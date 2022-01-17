@@ -1,0 +1,384 @@
+<template>
+  <div class="content-wrapper mb-5">
+    <section class="content-header">
+      <div class="container-fluid"></div>
+    </section>
+
+    <section class="content">
+      <div class="card card-outline card-info">
+        <div class="card-header">
+          <h3 class="card-title">
+            <i class="nav-icon fas fa-book-open"></i> TAMBAH RKH Detail
+          </h3>
+          <div class="card-tools"></div>
+        </div>
+        <div class="card-body">
+          <form @submit.prevent="storePost">
+            <div class="form-group">
+              <label>Block</label>
+              <multiselect
+                v-model="field.ha_statement_id"
+                :options="ha_statement"
+                label="block_lov"
+                track-by="id"
+                :searchable="true"
+              ></multiselect>
+              <div v-if="validation.ha_statement_id" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.ha_statement_id[0]
+                }}</b-alert>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Mandor</label>
+              <multiselect
+                v-model="field.foreman_employee_id"
+                :options="foreman"
+                label="employee_description"
+                track-by="id"
+                :searchable="true"
+              ></multiselect>
+              <div v-if="validation.employee_id" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.employee_id[0]
+                }}</b-alert>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>SKU</label>
+              <multiselect
+                v-model="field.labour"
+                :options="labour"
+                label="employee_description"
+                track-by="id"
+                :multiple="true"
+                :searchable="true"
+              ></multiselect>
+              <div v-if="validation.employee_id" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.employee_id[0]
+                }}</b-alert>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>HK</label>
+              <input
+                type="text"
+                v-model="field.man_days"
+                placeholder="Masukkan Jumlah HK"
+                class="form-control"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Volume</label>
+              <input
+                type="text"
+                v-model="field.qty"
+                placeholder="Masukkan Jumlah Volume"
+                class="form-control"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Keterangan</label>
+              <textarea
+                v-model="field.description"
+                class="form-control"
+                rows="3"
+                placeholder="Masukkan Deskripsi Singkat"
+              ></textarea>
+              <div v-if="validation.description" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.description[0]
+                }}</b-alert>
+              </div>
+            </div>
+
+            <button class="btn btn-info mr-1 btn-submit" type="submit">
+              <i class="fa fa-paper-plane"></i> SIMPAN
+            </button>
+            <button
+              v-on:click="say('salut')"
+              class="btn btn-warning btn-reset"
+              type="reset"
+            >
+              <i class="fa fa-redo"></i> RESETa
+            </button>
+            <nuxt-link
+              :to="{
+                name: 'admin-activity_plan_detail-id',
+                params: { id: activity_plan_id, r: 1 },
+              }"
+              class="btn btn-info btn-sm"
+              style="padding-top: 8px"
+              ><i class="fa fa-plus-circle"></i> TAMBAH</nuxt-link
+            >
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
+</template>
+
+<script>
+export default {
+  //layout
+  layout: 'admin',
+
+  //meta
+  head() {
+    return {
+      title:
+        'Tambah Post - SantriKoding.com - Belajar Koding Bahasa Indonesia Terlengkap',
+    }
+  },
+
+  components: {
+    'ckeditor-nuxt': () => {
+      if (process.client) {
+        return import('@blowstack/ckeditor-nuxt')
+      }
+    },
+  },
+
+  data() {
+    return {
+      value: undefined,
+      //state post
+      post: {
+        image: '',
+        title: '',
+        category_id: '',
+        content: '',
+        description: '',
+        tags: [],
+      },
+
+      field: {
+        ha_statement_id: '',
+        foreman_employee_id: '',
+        labour: [],
+        afdeling_id: this.$auth.user.employee.afdeling_id,
+        activity_id: '',
+        activitied_at: '',
+        man_days: '',
+        qty: '',
+        flexrate: '',
+        is_mobile: '',
+        description: '',
+      },
+
+      activity_plan_id: '',
+      afdeling_id: '',
+      company_code: '',
+      department_code: '',
+
+      //state categories
+      activity: [],
+      ha_statement: [],
+      foreman: [],
+      labour: [],
+
+      //state categories
+      categories: [],
+
+      //state tags
+      tags: [],
+
+      //state validation
+      validation: [],
+
+      //config CKEDITOR
+      editorConfig: {
+        removePlugins: ['Title'],
+        simpleUpload: {
+          uploadUrl: 'http://localhost:8000/api/web/posts/storeImage',
+        },
+      },
+    }
+  },
+
+  mounted() {
+    this.$axios
+      .get(`/api/admin/master/activity_plan/${this.$route.params.id}`)
+
+      .then((response) => {
+        //  console.log(response.data.data.afdeling_id)
+        this.activity_plan_id = response.data.data.id
+        this.afdeling_id = response.data.data.afdeling_id
+        this.company_code = response.data.data.company_code
+        this.department_code = response.data.data.department_code
+        this.$nuxt.$loading.start()
+        //Dropdown Block
+        this.$axios
+          .get(`/api/admin/lov_ha_statement_afdeling/${this.afdeling_id}`)
+
+          .then((response) => {
+            this.ha_statement = response.data.data
+          })
+
+        //Dropdown Mandor
+        this.$axios
+          .get(
+            `/api/admin/lov_employee_activity_group/${this.company_code}/${this.department_code}`
+          )
+
+          .then((response) => {
+            this.foreman = response.data.data
+          })
+
+        //Dropdown SKU
+        this.$axios
+          .get(
+            `/api/admin/lov_labour/${this.company_code}/${this.department_code}`
+          )
+
+          .then((response) => {
+            this.labour = response.data.data
+          })
+      }) //.get(`/api/admin/master/activity_plan/${this.$route.params.id}`)
+
+    //fetching data categories
+    this.$axios
+      .get('/api/admin/lov_activity')
+
+      .then((response) => {
+        // this.activity = response.data.data
+        response.data.data.forEach((dt) => {
+          if (dt.activity_group_code != 'PANEN') {
+            this.activity.push(dt)
+          }
+        })
+      })
+
+    // console.log(this.$auth.user.employee.afdeling_id)
+  },
+
+  methods: {
+    say(message) {
+      this.$router.push({
+        name: 'admin-activity_plan_detail-id',
+        params: { id: this.$route.params.id, r: 1 },
+      })
+    },
+
+    handleFileChange(e) {
+      //get image
+      let image = (this.post.image = e.target.files[0])
+
+      //check fileType
+      if (!image.type.match('image.*')) {
+        //if fileType not allowed, then clear value and set null
+        e.target.value = ''
+
+        this.post.image = null
+
+        //show sweet alert
+        this.$swal.fire({
+          title: 'OOPS!',
+          text: 'Format File Tidak Didukung!',
+          icon: 'error',
+          showConfirmButton: false,
+          timer: 2000,
+        })
+      }
+    },
+
+    async storePost() {
+      
+      let labour = this.post.labour
+      let selectedlabour = []
+
+      // labour.forEach((labour) => {
+      //   selectedlabour.push(labour.id)
+      // })  
+
+      console.log(selectedlabour)
+
+      //define formData
+      let formData = new FormData()
+
+      // console.log(this.field.activitied_at)
+
+      // this.value = this.field.activitied_at
+
+      formData.append(
+        'employee_id',
+        this.field.foreman_employee_id
+          ? this.field.foreman_employee_id.employee_id
+          : ''
+      )
+
+      // formData.append(
+      //   'labour_employee_id',
+      //   this.field.labour_employee_id ? this.field.labour_employee_id.id : ''
+      // )
+
+      formData.append(
+        'ha_statement_id',
+        this.field.ha_statement_id ? this.field.ha_statement_id.id : ''
+      )
+
+      formData.append('activity_plan_id', this.$route.params.id)
+      formData.append(
+        'activity_plan_detail_id',
+        this.$route.params.id +
+          '_' +
+          this.field.foreman_employee_id.employee_id +
+          '_' +
+          this.field.ha_statement_id.id + '_' + this.field.labour_employee_id.id
+      )
+      formData.append('man_days', this.field.man_days)
+      formData.append('qty', this.field.qty)
+      formData.append('flexrate', 0)
+      formData.append('description', this.field.description)
+      formData.append(
+        'created_by',
+        this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+      )
+      formData.append(
+        'updated_by',
+        this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+      )
+
+      for (var pair of formData.entries()) {
+        console.log(pair[0] + ', ' + pair[1])
+      }
+
+   
+      //sending data to server
+      // Promise.all([
+      //   await this.$axios.post('/api/admin/activity_plan_detail', formData),
+      //   await this.$axios.post('/api/admin/activity_actual', formData),
+      // ])
+      //   .then(() => {
+      //     //sweet alert
+      //     this.$swal.fire({
+      //       title: 'BERHASIL!',
+      //       text: 'Data Berhasil Disimpan!',
+      //       icon: 'success',
+      //       showConfirmButton: false,
+      //       timer: 2000,
+      //     })
+          
+      //     this.say('m')
+      //   })
+      //   .catch((error) => {
+        //   //assign error to state "validation"
+        //   this.validation = error.response.data
+        //   // this.validation= "sdgs"
+        // })
+    },
+  },
+}
+</script>
+
+<style>
+.ck-editor__editable {
+  min-height: 200px;
+}
+</style>
