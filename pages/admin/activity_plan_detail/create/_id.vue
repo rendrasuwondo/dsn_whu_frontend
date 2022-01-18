@@ -289,15 +289,8 @@ export default {
     },
 
     async storePost() {
-      
-      let labour = this.post.labour
-      let selectedlabour = []
-
-      // labour.forEach((labour) => {
-      //   selectedlabour.push(labour.id)
-      // })  
-
-      console.log(selectedlabour)
+      let labour = this.field.labour
+      let selectedLabour = []
 
       //define formData
       let formData = new FormData()
@@ -313,11 +306,6 @@ export default {
           : ''
       )
 
-      // formData.append(
-      //   'labour_employee_id',
-      //   this.field.labour_employee_id ? this.field.labour_employee_id.id : ''
-      // )
-
       formData.append(
         'ha_statement_id',
         this.field.ha_statement_id ? this.field.ha_statement_id.id : ''
@@ -330,7 +318,9 @@ export default {
           '_' +
           this.field.foreman_employee_id.employee_id +
           '_' +
-          this.field.ha_statement_id.id + '_' + this.field.labour_employee_id.id
+          this.field.ha_statement_id.id +
+          '_' +
+          this.field.labour.id
       )
       formData.append('man_days', this.field.man_days)
       formData.append('qty', this.field.qty)
@@ -345,11 +335,47 @@ export default {
         this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
       )
 
-      for (var pair of formData.entries()) {
-        console.log(pair[0] + ', ' + pair[1])
-      }
+      // for (var pair of formData.entries()) {
+      //   console.log(pair[0] + ', ' + pair[1])
+      // }
+
+      // insert
+      await
+
+      labour.forEach((labour) => {
+        formData.delete('labour_employee_id')
+        formData.append('labour_employee_id', labour.id)
+
+        //sending data to server
+     
+         this.$axios.post('/api/admin/activity_plan_detail', formData)
+        .then(() => {
+
+          this.$axios.post('/api/admin/activity_actual', formData)  
+
+          //sweet alert
+          this.$swal.fire({
+            title: 'BERHASIL!',
+            text: 'Data Berhasil Disimpan!',
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 2000,
+          })
+
+          this.say('m')
+        })
+        .catch((error) => {
+        //assign error to state "validation"
+        this.validation = error.response.data
+        // this.validation= "sdgs"
+      })
 
    
+      })
+      // insert end
+      // formData.delete('employee_id')
+      // console.log(formData)
+
       //sending data to server
       // Promise.all([
       //   await this.$axios.post('/api/admin/activity_plan_detail', formData),
@@ -364,14 +390,16 @@ export default {
       //       showConfirmButton: false,
       //       timer: 2000,
       //     })
-          
+
       //     this.say('m')
       //   })
       //   .catch((error) => {
-        //   //assign error to state "validation"
-        //   this.validation = error.response.data
-        //   // this.validation= "sdgs"
-        // })
+      //   //assign error to state "validation"
+      //   this.validation = error.response.data
+      //   // this.validation= "sdgs"
+      // })
+
+
     },
   },
 }

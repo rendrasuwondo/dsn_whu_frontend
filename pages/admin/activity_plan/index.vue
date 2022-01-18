@@ -10,9 +10,7 @@
           <h3 class="card-title">
             <i class="nav-icon fas fa-book-open"></i> RKH
           </h3>
-          <div class="card-tools">
-            
-          </div>
+          <div class="card-tools"></div>
         </div>
         <div class="card-body">
           <div class="form-group">
@@ -43,6 +41,8 @@
 
           <!-- table -->
           <b-table
+          small
+          responsive
             striped
             bordered
             hover
@@ -54,41 +54,39 @@
               <i class="fa fa-comments"></i> {{ row.item.comments.length }}
             </template>
             <template v-slot:cell(actions)="row">
-               <b-button
+              <b-button
                 :to="{
                   name: 'admin-activity_plan-edit-id',
                   params: { id: row.item.id },
                 }"
                 variant="link"
-                size="sm"
+                size=""
                 title="Edit"
-             
               >
-               <i class="fa fa-pencil-alt"></i>
+                <i class="fa fa-pencil-alt"></i>
               </b-button>
-             
+
               <b-button
                 variant="link"
-                size="sm"
+                size=""
                 @click="deletePost(row.item.id)"
                 title="Hapus"
-                ><i class="fa fa-trash"></i></b-button
-              >
+                ><i class="fa fa-trash"></i
+              ></b-button>
             </template>
             <template v-slot:cell(detail)="row">
-              
-                 <b-button
+              <b-button
                 :to="{
                   name: 'admin-activity_plan_detail-id',
                   params: { id: row.item.id },
                 }"
-                variant=""
-                size="sm"
+                variant="link"
+                size=""
+                title="Detail"
               >
-                Detail<i class="fa fa-plus-circle"></i>
+                <i class="fa fa-file-alt"></i>
               </b-button>
-               </template>
-            
+            </template>
           </b-table>
 
           <!-- pagination -->
@@ -114,8 +112,7 @@ export default {
   //meta
   head() {
     return {
-      title:
-        'RKH',
+      title: 'RKH',
     }
   },
 
@@ -137,24 +134,33 @@ export default {
         {
           label: 'Tanggal',
           key: 'activitied_at',
+          tdClass: 'align-middle'
         },
         {
           label: 'Afdeling',
-          key: 'afdeling.id',
+          key: 'afdeling_id',
+          tdClass: 'align-middle'
         },
         {
           label: 'KDKJ',
-          key: 'activity.name',
+          key: 'activity_name',
+          tdClass: 'align-middle'
         },
         {
           label: 'HK',
           key: 'man_days',
+           tdClass: 'align-middle text-right',
         },
         {
-          label: 'Luas',
+          label: 'Volume',
           key: 'qty',
-          tdClass: 'text-center',
-        }
+          tdClass: 'align-middle text-right',
+        },
+        {
+          label: 'Rate',
+          key: 'flexrate',
+          tdClass: 'align-middle text-right',
+        },
       ],
 
       //state search
@@ -173,7 +179,9 @@ export default {
     let search = query.q ? query.q : ''
 
     //fetching posts
-    const posts = await $axios.$get(`/api/admin/activity_plan?q=${search}&page=${page}`)
+    const posts = await $axios.$get(
+      `/api/admin/activity_plan?q=${search}&page=${page}`
+    )
 
     return {
       posts: posts.data.data,
@@ -219,7 +227,7 @@ export default {
         .then((result) => {
           if (result.isConfirmed) {
             //delete tag from server
-           
+
             this.$axios.delete(`/api/admin/activity_plan/${id}`).then(() => {
               //feresh data
               this.$nuxt.refresh()
