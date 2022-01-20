@@ -283,39 +283,25 @@ export default {
       let labour = this.field.labour
       let selectedLabour = []
 
-      //define formData
-      let formData = new FormData()
+      // formData.append(
+      //   'ha_statement_id',
+      //   this.field.ha_statement_id ? this.field.ha_statement_id.id : ''
+      // )
 
-      // console.log(this.field.activitied_at)
+      // formData.append('activity_plan_id', this.$route.params.id)
 
-      // this.value = this.field.activitied_at
-
-      formData.append(
-        'employee_id',
-        this.field.foreman_employee_id
-          ? this.field.foreman_employee_id.employee_id
-          : ''
-      )
-
-      formData.append(
-        'ha_statement_id',
-        this.field.ha_statement_id ? this.field.ha_statement_id.id : ''
-      )
-
-      formData.append('activity_plan_id', this.$route.params.id)
-      
-      formData.append('man_days', this.field.man_days)
-      formData.append('qty', this.field.qty)
-      formData.append('flexrate', 0)
-      formData.append('description', this.field.description)
-      formData.append(
-        'created_by',
-        this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
-      )
-      formData.append(
-        'updated_by',
-        this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
-      )
+      // formData.append('man_days', this.field.man_days)
+      // formData.append('qty', this.field.qty)
+      // formData.append('flexrate', 0)
+      // formData.append('description', this.field.description)
+      // formData.append(
+      //   'created_by',
+      //   this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+      // )
+      // formData.append(
+      //   'updated_by',
+      //   this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+      // )
 
       // for (var pair of formData.entries()) {
       //   console.log(pair[0] + ', ' + pair[1])
@@ -323,49 +309,107 @@ export default {
 
       // insert
       await labour.forEach((labour) => {
-        formData.delete('labour_employee_id')
+        //define formData
+        var formData = new FormData()
+
+        // console.log(this.field.activitied_at)
+
+        // this.value = this.field.activitied_at
+
+        formData.append(
+          'employee_id',
+          this.field.foreman_employee_id
+            ? this.field.foreman_employee_id.employee_id
+            : ''
+        )
+
+        formData.append(
+          'ha_statement_id',
+          this.field.ha_statement_id ? this.field.ha_statement_id.id : ''
+        )
+
+        formData.append('activity_plan_id', this.$route.params.id)
+
+        formData.append('man_days', this.field.man_days)
+        formData.append('qty', this.field.qty)
+        formData.append('flexrate', 0)
+        formData.append('description', this.field.description)
+        formData.append(
+          'created_by',
+          this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+        )
+        formData.append(
+          'updated_by',
+          this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+        )
+
+        formData.append('labour_employee_id', labour.id)
+
+        formData.append(
+          'activity_plan_detail_id',
+          this.$route.params.id +
+            '_' +
+            this.field.foreman_employee_id.employee_id +
+            '_' +
+            this.field.ha_statement_id.id +
+            '_' +
+            labour.id
+        )
+
+        /*  formData.delete('labour_employee_id')
         formData.append('labour_employee_id', labour.id)
 
         formData.delete('activity_plan_detail_id')
         formData.append(
-        'activity_plan_detail_id',
-        this.$route.params.id +
-          '_' +
-          this.field.foreman_employee_id.employee_id +
-          '_' +
-          this.field.ha_statement_id.id +
-          '_' +
-          labour.id
-      )
+          'activity_plan_detail_id',
+          this.$route.params.id +
+            '_' +
+            this.field.foreman_employee_id.employee_id +
+            '_' +
+            this.field.ha_statement_id.id +
+            '_' +
+            labour.id
+        ) */
 
-         for (var pair of formData.entries()) {
-        console.log(pair[0] + ', ' + pair[1])
-      }
+        //   console.log()
+
+        // for (var pair of formData.entries()) {
+        //   console.log(pair[0] + ', ' + pair[1])
+        // }
+        // console.log('-------------')
 
         //sending data to server
 
-      //   this.$axios
-      //     .post('/api/admin/activity_plan_detail', formData)
-      //     .then(() => {
-      //       this.$axios.post('/api/admin/activity_actual', formData)
+        this.$axios
+          .post('/api/admin/activity_plan_detail', formData)
+          .then(() => {
+            this.$axios.post('/api/admin/activity_actual', formData)
+            // //sweet alert
+            // this.$swal.fire({
+            //   title: 'BERHASIL!',
+            //   text: 'Data Berhasil Disimpan!',
+            //   icon: 'success',
+            //   showConfirmButton: false,
+            //   timer: 2000,
+            // })
+            // this.back()
+          })
+          .catch((error) => {
+            //assign error to state "validation"
+            this.validation = error.response.data
+            // this.validation= "sdgs"
+          })
+      })
 
-      //       //sweet alert
-      //       this.$swal.fire({
-      //         title: 'BERHASIL!',
-      //         text: 'Data Berhasil Disimpan!',
-      //         icon: 'success',
-      //         showConfirmButton: false,
-      //         timer: 2000,
-      //       })
-
-      //       this.back()
-      //     })
-      //     .catch((error) => {
-      //       //assign error to state "validation"
-      //       this.validation = error.response.data
-      //       // this.validation= "sdgs"
-      //     })
-      // })
+      //sweet alert
+      this.$swal.fire({
+        title: 'BERHASIL!',
+        text: 'Data Berhasil Disimpan!',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 2000,
+      })
+      this.back()
       // insert end
       // formData.delete('employee_id')
       // console.log(formData)
@@ -391,7 +435,7 @@ export default {
       //   //assign error to state "validation"
       //   this.validation = error.response.data
       //   // this.validation= "sdgs"
-      })
+      // })
     },
   },
 }
