@@ -100,10 +100,10 @@
             </div>
 
             <button class="btn btn-info mr-1 btn-submit" type="submit">
-              <i class="fa fa-paper-plane"></i> UPDATE
+              <i class="fa fa-paper-plane"></i> SIMPAN
             </button>
-            <button class="btn btn-warning btn-reset" type="reset">
-              <i class="fa fa-redo"></i> RESET
+            <button v-on:click="back()" class="btn btn-warning btn-reset" type="reset">
+              <i class="fa fa-redo"></i> BATAL
             </button>
           </form>
         </div>
@@ -183,6 +183,13 @@ export default {
   },
 
   methods: {
+    back() {
+      this.$router.push({
+        name: 'admin-activity_plan',
+        params: { id: this.$route.params.id, r: 1 },
+      })
+    },
+
     handleFileChange(e) {
       //get image
       let image = (this.category.image = e.target.files[0])

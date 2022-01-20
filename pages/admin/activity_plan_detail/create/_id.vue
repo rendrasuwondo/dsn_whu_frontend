@@ -102,21 +102,12 @@
               <i class="fa fa-paper-plane"></i> SIMPAN
             </button>
             <button
-              v-on:click="say('salut')"
+              v-on:click="back()"
               class="btn btn-warning btn-reset"
               type="reset"
             >
-              <i class="fa fa-redo"></i> RESETa
+              <i class="fa fa-redo"></i> BATAL
             </button>
-            <nuxt-link
-              :to="{
-                name: 'admin-activity_plan_detail-id',
-                params: { id: activity_plan_id, r: 1 },
-              }"
-              class="btn btn-info btn-sm"
-              style="padding-top: 8px"
-              ><i class="fa fa-plus-circle"></i> TAMBAH</nuxt-link
-            >
           </form>
         </div>
       </div>
@@ -259,7 +250,7 @@ export default {
   },
 
   methods: {
-    say(message) {
+    back() {
       this.$router.push({
         name: 'admin-activity_plan_detail-id',
         params: { id: this.$route.params.id, r: 1 },
@@ -312,16 +303,7 @@ export default {
       )
 
       formData.append('activity_plan_id', this.$route.params.id)
-      formData.append(
-        'activity_plan_detail_id',
-        this.$route.params.id +
-          '_' +
-          this.field.foreman_employee_id.employee_id +
-          '_' +
-          this.field.ha_statement_id.id +
-          '_' +
-          this.field.labour.id
-      )
+      
       formData.append('man_days', this.field.man_days)
       formData.append('qty', this.field.qty)
       formData.append('flexrate', 0)
@@ -340,38 +322,50 @@ export default {
       // }
 
       // insert
-      await
-
-      labour.forEach((labour) => {
+      await labour.forEach((labour) => {
         formData.delete('labour_employee_id')
         formData.append('labour_employee_id', labour.id)
 
+        formData.delete('activity_plan_detail_id')
+        formData.append(
+        'activity_plan_detail_id',
+        this.$route.params.id +
+          '_' +
+          this.field.foreman_employee_id.employee_id +
+          '_' +
+          this.field.ha_statement_id.id +
+          '_' +
+          labour.id
+      )
+
+         for (var pair of formData.entries()) {
+        console.log(pair[0] + ', ' + pair[1])
+      }
+
         //sending data to server
-     
-         this.$axios.post('/api/admin/activity_plan_detail', formData)
-        .then(() => {
 
-          this.$axios.post('/api/admin/activity_actual', formData)  
+      //   this.$axios
+      //     .post('/api/admin/activity_plan_detail', formData)
+      //     .then(() => {
+      //       this.$axios.post('/api/admin/activity_actual', formData)
 
-          //sweet alert
-          this.$swal.fire({
-            title: 'BERHASIL!',
-            text: 'Data Berhasil Disimpan!',
-            icon: 'success',
-            showConfirmButton: false,
-            timer: 2000,
-          })
+      //       //sweet alert
+      //       this.$swal.fire({
+      //         title: 'BERHASIL!',
+      //         text: 'Data Berhasil Disimpan!',
+      //         icon: 'success',
+      //         showConfirmButton: false,
+      //         timer: 2000,
+      //       })
 
-          this.say('m')
-        })
-        .catch((error) => {
-        //assign error to state "validation"
-        this.validation = error.response.data
-        // this.validation= "sdgs"
-      })
-
-   
-      })
+      //       this.back()
+      //     })
+      //     .catch((error) => {
+      //       //assign error to state "validation"
+      //       this.validation = error.response.data
+      //       // this.validation= "sdgs"
+      //     })
+      // })
       // insert end
       // formData.delete('employee_id')
       // console.log(formData)
@@ -397,9 +391,7 @@ export default {
       //   //assign error to state "validation"
       //   this.validation = error.response.data
       //   // this.validation= "sdgs"
-      // })
-
-
+      })
     },
   },
 }

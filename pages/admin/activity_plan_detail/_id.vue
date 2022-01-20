@@ -69,6 +69,8 @@
           <!-- table -->
 
           <b-table
+            small
+            responsive
             striped
             bordered
             hover
@@ -82,21 +84,23 @@
             <template v-slot:cell(actions)="row">
               <b-button
                 :to="{
-                  name: 'admin-activity_plan_detail-edit-id-r',
+                  name: 'admin-activity_plan_detail-edit-id',
                   params: { id: row.item.id, r: 1 },
                 }"
-                variant="warning"
-                size="sm"
+                variant="link"
+                size=""
+                title="Edit"
               >
-                EDIT<i class="fa fa-plus-circle"></i>
+                <i class="fa fa-pencil-alt"></i>
               </b-button>
 
               <b-button
-                variant="danger"
-                size="sm"
+                variant="link"
+                size=""
+                title="Hapus"
                 @click="deletePost(row.item.id, row.item.activity_actual_id)"
-                >DELETE</b-button
-              >
+                ><i class="fa fa-trash"></i
+              ></b-button>
             </template>
             <template v-slot:cell(detail)="row">
               <b-button
@@ -274,8 +278,8 @@ export default {
           if (result.isConfirmed) {
             //delete tag from server
 
-            // console.log(id)
-            // console.log(activity_actual_id)
+            console.log(id)
+            console.log(activity_actual_id)
             /*
             Promise.all([
                this.$axios.delete(
@@ -295,23 +299,26 @@ export default {
               })
             })
             */
-            this.$axios.delete(`/api/admin/activity_actual/${activity_actual_id}`).then(() => {
+            this.$axios
+              .delete(`/api/admin/activity_actual/${activity_actual_id}`)
+              .then(() => {
                 this.$axios.delete(`/api/admin/activity_plan_detail/${id}`)
 
-              //feresh data
-              this.$nuxt.refresh()
+                //feresh data
+                this.$nuxt.refresh()
 
-              //alert
-              this.$swal.fire({
-                title: 'BERHASIL!',
-                text: 'Data Berhasil Dihapus!',
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 2000,
+                //alert
+                this.$swal.fire({
+                  title: 'BERHASIL!',
+                  text: 'Data Berhasil Dihapus!',
+                  icon: 'success',
+                  showConfirmButton: false,
+                  timer: 2000,
+                })
               })
-            }).catch((err)=>{
-              alert(err.message)
-            })
+              .catch((err) => {
+                alert(err.message)
+              })
           }
         })
     },

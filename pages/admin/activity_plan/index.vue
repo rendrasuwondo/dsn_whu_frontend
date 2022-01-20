@@ -41,8 +41,8 @@
 
           <!-- table -->
           <b-table
-          small
-          responsive
+            small
+            responsive
             striped
             bordered
             hover
@@ -134,22 +134,22 @@ export default {
         {
           label: 'Tanggal',
           key: 'activitied_at',
-          tdClass: 'align-middle'
+          tdClass: 'align-middle',
         },
         {
           label: 'Afdeling',
           key: 'afdeling_id',
-          tdClass: 'align-middle'
+          tdClass: 'align-middle',
         },
         {
           label: 'KDKJ',
           key: 'activity_name',
-          tdClass: 'align-middle'
+          tdClass: 'align-middle',
         },
         {
           label: 'HK',
           key: 'man_days',
-           tdClass: 'align-middle text-right',
+          tdClass: 'align-middle text-right',
         },
         {
           label: 'Volume',
@@ -183,10 +183,22 @@ export default {
       `/api/admin/activity_plan?q=${search}&page=${page}`
     )
 
-    return {
+      return {
       posts: posts.data.data,
       pagination: posts.data,
+      search:search
     }
+  },
+  mounted() {
+    // this.search = this.$route.query.q
+    // document.onreadystatechange = () => {
+    //   if (document.readyState == 'complete') {
+    //     console.log('Page completed with image and files!' + this.$route.query.q)
+    //     // fetch to next page or some code
+    //   }
+    // }
+    // console.log('sadsa')
+    // console.log(this.$route.query.q)
   },
 
   methods: {
