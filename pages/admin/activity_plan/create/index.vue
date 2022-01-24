@@ -10,9 +10,7 @@
           <h3 class="card-title">
             <i class="nav-icon fas fa-book-open"></i> TAMBAH RKH
           </h3>
-          <div class="card-tools">
-           
-          </div>
+          <div class="card-tools"></div>
         </div>
         <div class="card-body">
           <form @submit.prevent="storePost">
@@ -87,7 +85,23 @@
             </div>
 
             <div class="form-group">
+              <label>Rate</label>
+
+              <!--   <input
+                type="text"
+                v-model="price"
+                placeholder="Masukkan Satuan Rate"
+                class="form-control"
+              /> -->
+              <number
+                class="form-control"
+                v-model="field.flexrate"
+              ></number>
+            </div>
+
+            <div class="form-group">
               <label>Keterangan</label>
+
               <textarea
                 v-model="field.description"
                 class="form-control"
@@ -104,7 +118,11 @@
             <button class="btn btn-info mr-1 btn-submit" type="submit">
               <i class="fa fa-paper-plane"></i> SIMPAN
             </button>
-            <button v-on:click="back()" class="btn btn-warning btn-reset" type="reset">
+            <button
+              v-on:click="back()"
+              class="btn btn-warning btn-reset"
+              type="reset"
+            >
               <i class="fa fa-redo"></i> BATAL
             </button>
           </form>
@@ -115,6 +133,9 @@
 </template>
 
 <script>
+/* import { VNumber  } from '@coders-tm/vue-number-format' */
+/* import { number } from '@coders-tm/vue-number-format' */
+
 export default {
   //layout
   layout: 'admin',
@@ -122,8 +143,7 @@ export default {
   //meta
   head() {
     return {
-      title:
-        'Tambah Post - SantriKoding.com - Belajar Koding Bahasa Indonesia Terlengkap',
+      title: 'Tambah RKH',
     }
   },
 
@@ -133,21 +153,30 @@ export default {
         return import('@blowstack/ckeditor-nuxt')
       }
     },
+  /*   number, */
   },
 
   data() {
     return {
+      price: '',
       value: undefined,
       //state post
-      post: {
-        image: '',
-        title: '',
-        category_id: '',
-        content: '',
-        description: '',
-        tags: [],
-      },
-
+      // post: {
+      //   image: '',
+      //   title: '',
+      //   category_id: '',
+      //   content: '',
+      //   description: '',
+      //   tags: [],
+      // },
+      /* number: {
+          decimal: '.',
+          separator: ',',
+          prefix: '$ ',
+          suffix: ' #',
+          precision: 2,
+          masked: false
+        }, */
       field: {
         afdeling_id: this.$auth.user.employee.afdeling_id,
         activity_id: '',
@@ -158,6 +187,8 @@ export default {
         is_mobile: '',
         description: '',
       },
+
+      test: '',
 
       //state categories
       activity: [],
@@ -182,6 +213,10 @@ export default {
   },
 
   mounted() {
+    this.field.activitied_at = this.currentDate()
+
+    console.log(this.field.activitied_at)
+
     //fetching data categories
     this.$axios
       .get('/api/admin/lov_activity')
@@ -189,12 +224,13 @@ export default {
       .then((response) => {
         // this.activity = response.data.data
         response.data.data.forEach((dt) => {
-          if (dt.activity_group_code != 'PANEN') {
+          if (dt.activity_group_id == this.$cookies.get('activity_group_id')) {
             this.activity.push(dt)
           }
         })
       })
 
+    // console.log(this.$cookies.get('activity_group_id'))
     //fetching data categories
     this.$axios
       .get('/api/admin/categories')
@@ -231,6 +267,15 @@ export default {
       })
     },
 
+    currentDate() {
+      const current = new Date()
+      const date = `${current.getFullYear()}-${
+        current.getMonth() + 1
+      }-${current.getDate()}`
+
+      return date
+    },
+
     handleFileChange(e) {
       //get image
       let image = (this.post.image = e.target.files[0])
@@ -257,11 +302,16 @@ export default {
       //define formData
       let formData = new FormData()
 
-      console.log(this.field.activitied_at)
+      // console.log(this.field.activitied_at)
 
       this.value = this.field.activitied_at
 
-      formData.append('id', this.field.activity_id ? this.field.activity_id.id : '' + this.field.afdeling_id +this.field.activitied_at)
+      formData.append(
+        'id',
+        this.field.activity_id
+          ? this.field.activity_id.id
+          : '' + this.field.afdeling_id + this.field.activitied_at
+      )
       formData.append('afdeling_id', this.field.afdeling_id)
       formData.append(
         'activity_id',
@@ -270,11 +320,16 @@ export default {
       formData.append('activitied_at', this.field.activitied_at)
       formData.append('man_days', this.field.man_days)
       formData.append('qty', this.field.qty)
-      formData.append('flexrate', 0)
+      formData.append('flexrate', this.field.flexrate)
       formData.append('description', this.field.description)
-      formData.append('created_by', this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name)
-      formData.append('updated_by', this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name)
-        
+      formData.append(
+        'created_by',
+        this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+      )
+      formData.append(
+        'updated_by',
+        this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+      )
 
       //sending data to server
       await this.$axios

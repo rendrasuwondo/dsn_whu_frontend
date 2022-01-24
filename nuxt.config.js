@@ -63,7 +63,7 @@ export default {
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [{ src: '@/plugins/vue-number-format.js', ssr: false }],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -83,8 +83,10 @@ export default {
     'nuxt-multiselect',
     //https://github.com/avil13/vue-sweetalert2
     'vue-sweetalert2/nuxt',
+    // Simple usage
+    'cookie-universal-nuxt',
   ],
-  middleware : ['auth'],
+  middleware: ['auth'],
 
   auth: {
     strategies: {

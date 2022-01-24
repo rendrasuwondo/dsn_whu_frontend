@@ -29,6 +29,7 @@
   </nav>
 </template>
 
+
 <script>
   export default {
 
@@ -39,11 +40,14 @@
     },
 
     methods: {
-
+      
       async logout() {
 
         //logout auth
         await this.$auth.logout()
+
+        //remove cookies
+        this.$cookies.removeAll();
 
         //redirect route login
         this.$router.push({
