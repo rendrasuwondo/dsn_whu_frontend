@@ -32,7 +32,15 @@
 
             <div class="form-group">
               <label>KDKJ</label>
+              <input
+                type="text"
+                v-model="field.activity_description"
+                placeholder=""
+                class="form-control"
+                readonly
+              />
               <multiselect
+                v-show="false"
                 v-model="field.activity_id"
                 :options="activity"
                 label="name"
@@ -56,6 +64,7 @@
                   day: '2-digit',
                   weekday: 'short',
                 }"
+                disabled
               ></b-form-datepicker>
               <div v-if="validation.activitied_at" class="mt-2">
                 <b-alert show variant="danger">{{
@@ -64,24 +73,65 @@
               </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" v-show="show_hk">
               <label>HK</label>
-              <input
-                type="text"
+              <money
                 v-model="field.man_days"
-                placeholder="Masukkan Jumlah HK"
+                v-bind="money"
+                precision="2"
                 class="form-control"
-              />
+              ></money>
+              <!-- <number
+                class="form-control"
+                placeholder="Masukkan Jumlah HK"
+                v-model="field.man_days"
+                prefix=""
+              ></number> -->
             </div>
 
             <div class="form-group">
               <label>Volume</label>
-              <input
+              <!-- <input
                 type="text"
-                v-model="field.qty"
+                v-model="field.man_days"
                 placeholder="Masukkan Jumlah Volume"
                 class="form-control"
-              />
+              /> -->
+
+              <money
+                v-model="field.qty"
+                v-bind="money"
+                precision="2"
+                class="form-control"
+              ></money>
+
+              <!-- {{ price }} -->
+              <!-- <number
+                class="form-control"
+                v-model="field.man_days"
+                placeholder="Masukkan Jumlah Volume"
+                prefix=""
+                v-bind="number"
+              ></number> -->
+            </div>
+
+            <div class="form-group" v-show="show_rate">
+              <label>Rate</label>
+
+              <money
+                v-model="field.flexrate"
+                v-bind="money"
+                precision="2"
+                prefix="Rp "
+                class="form-control"
+              ></money>
+
+              <!-- <number
+                class="form-control"
+                placeholder="Masukkan Upah / Unit"
+                v-model="field.flexrate"
+                v-bind="number"
+              ></number> -->
             </div>
 
             <div class="form-group">
@@ -102,7 +152,11 @@
             <button class="btn btn-info mr-1 btn-submit" type="submit">
               <i class="fa fa-paper-plane"></i> SIMPAN
             </button>
-            <button v-on:click="back()" class="btn btn-warning btn-reset" type="reset">
+            <button
+              v-on:click="back()"
+              class="btn btn-warning btn-reset"
+              type="reset"
+            >
               <i class="fa fa-redo"></i> BATAL
             </button>
           </form>
@@ -120,13 +174,15 @@ export default {
   //meta
   head() {
     return {
-      title:
-        'Edit RKH',
+      title: 'Edit RKH',
     }
   },
 
   data() {
     return {
+      price: '',
+      show_hk: true,
+      show_rate: false,
       //state category
       category: {
         image: '',
@@ -139,9 +195,10 @@ export default {
         activitied_at: '',
         man_days: '',
         qty: '',
-        flexrate: '',
+        flexrate: 0,
         is_mobile: '',
         description: '',
+        activity_description: '',
       },
 
       activity: [],
@@ -164,9 +221,35 @@ export default {
         this.field.activity_id = response.data.data.activity
 
         this.field.activitied_at = response.data.data.activitied_at
-        this.field.man_days = response.data.data.man_days
+
+        if (response.data.data.activity.name.indexOf('RATE') > 0) {
+          this.field.flexrate = response.data.data.flexrate
+          this.show_hk = false
+          this.show_rate = true
+        } else {
+          this.field.man_days = response.data.data.man_days
+          this.show_hk = true
+          this.show_rate = false
+        } //if (response.data.data.activity_name.indexOf('RATE') > 0) {
+
         this.field.qty = response.data.data.qty
         this.field.description = response.data.data.description
+        this.field.activity_description =
+          response.data.data.activity_id +
+          ' ' +
+          response.data.data.activity.name
+        // console.log(response.data.data.man_days)
+        // console.log(this.field.man_days)
+
+        // if (this.field.activity_id.name.indexOf('RATE') > 0) {
+        //   this.show_hk = false
+        //   this.show_rate = true
+        //   this.field.man_days = ''
+        // } else {
+        //   this.show_hk = true
+        //   this.show_rate = false
+        //   this.field.flexrate = ''
+        // }
       })
 
     this.$axios
@@ -217,7 +300,7 @@ export default {
       //define formData
       let formData = new FormData()
 
-       formData.append('afdeling_id', this.$auth.user.employee.afdeling_id)
+      formData.append('afdeling_id', this.$auth.user.employee.afdeling_id)
       formData.append(
         'activity_id',
         this.field.activity_id ? this.field.activity_id.id : ''
@@ -225,9 +308,12 @@ export default {
       formData.append('activitied_at', this.field.activitied_at)
       formData.append('man_days', this.field.man_days)
       formData.append('qty', this.field.qty)
-      formData.append('flexrate', 0)
+      formData.append('flexrate', this.field.flexrate)
       formData.append('description', this.field.description)
-      formData.append('updated_by', this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name)
+      formData.append(
+        'updated_by',
+        this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+      )
       formData.append('_method', 'PATCH')
 
       //sending data to server
@@ -254,6 +340,7 @@ export default {
         })
     },
   },
+  watch: {},
 }
 </script>
 

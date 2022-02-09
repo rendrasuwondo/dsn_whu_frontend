@@ -60,7 +60,7 @@
                   params: { id: row.item.id },
                 }"
                 variant="link"
-                size=""
+                size="sm"
                 title="Edit"
               >
                 <i class="fa fa-pencil-alt"></i>
@@ -68,7 +68,7 @@
 
               <b-button
                 variant="link"
-                size=""
+                size="sm"
                 @click="deletePost(row.item.id)"
                 title="Hapus"
                 ><i class="fa fa-trash"></i
@@ -124,12 +124,12 @@ export default {
         {
           label: 'Actions',
           key: 'actions',
-          tdClass: 'text-center',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
           label: 'Detail',
           key: 'detail',
-          tdClass: 'text-center',
+          tdClass: 'align-middle text-center',
         },
         {
           label: 'Tanggal',
@@ -143,23 +143,23 @@ export default {
         },
         {
           label: 'KDKJ',
-          key: 'activity_name',
-          tdClass: 'align-middle',
+          key: 'activity_description',
+          tdClass: 'align-middle text-nowrap',
         },
         {
           label: 'HK',
-          key: 'man_days',
+          key: 'man_daysFormat',
           tdClass: 'align-middle text-right',
         },
         {
           label: 'Volume',
-          key: 'qty',
+          key: 'qtyFormat',
           tdClass: 'align-middle text-right',
         },
         {
           label: 'Rate',
-          key: 'flexrate',
-          tdClass: 'align-middle text-right',
+          key: 'flexrateFormat',
+          tdClass: 'align-middle text-left text-nowrap',
         },
       ],
 
@@ -183,10 +183,10 @@ export default {
       `/api/admin/activity_plan?q=${search}&page=${page}`
     )
 
-      return {
+    return {
       posts: posts.data.data,
       pagination: posts.data,
-      search:search
+      search: search,
     }
   },
   mounted() {

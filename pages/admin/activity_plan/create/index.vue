@@ -38,6 +38,7 @@
                 label="name"
                 track-by="id"
                 :searchable="true"
+                @input="onChange"
               ></multiselect>
               <div v-if="validation.activity_id" class="mt-2">
                 <b-alert show variant="danger">{{
@@ -64,27 +65,41 @@
               </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" v-show="show_hk">
               <label>HK</label>
-              <input
+              <!-- <input
                 type="text"
                 v-model="field.man_days"
                 placeholder="Masukkan Jumlah HK"
                 class="form-control"
-              />
+              /> -->
+
+              <number
+                class="form-control"
+                placeholder="Masukkan Jumlah HK"
+                v-model="field.man_days"
+                prefix=""
+              ></number>
             </div>
 
             <div class="form-group">
               <label>Volume</label>
-              <input
+              <!-- <input
                 type="text"
                 v-model="field.qty"
                 placeholder="Masukkan Jumlah Volume"
                 class="form-control"
-              />
+              /> -->
+
+              <number
+                class="form-control"
+                placeholder="Masukkan Jumlah Volume"
+                v-model="field.qty"
+                prefix=""
+              ></number>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" v-show="show_rate">
               <label>Rate</label>
 
               <!--   <input
@@ -95,7 +110,11 @@
               /> -->
               <number
                 class="form-control"
+                placeholder="Masukkan Upah / Unit"
                 v-model="field.flexrate"
+                prefix="Rp "
+                precision="2"
+                masked="true"
               ></number>
             </div>
 
@@ -153,11 +172,13 @@ export default {
         return import('@blowstack/ckeditor-nuxt')
       }
     },
-  /*   number, */
+    /*   number, */
   },
 
   data() {
     return {
+      show_hk: true,
+      show_rate: false,
       price: '',
       value: undefined,
       //state post
@@ -260,6 +281,17 @@ export default {
   },
 
   methods: {
+    onChange() {
+      if (this.field.activity_id.activity_name.indexOf('RATE') > 0) {
+        this.show_hk = false
+        this.show_rate = true
+        this.field.man_days = ''
+      } else {
+        this.show_hk = true
+        this.show_rate = false
+        this.field.flexrate = ''
+      }
+    },
     back() {
       this.$router.push({
         name: 'admin-activity_plan',
