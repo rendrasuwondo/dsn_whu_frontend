@@ -63,7 +63,7 @@
               </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" v-show="show_hk">
               <label>HK</label>
               <input
                 type="text"
@@ -75,12 +75,33 @@
 
             <div class="form-group">
               <label>Volume</label>
-              <input
-                type="text"
+              <!-- <money
                 v-model="field.qty"
-                placeholder="Masukkan Jumlah Volume"
+                v-bind="money"
                 class="form-control"
+              ></money> -->
+              <input
+                class="form-control"
+                v-model.lazy="field.qty"
+                v-money="{}"
               />
+            </div>
+
+            <div class="form-group" v-show="show_rate">
+              <label>Rate</label>
+              <input
+                class="form-control"
+                v-model.lazy="field.flexrate"
+                v-money="{ prefix: 'Rp ', precision: 2 }"
+              />
+              <!-- <money
+                v-model="field.flexrate"
+                v-bind="money"
+                precision="2"
+                prefix="Rp "
+                class="form-control"
+                readonly
+              ></money> -->
             </div>
 
             <div class="form-group">
@@ -138,6 +159,8 @@ export default {
 
   data() {
     return {
+      show_hk: true,
+      show_rate: false,
       value: undefined,
       //state post
       post: {
@@ -157,8 +180,8 @@ export default {
         activity_id: '',
         activitied_at: '',
         man_days: '',
-        qty: '',
-        flexrate: '',
+        qty: 0.0,
+        flexrate: 0,
         is_mobile: '',
         description: '',
       },
@@ -203,6 +226,18 @@ export default {
         this.afdeling_id = response.data.data.afdeling_id
         this.company_code = response.data.data.company_code
         this.department_code = response.data.data.department_code
+
+        if (response.data.data.activity_name.indexOf('RATE') > 0) {
+          this.show_hk = false
+          this.show_rate = true
+          this.field.man_days = ''
+          this.field.flexrate = response.data.data.flexrate * 100
+        } else {
+          this.show_hk = true
+          this.show_rate = false
+          this.field.flexrate = ''
+        }
+
         this.$nuxt.$loading.start()
         //Dropdown Block
         this.$axios

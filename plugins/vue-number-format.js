@@ -14,4 +14,4 @@ Vue.use(number, {
 })
 
 // register directive v-money and component <money>
-Vue.use(money, { precision: 4 })
+Vue.use(money, { precision: 0 });
