@@ -15,6 +15,16 @@
         <div class="card-body">
           <form @submit.prevent="storePost">
             <div class="form-group">
+              <label>KDKJ</label>
+              <input
+                type="text"
+                v-model="field.activity_description"
+                placeholder=""
+                class="form-control"
+                readonly
+              />
+            </div>
+            <div class="form-group">
               <label>Block</label>
               <multiselect
                 v-model="field.ha_statement_id"
@@ -144,8 +154,7 @@ export default {
   //meta
   head() {
     return {
-      title:
-        'Tambah Post - SantriKoding.com - Belajar Koding Bahasa Indonesia Terlengkap',
+      title: 'Tambah RKH Detail',
     }
   },
 
@@ -184,6 +193,7 @@ export default {
         flexrate: 0,
         is_mobile: '',
         description: '',
+        activity_description: '',
       },
 
       activity_plan_id: '',
@@ -226,6 +236,9 @@ export default {
         this.afdeling_id = response.data.data.afdeling_id
         this.company_code = response.data.data.company_code
         this.department_code = response.data.data.department_code
+        this.field.activity_description =
+          response.data.data.activity_description
+        this.field.activity_id = response.data.data.activity_id
 
         if (response.data.data.activity_name.indexOf('RATE') > 0) {
           this.show_hk = false
@@ -241,7 +254,9 @@ export default {
         this.$nuxt.$loading.start()
         //Dropdown Block
         this.$axios
-          .get(`/api/admin/lov_ha_statement_afdeling/${this.afdeling_id}`)
+          .get(
+            `/api/admin/lov_ha_statement_afdeling/${this.afdeling_id}/${this.field.activity_id}`
+          )
 
           .then((response) => {
             this.ha_statement = response.data.data
