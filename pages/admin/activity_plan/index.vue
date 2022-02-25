@@ -28,7 +28,7 @@
                 class="form-control"
                 v-model="search"
                 @keypress.enter="searchData"
-                placeholder="cari berdasarkan nama tag"
+                placeholder=""
               />
               <div class="input-group-append">
                 <button @click="searchData" class="btn btn-info">
