@@ -19,7 +19,7 @@
               <input
                 type="text"
                 v-model="field.code"
-                placeholder=""
+                placeholder="Masukkan kode PT"
                 class="form-control"
               />
               <div v-if="validation.code" class="mt-2">
@@ -41,19 +41,13 @@
 
             <div class="form-group">
               <label>Active</label>
-              <!-- <input
-                type="text"
-                v-model="field.name"
-                placeholder="Masukkan Nama PT"
-                class="form-control"
-              /> -->
-              <!-- <Dropdown
-                :option="['Y', 'N']"
-                v-on:selected="validateSelection"
-                v-on:filter="getDropdownValues"
-                :disabled="false"
-              ></Dropdown> -->
-              <select v-modelname="" id=""></select>
+              <b-form-select v-model="field.is_active">
+                <b-form-select-option :value="null" disabled
+                  >Pilih status aktif</b-form-select-option
+                >
+                <b-form-select-option value="Y">Ya</b-form-select-option>
+                <b-form-select-option value="N">Tidak</b-form-select-option>
+              </b-form-select>
             </div>
 
             <div class="form-group">
@@ -321,10 +315,7 @@ export default {
         code: '',
         name: '',
         code_sap: '',
-        is_active: [
-          { text: 'Yes', value: 'Y' },
-          { text: 'No', value: 'N' },
-        ],
+        is_active: null,
         created_at: '',
         updated_at: '',
         created_by: '',
