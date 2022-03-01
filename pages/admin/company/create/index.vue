@@ -140,14 +140,6 @@
 
             <div class="form-group"></div>
 
-            <div class="form-group">
-              <label>sbu</label>
-              <b-form-select
-                v-model="field.sbu"
-                :options="field.options2"
-              ></b-form-select>
-            </div>
-
             <button class="btn btn-info mr-1 btn-submit" type="submit">
               <i class="fa fa-paper-plane"></i> SIMPAN
             </button>
@@ -241,19 +233,6 @@ export default {
         updated_at: '',
         created_by: '',
         updated_by: '',
-        sbu: null,
-
-        options: [
-          { value: null, text: 'Pilih Status Aktif', disabled: true },
-          { value: 'Y', text: 'Ya' },
-          { value: 'N', text: 'Tidak' },
-        ],
-        options2: [
-          { value: null, text: 'Pilih sbu', disabled: true },
-          { value: 'A', text: 'A' },
-          { value: 'B', text: 'B' },
-          { value: 'C', text: 'C' },
-        ],
       },
 
       test: '',
@@ -471,6 +450,7 @@ export default {
         })
     },
   },
+
   computed: {
     disabled() {
       return this.state === 'disabled'

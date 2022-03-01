@@ -64,7 +64,7 @@
               <b-button
                 variant="link"
                 size="sm"
-                @click="deletePost(row.item.id)"
+                @click="deletePost(row)"
                 title="Hapus"
                 ><i class="fa fa-trash"></i
               ></b-button>
@@ -153,6 +153,17 @@ export default {
         query: {
           q: this.search,
         },
+      })
+    },
+
+    //deletePost method
+    async deletePost(row) {
+      //delete data post by ID
+      await this.$axios.delete(`/api/admin/company/${row.item.id}`).then(() => {
+        //remove item array by index
+        this.posts.splice(row.index, 1)
+        //feresh data
+        this.$nuxt.refresh()
       })
     },
   },
