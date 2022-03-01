@@ -40,14 +40,6 @@
             </div>
 
             <div class="form-group">
-              <label>Active</label>
-              <b-form-select
-                v-model="field.is_active"
-                :options="field.options"
-              ></b-form-select>
-            </div>
-
-            <div class="form-group">
               <label>Kode SAP</label>
               <input
                 type="text"
@@ -55,6 +47,26 @@
                 placeholder="Masukkan Code SAP"
                 class="form-control"
               />
+            </div>
+
+            <div class="form-group">
+              <label>Aktif?</label>
+              <b-form-select v-model="field.is_active">
+                <b-form-select-option value="Y">Ya</b-form-select-option>
+                <b-form-select-option value="N">Tidak</b-form-select-option>
+              </b-form-select>
+            </div>
+
+            <div class="form-group">
+              <label>SBU?</label>
+              <b-form-select v-model="field.sbu">
+                <b-form-select-option
+                  :value="null"
+                  disabled
+                ></b-form-select-option>
+                <b-form-select-option value="A">Agro</b-form-select-option>
+                <b-form-select-option value="C">Corporate</b-form-select-option>
+              </b-form-select>
             </div>
 
             <div class="form-group">
@@ -72,49 +84,61 @@
                 }}</b-alert>
               </div>
             </div>
-
             <div class="form-group">
-              <label>Tanggal Buat </label>
-              <b-form-datepicker
-                v-model="field.created_at"
-                :date-format-options="{
-                  year: 'numeric',
-                  month: 'short',
-                  day: '2-digit',
-                  weekday: 'short',
-                }"
-              ></b-form-datepicker>
+              <b-row>
+                <b-col>
+                  <label>Tanggal Buat </label>
+                  <b-form-datepicker
+                    v-model="field.created_at"
+                    :date-format-options="{
+                      year: 'numeric',
+                      month: 'short',
+                      day: '2-digit',
+                      weekday: 'short',
+                    }"
+                    :disabled="disabled"
+                  ></b-form-datepicker>
+                </b-col>
+                <b-col
+                  ><label>Pembuat</label>
+                  <input
+                    type="text"
+                    v-model="field.created_by"
+                    class="form-control"
+                    readonly
+                /></b-col>
+              </b-row>
             </div>
 
             <div class="form-group">
-              <label>Pembuat</label>
-              <input
-                type="text"
-                v-model="field.created_by"
-                class="form-control"
-              />
-            </div>
-            <div class="form-group">
-              <label>Tanggal Ubah </label>
-              <b-form-datepicker
-                v-model="field.updated_at"
-                :date-format-options="{
-                  year: 'numeric',
-                  month: 'short',
-                  day: '2-digit',
-                  weekday: 'short',
-                }"
-              ></b-form-datepicker>
+              <b-row>
+                <b-col
+                  ><label>Tanggal Ubah </label>
+
+                  <b-form-datepicker
+                    v-model="field.updated_at"
+                    :date-format-options="{
+                      year: 'numeric',
+                      month: 'short',
+                      day: '2-digit',
+                      weekday: 'short',
+                    }"
+                    :disabled="disabled"
+                  ></b-form-datepicker
+                ></b-col>
+                <b-col>
+                  <label>Pengubah</label>
+                  <input
+                    type="text"
+                    v-model="field.updated_by"
+                    class="form-control"
+                    readonly
+                  />
+                </b-col>
+              </b-row>
             </div>
 
-            <div class="form-group">
-              <label>Pengubah</label>
-              <input
-                type="text"
-                v-model="field.updated_by"
-                class="form-control"
-              />
-            </div>
+            <div class="form-group"></div>
 
             <div class="form-group">
               <label>sbu</label>
@@ -167,6 +191,17 @@ export default {
 
   data() {
     return {
+      is_active: { value: 'Y', text: 'Ya' },
+      options: [
+        { value: 'Y', text: 'Ya' },
+        { value: 'N', text: 'Tidak' },
+      ],
+      sbu: { value: 'A', text: 'Agro' },
+      sbu_options: [
+        { value: 'A', text: 'Agro' },
+        { value: 'C', text: 'Corporate' },
+      ],
+      state: 'disabled',
       show_hk: true,
       show_rate: false,
       price: '',
@@ -200,7 +235,8 @@ export default {
         code: '',
         name: '',
         code_sap: '',
-        is_active: null,
+        sbu: '',
+        is_active: 'Y',
         created_at: '',
         updated_at: '',
         created_by: '',
@@ -245,8 +281,12 @@ export default {
   },
 
   mounted() {
-    // this.field.created_at = this.currentDate()
-    // this.field.updated_at = this.currentDate()
+    this.field.created_at = this.currentDate()
+    this.field.updated_at = this.currentDate()
+    this.field.created_by =
+      this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+    this.field.updated_by =
+      this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
     // this.field.activitied_at = this.currentDate()
     // console.log(this.field.activitied_at)
     //fetching data categories
@@ -304,14 +344,14 @@ export default {
       })
     },
 
-    // currentDate() {
-    //   const current = new Date()
-    //   const date = `${current.getFullYear()}-${
-    //     current.getMonth() + 1
-    //   }-${current.getDate()}`
+    currentDate() {
+      const current = new Date()
+      const date = `${current.getFullYear()}-${
+        current.getMonth() + 1
+      }-${current.getDate()}`
 
-    //   return date
-    // },
+      return date
+    },
 
     // handleFileChange(e) {
     //   //get image
@@ -429,6 +469,14 @@ export default {
           //assign validation
           this.validation = error.response.data
         })
+    },
+  },
+  computed: {
+    disabled() {
+      return this.state === 'disabled'
+    },
+    readonly() {
+      return this.state === 'readonly'
     },
   },
 }
