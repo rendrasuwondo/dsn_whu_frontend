@@ -41,13 +41,17 @@
 
             <div class="form-group">
               <label>Active</label>
-              <b-form-select v-model="field.is_active">
+              <b-form-select
+                v-model="field.is_active"
+                :options="field.options"
+              ></b-form-select>
+              <!-- <b-form-select v-model="field.is_active">
                 <b-form-select-option :value="null" disabled
                   >Pilih status aktif</b-form-select-option
                 >
                 <b-form-select-option value="Y">Ya</b-form-select-option>
                 <b-form-select-option value="N">Tidak</b-form-select-option>
-              </b-form-select>
+              </b-form-select> -->
             </div>
 
             <div class="form-group">
@@ -119,126 +123,6 @@
               />
             </div>
 
-            <div class="form-group">
-              <label>Afdeling</label>
-              <input
-                type="text"
-                v-model="field.afdeling_id"
-                placeholder=""
-                class="form-control"
-                readonly
-              />
-              <div v-if="validation.afdeling" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.afdeling[0]
-                }}</b-alert>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>KDKJ</label>
-              <multiselect
-                v-model="field.activity_id"
-                :options="activity"
-                label="name"
-                track-by="id"
-                :searchable="true"
-                @input="onChange"
-              ></multiselect>
-              <div v-if="validation.activity_id" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.activity_id[0]
-                }}</b-alert>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Tanggal</label>
-              <b-form-datepicker
-                v-model="field.activitied_at"
-                :date-format-options="{
-                  year: 'numeric',
-                  month: 'short',
-                  day: '2-digit',
-                  weekday: 'short',
-                }"
-              ></b-form-datepicker>
-              <div v-if="validation.activitied_at" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.activitied_at[0]
-                }}</b-alert>
-              </div>
-            </div>
-
-            <div class="form-group" v-show="show_hk">
-              <label>HK</label>
-              <!-- <input
-                type="text"
-                v-model="field.man_days"
-                placeholder="Masukkan Jumlah HK"
-                class="form-control"
-              /> -->
-
-              <number
-                class="form-control"
-                placeholder="Masukkan Jumlah HK"
-                v-model="field.man_days"
-                prefix=""
-              ></number>
-            </div>
-
-            <div class="form-group">
-              <label>Volume</label>
-              <!-- <input
-                type="text"
-                v-model="field.qty"
-                placeholder="Masukkan Jumlah Volume"
-                class="form-control"
-              /> -->
-
-              <number
-                class="form-control"
-                placeholder="Masukkan Jumlah Volume"
-                v-model="field.qty"
-                prefix=""
-              ></number>
-            </div>
-
-            <div class="form-group" v-show="show_rate">
-              <label>Rate</label>
-
-              <!--   <input
-                type="text"
-                v-model="price"
-                placeholder="Masukkan Satuan Rate"
-                class="form-control"
-              /> -->
-              <number
-                class="form-control"
-                placeholder="Masukkan Upah / Unit"
-                v-model="field.flexrate"
-                prefix="Rp "
-                precision="2"
-                masked="true"
-              ></number>
-            </div>
-
-            <div class="form-group">
-              <label>Keterangan</label>
-
-              <textarea
-                v-model="field.description"
-                class="form-control"
-                rows="3"
-                placeholder="Masukkan Deskripsi Singkat"
-              ></textarea>
-              <div v-if="validation.description" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.description[0]
-                }}</b-alert>
-              </div>
-            </div>
-
             <button class="btn btn-info mr-1 btn-submit" type="submit">
               <i class="fa fa-paper-plane"></i> SIMPAN
             </button>
@@ -304,13 +188,14 @@ export default {
           masked: false
         }, */
       field: {
-        afdeling_id: this.$auth.user.employee.afdeling_id,
-        activity_id: '',
-        activitied_at: '',
-        man_days: '',
-        qty: '',
-        flexrate: '',
-        is_mobile: '',
+        // afdeling_id: this.$auth.user.employee.afdeling_id,
+        // activity_id: '',
+        // activitied_at: '',
+        // man_days: '',
+        // qty: '',
+        // flexrate: '',
+        // is_mobile: '',
+        id: '',
         description: '',
         code: '',
         name: '',
@@ -320,6 +205,11 @@ export default {
         updated_at: '',
         created_by: '',
         updated_by: '',
+        options: [
+          { value: null, text: 'Pilih Status Aktif', disabled: true },
+          { value: 'Y', text: 'Ya' },
+          { value: 'N', text: 'Tidak' },
+        ],
       },
 
       test: '',
@@ -347,105 +237,105 @@ export default {
   },
 
   mounted() {
-    // this.field.created_at = this.currentDate()
+    this.field.created_at = this.currentDate()
 
-    // this.field.updated_at = this.currentDate()
+    this.field.updated_at = this.currentDate()
 
     this.field.activitied_at = this.currentDate()
 
     console.log(this.field.activitied_at)
 
     //fetching data categories
-    this.$axios
-      .get('/api/admin/lov_activity')
+    // this.$axios
+    //   .get('/api/admin/lov_activity')
 
-      .then((response) => {
-        // this.activity = response.data.data
-        response.data.data.forEach((dt) => {
-          if (dt.activity_group_id == this.$cookies.get('activity_group_id')) {
-            this.activity.push(dt)
-          }
-        })
-      })
+    //   .then((response) => {
+    //     // this.activity = response.data.data
+    //     response.data.data.forEach((dt) => {
+    //       if (dt.activity_group_id == this.$cookies.get('activity_group_id')) {
+    //         this.activity.push(dt)
+    //       }
+    //     })
+    //   })
 
     // console.log(this.$cookies.get('activity_group_id'))
     //fetching data categories
-    this.$axios
-      .get('/api/admin/categories')
+    // this.$axios
+    //   .get('/api/admin/categories')
 
-      .then((response) => {
-        this.categories = response.data.data.data
-        // console.log(response.data.data.data);
-        // //assing response data to state "categories"
-        // response.data.data.data.forEach((dt)=> {
-        //   console.log(dt.name);
-        //   if (dt.name == 'laravel') {
-        //       this.categories.push(dt)
-        //   }
-        // })
-      })
+    //   .then((response) => {
+    //     this.categories = response.data.data.data
+    //     // console.log(response.data.data.data);
+    //     // //assing response data to state "categories"
+    //     // response.data.data.data.forEach((dt)=> {
+    //     //   console.log(dt.name);
+    //     //   if (dt.name == 'laravel') {
+    //     //       this.categories.push(dt)
+    //     //   }
+    //     // })
+    //   })
 
     //fetching data tags
-    this.$axios
-      .get('/api/admin/tags')
+    // this.$axios
+    //   .get('/api/admin/tags')
 
-      .then((response) => {
-        //assing response data to state "tags"
-        this.tags = response.data.data.data
-      })
+    //   .then((response) => {
+    //     //assing response data to state "tags"
+    //     this.tags = response.data.data.data
+    //   })
 
-    console.log(this.$auth.user.employee.afdeling_id)
+    // console.log(this.$auth.user.employee.afdeling_id)
   },
 
   methods: {
-    onChange() {
-      if (this.field.activity_id.activity_name.indexOf('RATE') > 0) {
-        this.show_hk = false
-        this.show_rate = true
-        this.field.man_days = ''
-      } else {
-        this.show_hk = true
-        this.show_rate = false
-        this.field.flexrate = ''
-      }
-    },
-    back() {
-      this.$router.push({
-        name: 'admin-activity_plan',
-        params: { id: this.$route.params.id, r: 1 },
-      })
-    },
+    // onChange() {
+    //   if (this.field.activity_id.activity_name.indexOf('RATE') > 0) {
+    //     this.show_hk = false
+    //     this.show_rate = true
+    //     this.field.man_days = ''
+    //   } else {
+    //     this.show_hk = true
+    //     this.show_rate = false
+    //     this.field.flexrate = ''
+    //   }
+    // },
+    // back() {
+    //   this.$router.push({
+    //     name: 'admin-activity_plan',
+    //     params: { id: this.$route.params.id, r: 1 },
+    //   })
+    // },
 
-    currentDate() {
-      const current = new Date()
-      const date = `${current.getFullYear()}-${
-        current.getMonth() + 1
-      }-${current.getDate()}`
+    // currentDate() {
+    //   const current = new Date()
+    //   const date = `${current.getFullYear()}-${
+    //     current.getMonth() + 1
+    //   }-${current.getDate()}`
 
-      return date
-    },
+    //   return date
+    // },
 
-    handleFileChange(e) {
-      //get image
-      let image = (this.post.image = e.target.files[0])
+    // handleFileChange(e) {
+    //   //get image
+    //   let image = (this.post.image = e.target.files[0])
 
-      //check fileType
-      if (!image.type.match('image.*')) {
-        //if fileType not allowed, then clear value and set null
-        e.target.value = ''
+    //   //check fileType
+    //   if (!image.type.match('image.*')) {
+    //     //if fileType not allowed, then clear value and set null
+    //     e.target.value = ''
 
-        this.post.image = null
+    //     this.post.image = null
 
-        //show sweet alert
-        this.$swal.fire({
-          title: 'OOPS!',
-          text: 'Format File Tidak Didukung!',
-          icon: 'error',
-          showConfirmButton: false,
-          timer: 2000,
-        })
-      }
-    },
+    //     //show sweet alert
+    //     this.$swal.fire({
+    //       title: 'OOPS!',
+    //       text: 'Format File Tidak Didukung!',
+    //       icon: 'error',
+    //       showConfirmButton: false,
+    //       timer: 2000,
+    //     })
+    //   }
+    // },
 
     async storePost() {
       //define formData
@@ -453,36 +343,46 @@ export default {
 
       // console.log(this.field.activitied_at)
 
-      this.value = this.field.activitied_at
+      // this.value = this.field.activitied_at
 
-      formData.append(
-        'id',
-        this.field.activity_id
-          ? this.field.activity_id.id
-          : '' + this.field.afdeling_id + this.field.activitied_at
-      )
-      formData.append('afdeling_id', this.field.afdeling_id)
-      formData.append(
-        'activity_id',
-        this.field.activity_id ? this.field.activity_id.id : ''
-      )
-      formData.append('activitied_at', this.field.activitied_at)
-      formData.append('man_days', this.field.man_days)
-      formData.append('qty', this.field.qty)
-      formData.append('flexrate', this.field.flexrate)
+      // formData.append(
+      //   'id',
+      //   this.field.activity_id
+      //     ? this.field.activity_id.id
+      //     : '' + this.field.afdeling_id + this.field.activitied_at
+      // )
+      // formData.append('afdeling_id', this.field.afdeling_id)
+      // formData.append(
+      //   'activity_id',
+      //   this.field.activity_id ? this.field.activity_id.id : ''
+      // )
+      // formData.append('activitied_at', this.field.activitied_at)
+      // formData.append('man_days', this.field.man_days)
+      // formData.append('qty', this.field.qty)
+      // formData.append('flexrate', this.field.flexrate)
+      // formData.append('description', this.field.description)
+      // formData.append(
+      //   'created_by',
+      //   this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+      // )
+      // formData.append(
+      //   'updated_by',
+      //   this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+      // )
+
+      formData.append('code', this.field.code)
+      formData.append('name', this.field.name)
+      formData.append('is_active', this.field.is_active)
+      formData.append('code_sap', this.field.code_sap)
+      formData.append('created_at', this.field.created_at)
+      formData.append('created_by', this.field.created_by)
+      formData.append('update_at', this.field.update_at)
+      formData.append('udpate_by', this.field.udpate_by)
       formData.append('description', this.field.description)
-      formData.append(
-        'created_by',
-        this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
-      )
-      formData.append(
-        'updated_by',
-        this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
-      )
 
       //sending data to server
       await this.$axios
-        .post('/api/admin/activity_plan', formData)
+        .post('/api/admin/company', formData)
         .then(() => {
           //sweet alert
           this.$swal.fire({
@@ -495,7 +395,7 @@ export default {
 
           //redirect, if success store data
           this.$router.push({
-            name: 'admin-activity_plan',
+            name: 'admin-company',
           })
         })
         .catch((error) => {
@@ -503,6 +403,35 @@ export default {
           this.validation = error.response.data
         })
     },
+
+    // async storePost() {
+    //   // e.preventDefault()
+
+    //   //send data ke Rest API
+    //   await this.$axios
+    //     .post('/api/admin/company', {
+    //       //data yang dikirim ke server
+    //       code: this.field.code,
+    //       name: this.field.name,
+    //       is_active: this.field.is_active,
+    //       code_sap: this.field.code_sap,
+    //       created_at: this.field.created_at,
+    //       updated_at: this.field.updated_at,
+    //       created_by: this.field.created_by,
+    //       updated_by: this.field.updated_by,
+    //       description: this.field.description,
+    //     })
+    //     .then(() => {
+    //       //redirect ke route "company"
+    //       this.$router.push({
+    //         name: 'admin-company',
+    //       })
+    //     })
+    //     .catch((error) => {
+    //       //assign validation
+    //       this.validation = error.response.data
+    //     })
+    // },
   },
 }
 </script>
