@@ -39,26 +39,6 @@
               />
             </div>
 
-<<<<<<< HEAD
-            
-
-=======
-            <div class="form-group">
-              <label>Active</label>
-              <b-form-select
-                v-model="field.is_active"
-                :options="field.options"
-              ></b-form-select>
-              <!-- <b-form-select v-model="field.is_active">
-                <b-form-select-option :value="null" disabled
-                  >Pilih status aktif</b-form-select-option
-                >
-                <b-form-select-option value="Y">Ya</b-form-select-option>
-                <b-form-select-option value="N">Tidak</b-form-select-option>
-              </b-form-select> -->
-            </div>
->>>>>>> 45d26ba87cc603a9cc97ce78ceba860a4ad1c13c
-
             <div class="form-group">
               <label>Kode SAP</label>
               <input
@@ -80,15 +60,14 @@
             <div class="form-group">
               <label>SBU?</label>
               <b-form-select v-model="field.sbu">
-                <b-form-select-option :value="null" disabled
-                  ></b-form-select-option
-                >
+                <b-form-select-option
+                  :value="null"
+                  disabled
+                ></b-form-select-option>
                 <b-form-select-option value="A">Agro</b-form-select-option>
                 <b-form-select-option value="C">Corporate</b-form-select-option>
               </b-form-select>
-          
             </div>
-
 
             <div class="form-group">
               <label>Keterangan</label>
@@ -105,73 +84,62 @@
                 }}</b-alert>
               </div>
             </div>
-
             <div class="form-group">
-              <label>Tanggal Buat </label>
-              <b-form-datepicker
-                v-model="field.created_at"
-                :date-format-options="{
-                  year: 'numeric',
-                  month: 'short',
-                  day: '2-digit',
-                  weekday: 'short',
-                }"
-                :disabled="disabled"
-              ></b-form-datepicker>
-            </div>
-
-            <div class="form-group">
-              <label>Pembuat</label>
-              <input
-                type="text"
-                v-model="field.created_by"
-                class="form-control"
-                readonly
-              />
-            </div>
-            <div class="form-group">
-              <label>Tanggal Ubah </label>
-              
-              <b-form-datepicker
-                v-model="field.updated_at"
-                :date-format-options="{
-                  year: 'numeric',
-                  month: 'short',
-                  day: '2-digit',
-                  weekday: 'short',
-                }"
-                :disabled="disabled"
-              ></b-form-datepicker>
+              <b-row>
+                <b-col>
+                  <label>Tanggal Buat </label>
+                  <b-form-datepicker
+                    v-model="field.created_at"
+                    :date-format-options="{
+                      year: 'numeric',
+                      month: 'short',
+                      day: '2-digit',
+                      weekday: 'short',
+                    }"
+                    :disabled="disabled"
+                  ></b-form-datepicker>
+                </b-col>
+                <b-col
+                  ><label>Pembuat</label>
+                  <input
+                    type="text"
+                    v-model="field.created_by"
+                    class="form-control"
+                    readonly
+                /></b-col>
+              </b-row>
             </div>
 
             <div class="form-group">
-              <label>Pengubah</label>
-              <input
-                type="text"
-                v-model="field.updated_by"
-                class="form-control"
-<<<<<<< HEAD
-                readonly
-              />
+              <b-row>
+                <b-col
+                  ><label>Tanggal Ubah </label>
+
+                  <b-form-datepicker
+                    v-model="field.updated_at"
+                    :date-format-options="{
+                      year: 'numeric',
+                      month: 'short',
+                      day: '2-digit',
+                      weekday: 'short',
+                    }"
+                    :disabled="disabled"
+                  ></b-form-datepicker
+                ></b-col>
+                <b-col>
+                  <label>Pengubah</label>
+                  <input
+                    type="text"
+                    v-model="field.updated_by"
+                    class="form-control"
+                    readonly
+                  />
+                </b-col>
+              </b-row>
             </div>
 
-           
+            <div class="form-group"></div>
 
-           
-
-           
-          
-
-          
-
-           
-          
-
-=======
-              />
-            </div>
-
->>>>>>> 45d26ba87cc603a9cc97ce78ceba860a4ad1c13c
             <button class="btn btn-info mr-1 btn-submit" type="submit">
               <i class="fa fa-paper-plane"></i> SIMPAN
             </button>
@@ -185,9 +153,6 @@
           </form>
         </div>
       </div>
-
-
-   
     </section>
   </div>
 </template>
@@ -218,7 +183,7 @@ export default {
 
   data() {
     return {
-      is_active:{ value: 'Y', text: 'Ya' },
+      is_active: { value: 'Y', text: 'Ya' },
       options: [
         { value: 'Y', text: 'Ya' },
         { value: 'N', text: 'Tidak' },
@@ -300,22 +265,14 @@ export default {
   },
 
   mounted() {
-<<<<<<< HEAD
     this.field.created_at = this.currentDate()
     this.field.updated_at = this.currentDate()
-    this.field.created_by =  this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
-    this.field.updated_by =  this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name 
-
-    this.field.activitied_at = this.currentDate()
-
-    
-
-=======
-    // this.field.created_at = this.currentDate()
-    // this.field.updated_at = this.currentDate()
+    this.field.created_by =
+      this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+    this.field.updated_by =
+      this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
     // this.field.activitied_at = this.currentDate()
     // console.log(this.field.activitied_at)
->>>>>>> 45d26ba87cc603a9cc97ce78ceba860a4ad1c13c
     //fetching data categories
     // this.$axios
     //   .get('/api/admin/lov_activity')
@@ -353,57 +310,6 @@ export default {
   },
 
   methods: {
-<<<<<<< HEAD
-    
-    onChange() {
-      if (this.field.activity_id.activity_name.indexOf('RATE') > 0) {
-        this.show_hk = false
-        this.show_rate = true
-        this.field.man_days = ''
-      } else {
-        this.show_hk = true
-        this.show_rate = false
-        this.field.flexrate = ''
-      }
-    },
-    back() {
-      this.$router.push({
-        name: 'admin-activity_plan',
-        params: { id: this.$route.params.id, r: 1 },
-      })
-    },
-
-    currentDate() {
-      const current = new Date()
-      const date = `${current.getFullYear()}-${
-        current.getMonth() + 1
-      }-${current.getDate()}`
-
-      return date
-    },
-
-    handleFileChange(e) {
-      //get image
-      let image = (this.post.image = e.target.files[0])
-
-      //check fileType
-      if (!image.type.match('image.*')) {
-        //if fileType not allowed, then clear value and set null
-        e.target.value = ''
-
-        this.post.image = null
-
-        //show sweet alert
-        this.$swal.fire({
-          title: 'OOPS!',
-          text: 'Format File Tidak Didukung!',
-          icon: 'error',
-          showConfirmButton: false,
-          timer: 2000,
-        })
-      }
-    },
-=======
     // onChange() {
     //   if (this.field.activity_id.activity_name.indexOf('RATE') > 0) {
     //     this.show_hk = false
@@ -422,14 +328,14 @@ export default {
     //   })
     // },
 
-    // currentDate() {
-    //   const current = new Date()
-    //   const date = `${current.getFullYear()}-${
-    //     current.getMonth() + 1
-    //   }-${current.getDate()}`
+    currentDate() {
+      const current = new Date()
+      const date = `${current.getFullYear()}-${
+        current.getMonth() + 1
+      }-${current.getDate()}`
 
-    //   return date
-    // },
+      return date
+    },
 
     // handleFileChange(e) {
     //   //get image
@@ -452,7 +358,6 @@ export default {
     //     })
     //   }
     // },
->>>>>>> 45d26ba87cc603a9cc97ce78ceba860a4ad1c13c
 
     async storePost() {
       //define formData
@@ -551,17 +456,14 @@ export default {
     },
   },
   computed: {
-      disabled() {
-        return this.state === 'disabled'
-      },
-      readonly() {
-        return this.state === 'readonly'
-      }
-    }
+    disabled() {
+      return this.state === 'disabled'
+    },
+    readonly() {
+      return this.state === 'readonly'
+    },
+  },
 }
-
-
-
 </script>
 
 <style>
