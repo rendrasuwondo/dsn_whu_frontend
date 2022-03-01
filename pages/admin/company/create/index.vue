@@ -321,12 +321,12 @@ export default {
     //     this.field.flexrate = ''
     //   }
     // },
-    // back() {
-    //   this.$router.push({
-    //     name: 'admin-activity_plan',
-    //     params: { id: this.$route.params.id, r: 1 },
-    //   })
-    // },
+    back() {
+      this.$router.push({
+        name: 'admin-activity_plan',
+        params: { id: this.$route.params.id, r: 1 },
+      })
+    },
 
     currentDate() {
       const current = new Date()
