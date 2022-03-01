@@ -45,13 +45,6 @@
                 v-model="field.is_active"
                 :options="field.options"
               ></b-form-select>
-              <!-- <b-form-select v-model="field.is_active">
-                <b-form-select-option :value="null" disabled
-                  >Pilih status aktif</b-form-select-option
-                >
-                <b-form-select-option value="Y">Ya</b-form-select-option>
-                <b-form-select-option value="N">Tidak</b-form-select-option>
-              </b-form-select> -->
             </div>
 
             <div class="form-group">
@@ -121,6 +114,14 @@
                 v-model="field.updated_by"
                 class="form-control"
               />
+            </div>
+
+            <div class="form-group">
+              <label>sbu</label>
+              <b-form-select
+                v-model="field.sbu"
+                :options="field.options2"
+              ></b-form-select>
             </div>
 
             <button class="btn btn-info mr-1 btn-submit" type="submit">
@@ -204,10 +205,18 @@ export default {
         updated_at: '',
         created_by: '',
         updated_by: '',
+        sbu: null,
+
         options: [
           { value: null, text: 'Pilih Status Aktif', disabled: true },
           { value: 'Y', text: 'Ya' },
           { value: 'N', text: 'Tidak' },
+        ],
+        options2: [
+          { value: null, text: 'Pilih sbu', disabled: true },
+          { value: 'A', text: 'A' },
+          { value: 'B', text: 'B' },
+          { value: 'C', text: 'C' },
         ],
       },
 
@@ -288,12 +297,12 @@ export default {
     //     this.field.flexrate = ''
     //   }
     // },
-    // back() {
-    //   this.$router.push({
-    //     name: 'admin-activity_plan',
-    //     params: { id: this.$route.params.id, r: 1 },
-    //   })
-    // },
+    back() {
+      this.$router.push({
+        name: 'admin-company',
+        params: { id: this.$route.params.id, r: 1 },
+      })
+    },
 
     // currentDate() {
     //   const current = new Date()
