@@ -39,22 +39,8 @@
               />
             </div>
 
-            <div class="form-group">
-              <label>Active</label>
-              <!-- <input
-                type="text"
-                v-model="field.name"
-                placeholder="Masukkan Nama PT"
-                class="form-control"
-              /> -->
-              <!-- <Dropdown
-                :option="['Y', 'N']"
-                v-on:selected="validateSelection"
-                v-on:filter="getDropdownValues"
-                :disabled="false"
-              ></Dropdown> -->
-              <select v-modelname="" id=""></select>
-            </div>
+            
+
 
             <div class="form-group">
               <label>Kode SAP</label>
@@ -65,6 +51,27 @@
                 class="form-control"
               />
             </div>
+
+            <div class="form-group">
+              <label>Aktif?</label>
+              <b-form-select v-model="field.is_active">
+                <b-form-select-option value="Y">Ya</b-form-select-option>
+                <b-form-select-option value="N">Tidak</b-form-select-option>
+              </b-form-select>
+            </div>
+
+            <div class="form-group">
+              <label>SBU?</label>
+              <b-form-select v-model="field.sbu">
+                <b-form-select-option :value="null" disabled
+                  ></b-form-select-option
+                >
+                <b-form-select-option value="A">Agro</b-form-select-option>
+                <b-form-select-option value="C">Corporate</b-form-select-option>
+              </b-form-select>
+          
+            </div>
+
 
             <div class="form-group">
               <label>Keterangan</label>
@@ -92,6 +99,7 @@
                   day: '2-digit',
                   weekday: 'short',
                 }"
+                :disabled="disabled"
               ></b-form-datepicker>
             </div>
 
@@ -101,10 +109,12 @@
                 type="text"
                 v-model="field.created_by"
                 class="form-control"
+                readonly
               />
             </div>
             <div class="form-group">
               <label>Tanggal Ubah </label>
+              
               <b-form-datepicker
                 v-model="field.updated_at"
                 :date-format-options="{
@@ -113,6 +123,7 @@
                   day: '2-digit',
                   weekday: 'short',
                 }"
+                :disabled="disabled"
               ></b-form-datepicker>
             </div>
 
@@ -122,128 +133,21 @@
                 type="text"
                 v-model="field.updated_by"
                 class="form-control"
-              />
-            </div>
-
-            <div class="form-group">
-              <label>Afdeling</label>
-              <input
-                type="text"
-                v-model="field.afdeling_id"
-                placeholder=""
-                class="form-control"
                 readonly
               />
-              <div v-if="validation.afdeling" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.afdeling[0]
-                }}</b-alert>
-              </div>
             </div>
 
-            <div class="form-group">
-              <label>KDKJ</label>
-              <multiselect
-                v-model="field.activity_id"
-                :options="activity"
-                label="name"
-                track-by="id"
-                :searchable="true"
-                @input="onChange"
-              ></multiselect>
-              <div v-if="validation.activity_id" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.activity_id[0]
-                }}</b-alert>
-              </div>
-            </div>
+           
 
-            <div class="form-group">
-              <label>Tanggal</label>
-              <b-form-datepicker
-                v-model="field.activitied_at"
-                :date-format-options="{
-                  year: 'numeric',
-                  month: 'short',
-                  day: '2-digit',
-                  weekday: 'short',
-                }"
-              ></b-form-datepicker>
-              <div v-if="validation.activitied_at" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.activitied_at[0]
-                }}</b-alert>
-              </div>
-            </div>
+           
 
-            <div class="form-group" v-show="show_hk">
-              <label>HK</label>
-              <!-- <input
-                type="text"
-                v-model="field.man_days"
-                placeholder="Masukkan Jumlah HK"
-                class="form-control"
-              /> -->
+           
+          
 
-              <number
-                class="form-control"
-                placeholder="Masukkan Jumlah HK"
-                v-model="field.man_days"
-                prefix=""
-              ></number>
-            </div>
+          
 
-            <div class="form-group">
-              <label>Volume</label>
-              <!-- <input
-                type="text"
-                v-model="field.qty"
-                placeholder="Masukkan Jumlah Volume"
-                class="form-control"
-              /> -->
-
-              <number
-                class="form-control"
-                placeholder="Masukkan Jumlah Volume"
-                v-model="field.qty"
-                prefix=""
-              ></number>
-            </div>
-
-            <div class="form-group" v-show="show_rate">
-              <label>Rate</label>
-
-              <!--   <input
-                type="text"
-                v-model="price"
-                placeholder="Masukkan Satuan Rate"
-                class="form-control"
-              /> -->
-              <number
-                class="form-control"
-                placeholder="Masukkan Upah / Unit"
-                v-model="field.flexrate"
-                prefix="Rp "
-                precision="2"
-                masked="true"
-              ></number>
-            </div>
-
-            <div class="form-group">
-              <label>Keterangan</label>
-
-              <textarea
-                v-model="field.description"
-                class="form-control"
-                rows="3"
-                placeholder="Masukkan Deskripsi Singkat"
-              ></textarea>
-              <div v-if="validation.description" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.description[0]
-                }}</b-alert>
-              </div>
-            </div>
+           
+          
 
             <button class="btn btn-info mr-1 btn-submit" type="submit">
               <i class="fa fa-paper-plane"></i> SIMPAN
@@ -258,6 +162,9 @@
           </form>
         </div>
       </div>
+
+
+   
     </section>
   </div>
 </template>
@@ -288,6 +195,17 @@ export default {
 
   data() {
     return {
+      is_active:{ value: 'Y', text: 'Ya' },
+      options: [
+        { value: 'Y', text: 'Ya' },
+        { value: 'N', text: 'Tidak' },
+      ],
+      sbu: { value: 'A', text: 'Agro' },
+      sbu_options: [
+        { value: 'A', text: 'Agro' },
+        { value: 'C', text: 'Corporate' },
+      ],
+      state: 'disabled',
       show_hk: true,
       show_rate: false,
       price: '',
@@ -321,10 +239,8 @@ export default {
         code: '',
         name: '',
         code_sap: '',
-        is_active: [
-          { text: 'Yes', value: 'Y' },
-          { text: 'No', value: 'N' },
-        ],
+        sbu: '',
+        is_active: 'Y',
         created_at: '',
         updated_at: '',
         created_by: '',
@@ -356,13 +272,14 @@ export default {
   },
 
   mounted() {
-    // this.field.created_at = this.currentDate()
-
-    // this.field.updated_at = this.currentDate()
+    this.field.created_at = this.currentDate()
+    this.field.updated_at = this.currentDate()
+    this.field.created_by =  this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+    this.field.updated_by =  this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name 
 
     this.field.activitied_at = this.currentDate()
 
-    console.log(this.field.activitied_at)
+    
 
     //fetching data categories
     this.$axios
@@ -407,6 +324,7 @@ export default {
   },
 
   methods: {
+    
     onChange() {
       if (this.field.activity_id.activity_name.indexOf('RATE') > 0) {
         this.show_hk = false
@@ -513,7 +431,18 @@ export default {
         })
     },
   },
+  computed: {
+      disabled() {
+        return this.state === 'disabled'
+      },
+      readonly() {
+        return this.state === 'readonly'
+      }
+    }
 }
+
+
+
 </script>
 
 <style>

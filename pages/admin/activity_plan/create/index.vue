@@ -31,7 +31,7 @@
             </div>
 
             <div class="form-group">
-              <label>KDKJ</label>
+                          <label>KDKJ</label>
               <multiselect
                 v-model="field.activity_id"
                 :options="activity"
@@ -57,6 +57,7 @@
                   day: '2-digit',
                   weekday: 'short',
                 }"
+                :disabled="disabled"
               ></b-form-datepicker>
               <div v-if="validation.activitied_at" class="mt-2">
                 <b-alert show variant="danger">{{
@@ -177,6 +178,14 @@ export default {
 
   data() {
     return {
+      value: '',
+      options: [
+        { name: 'Vue.js', language: 'JavaScript' },
+        { name: 'Rails', language: 'Ruby' },
+        { name: 'Sinatra', language: 'Ruby' },
+        { name: 'Laravel', language: 'PHP', $isDisabled: true },
+        { name: 'Phoenix', language: 'Elixir' }
+      ],
       show_hk: true,
       show_rate: false,
       price: '',
@@ -387,6 +396,14 @@ export default {
         })
     },
   },
+  computed: {
+      disabled() {
+        return this.state === 'disabled'
+      },
+      readonly() {
+        return this.state === 'readonly'
+      }
+    }
 }
 </script>
 

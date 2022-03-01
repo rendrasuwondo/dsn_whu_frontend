@@ -50,9 +50,9 @@
             :fields="fields"
             show-empty
           >
-            <template v-slot:cell(comments)="row">
+            <!-- <template v-slot:cell(comments)="row">
               <i class="fa fa-comments"></i> {{ row.item.comments.length }}
-            </template>
+            </template> -->
             <template v-slot:cell(actions)="row">
               <b-button
                 :to="{
