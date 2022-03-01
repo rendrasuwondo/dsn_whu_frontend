@@ -13,7 +13,7 @@
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
-          <form @submit.prevent="storePost">
+          <form @submit.prevent="storeP">
             <div class="form-group">
               <label>Kode</label>
               <input
@@ -195,7 +195,6 @@ export default {
         // qty: '',
         // flexrate: '',
         // is_mobile: '',
-        id: '',
         description: '',
         code: '',
         name: '',
@@ -237,18 +236,13 @@ export default {
   },
 
   mounted() {
-    this.field.created_at = this.currentDate()
-
-    this.field.updated_at = this.currentDate()
-
-    this.field.activitied_at = this.currentDate()
-
-    console.log(this.field.activitied_at)
-
+    // this.field.created_at = this.currentDate()
+    // this.field.updated_at = this.currentDate()
+    // this.field.activitied_at = this.currentDate()
+    // console.log(this.field.activitied_at)
     //fetching data categories
     // this.$axios
     //   .get('/api/admin/lov_activity')
-
     //   .then((response) => {
     //     // this.activity = response.data.data
     //     response.data.data.forEach((dt) => {
@@ -257,12 +251,10 @@ export default {
     //       }
     //     })
     //   })
-
     // console.log(this.$cookies.get('activity_group_id'))
     //fetching data categories
     // this.$axios
     //   .get('/api/admin/categories')
-
     //   .then((response) => {
     //     this.categories = response.data.data.data
     //     // console.log(response.data.data.data);
@@ -274,16 +266,13 @@ export default {
     //     //   }
     //     // })
     //   })
-
     //fetching data tags
     // this.$axios
     //   .get('/api/admin/tags')
-
     //   .then((response) => {
     //     //assing response data to state "tags"
     //     this.tags = response.data.data.data
     //   })
-
     // console.log(this.$auth.user.employee.afdeling_id)
   },
 
@@ -404,34 +393,34 @@ export default {
         })
     },
 
-    // async storePost() {
-    //   // e.preventDefault()
+    async storeP(e) {
+      e.preventDefault()
 
-    //   //send data ke Rest API
-    //   await this.$axios
-    //     .post('/api/admin/company', {
-    //       //data yang dikirim ke server
-    //       code: this.field.code,
-    //       name: this.field.name,
-    //       is_active: this.field.is_active,
-    //       code_sap: this.field.code_sap,
-    //       created_at: this.field.created_at,
-    //       updated_at: this.field.updated_at,
-    //       created_by: this.field.created_by,
-    //       updated_by: this.field.updated_by,
-    //       description: this.field.description,
-    //     })
-    //     .then(() => {
-    //       //redirect ke route "company"
-    //       this.$router.push({
-    //         name: 'admin-company',
-    //       })
-    //     })
-    //     .catch((error) => {
-    //       //assign validation
-    //       this.validation = error.response.data
-    //     })
-    // },
+      //send data ke Rest API
+      await this.$axios
+        .post('/api/admin/company', {
+          //data yang dikirim ke server
+          code: this.field.code,
+          name: this.field.name,
+          is_active: this.field.is_active,
+          code_sap: this.field.code_sap,
+          created_at: this.field.created_at,
+          updated_at: this.field.updated_at,
+          created_by: this.field.created_by,
+          updated_by: this.field.updated_by,
+          description: this.field.description,
+        })
+        .then(() => {
+          //redirect ke route "company"
+          this.$router.push({
+            name: 'admin-company',
+          })
+        })
+        .catch((error) => {
+          //assign validation
+          this.validation = error.response.data
+        })
+    },
   },
 }
 </script>
