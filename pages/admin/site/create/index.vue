@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-book-open"></i> TAMBAH PT
+            <i class="nav-icon fas fa-book-open"></i> TAMBAH SITE
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -19,7 +19,7 @@
               <input
                 type="text"
                 v-model="field.code"
-                placeholder="Masukkan kode PT"
+                placeholder="Masukkan kode Site"
                 class="form-control"
               />
               <div v-if="validation.code" class="mt-2">
@@ -34,7 +34,7 @@
               <input
                 type="text"
                 v-model="field.name"
-                placeholder="Masukkan Nama PT"
+                placeholder="Masukkan Nama Site"
                 class="form-control"
               />
               <div v-if="validation.name" class="mt-2">
@@ -45,32 +45,10 @@
             </div>
 
             <div class="form-group">
-              <label>Kode SAP</label>
-              <input
-                type="text"
-                v-model="field.code_sap"
-                placeholder="Masukkan Code SAP"
-                class="form-control"
-              />
-            </div>
-
-            <div class="form-group">
               <label>Aktif?</label>
               <b-form-select v-model="field.is_active">
                 <b-form-select-option value="Y">Ya</b-form-select-option>
                 <b-form-select-option value="N">Tidak</b-form-select-option>
-              </b-form-select>
-            </div>
-
-            <div class="form-group">
-              <label>SBU?</label>
-              <b-form-select v-model="field.sbu">
-                <b-form-select-option
-                  :value="null"
-                  disabled
-                ></b-form-select-option>
-                <b-form-select-option value="A">Agro</b-form-select-option>
-                <b-form-select-option value="C">Corporate</b-form-select-option>
               </b-form-select>
             </div>
 
@@ -173,7 +151,7 @@ export default {
   //meta
   head() {
     return {
-      title: 'Tambah PT',
+      title: 'Tambah Site',
     }
   },
 
@@ -193,11 +171,7 @@ export default {
         { value: 'Y', text: 'Ya' },
         { value: 'N', text: 'Tidak' },
       ],
-      sbu: { value: 'A', text: 'Agro' },
-      sbu_options: [
-        { value: 'A', text: 'Agro' },
-        { value: 'C', text: 'Corporate' },
-      ],
+
       state: 'disabled',
       show_hk: true,
       show_rate: false,
@@ -208,8 +182,7 @@ export default {
         description: '',
         code: '',
         name: '',
-        code_sap: '',
-        sbu: 'A',
+        description: '',
         is_active: 'Y',
         created_at: '',
         updated_at: '',
@@ -300,7 +273,7 @@ export default {
     // },
     back() {
       this.$router.push({
-        name: 'admin-company',
+        name: 'admin-site',
         params: { id: this.$route.params.id, r: 1 },
       })
     },
@@ -336,6 +309,7 @@ export default {
     //   }
     // },
 
+    // methods create
     async storeP() {
       //define formData
       let formData = new FormData()
@@ -343,13 +317,11 @@ export default {
       formData.append('code', this.field.code)
       formData.append('name', this.field.name)
       formData.append('is_active', this.field.is_active)
-      formData.append('code_sap', this.field.code_sap)
+      formData.append('description', this.field.description)
       formData.append('created_at', this.field.created_at)
       formData.append('created_by', this.field.created_by)
       formData.append('update_at', this.field.update_at)
       formData.append('udpate_by', this.field.udpate_by)
-      formData.append('description', this.field.description)
-      formData.append('sbu', this.field.sbu)
 
       //sending data to server
       await this.$axios

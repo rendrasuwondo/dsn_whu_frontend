@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-book-open"></i> PT
+            <i class="nav-icon fas fa-map-marker-alt"></i> Site
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -17,7 +17,7 @@
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <nuxt-link
-                  :to="{ name: 'admin-company-create' }"
+                  :to="{ name: 'admin-site-create' }"
                   class="btn btn-info btn-sm"
                   style="padding-top: 8px"
                   ><i class="fa fa-plus-circle"></i> TAMBAH</nuxt-link
@@ -52,7 +52,7 @@
             <template v-slot:cell(actions)="row">
               <b-button
                 :to="{
-                  name: 'admin-company-edit-id',
+                  name: 'admin-site-edit-id',
                   params: { id: row.item.id },
                 }"
                 variant="link"
@@ -91,7 +91,7 @@ export default {
 
   head() {
     return {
-      title: 'PT',
+      title: 'Site',
     }
   },
   data() {
@@ -125,9 +125,7 @@ export default {
     let search = query.q ? query.q : ''
 
     //fetching posts
-    const posts = await $axios.$get(
-      `/api/admin/company?q=${search}&page=${page}`
-    )
+    const posts = await $axios.$get(`/api/admin/site?q=${search}&page=${page}`)
 
     return {
       posts: posts.data.data,
@@ -173,7 +171,7 @@ export default {
           if (result.isConfirmed) {
             //delete tag from server
 
-            this.$axios.delete(`/api/admin/company/${id}`).then(() => {
+            this.$axios.delete(`/api/admin/site/${id}`).then(() => {
               //feresh data
               this.$nuxt.refresh()
 
