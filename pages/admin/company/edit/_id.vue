@@ -13,7 +13,7 @@
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
-          <form @submit.prevent="updatePT">
+          <form @submit.prevent="update">
             <div class="form-group">
               <label>Kode</label>
               <input
@@ -22,6 +22,11 @@
                 placeholder=""
                 class="form-control"
               />
+              <!-- <div v-if="validation.code" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.code[0]
+                }}</b-alert>
+              </div> -->
             </div>
 
             <div class="form-group">
@@ -32,14 +37,11 @@
                 placeholder=""
                 class="form-control"
               />
-            </div>
-
-            <div class="form-group">
-              <label>Active</label>
-              <b-form-select
-                v-model="field.is_active"
-                :options="field.options"
-              ></b-form-select>
+              <!-- <div v-if="validation.name" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.name[0]
+                }}</b-alert>
+              </div> -->
             </div>
 
             <div class="form-group">
@@ -53,7 +55,24 @@
             </div>
 
             <div class="form-group">
+              <label>Aktif?</label>
+              <b-form-select v-model="field.is_active">
+                <b-form-select-option value="Y">Ya</b-form-select-option>
+                <b-form-select-option value="N">Tidak</b-form-select-option>
+              </b-form-select>
+            </div>
+
+            <div class="form-group">
+              <label>SBU?</label>
+              <b-form-select v-model="field.sbu">
+                <b-form-select-option value="A">Agro</b-form-select-option>
+                <b-form-select-option value="C">Corporate</b-form-select-option>
+              </b-form-select>
+            </div>
+
+            <div class="form-group">
               <label>Keterangan</label>
+
               <textarea
                 v-model="field.description"
                 class="form-control"
@@ -66,58 +85,59 @@
                 }}</b-alert>
               </div>
             </div>
-
             <div class="form-group">
-              <label>Tanggal Buat </label>
-              <b-form-datepicker
-                v-model="field.created_at"
-                :date-format-options="{
-                  year: 'numeric',
-                  month: 'short',
-                  day: '2-digit',
-                  weekday: 'short',
-                }"
-              ></b-form-datepicker>
+              <b-row>
+                <b-col>
+                  <label>Tanggal Buat </label>
+                  <b-form-datepicker
+                    v-model="field.created_at"
+                    :date-format-options="{
+                      year: 'numeric',
+                      month: 'short',
+                      day: '2-digit',
+                      weekday: 'short',
+                    }"
+                    :disabled="disabled"
+                  ></b-form-datepicker>
+                </b-col>
+                <b-col
+                  ><label>Pembuat</label>
+                  <input
+                    type="text"
+                    v-model="field.created_by"
+                    class="form-control"
+                    readonly
+                /></b-col>
+              </b-row>
             </div>
 
             <div class="form-group">
-              <label>Pembuat</label>
-              <input
-                type="text"
-                v-model="field.created_by"
-                class="form-control"
-              />
-            </div>
-            <div class="form-group">
-              <label>Tanggal Ubah </label>
-              <b-form-datepicker
-                v-model="field.updated_at"
-                :date-format-options="{
-                  year: 'numeric',
-                  month: 'short',
-                  day: '2-digit',
-                  weekday: 'short',
-                }"
-              ></b-form-datepicker>
-            </div>
+              <b-row>
+                <b-col
+                  ><label>Tanggal Ubah </label>
 
-            <div class="form-group">
-              <label>Pengubah</label>
-              <input
-                type="text"
-                v-model="field.updated_by"
-                class="form-control"
-              />
+                  <b-form-datepicker
+                    v-model="field.updated_at"
+                    :date-format-options="{
+                      year: 'numeric',
+                      month: 'short',
+                      day: '2-digit',
+                      weekday: 'short',
+                    }"
+                    :disabled="disabled"
+                  ></b-form-datepicker
+                ></b-col>
+                <b-col>
+                  <label>Pengubah</label>
+                  <input
+                    type="text"
+                    v-model="field.updated_by"
+                    class="form-control"
+                    readonly
+                  />
+                </b-col>
+              </b-row>
             </div>
-
-            <div class="form-group">
-              <label>sbu</label>
-              <b-form-select
-                v-model="field.sbu"
-                :options="field.options2"
-              ></b-form-select>
-            </div>
-
             <button class="btn btn-info mr-1 btn-submit" type="submit">
               <i class="fa fa-paper-plane"></i> SIMPAN
             </button>
@@ -148,6 +168,14 @@ export default {
 
   data() {
     return {
+      options: [
+        { value: 'Y', text: 'Ya' },
+        { value: 'N', text: 'Tidak' },
+      ],
+      sbu_options: [
+        { value: 'A', text: 'Agro' },
+        { value: 'C', text: 'Corporate' },
+      ],
       price: '',
       show_hk: true,
       show_rate: false,
@@ -168,18 +196,6 @@ export default {
         created_by: '',
         updated_by: '',
         sbu: '',
-
-        options: [
-          { value: null, text: 'Pilih Status Aktif', disabled: true },
-          { value: 'Y', text: 'Ya' },
-          { value: 'N', text: 'Tidak' },
-        ],
-        options2: [
-          { value: null, text: 'Pilih sbu', disabled: true },
-          { value: 'A', text: 'A' },
-          { value: 'B', text: 'B' },
-          { value: 'C', text: 'C' },
-        ],
       },
 
       activity: [],
@@ -193,6 +209,7 @@ export default {
     this.$axios
       .get(`/api/admin/company/${this.$route.params.id}`)
       .then((response) => {
+        //data yang diambil
         this.field.code = response.data.data.code
         this.field.name = response.data.data.name
         this.field.code_sap = response.data.data.code_sap
@@ -214,7 +231,8 @@ export default {
       })
     },
 
-    async updatePT(e) {
+    // update method
+    async update(e) {
       e.preventDefault()
 
       //send data ke Rest API untuk update
@@ -230,6 +248,7 @@ export default {
           created_by: this.field.created_by,
           updated_by: this.field.updated_by,
           description: this.field.description,
+          sbu: this.field.sbu,
         })
         .then(() => {
           //redirect ke route "post"
@@ -242,6 +261,46 @@ export default {
           this.validation = error.response.data
         })
     },
+
+    // async update() {
+    //   //define formData
+    //   let formData = new FormData()
+
+    //   formData.append('code', this.$auth.user.employee.code)
+    //   formData.append('name', this.$auth.user.employee.name)
+    //   formData.append('is_active', this.$auth.user.employee.is_active)
+    //   formData.append('sbu', this.$auth.user.employee.sbu)
+    //   formData.append('code_sap', this.$auth.user.employee.code_sap)
+    //   formData.append('created_at', this.$auth.user.employee.created_at)
+    //   formData.append('created_by', this.$auth.user.employee.created_by)
+    //   formData.append('updated_at', this.$auth.user.employee.updated_at)
+    //   formData.append('updated_by', this.$auth.user.employee.updated_by)
+    //   formData.append('description', this.$auth.user.employee.description)
+    //   // formData.append('_method', 'PATCH')
+
+    //   //sending data to server
+    //   await this.$axios
+    //     .put(`/api/admin/company/${this.$route.params.id}`, formData)
+    //     .then(() => {
+    //       //sweet alert
+    //       this.$swal.fire({
+    //         title: 'BERHASIL!',
+    //         text: 'Data Berhasil Diupdate!',
+    //         icon: 'success',
+    //         showConfirmButton: false,
+    //         timer: 2000,
+    //       })
+
+    //       //redirect, if success update data
+    //       this.$router.push({
+    //         name: 'admin-company',
+    //       })
+    //     })
+    //     .catch((error) => {
+    //       //assign error to state "validation"
+    //       this.validation = error.response.data
+    //     })
+    // },
   },
 }
 </script>

@@ -37,6 +37,11 @@
                 placeholder="Masukkan Nama PT"
                 class="form-control"
               />
+              <div v-if="validation.name" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.name[0]
+                }}</b-alert>
+              </div>
             </div>
 
             <div class="form-group">
@@ -60,10 +65,6 @@
             <div class="form-group">
               <label>SBU?</label>
               <b-form-select v-model="field.sbu">
-                <b-form-select-option
-                  :value="null"
-                  disabled
-                ></b-form-select-option>
                 <b-form-select-option value="A">Agro</b-form-select-option>
                 <b-form-select-option value="C">Corporate</b-form-select-option>
               </b-form-select>
@@ -227,7 +228,7 @@ export default {
         code: '',
         name: '',
         code_sap: '',
-        sbu: '',
+        sbu: 'A',
         is_active: 'Y',
         created_at: '',
         updated_at: '',

@@ -64,7 +64,7 @@
               <b-button
                 variant="link"
                 size="sm"
-                @click="deletePost(row)"
+                @click="deletePost(row.item.id)"
                 title="Hapus"
                 ><i class="fa fa-trash"></i
               ></b-button>
@@ -157,15 +157,48 @@ export default {
     },
 
     //deletePost method
-    async deletePost(row) {
+    async deletePost(id) {
       //delete data post by ID
-      await this.$axios.delete(`/api/admin/company/${row.item.id}`).then(() => {
+      await this.$axios.delete(`/api/admin/company/${id}`).then(() => {
         //remove item array by index
-        this.posts.splice(row.index, 1)
         //feresh data
         this.$nuxt.refresh()
       })
     },
+
+    // deletePost(id) {
+    //   this.$swal
+    //     .fire({
+    //       title: 'APAKAH ANDA YAKIN ?',
+    //       text: 'INGIN MENGHAPUS DATA INI !',
+    //       icon: 'warning',
+    //       showCancelButton: true,
+    //       confirmButtonColor: '#d33',
+    //       cancelButtonColor: '#3085d6',
+    //       confirmButtonText: 'YA, HAPUS!',
+    //       cancelButtonText: 'TIDAK',
+    //     })
+    //     .then((result) => {
+    //       if (result.isConfirmed) {
+    //         //delete tag from server
+
+    //         this.$axios.delete(`/api/admin/company/${id}`).then(() => {
+    //           this.posts.splice(id.index, 1)
+    //           //feresh data
+    //           this.$nuxt.refresh()
+
+    //           //alert
+    //           this.$swal.fire({
+    //             title: 'BERHASIL!',
+    //             text: 'Data Berhasil Dihapus!',
+    //             icon: 'success',
+    //             showConfirmButton: false,
+    //             timer: 2000,
+    //           })
+    //         })
+    //       }
+    //     })
+    // },
   },
 }
 </script>
