@@ -17,7 +17,9 @@
       </div>
       <form @submit.prevent="login">
         <div class="form-group">
-          <label class="font-weight-bold text-uppercase">User</label>
+          <label class="font-weight-bold text-uppercase"
+            ><i class="fas fa-user-alt"></i> User</label
+          >
           <input
             type="text"
             v-model="user.user_name"
@@ -32,7 +34,9 @@
         </div>
 
         <div class="form-group">
-          <label class="font-weight-bold text-uppercase">Password</label>
+          <label class="font-weight-bold text-uppercase"
+            ><i class="fas fa-lock"></i> Password</label
+          >
           <input
             type="password"
             v-model="user.password"
@@ -91,7 +95,11 @@ export default {
           this.$axios.get('/api/admin/profile').then((response) => {
             response.data.data.forEach((dt) => {
               this.$cookies.set('activity_group_id', dt.activity_group_id, {})
-              this.$cookies.set('activity_group_code', dt.activity_group_code, {})
+              this.$cookies.set(
+                'activity_group_code',
+                dt.activity_group_code,
+                {}
+              )
             })
           })
 
@@ -100,7 +108,7 @@ export default {
             name: 'admin-dashboard',
           })
         })
-      
+
         .catch((error) => {
           //assign validation
           this.validation = error.response.data

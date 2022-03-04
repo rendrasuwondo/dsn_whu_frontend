@@ -9,38 +9,36 @@
 </template>
 
 <script>
-  export default {
-
-    //middleware auth
-    middleware: 'auth',
-
-  }
+export default {
+  //middleware auth
+  middleware: 'auth',
+}
 </script>
 
 <style>
-  body {
-    font-family: 'Quicksand', sans-serif;
-  }
+body {
+  font-family: 'Quicksand', sans-serif;
+}
 
-  .login-page {
-    background-color: #ccdcec !important;
-  }
+.login-page {
+  background-color: linear-gradient(#000046, #1cb5e0) !important;
+}
 
-  .card-info.card-outline {
-    border-top: 3px solid #186399;
-  }
+.card-info.card-outline {
+  border-top: 3px solid #186399;
+}
 
-  .btn-info {
-    color: #fff;
-    background-color: #186399;
-    border-color: #186399;
-    box-shadow: none;
-  }
+.btn-info {
+  color: #fff;
+  background-color: #186399;
+  border-color: #186399;
+  box-shadow: none;
+}
 
-  .btn-info:hover {
-    color: #fff;
-    background-color: #12466B;
-    border-color: #12466B;
-    box-shadow: none;
-  }
+.btn-info:hover {
+  color: #fff;
+  background-color: #12466b;
+  border-color: #12466b;
+  box-shadow: none;
+}
 </style>
