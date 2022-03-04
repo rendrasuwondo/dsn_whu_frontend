@@ -176,15 +176,7 @@ export default {
         { value: 'A', text: 'Agro' },
         { value: 'C', text: 'Corporate' },
       ],
-      price: '',
-      show_hk: true,
-      show_rate: false,
-      //state category
-      category: {
-        image: '',
-        name: '',
-      },
-
+      state: 'disabled',
       field: {
         description: '',
         code: '',
@@ -198,7 +190,6 @@ export default {
         sbu: '',
       },
 
-      activity: [],
       //state validation
       validation: [],
     }
@@ -251,6 +242,14 @@ export default {
           sbu: this.field.sbu,
         })
         .then(() => {
+          //sweet alert
+          this.$swal.fire({
+            title: 'BERHASIL!',
+            text: 'Data Berhasil Diupdate!',
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 2000,
+          })
           //redirect ke route "post"
           this.$router.push({
             name: 'admin-company',
@@ -261,46 +260,14 @@ export default {
           this.validation = error.response.data
         })
     },
-
-    // async update() {
-    //   //define formData
-    //   let formData = new FormData()
-
-    //   formData.append('code', this.$auth.user.employee.code)
-    //   formData.append('name', this.$auth.user.employee.name)
-    //   formData.append('is_active', this.$auth.user.employee.is_active)
-    //   formData.append('sbu', this.$auth.user.employee.sbu)
-    //   formData.append('code_sap', this.$auth.user.employee.code_sap)
-    //   formData.append('created_at', this.$auth.user.employee.created_at)
-    //   formData.append('created_by', this.$auth.user.employee.created_by)
-    //   formData.append('updated_at', this.$auth.user.employee.updated_at)
-    //   formData.append('updated_by', this.$auth.user.employee.updated_by)
-    //   formData.append('description', this.$auth.user.employee.description)
-    //   // formData.append('_method', 'PATCH')
-
-    //   //sending data to server
-    //   await this.$axios
-    //     .put(`/api/admin/company/${this.$route.params.id}`, formData)
-    //     .then(() => {
-    //       //sweet alert
-    //       this.$swal.fire({
-    //         title: 'BERHASIL!',
-    //         text: 'Data Berhasil Diupdate!',
-    //         icon: 'success',
-    //         showConfirmButton: false,
-    //         timer: 2000,
-    //       })
-
-    //       //redirect, if success update data
-    //       this.$router.push({
-    //         name: 'admin-company',
-    //       })
-    //     })
-    //     .catch((error) => {
-    //       //assign error to state "validation"
-    //       this.validation = error.response.data
-    //     })
-    // },
+  },
+  computed: {
+    disabled() {
+      return this.state === 'disabled'
+    },
+    readonly() {
+      return this.state === 'readonly'
+    },
   },
 }
 </script>

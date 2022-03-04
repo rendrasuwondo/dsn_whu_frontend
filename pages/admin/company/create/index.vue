@@ -13,7 +13,7 @@
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
-          <form @submit.prevent="storeP">
+          <form @submit.prevent="storePost">
             <div class="form-group">
               <label>Kode</label>
               <input
@@ -21,6 +21,7 @@
                 v-model="field.code"
                 placeholder="Masukkan kode PT"
                 class="form-control"
+                ref="code"
               />
               <div v-if="validation.code" class="mt-2">
                 <b-alert show variant="danger">{{
@@ -177,14 +178,14 @@ export default {
     }
   },
 
-  components: {
-    'ckeditor-nuxt': () => {
-      if (process.client) {
-        return import('@blowstack/ckeditor-nuxt')
-      }
-    },
-    /*   number, */
-  },
+  // components: {
+  //   'ckeditor-nuxt': () => {
+  //     if (process.client) {
+  //       return import('@blowstack/ckeditor-nuxt')
+  //     }
+  //   },
+  //   /*   number, */
+  // },
 
   data() {
     return {
@@ -199,10 +200,10 @@ export default {
         { value: 'C', text: 'Corporate' },
       ],
       state: 'disabled',
-      show_hk: true,
-      show_rate: false,
-      price: '',
-      value: undefined,
+      // show_hk: true,
+      // show_rate: false,
+      // price: '',
+      // value: undefined,
 
       field: {
         description: '',
@@ -219,85 +220,38 @@ export default {
 
       test: '',
 
-      //state categories
-      activity: [],
+      // //state categories
+      // activity: [],
 
-      //state categories
-      categories: [],
+      // //state categories
+      // categories: [],
 
-      //state tags
-      tags: [],
+      // //state tags
+      // tags: [],
 
       //state validation
       validation: [],
 
-      //config CKEDITOR
-      editorConfig: {
-        removePlugins: ['Title'],
-        simpleUpload: {
-          uploadUrl: 'http://localhost:8000/api/web/posts/storeImage',
-        },
-      },
+      // //config CKEDITOR
+      // editorConfig: {
+      //   removePlugins: ['Title'],
+      //   simpleUpload: {
+      //     uploadUrl: 'http://localhost:8000/api/web/posts/storeImage',
+      //   },
+      // },
     }
   },
 
   mounted() {
     this.field.created_at = this.currentDate()
     this.field.updated_at = this.currentDate()
-    this.field.created_by =
-      this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
-    this.field.updated_by =
-      this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
-    // this.field.activitied_at = this.currentDate()
-    // console.log(this.field.activitied_at)
-    //fetching data categories
-    // this.$axios
-    //   .get('/api/admin/lov_activity')
-    //   .then((response) => {
-    //     // this.activity = response.data.data
-    //     response.data.data.forEach((dt) => {
-    //       if (dt.activity_group_id == this.$cookies.get('activity_group_id')) {
-    //         this.activity.push(dt)
-    //       }
-    //     })
-    //   })
-    // console.log(this.$cookies.get('activity_group_id'))
-    //fetching data categories
-    // this.$axios
-    //   .get('/api/admin/categories')
-    //   .then((response) => {
-    //     this.categories = response.data.data.data
-    //     // console.log(response.data.data.data);
-    //     // //assing response data to state "categories"
-    //     // response.data.data.data.forEach((dt)=> {
-    //     //   console.log(dt.name);
-    //     //   if (dt.name == 'laravel') {
-    //     //       this.categories.push(dt)
-    //     //   }
-    //     // })
-    //   })
-    //fetching data tags
-    // this.$axios
-    //   .get('/api/admin/tags')
-    //   .then((response) => {
-    //     //assing response data to state "tags"
-    //     this.tags = response.data.data.data
-    //   })
-    // console.log(this.$auth.user.employee.afdeling_id)
+    this.field.created_by = this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+    this.field.updated_by = this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+
+    this.$refs.code.focus()
   },
 
   methods: {
-    // onChange() {
-    //   if (this.field.activity_id.activity_name.indexOf('RATE') > 0) {
-    //     this.show_hk = false
-    //     this.show_rate = true
-    //     this.field.man_days = ''
-    //   } else {
-    //     this.show_hk = true
-    //     this.show_rate = false
-    //     this.field.flexrate = ''
-    //   }
-    // },
     back() {
       this.$router.push({
         name: 'admin-company',
@@ -314,29 +268,7 @@ export default {
       return date
     },
 
-    // handleFileChange(e) {
-    //   //get image
-    //   let image = (this.post.image = e.target.files[0])
-
-    //   //check fileType
-    //   if (!image.type.match('image.*')) {
-    //     //if fileType not allowed, then clear value and set null
-    //     e.target.value = ''
-
-    //     this.post.image = null
-
-    //     //show sweet alert
-    //     this.$swal.fire({
-    //       title: 'OOPS!',
-    //       text: 'Format File Tidak Didukung!',
-    //       icon: 'error',
-    //       showConfirmButton: false,
-    //       timer: 2000,
-    //     })
-    //   }
-    // },
-
-    async storeP() {
+    async storePost() {
       //define formData
       let formData = new FormData()
 
