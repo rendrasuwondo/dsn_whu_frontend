@@ -21,11 +21,11 @@ body {
 }
 
 .login-page {
-  background-color: linear-gradient(#000046, #1cb5e0) !important;
+  background: linear-gradient(#020261, #1cb5e0) !important;
 }
 
 .card-info.card-outline {
-  border-top: 3px solid #186399;
+  border-top: 5px solid #1cb5e0;
 }
 
 .btn-info {

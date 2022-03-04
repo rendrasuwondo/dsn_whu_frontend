@@ -315,7 +315,7 @@ export default {
       let formData = new FormData()
 
       formData.append('code', this.field.code)
-      formData.append('name', this.field.name)
+      foarmData.append('name', this.field.name)
       formData.append('is_active', this.field.is_active)
       formData.append('description', this.field.description)
       formData.append('created_at', this.field.created_at)
@@ -325,7 +325,7 @@ export default {
 
       //sending data to server
       await this.$axios
-        .post('/api/admin/company', formData)
+        .post('/api/admin/site', formData)
         .then(() => {
           //sweet alert
           this.$swal.fire({
@@ -338,7 +338,7 @@ export default {
 
           //redirect, if success store data
           this.$router.push({
-            name: 'admin-company',
+            name: 'admin-site',
           })
         })
         .catch((error) => {

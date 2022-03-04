@@ -1,10 +1,10 @@
 <template>
   <div class="card card-outline card-info">
     <div class="card-header text-center">
-      <nuxt-link to="/" class="h1 font-weight-bold text-dark"
+      <nuxt-link to="/" class="h1 font-weight-bold text-dark title-1"
         >ERP-WHU</nuxt-link
       >
-      <div>
+      <div class="title-2">
         <i
           >Enterprise Resource Planning <br />
           Muara Wahau Test</i
@@ -17,39 +17,43 @@
       </div>
       <form @submit.prevent="login">
         <div class="form-group">
-          <label class="font-weight-bold text-uppercase"
+          <label class="font-weight-bold text-uppercase text-size"
             ><i class="fas fa-user-alt"></i> User</label
           >
           <input
             type="text"
             v-model="user.user_name"
             :class="{ 'is-invalid': validation.user_name }"
-            class="form-control"
+            class="form-control form-content"
             placeholder="Masukkan User Name"
             autofocus
           />
+          <div class="form-border"></div>
         </div>
         <div v-if="validation.user_name" class="mt-2">
           <b-alert show variant="danger">{{ validation.user_name[0] }}</b-alert>
         </div>
 
         <div class="form-group">
-          <label class="font-weight-bold text-uppercase"
+          <label class="font-weight-bold text-uppercase text-size"
             ><i class="fas fa-lock"></i> Password</label
           >
           <input
             type="password"
             v-model="user.password"
             :class="{ 'is-invalid': validation.password }"
-            class="form-control"
+            class="form-control form-content"
             placeholder="Masukkan Password"
           />
+          <div class="form-border"></div>
         </div>
         <div v-if="validation.password" class="mt-2">
           <b-alert show variant="danger">{{ validation.password[0] }}</b-alert>
         </div>
 
-        <button type="submit" class="btn btn-info btn-block">LOGIN</button>
+        <center>
+          <button type="submit" class="btn btn-block submit-btn">LOGIN</button>
+        </center>
       </form>
     </div>
     <!-- /.card-body -->
@@ -118,4 +122,45 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+.submit-btn {
+  background: linear-gradient(#000046, #1cb5e0);
+  border-radius: 21px;
+
+  cursor: pointer;
+  color: white;
+  transition: 0.25s;
+  border: none;
+  left: 50%;
+  margin-top: 30px;
+  margin-bottom: 10px;
+  width: 50%;
+  font-weight: 600;
+}
+.submit-btn:hover {
+  font-weight: 600;
+  color: white;
+  box-shadow: 0px 1px 12px #0fbcf9;
+}
+.form-border {
+  background: linear-gradient(#000046, #1cb5e0);
+  height: 1px;
+  width: 100%;
+}
+.form-content {
+  border: none;
+  outline: none;
+  font-size: 14px;
+}
+.text-size {
+  font-size: 14px;
+  margin-top: 5px;
+}
+.title-1 {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-shadow: 3px 2px 1px #bdc3c7;
+}
+.title-2 {
+  margin-top: 5px;
+}
+</style>
