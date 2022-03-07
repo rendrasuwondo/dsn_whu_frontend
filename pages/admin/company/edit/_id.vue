@@ -21,6 +21,7 @@
                 v-model="field.code"
                 placeholder=""
                 class="form-control"
+                ref="code"
               />
               <!-- <div v-if="validation.code" class="mt-2">
                 <b-alert show variant="danger">{{
@@ -212,6 +213,7 @@ export default {
         this.field.description = response.data.data.description
         this.field.sbu = response.data.data.sbu
       })
+      this.$refs.code.focus()
   },
 
   methods: {

@@ -112,6 +112,21 @@ export default {
           key: 'name',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
+        {
+          label: 'Kode SAP',
+          key: 'code_sap',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          label: 'Aktif',
+          key: 'is_active',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          label: 'SBU',
+          key: 'sbu',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
       ],
     }
   },

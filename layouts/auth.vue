@@ -21,7 +21,7 @@ body {
 }
 
 .login-page {
-  background: linear-gradient(#020261, #1cb5e0) !important;
+  background: linear-gradient(#000046, #1cb5e0) !important;
 }
 
 .card-info.card-outline {

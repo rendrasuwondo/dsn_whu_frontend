@@ -178,15 +178,6 @@ export default {
     }
   },
 
-  // components: {
-  //   'ckeditor-nuxt': () => {
-  //     if (process.client) {
-  //       return import('@blowstack/ckeditor-nuxt')
-  //     }
-  //   },
-  //   /*   number, */
-  // },
-
   data() {
     return {
       is_active: { value: 'Y', text: 'Ya' },
@@ -200,10 +191,6 @@ export default {
         { value: 'C', text: 'Corporate' },
       ],
       state: 'disabled',
-      // show_hk: true,
-      // show_rate: false,
-      // price: '',
-      // value: undefined,
 
       field: {
         description: '',
@@ -218,35 +205,18 @@ export default {
         updated_by: '',
       },
 
-      test: '',
-
-      // //state categories
-      // activity: [],
-
-      // //state categories
-      // categories: [],
-
-      // //state tags
-      // tags: [],
-
       //state validation
       validation: [],
-
-      // //config CKEDITOR
-      // editorConfig: {
-      //   removePlugins: ['Title'],
-      //   simpleUpload: {
-      //     uploadUrl: 'http://localhost:8000/api/web/posts/storeImage',
-      //   },
-      // },
     }
   },
 
   mounted() {
     this.field.created_at = this.currentDate()
     this.field.updated_at = this.currentDate()
-    this.field.created_by = this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
-    this.field.updated_by = this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+    this.field.created_by =
+      this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+    this.field.updated_by =
+      this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
 
     this.$refs.code.focus()
   },
