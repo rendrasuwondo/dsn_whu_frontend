@@ -7,7 +7,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-folder"></i> EDIT PT
+            <i class="nav-icon fas fa-folder"></i> EDIT SITE
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -154,14 +154,7 @@ export default {
         { value: 'Y', text: 'Ya' },
         { value: 'N', text: 'Tidak' },
       ],
-      price: '',
-      show_hk: true,
-      show_rate: false,
-      //state category
-      category: {
-        image: '',
-        name: '',
-      },
+      state: 'disabled',
 
       field: {
         code: '',
@@ -174,7 +167,6 @@ export default {
         updated_by: '',
       },
 
-      activity: [],
       //state validation
       validation: [],
     }
@@ -224,6 +216,14 @@ export default {
           updated_by: this.field.updated_by,
         })
         .then(() => {
+          //sweet alert
+          this.$swal.fire({
+            title: 'BERHASIL!',
+            text: 'Data Berhasil Diupdate!',
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 2000,
+          })
           //redirect ke route "post"
           this.$router.push({
             name: 'admin-site',
@@ -233,6 +233,14 @@ export default {
           //assign error validasi
           this.validation = error.response.data
         })
+    },
+  },
+  computed: {
+    disabled() {
+      return this.state === 'disabled'
+    },
+    readonly() {
+      return this.state === 'readonly'
     },
   },
 }

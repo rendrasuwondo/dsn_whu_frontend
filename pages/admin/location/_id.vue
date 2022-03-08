@@ -208,8 +208,8 @@ export default {
     const { id } = route.params
 
     const posts = await $axios.$get(
-      `/api/admin/location/site_detail/${id}?q=${search}&page=${page}`
-      // `/api/admin/location/${id}?q=${search}&page=${page}`
+      // `/api/admin/location/site_detail/${id}?q=${search}&page=${page}`
+      `/api/admin/location/${id}?q=${search}&page=${page}`
     )
 
     return {
@@ -277,8 +277,8 @@ export default {
 
   mounted() {
     this.$axios
-      // .get(`/api/admin/site/${this.$route.params.id}`)
-      .get(`/api/admin/site/site_loc/${this.$route.params.id}`)
+      .get(`/api/admin/site/${this.$route.params.id}`)
+      // .get(`/api/admin/site/site_loc/${this.$route.params.id}`)
 
       .then((response) => {
         //console.log(JSON.stringify(response.data.data))
