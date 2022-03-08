@@ -8,39 +8,16 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <table>
-              <tr>
-                <td>
-                  <nuxt-link :to="{ name: 'admin-site' }" class="nav-link">
-                    <i class="nav-icon fas fa-map-marker-alt"></i>
-                    Site
-                  </nuxt-link>
-                </td>
-                <td>/ Lokasi</td>
-              </tr>
-            </table>
+            <i class="nav-icon fas fa-book-open"></i> Role
           </h3>
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
           <div class="form-group">
-            <b-table
-              striped
-              bordered
-              hover
-              :items="header"
-              :fields="fields_header"
-              show-empty
-            ></b-table>
-          </div>
-          <div class="form-group">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <nuxt-link
-                  :to="{
-                    name: 'admin-location-create-id',
-                    params: { id: site_id, r: 1 },
-                  }"
+                  :to="{ name: 'admin-role-create' }"
                   class="btn btn-info btn-sm"
                   style="padding-top: 8px"
                   ><i class="fa fa-plus-circle"></i> TAMBAH</nuxt-link
@@ -51,7 +28,7 @@
                 class="form-control"
                 v-model="search"
                 @keypress.enter="searchData"
-                placeholder="cari berdasarkan nama tag"
+                placeholder=""
               />
               <div class="input-group-append">
                 <button @click="searchData" class="btn btn-info">
@@ -61,9 +38,7 @@
               </div>
             </div>
           </div>
-
           <!-- table -->
-
           <b-table
             small
             responsive
@@ -74,44 +49,27 @@
             :fields="fields"
             show-empty
           >
-            <template v-slot:cell(comments)="row">
-              <i class="fa fa-comments"></i> {{ row.item.comments.length }}
-            </template>
             <template v-slot:cell(actions)="row">
               <b-button
                 :to="{
-                  name: 'admin-location-edit-id',
-                  params: { id: row.item.id, r: 1 },
+                  name: 'admin-role-edit-id',
+                  params: { id: row.item.id },
                 }"
                 variant="link"
-                size=""
+                size="sm"
                 title="Edit"
               >
                 <i class="fa fa-pencil-alt"></i>
               </b-button>
-
               <b-button
                 variant="link"
-                size=""
-                title="Hapus"
+                size="sm"
                 @click="deletePost(row.item.id)"
+                title="Hapus"
                 ><i class="fa fa-trash"></i
               ></b-button>
             </template>
-            <template v-slot:cell(detail)="row">
-              <b-button
-                :to="{
-                  name: 'admin-location',
-                  params: { id: row.item.id },
-                }"
-                variant=""
-                size="sm"
-              >
-                Detail<i class="fa fa-plus-circle"></i>
-              </b-button>
-            </template>
           </b-table>
-
           <!-- pagination -->
           <b-pagination
             v-model="pagination.current_page"
@@ -129,71 +87,42 @@
 
 <script>
 export default {
-  //layout
   layout: 'admin',
 
-  //meta
   head() {
     return {
-      title: 'Lokasi',
+      title: 'Role',
     }
   },
-
-  //data function
   data() {
     return {
-      //table header
       fields: [
         {
           label: 'Actions',
           key: 'actions',
-          tdClass: 'text-center',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
           label: 'Kode',
           key: 'code',
-          tdClass: 'text-center',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
           label: 'Nama',
           key: 'name',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          label: 'Aktive',
-          key: 'is_aktive',
+          label: 'Aktif',
+          key: 'is_active',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
       ],
-
-      header: [],
-
-      site_id: this.$route.params.id,
-
-      fields_header: [
-        {
-          label: 'Tanggal',
-          key: 'created_at',
-          tdClass: 'text-center',
-        },
-        {
-          label: 'Kode',
-          key: 'code',
-          tdClass: 'text-center',
-        },
-        {
-          label: 'Nama',
-          key: 'name',
-          tdClass: '',
-        },
-      ],
-      //state search
-      search: '',
     }
   },
-
-  //watch query URL
   watchQuery: ['q', 'page'],
 
-  async asyncData({ $axios, query, route }) {
+  async asyncData({ $axios, query }) {
     //page
     let page = query.page ? parseInt(query.page) : ''
 
@@ -201,25 +130,16 @@ export default {
     let search = query.q ? query.q : ''
 
     //fetching posts
-    // const posts = await $axios.$get(
-    //   `/api/admin/site?q=${search}&page=${page}`
-    // )
-
-    const { id } = route.params
-
-    const posts = await $axios.$get(
-      // `/api/admin/location/site_detail/${id}?q=${search}&page=${page}`
-      `/api/admin/location/${id}?q=${search}&page=${page}`
-    )
+    const posts = await $axios.$get(`/api/admin/role?q=${search}&page=${page}`)
 
     return {
       posts: posts.data.data,
       pagination: posts.data,
+      search: search,
     }
   },
 
   methods: {
-    //change page pagination
     changePage(page) {
       this.$router.push({
         path: this.$route.path,
@@ -229,7 +149,6 @@ export default {
         },
       })
     },
-
     //searchData
     searchData() {
       this.$router.push({
@@ -257,7 +176,7 @@ export default {
           if (result.isConfirmed) {
             //delete tag from server
 
-            this.$axios.delete(`/api/admin/location/${id}`).then(() => {
+            this.$axios.delete(`/api/admin/role/${id}`).then(() => {
               //feresh data
               this.$nuxt.refresh()
 
@@ -274,22 +193,7 @@ export default {
         })
     },
   },
-
-  mounted() {
-    this.$axios
-      .get(`/api/admin/site/${this.$route.params.id}`)
-      // .get(`/api/admin/site/site_loc/${this.$route.params.id}`)
-
-      .then((response) => {
-        //console.log(JSON.stringify(response.data.data))
-        // console.log('rdr')
-        console.log(response.data.data.site_id)
-        this.header.push(response.data.data)
-        // this.detail(response.data)
-        // console.log(this.detail)
-      })
-  },
 }
 </script>
 
-<style></style>
+<style scoped></style>

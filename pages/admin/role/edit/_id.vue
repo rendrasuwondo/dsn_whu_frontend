@@ -3,11 +3,12 @@
     <section class="content-header">
       <div class="container-fluid"></div>
     </section>
+
     <section class="content">
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-folder"></i> EDIT SITE
+            <i class="nav-icon fas fa-folder"></i> EDIT ROLE
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -144,7 +145,7 @@ export default {
   //meta
   head() {
     return {
-      title: 'Edit Site',
+      title: 'Edit Role',
     }
   },
 
@@ -154,8 +155,8 @@ export default {
         { value: 'Y', text: 'Ya' },
         { value: 'N', text: 'Tidak' },
       ],
-      state: 'disabled',
 
+      state: 'disabled',
       field: {
         code: '',
         name: '',
@@ -175,7 +176,7 @@ export default {
   mounted() {
     //get data field by ID
     this.$axios
-      .get(`/api/admin/site/${this.$route.params.id}`)
+      .get(`/api/admin/role/${this.$route.params.id}`)
       .then((response) => {
         //data yang diambil
         this.field.code = response.data.data.code
@@ -193,7 +194,7 @@ export default {
   methods: {
     back() {
       this.$router.push({
-        name: 'admin-site',
+        name: 'admin-role',
         params: { id: this.$route.params.id, r: 1 },
       })
     },
@@ -204,7 +205,7 @@ export default {
 
       //send data ke Rest API untuk update
       await this.$axios
-        .put(`/api/admin/site/${this.$route.params.id}`, {
+        .put(`/api/admin/role/${this.$route.params.id}`, {
           //data yang dikirim
           code: this.field.code,
           name: this.field.name,
@@ -226,7 +227,7 @@ export default {
           })
           //redirect ke route "post"
           this.$router.push({
-            name: 'admin-site',
+            name: 'admin-role',
           })
         })
         .catch((error) => {
