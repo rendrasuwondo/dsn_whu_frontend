@@ -147,6 +147,13 @@
         </nuxt-link>
       </li>
 
+      <li class="nav-item">
+        <nuxt-link :to="{ name: 'admin-role' }" class="nav-link">
+          <i class="nav-icon fas fa-book-open"></i>
+          <p>Role</p>
+        </nuxt-link>
+      </li>
+
       <li class="nav-header">
         <h6>CONTENT</h6>
       </li>
@@ -197,7 +204,6 @@
         </a>
       </li>
     </ul>
-   
   </nav>
   <!-- /.sidebar-menu -->
 </template>
