@@ -197,9 +197,7 @@
         </a>
       </li>
     </ul>
-    <ul>
-      <li v-for="(nama, index) in daftarnama">{{ index }}-{{ nama }}</li>
-    </ul>
+   
   </nav>
   <!-- /.sidebar-menu -->
 </template>
