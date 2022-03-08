@@ -47,6 +47,9 @@ export default {
             {
                 src: '/js/adminlte.min.js',
             },
+            {
+                src: '/js/demo.js',
+            },
         ],
     },
 
