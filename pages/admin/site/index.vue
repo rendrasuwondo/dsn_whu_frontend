@@ -69,6 +69,19 @@
                 ><i class="fa fa-trash"></i
               ></b-button>
             </template>
+            <template v-slot:cell(detail)="row">
+              <b-button
+                :to="{
+                  name: 'admin-location-id',
+                  params: { id: row.item.id },
+                }"
+                variant="link"
+                size=""
+                title="Detail"
+              >
+                <i class="fa fa-file-alt"></i>
+              </b-button>
+            </template>
           </b-table>
           <!-- pagination -->
           <b-pagination
@@ -100,7 +113,12 @@ export default {
         {
           label: 'Actions',
           key: 'actions',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          tdClass: 'align-middle text-center text-nowrap nameOfTheClass',
+        },
+        {
+          label: 'Detail',
+          key: 'detail',
+          tdClass: 'align-middle text-center',
         },
         {
           label: 'Kode',
