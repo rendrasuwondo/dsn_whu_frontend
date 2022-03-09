@@ -39,7 +39,7 @@
             ><i class="fas fa-lock"></i> Password</label
           >
           <input
-            :type="passwordFieldType"
+            :type="password"
             v-model="user.password"
             :class="{ 'is-invalid': validation.password }"
             class="form-control form-content"

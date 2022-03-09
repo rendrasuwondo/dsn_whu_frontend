@@ -3,6 +3,7 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
+          <div v-html="menu"></div>   
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -31,7 +32,7 @@
             <ul class="nav nav-treeview">
                <li class="nav-item">
         <nuxt-link :to="{ name: 'admin-company' }" class="nav-link">
-          <i class="nav-icon fas fa-book-open"></i>
+          <i class="nav-icon fas fa-industry"></i>
           <p>PT</p>
         </nuxt-link>
       </li>
@@ -78,6 +79,7 @@ export default {
   data() {
     return {
       mountains: [],
+      menu : ''
     }
   },
   async fetch() {
@@ -85,6 +87,20 @@ export default {
       (res) => res.json()
     )
   },
+  mounted() {
+
+    this.$axios
+      .get(`/api/admin/menu_user/${this.$route.path.replaceAll("/", "*")}`)
+
+      .then((response) => {
+        //console.log(JSON.stringify(response.data.data))
+        console.log('rdr')
+        console.log(response.data.data)
+       this.menu = response.data.data
+        // this.detail(response.data)
+        // console.log(this.detail)
+      })
+  }
 }
 </script>
 <style scoped>
