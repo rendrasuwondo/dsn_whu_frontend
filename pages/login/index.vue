@@ -39,12 +39,13 @@
             ><i class="fas fa-lock"></i> Password</label
           >
           <input
-            type="password"
+            :type="passwordFieldType"
             v-model="user.password"
             :class="{ 'is-invalid': validation.password }"
             class="form-control form-content"
             placeholder="Masukkan Password"
           />
+
           <div class="form-border"></div>
         </div>
         <div v-if="validation.password" class="mt-2">
@@ -123,10 +124,13 @@ export default {
 </script>
 
 <style>
+.card {
+  padding: 10px 15px 5px 15px;
+}
 .submit-btn {
-  background: linear-gradient(#000046, #1cb5e0);
+  background: #0385ca;
   border-radius: 21px;
-
+  box-shadow: 0px 5px 5px #a8adb1;
   cursor: pointer;
   color: white;
   transition: 0.25s;
@@ -140,7 +144,8 @@ export default {
 .submit-btn:hover {
   font-weight: 600;
   color: white;
-  box-shadow: 0px 1px 12px #0fbcf9;
+  box-shadow: 0px 1px 12px #a8adb1;
+  background: linear-gradient(#000046, #1cb5e0);
 }
 .form-border {
   background: linear-gradient(#000046, #1cb5e0);
