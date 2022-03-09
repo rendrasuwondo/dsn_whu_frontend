@@ -54,7 +54,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <nuxt-link :to="{ name: 'admin-role' }" class="nav-link">
+                <nuxt-link :to="{ name: 'System-role' }" class="nav-link">
                   <i class="nav-icon fas fa-book-open"></i>
                   <p>Role</p>
                 </nuxt-link>

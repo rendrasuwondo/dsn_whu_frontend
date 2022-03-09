@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-map-marker-alt"></i> Site
+            <i class="nav-icon fas fa-book-open"></i> Role
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -17,7 +17,7 @@
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <nuxt-link
-                  :to="{ name: 'admin-site-create' }"
+                  :to="{ name: 'admin-role-create' }"
                   class="btn btn-info btn-sm"
                   style="padding-top: 8px"
                   ><i class="fa fa-plus-circle"></i> TAMBAH</nuxt-link
@@ -52,7 +52,7 @@
             <template v-slot:cell(actions)="row">
               <b-button
                 :to="{
-                  name: 'admin-site-edit-id',
+                  name: 'admin-role-edit-id',
                   params: { id: row.item.id },
                 }"
                 variant="link"
@@ -68,19 +68,6 @@
                 title="Hapus"
                 ><i class="fa fa-trash"></i
               ></b-button>
-            </template>
-            <template v-slot:cell(detail)="row">
-              <b-button
-                :to="{
-                  name: 'admin-location-id',
-                  params: { id: row.item.id },
-                }"
-                variant="link"
-                size=""
-                title="Detail"
-              >
-                <i class="fa fa-file-alt"></i>
-              </b-button>
             </template>
           </b-table>
           <!-- pagination -->
@@ -104,7 +91,7 @@ export default {
 
   head() {
     return {
-      title: 'Site',
+      title: 'Role',
     }
   },
   data() {
@@ -113,12 +100,7 @@ export default {
         {
           label: 'Actions',
           key: 'actions',
-          tdClass: 'align-middle text-center text-nowrap nameOfTheClass',
-        },
-        {
-          label: 'Detail',
-          key: 'detail',
-          tdClass: 'align-middle text-center',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
           label: 'Kode',
@@ -148,7 +130,7 @@ export default {
     let search = query.q ? query.q : ''
 
     //fetching posts
-    const posts = await $axios.$get(`/api/admin/site?q=${search}&page=${page}`)
+    const posts = await $axios.$get(`/api/admin/role?q=${search}&page=${page}`)
 
     return {
       posts: posts.data.data,
@@ -194,7 +176,7 @@ export default {
           if (result.isConfirmed) {
             //delete tag from server
 
-            this.$axios.delete(`/api/admin/site/${id}`).then(() => {
+            this.$axios.delete(`/api/admin/role/${id}`).then(() => {
               //feresh data
               this.$nuxt.refresh()
 

@@ -170,11 +170,6 @@ export default {
 
       fields_header: [
         {
-          label: 'Tanggal',
-          key: 'created_at',
-          tdClass: 'text-center',
-        },
-        {
           label: 'Kode',
           key: 'code',
           tdClass: 'text-center',
@@ -183,6 +178,11 @@ export default {
           label: 'Nama',
           key: 'name',
           tdClass: '',
+        },
+        {
+          label: 'Aktif',
+          key: 'is_active',
+          tdClass: 'text-center',
         },
       ],
       //state search
@@ -209,7 +209,7 @@ export default {
 
     const posts = await $axios.$get(
       // `/api/admin/location/site_detail/${id}?q=${search}&page=${page}`
-      `/api/admin/location/${id}?q=${search}&page=${page}`
+      `/api/admin/detail/location/${id}?q=${search}&page=${page}`
     )
 
     return {
@@ -258,6 +258,7 @@ export default {
             //delete tag from server
 
             this.$axios.delete(`/api/admin/location/${id}`).then(() => {
+              this.$axios.delete(`/api/admin/location/${id}`)
               //feresh data
               this.$nuxt.refresh()
 
@@ -277,7 +278,7 @@ export default {
 
   mounted() {
     this.$axios
-      .get(`/api/admin/site/${this.$route.params.id}`)
+      .get(`/api/admin/master/site/${this.$route.params.id}`)
       // .get(`/api/admin/site/site_loc/${this.$route.params.id}`)
 
       .then((response) => {

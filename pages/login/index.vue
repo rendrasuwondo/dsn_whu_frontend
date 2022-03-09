@@ -16,7 +16,7 @@
         <b-alert show variant="danger">{{ validation.message }}</b-alert>
       </div>
       <form @submit.prevent="login">
-        <div class="form-group">
+        <div c ass="form-group">
           <label class="font-weight-bold text-uppercase text-size"
             ><i class="fas fa-user-alt"></i> User</label
           >
@@ -39,7 +39,7 @@
             ><i class="fas fa-lock"></i> Password</label
           >
           <input
-            :type="passwordFieldType"
+            type="password"
             v-model="user.password"
             :class="{ 'is-invalid': validation.password }"
             class="form-control form-content"
@@ -151,6 +151,7 @@ export default {
   background: linear-gradient(#000046, #1cb5e0);
   height: 1px;
   width: 100%;
+  margin-bottom: 10px;
 }
 .form-content {
   border: none;
@@ -167,5 +168,6 @@ export default {
 }
 .title-2 {
   margin-top: 5px;
+  margin-bottom: 5px;
 }
 </style>

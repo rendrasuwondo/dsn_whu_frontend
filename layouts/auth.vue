@@ -28,7 +28,7 @@ body {
     #ffdde1,
     #f08997,
     #dcdde1,
-    #6190e8
+    #266cee
   ) !important;
 }
 
