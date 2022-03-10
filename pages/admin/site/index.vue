@@ -132,7 +132,7 @@ export default {
         },
         {
           label: 'Aktif',
-          key: 'is_active',
+          key: 'is_active_code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
       ],
