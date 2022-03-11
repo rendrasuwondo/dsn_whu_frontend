@@ -147,20 +147,20 @@ export default {
         {
           label: 'Actions',
           key: 'actions',
-          tdClass: 'text-center',
+          tdClass: '',
         },
         {
           label: 'Kode',
           key: 'code',
-          tdClass: 'text-center',
+          tdClass: '',
         },
         {
           label: 'Nama',
           key: 'name',
         },
         {
-          label: 'Aktive',
-          key: 'is_aktive',
+          label: 'Aktif',
+          key: 'is_active_code',
         },
       ],
 
@@ -172,7 +172,7 @@ export default {
         {
           label: 'Kode',
           key: 'code',
-          tdClass: 'text-center',
+          tdClass: 'text-left',
         },
         {
           label: 'Nama',
@@ -181,8 +181,8 @@ export default {
         },
         {
           label: 'Aktif',
-          key: 'is_active',
-          tdClass: 'text-center',
+          key: 'is_active_code',
+          tdClass: 'text-left',
         },
       ],
       //state search
@@ -258,7 +258,6 @@ export default {
             //delete tag from server
 
             this.$axios.delete(`/api/admin/location/${id}`).then(() => {
-              this.$axios.delete(`/api/admin/location/${id}`)
               //feresh data
               this.$nuxt.refresh()
 

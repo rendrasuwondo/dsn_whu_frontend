@@ -8,16 +8,33 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-book-open"></i> Role
+            <i class="nav-icon fas fa-users"></i> USERS
           </h3>
-          <div class="card-tools"></div>
+          <div class="card-tools">
+            <button
+              type="button"
+              class="btn btn-tool"
+              data-card-widget="collapse"
+              title="Collapse"
+            >
+              <i class="fas fa-minus"></i>
+            </button>
+            <button
+              type="button"
+              class="btn btn-tool"
+              data-card-widget="remove"
+              title="Remove"
+            >
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
         </div>
         <div class="card-body">
           <div class="form-group">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <nuxt-link
-                  :to="{ name: 'system-role-create' }"
+                  :to="{ name: 'system-user-create' }"
                   class="btn btn-info btn-sm"
                   style="padding-top: 8px"
                   ><i class="fa fa-plus-circle"></i> TAMBAH</nuxt-link
@@ -28,7 +45,7 @@
                 class="form-control"
                 v-model="search"
                 @keypress.enter="searchData"
-                placeholder=""
+                placeholder="cari berdasarkan nama user"
               />
               <div class="input-group-append">
                 <button @click="searchData" class="btn btn-info">
@@ -38,38 +55,39 @@
               </div>
             </div>
           </div>
+
           <!-- table -->
           <b-table
-            small
-            responsive
             striped
             bordered
             hover
-            :items="posts"
+            :items="users"
             :fields="fields"
             show-empty
           >
             <template v-slot:cell(actions)="row">
               <b-button
                 :to="{
-                  name: 'admin-role-edit-id',
+                  name: 'system-user-edit-id',
                   params: { id: row.item.id },
                 }"
                 variant="link"
                 size="sm"
                 title="Edit"
               >
-                <i class="fa fa-pencil-alt"></i>
-              </b-button>
+                <i class="fa fa-pencil-alt"></i
+              ></b-button>
               <b-button
                 variant="link"
                 size="sm"
-                @click="deleteRole(row.item.id)"
-                title="Hapus"
-                ><i class="fa fa-trash"></i
+                title="Delete"
+                @click="deleteUser(row.item.id)"
+              >
+                <i class="fa fa-trash"></i
               ></b-button>
             </template>
           </b-table>
+
           <!-- pagination -->
           <b-pagination
             v-model="pagination.current_page"
@@ -87,39 +105,46 @@
 
 <script>
 export default {
+  //layout
   layout: 'admin',
 
+  //meta
   head() {
     return {
-      title: 'Role',
+      title: 'Users',
     }
   },
+
+  //data function
   data() {
     return {
+      //table header
       fields: [
         {
           label: 'Actions',
           key: 'actions',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          tdClass: '',
         },
         {
-          label: 'Kode',
-          key: 'code',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          label: 'User Name',
+          key: 'user_name',
         },
         {
           label: 'Nama',
           key: 'name',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          label: 'Aktif',
-          key: 'is_active_code',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          label: 'Email',
+          key: 'email',
         },
       ],
+
+      //state search
+      search: '',
     }
   },
+
+  //watch query URL
   watchQuery: ['q', 'page'],
 
   async asyncData({ $axios, query }) {
@@ -129,17 +154,17 @@ export default {
     //search
     let search = query.q ? query.q : ''
 
-    //fetching posts
-    const posts = await $axios.$get(`/api/admin/role?q=${search}&page=${page}`)
+    //fetching users
+    const users = await $axios.$get(`/api/admin/users?q=${search}&page=${page}`)
 
     return {
-      posts: posts.data.data,
-      pagination: posts.data,
-      search: search,
+      users: users.data.data,
+      pagination: users.data,
     }
   },
 
   methods: {
+    //change page pagination
     changePage(page) {
       this.$router.push({
         path: this.$route.path,
@@ -149,6 +174,7 @@ export default {
         },
       })
     },
+
     //searchData
     searchData() {
       this.$router.push({
@@ -160,7 +186,7 @@ export default {
     },
 
     //deletePost method
-    deleteRole(id) {
+    deleteUser(id) {
       this.$swal
         .fire({
           title: 'APAKAH ANDA YAKIN ?',
@@ -176,7 +202,7 @@ export default {
           if (result.isConfirmed) {
             //delete tag from server
 
-            this.$axios.delete(`/api/admin/role/${id}`).then(() => {
+            this.$axios.delete(`/api/admin/users/${id}`).then(() => {
               //feresh data
               this.$nuxt.refresh()
 
@@ -196,4 +222,4 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style></style>
