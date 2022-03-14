@@ -91,6 +91,19 @@
                   ></b-form-datepicker>
                 </b-col>
                 <b-col
+                  ><label>Pembuat</label>
+                  <input
+                    type="text"
+                    v-model="field.created_by"
+                    class="form-control"
+                    readonly
+                /></b-col>
+              </b-row>
+            </div>
+
+            <div class="form-group">
+              <b-row>
+                <b-col
                   ><label>Tanggal Ubah </label>
 
                   <b-form-datepicker
@@ -104,22 +117,17 @@
                     :disabled="disabled"
                   ></b-form-datepicker
                 ></b-col>
+                <b-col>
+                  <label>Pengubah</label>
+                  <input
+                    type="text"
+                    v-model="field.updated_by"
+                    class="form-control"
+                    readonly
+                  />
+                </b-col>
               </b-row>
             </div>
-
-            <!-- <div class="form-group">
-              <label>Tanggal Ubah </label>
-              <b-form-datepicker
-                v-model="field.updated_at"
-                :date-format-options="{
-                  year: 'numeric',
-                  month: 'short',
-                  day: '2-digit',
-                  weekday: 'short',
-                }"
-                :disabled="disabled"
-              ></b-form-datepicker>
-            </div> -->
 
             <div class="form-group"></div>
 
@@ -162,6 +170,8 @@ export default {
         password: '',
         created_at: '',
         updated_at: '',
+        created_by: '',
+        updated_by: '',
       },
 
       //state validation
@@ -170,6 +180,11 @@ export default {
   },
 
   mounted() {
+    this.field.created_by =
+      this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+    this.field.updated_by =
+      this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+
     //get data field by ID
     this.$axios
       .get(`/api/admin/users/${this.$route.params.id}`)
@@ -181,6 +196,8 @@ export default {
         this.field.password = response.data.data.password
         this.field.created_at = response.data.data.created_at
         this.field.updated_at = response.data.data.updated_at
+        // this.field.created_by = response.data.data.created_by
+        // this.field.updated_by = response.data.data.updated_by
       })
     this.$refs.user_name.focus()
   },
