@@ -199,12 +199,7 @@ export default {
   },
 
   mounted() {
-    this.field.created_at = this.currentDate()
-    this.field.updated_at = this.currentDate()
-    this.field.created_by =
-      this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
-    this.field.updated_by =
-      this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+   
     this.$refs.code.focus()
 
     this.$axios
@@ -248,8 +243,9 @@ export default {
     back() {
       this.$router.push({
         name: 'admin-location-id',
-        params: { id: this.$route.params.id, r: 1 },
+        params: { id: this.field.site_id, r: 1 },
       })
+   
     },
 
     // update method
@@ -265,10 +261,6 @@ export default {
           name: this.field.name,
           is_active: this.field.is_active,
           description: this.field.description,
-          created_at: this.field.created_at,
-          updated_at: this.field.updated_at,
-          created_by: this.field.created_by,
-          updated_by: this.field.updated_by,
         })
         .then(() => {
           //sweet alert
