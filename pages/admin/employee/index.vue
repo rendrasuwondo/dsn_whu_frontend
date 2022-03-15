@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-book-open"></i> Role
+            <i class="nav-icon fas fa-user-tie"></i> EMPLOYEE
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -17,7 +17,7 @@
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <nuxt-link
-                  :to="{ name: 'system-role-create' }"
+                  :to="{ name: 'admin-employee-create' }"
                   class="btn btn-info btn-sm"
                   style="padding-top: 8px"
                   ><i class="fa fa-plus-circle"></i> TAMBAH</nuxt-link
@@ -52,7 +52,7 @@
             <template v-slot:cell(actions)="row">
               <b-button
                 :to="{
-                  name: 'system-role-edit-id',
+                  name: 'admin-employee-edit-id',
                   params: { id: row.item.id },
                 }"
                 variant="link"
@@ -64,23 +64,10 @@
               <b-button
                 variant="link"
                 size="sm"
-                @click="deleteRole(row.item.id)"
+                @click="deletePost(row.item.id)"
                 title="Hapus"
                 ><i class="fa fa-trash"></i
               ></b-button>
-            </template>
-            <template v-slot:cell(users)="row">
-              <b-button
-                :to="{
-                  name: 'system-user_has_role-id',
-                  params: { id: row.item.id },
-                }"
-                variant="link"
-                size=""
-                title="Users"
-              >
-                <i class="fa fa-file-alt"></i>
-              </b-button>
             </template>
           </b-table>
           <!-- pagination -->
@@ -104,7 +91,7 @@ export default {
 
   head() {
     return {
-      title: 'Role',
+      title: 'EMPLOYEE',
     }
   },
   data() {
@@ -116,18 +103,38 @@ export default {
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          label: 'Users',
-          key: 'users',
-          tdClass: 'align-middle text-center',
-        },
-        {
-          label: 'Kode',
-          key: 'code',
+          label: 'NIK',
+          key: 'nik',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
           label: 'Nama',
           key: 'name',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          label: 'Alamat Email',
+          key: 'email',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          label: 'PT',
+          key: 'company_code',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          label: 'Site',
+          key: 'site_code',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          label: 'Lokasi',
+          key: 'location_code',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          label: 'Posisi',
+          key: 'position_code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
@@ -148,7 +155,9 @@ export default {
     let search = query.q ? query.q : ''
 
     //fetching posts
-    const posts = await $axios.$get(`/api/admin/role?q=${search}&page=${page}`)
+    const posts = await $axios.$get(
+      `/api/admin/employee?q=${search}&page=${page}`
+    )
 
     return {
       posts: posts.data.data,
@@ -178,7 +187,7 @@ export default {
     },
 
     //deletePost method
-    deleteRole(id) {
+    deletePost(id) {
       this.$swal
         .fire({
           title: 'APAKAH ANDA YAKIN ?',
@@ -194,7 +203,7 @@ export default {
           if (result.isConfirmed) {
             //delete tag from server
 
-            this.$axios.delete(`/api/admin/role/${id}`).then(() => {
+            this.$axios.delete(`/api/admin/employee/${id}`).then(() => {
               //feresh data
               this.$nuxt.refresh()
 

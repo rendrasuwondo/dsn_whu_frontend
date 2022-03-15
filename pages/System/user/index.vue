@@ -86,6 +86,19 @@
                 <i class="fa fa-trash"></i
               ></b-button>
             </template>
+            <template v-slot:cell(role)="row">
+              <b-button
+                :to="{
+                  name: 'system-user_has_role-id',
+                  params: { id: row.item.id },
+                }"
+                variant="link"
+                size=""
+                title="Users"
+              >
+                <i class="fa fa-file-alt"></i>
+              </b-button>
+            </template>
           </b-table>
 
           <!-- pagination -->
@@ -124,6 +137,11 @@ export default {
           label: 'Actions',
           key: 'actions',
           tdClass: '',
+        },
+        {
+          label: 'Role',
+          key: 'role',
+          tdClass: 'align-middle text-center',
         },
         {
           label: 'User Name',

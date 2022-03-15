@@ -91,6 +91,19 @@
                   ></b-form-datepicker>
                 </b-col>
                 <b-col
+                  ><label>Pembuat</label>
+                  <input
+                    type="text"
+                    v-model="field.created_by"
+                    class="form-control"
+                    readonly
+                /></b-col>
+              </b-row>
+            </div>
+
+            <div class="form-group">
+              <b-row>
+                <b-col
                   ><label>Tanggal Ubah </label>
 
                   <b-form-datepicker
@@ -104,23 +117,17 @@
                     :disabled="disabled"
                   ></b-form-datepicker
                 ></b-col>
+                <b-col>
+                  <label>Pengubah</label>
+                  <input
+                    type="text"
+                    v-model="field.updated_by"
+                    class="form-control"
+                    readonly
+                  />
+                </b-col>
               </b-row>
             </div>
-
-            <!-- <div class="form-group">
-              <label>Tanggal Ubah </label>
-              <b-form-datepicker
-                v-model="field.updated_at"
-                :date-format-options="{
-                  year: 'numeric',
-                  month: 'short',
-                  day: '2-digit',
-                  weekday: 'short',
-                }"
-                :disabled="disabled"
-              ></b-form-datepicker>
-            </div> -->
-
             <div class="form-group"></div>
 
             <button class="btn btn-info mr-1 btn-submit" type="submit">
@@ -166,6 +173,10 @@ export default {
         password: '',
         created_at: '',
         updated_at: '',
+        created_by: '',
+
+        updated_by: '',
+        employee_id: '',
       },
 
       //state validation
@@ -209,6 +220,7 @@ export default {
       formData.append('name', this.field.name)
       formData.append('email', this.field.email)
       formData.append(' password', this.field.password)
+      formData.append('employee_id', this.field.employee_id)
       formData.append('created_at', this.field.created_at)
       formData.append('update_at', this.field.update_at)
 

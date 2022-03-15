@@ -1,5 +1,5 @@
 <template>
-  <div class="content-wrapper mb-5">
+  <div class="content-wrapper">
     <section class="content-header">
       <div class="container-fluid"></div>
     </section>
@@ -8,26 +8,24 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-book-open"></i> EDIT Lokasi
+            <i class="nav-icon fas fa-folder"></i> EDIT EMPLOYEE
           </h3>
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
-          <form @submit.prevent="updateData">
+          <form @submit.prevent="update">
             <div class="form-group">
-              <label>Kode</label>
+              <label>NIK</label>
               <input
                 type="text"
-                v-model="field.code"
-                placeholder="Masukkan kode Lokasi"
+                v-model="field.nik"
+                placeholder="Masukkan NIK"
                 class="form-control"
-                ref="code"
+                ref="nik"
               />
-              <!-- <div v-if="validation.code" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.code[0]
-                }}</b-alert>
-              </div> -->
+              <div v-if="validation.nik" class="mt-2">
+                <b-alert show variant="danger">{{ validation.nik[0] }}</b-alert>
+              </div>
             </div>
 
             <div class="form-group">
@@ -35,22 +33,109 @@
               <input
                 type="text"
                 v-model="field.name"
-                placeholder="Masukkan Nama Lokasi"
+                placeholder="Masukkan Nama Karyawan"
                 class="form-control"
               />
-              <!-- <div v-if="validation.name" class="mt-2">
+              <div v-if="validation.name" class="mt-2">
                 <b-alert show variant="danger">{{
                   validation.name[0]
+                }}</b-alert>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>PT</label>
+              <input
+                type="text"
+                v-model="field.company_id"
+                placeholder="Masukkan PT"
+                class="form-control"
+              />
+              <!-- <multiselect
+                v-model="field.company_id"
+                :options="company"
+                label="name"
+                track-by="id"
+                :searchable="true"
+                @input="onChange"
+              ></multiselect> -->
+              <!-- <div v-if="validation.company_id" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.company_id[0]
                 }}</b-alert>
               </div> -->
             </div>
 
             <div class="form-group">
+              <label>Department</label>
+              <input
+                type="text"
+                v-model="field.department_id"
+                placeholder="Masukkan Nama Department"
+                class="form-control"
+              />
+              <!-- <multiselect
+                v-model="field.department_id"
+                :options="department"
+                label="name"
+                track-by="id"
+                :searchable="true"
+                @input="onChange"
+              ></multiselect> -->
+              <!-- <div v-if="validation.department_id" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.department_id[0]
+                }}</b-alert>
+              </div> -->
+            </div>
+
+            <div class="form-group">
+              <label>Lokasi</label>
+              <input
+                type="text"
+                v-model="field.location_id"
+                placeholder="Masukkan Nama Lokasi"
+                class="form-control"
+              />
+              <!-- <multiselect
+                v-model="field.location_id"
+                :options="location"
+                label="name"
+                track-by="id"
+                :searchable="true"
+                @input="onChange"
+              ></multiselect> -->
+              <!-- <div v-if="validation.location_id" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.location_id[0]
+                }}</b-alert>
+              </div> -->
+            </div>
+
+            <div class="form-group">
+              <label>Alamat Email</label>
+              <input
+                type="email"
+                v-model="field.email"
+                placeholder="Masukkan Alamat Email"
+                class="form-control"
+              />
+            </div>
+
+            <div class="form-group">
               <label>Aktif?</label>
-              <b-form-select v-model="field.is_active">
-                <b-form-select-option value="Y">Ya</b-form-select-option>
-                <b-form-select-option value="N">Tidak</b-form-select-option>
+              <b-form-select v-model="field.is_active" :options="options">
               </b-form-select>
+            </div>
+
+            <div class="form-group">
+              <label>Employee status</label>
+              <input
+                type="text"
+                v-model="field.employee_status"
+                placeholder="Masukkan Employee status"
+                class="form-control"
+              />
             </div>
 
             <div class="form-group">
@@ -121,7 +206,6 @@
                 </b-col>
               </b-row>
             </div>
-
             <div class="form-group"></div>
 
             <button class="btn btn-info mr-1 btn-submit" type="submit">
@@ -140,7 +224,6 @@
     </section>
   </div>
 </template>
-
 <script>
 export default {
   //layout
@@ -149,16 +232,8 @@ export default {
   //meta
   head() {
     return {
-      title: 'Edit Lokasi',
+      title: 'Edit EMPLOYEE',
     }
-  },
-
-  components: {
-    'ckeditor-nuxt': () => {
-      if (process.client) {
-        return import('@blowstack/ckeditor-nuxt')
-      }
-    },
   },
 
   data() {
@@ -169,96 +244,85 @@ export default {
       ],
 
       state: 'disabled',
-      value: undefined,
 
       field: {
-        code: '',
+        location_id: '',
+        department_id: '',
+        company_id: '',
+        position_id: '',
+        nik: '',
         name: '',
-        site_id: '',
+        email: '',
         is_active: '',
+        employee_status: '',
         description: '',
-        create_at: '',
-        update_at: '',
+        created_at: '',
         created_by: '',
+        updated_at: '',
         updated_by: '',
       },
 
-      id_site: '',
-
       //state validation
       validation: [],
-
-      //config CKEDITOR
-      editorConfig: {
-        removePlugins: ['Title'],
-        simpleUpload: {
-          uploadUrl: 'http://localhost:8000/api/web/posts/storeImage',
-        },
-      },
     }
   },
 
   mounted() {
-    this.$refs.code.focus()
-
+    //get data field by ID
     this.$axios
-      .get(`/api/admin/master/site/${this.$route.params.id}`)
-
-      .then((response) => {
-        //  console.log(response.data.data.afdeling_id)
-        this.id_site = response.data.data.id
-
-        this.$nuxt.$loading.start()
-      })
-
-    this.$axios
-      .get(`/api/admin/location/${this.$route.params.id}`)
+      .get(`/api/admin/employee/${this.$route.params.id}`)
       .then((response) => {
         //data yang diambil
-        this.field.site_id = response.data.data.site_id
-        this.field.code = response.data.data.code
-        this.field.name = response.data.data.name
-        this.field.is_active = response.data.data.is_active
-        this.field.description = response.data.data.description
+        this.field.location_id = response.data.data.location_id
+        this.field.department_id = response.data.data.department_id
+        this.field.company_id = response.data.data.company_id
+        this.field.position_id = response.data.data.position_id
         this.field.created_at = response.data.data.created_at
         this.field.created_by = response.data.data.created_by
         this.field.updated_at = response.data.data.updated_at
         this.field.updated_by = response.data.data.updated_by
-
-        this.$nuxt.$loading.start()
+        this.field.description = response.data.data.description
+        this.field.nik = response.data.data.nik
+        this.field.nik = response.data.data.nik
+        this.field.name = response.data.data.name
+        this.field.email = response.data.data.nik
+        this.field.is_active = response.data.data.is_active
+        this.field.employee_status = response.data.data.employee_status
       })
+    this.$refs.nik.focus()
   },
 
   methods: {
-    currentDate() {
-      const current = new Date()
-      const date = `${current.getFullYear()}-${
-        current.getMonth() + 1
-      }-${current.getDate()}`
-
-      return date
-    },
-
     back() {
       this.$router.push({
-        name: 'admin-location-id',
-        params: { id: this.field.site_id, r: 1 },
+        name: 'admin-employee',
+        params: { id: this.$route.params.id, r: 1 },
       })
     },
 
     // update method
-    async updateData(e) {
+    async update(e) {
       e.preventDefault()
 
       //send data ke Rest API untuk update
       await this.$axios
-        .put(`api/admin/location/${this.$route.params.id}`, {
+        .put(`/api/admin/employee/${this.$route.params.id}`, {
           //data yang dikirim
-          site_id: this.field.site_id,
-          code: this.field.code,
+          location_id: this.field.location_id,
+          department_id: this.field.department_id,
+          company_id: this.field.company_id,
+          position_id: this.field.position_id,
+          nik: this.field.nik,
           name: this.field.name,
+          email: this.field.email,
           is_active: this.field.is_active,
+          code_sap: this.field.code_sap,
+          created_at: this.field.created_at,
+          updated_at: this.field.updated_at,
+          created_by: this.field.created_by,
+          updated_by: this.field.updated_by,
           description: this.field.description,
+          employee_status: this.field.employee_status,
         })
         .then(() => {
           //sweet alert
@@ -269,8 +333,10 @@ export default {
             showConfirmButton: false,
             timer: 2000,
           })
-          //redirect ke route "location"
-          this.back()
+          //redirect ke route "post"
+          this.$router.push({
+            name: 'admin-company',
+          })
         })
         .catch((error) => {
           //assign error validasi
@@ -278,7 +344,6 @@ export default {
         })
     },
   },
-
   computed: {
     disabled() {
       return this.state === 'disabled'
@@ -289,9 +354,4 @@ export default {
   },
 }
 </script>
-
-<style>
-.ck-editor__editable {
-  min-height: 200px;
-}
-</style>
+<style></style>

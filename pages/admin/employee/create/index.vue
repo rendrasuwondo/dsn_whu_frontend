@@ -8,25 +8,23 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-book-open"></i> TAMBAH PT
+            <i class="nav-icon fas fa-user-tie"></i> TAMBAH EMPLOYEE
           </h3>
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
           <form @submit.prevent="storePost">
             <div class="form-group">
-              <label>Kode</label>
+              <label>NIK</label>
               <input
                 type="text"
-                v-model="field.code"
-                placeholder="Masukkan kode PT"
+                v-model="field.nik"
+                placeholder="Masukkan NIK"
                 class="form-control"
-                ref="code"
+                ref="nik"
               />
-              <div v-if="validation.code" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.code[0]
-                }}</b-alert>
+              <div v-if="validation.nik" class="mt-2">
+                <b-alert show variant="danger">{{ validation.nik[0] }}</b-alert>
               </div>
             </div>
 
@@ -35,7 +33,7 @@
               <input
                 type="text"
                 v-model="field.name"
-                placeholder="Masukkan Nama PT"
+                placeholder="Masukkan Nama Karyawan"
                 class="form-control"
               />
               <div v-if="validation.name" class="mt-2">
@@ -46,11 +44,80 @@
             </div>
 
             <div class="form-group">
-              <label>Kode SAP</label>
+              <label>PT</label>
               <input
                 type="text"
-                v-model="field.code_sap"
-                placeholder="Masukkan Code SAP"
+                v-model="field.company_id"
+                placeholder="Masukkan PT"
+                class="form-control"
+              />
+              <!-- <multiselect
+                v-model="field.company_id"
+                :options="company"
+                label="name"
+                track-by="id"
+                :searchable="true"
+                @input="onChange"
+              ></multiselect> -->
+              <!-- <div v-if="validation.company_id" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.company_id[0]
+                }}</b-alert>
+              </div> -->
+            </div>
+
+            <div class="form-group">
+              <label>Department</label>
+              <input
+                type="text"
+                v-model="field.department_id"
+                placeholder="Masukkan Nama Department"
+                class="form-control"
+              />
+              <!-- <multiselect
+                v-model="field.department_id"
+                :options="department"
+                label="name"
+                track-by="id"
+                :searchable="true"
+                @input="onChange"
+              ></multiselect> -->
+              <!-- <div v-if="validation.department_id" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.department_id[0]
+                }}</b-alert>
+              </div> -->
+            </div>
+
+            <div class="form-group">
+              <label>Lokasi</label>
+              <input
+                type="text"
+                v-model="field.location_id"
+                placeholder="Masukkan Nama Lokasi"
+                class="form-control"
+              />
+              <!-- <multiselect
+                v-model="field.location_id"
+                :options="location"
+                label="name"
+                track-by="id"
+                :searchable="true"
+                @input="onChange"
+              ></multiselect> -->
+              <!-- <div v-if="validation.location_id" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.location_id[0]
+                }}</b-alert>
+              </div> -->
+            </div>
+
+            <div class="form-group">
+              <label>Alamat Email</label>
+              <input
+                type="email"
+                v-model="field.email"
+                placeholder="Masukkan Alamat Email"
                 class="form-control"
               />
             </div>
@@ -62,9 +129,13 @@
             </div>
 
             <div class="form-group">
-              <label>SBU?</label>
-              <b-form-select v-model="field.sbu" :options="sbu_options">
-              </b-form-select>
+              <label>Employee status</label>
+              <input
+                type="text"
+                v-model="field.employee_status"
+                placeholder="Masukkan Employee status"
+                class="form-control"
+              />
             </div>
 
             <div class="form-group">
@@ -166,7 +237,7 @@ export default {
   //meta
   head() {
     return {
-      title: 'Tambah PT',
+      title: 'Tambah Employee',
     }
   },
 
@@ -176,22 +247,23 @@ export default {
         { value: 'Y', text: 'Ya' },
         { value: 'N', text: 'Tidak' },
       ],
-      sbu_options: [
-        { value: 'A', text: 'Agro' },
-        { value: 'C', text: 'Corporate' },
-      ],
+
       state: 'disabled',
 
       field: {
-        description: '',
-        code: '',
+        location_id: '',
+        department_id: '',
+        company_id: '',
+        position_id: '',
+        nik: '',
         name: '',
-        code_sap: '',
-        sbu: 'A',
+        email: '',
         is_active: 'Y',
+        employee_status: '',
+        description: '',
         created_at: '',
-        updated_at: '',
         created_by: '',
+        updated_at: '',
         updated_by: '',
       },
 
@@ -208,13 +280,24 @@ export default {
     this.field.updated_by =
       this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
 
-    this.$refs.code.focus()
+    this.$refs.nik.focus()
   },
 
   methods: {
+    onChange() {
+      if (this.field.department_id.department_code.indexOf('RATE') > 0) {
+        this.show_hk = false
+        this.show_rate = true
+        this.field.man_days = ''
+      } else {
+        this.show_hk = true
+        this.show_rate = false
+        this.field.flexrate = ''
+      }
+    },
     back() {
       this.$router.push({
-        name: 'admin-company',
+        name: 'admin-employee',
         params: { id: this.$route.params.id, r: 1 },
       })
     },
@@ -232,20 +315,24 @@ export default {
       //define formData
       let formData = new FormData()
 
-      formData.append('code', this.field.code)
+      formData.append('location_id', this.field.location_id)
+      formData.append('department_id', this.field.department_id)
+      formData.append('company_id', this.field.company_id)
+      formData.append('position_id', this.field.position_id)
+      formData.append('employee_status', this.field.employee_status)
+      formData.append('nik', this.field.nik)
       formData.append('name', this.field.name)
+      formData.append('email', this.field.email)
       formData.append('is_active', this.field.is_active)
-      formData.append('code_sap', this.field.code_sap)
+      formData.append('description', this.field.description)
       formData.append('created_at', this.field.created_at)
       formData.append('created_by', this.field.created_by)
       formData.append('update_at', this.field.update_at)
       formData.append('udpate_by', this.field.udpate_by)
-      formData.append('description', this.field.description)
-      formData.append('sbu', this.field.sbu)
 
       //sending data to server
       await this.$axios
-        .post('/api/admin/company', formData)
+        .post('/api/admin/employee', formData)
         .then(() => {
           //sweet alert
           this.$swal.fire({
@@ -258,7 +345,7 @@ export default {
 
           //redirect, if success store data
           this.$router.push({
-            name: 'admin-company',
+            name: 'admin-employee',
           })
         })
         .catch((error) => {

@@ -1,5 +1,5 @@
 <template>
-  <div class="content-wrapper">
+  <div class="content-wrapper mb-5">
     <section class="content-header">
       <div class="container-fluid"></div>
     </section>
@@ -8,12 +8,12 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-user"></i> EDIT USER
+            <i class="nav-icon fas fa-book-open"></i> TAMBAH USER
           </h3>
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
-          <form @submit.prevent="update">
+          <form @submit.prevent="storePost">
             <div class="form-group">
               <label>User Name</label>
               <input
@@ -23,11 +23,11 @@
                 class="form-control"
                 ref="user_name"
               />
-              <!-- <div v-if="validation.user_name" class="mt-2">
+              <div v-if="validation.user_name" class="mt-2">
                 <b-alert show variant="danger">{{
                   validation.user_name[0]
                 }}</b-alert>
-              </div> -->
+              </div>
             </div>
 
             <div class="form-group">
@@ -38,11 +38,11 @@
                 placeholder="Masukkan Nama User"
                 class="form-control"
               />
-              <!-- <div v-if="validation.name" class="mt-2">
+              <div v-if="validation.name" class="mt-2">
                 <b-alert show variant="danger">{{
                   validation.name[0]
                 }}</b-alert>
-              </div> -->
+              </div>
             </div>
 
             <div class="form-group">
@@ -53,11 +53,11 @@
                 placeholder="Masukkan Alamat Email "
                 class="form-control"
               />
-              <!-- <div v-if="validation.email" class="mt-2">
+              <div v-if="validation.email" class="mt-2">
                 <b-alert show variant="danger">{{
                   validation.email[0]
                 }}</b-alert>
-              </div> -->
+              </div>
             </div>
 
             <div class="form-group">
@@ -68,11 +68,11 @@
                 placeholder="Masukkan Password"
                 class="form-control"
               />
-              <!-- <div v-if="validation.password" class="mt-2">
+              <div v-if="validation.password" class="mt-2">
                 <b-alert show variant="danger">{{
                   validation.password[0]
                 }}</b-alert>
-              </div> -->
+              </div>
             </div>
 
             <div class="form-group">
@@ -147,6 +147,7 @@
     </section>
   </div>
 </template>
+
 <script>
 export default {
   //layout
@@ -155,13 +156,28 @@ export default {
   //meta
   head() {
     return {
-      title: 'Edit User',
+      title: 'Tambah User',
     }
+  },
+
+  components: {
+    'ckeditor-nuxt': () => {
+      if (process.client) {
+        return import('@blowstack/ckeditor-nuxt')
+      }
+    },
   },
 
   data() {
     return {
+      is_active: { value: 'Y', text: 'Ya' },
+      options: [
+        { value: 'Y', text: 'Ya' },
+        { value: 'N', text: 'Tidak' },
+      ],
+
       state: 'disabled',
+      value: undefined,
 
       field: {
         user_name: '',
@@ -172,79 +188,124 @@ export default {
         updated_at: '',
         created_by: '',
         updated_by: '',
+        employee_id: '',
       },
+
+      role_id: '',
+      //state categories
+      //   activity: [],
+      //   ha_statement: [],
+      //   foreman: [],
+      //   labour: [],
+
+      //state categories
+      //   categories: [],
+
+      //   //state tags
+      //   tags: [],
 
       //state validation
       validation: [],
+
+      //config CKEDITOR
+      editorConfig: {
+        removePlugins: ['Title'],
+        simpleUpload: {
+          uploadUrl: 'http://localhost:8000/api/web/posts/storeImage',
+        },
+      },
     }
   },
 
   mounted() {
+    this.field.created_at = this.currentDate()
+    this.field.updated_at = this.currentDate()
     this.field.created_by =
       this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
     this.field.updated_by =
       this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+    this.$refs.code.focus()
 
-    //get data field by ID
     this.$axios
-      .get(`/api/admin/users/${this.$route.params.id}`)
+      .get(`/api/admin/master/role/${this.$route.params.id}`)
+
       .then((response) => {
-        //data yang diambil
-        this.field.user_name = response.data.data.user_name
-        this.field.name = response.data.data.name
-        this.field.email = response.data.data.email
-        this.field.password = response.data.data.password
-        this.field.created_at = response.data.data.created_at
-        this.field.updated_at = response.data.data.updated_at
-        // this.field.created_by = response.data.data.created_by
-        // this.field.updated_by = response.data.data.updated_by
-      })
-    this.$refs.user_name.focus()
+        //  console.log(response.data.data.afdeling_id)
+        this.role_id = response.data.data.id
+
+        this.$nuxt.$loading.start()
+      }) //.get(`/api/admin/master/activity_plan/${this.$route.params.id}`)
+
+    //fetching data categories
+    // this.$axios
+    //   .get('/api/admin/site')
+
+    //   .then((response) => {
+    //     // this.activity = response.data.data
+    //     response.data.data.forEach((dt) => {
+    //       if (dt.activity_group_code != 'PANEN') {
+    //         this.activity.push(dt)
+    //       }
+    //     })
+    //   })
+
+    // console.log(this.$auth.user.employee.afdeling_id)
   },
 
   methods: {
+    currentDate() {
+      const current = new Date()
+      const date = `${current.getFullYear()}-${
+        current.getMonth() + 1
+      }-${current.getDate()}`
+
+      return date
+    },
+
     back() {
       this.$router.push({
-        name: 'system-user',
+        name: 'system-user_has_role-id',
         params: { id: this.$route.params.id, r: 1 },
       })
     },
 
-    // update method
-    async update(e) {
-      e.preventDefault()
+    async storePost() {
+      //define formData
+      let formData = new FormData()
 
-      //send data ke Rest API untuk update
+      formData.append('site_id', this.$route.params.id)
+      formData.append('code', this.field.code)
+      formData.append('name', this.field.name)
+      formData.append('is_active', this.field.is_active)
+      formData.append('description', this.field.description)
+      formData.append('created_at', this.field.created_at)
+      formData.append('created_by', this.field.created_by)
+      formData.append('update_at', this.field.update_at)
+      formData.append('udpate_by', this.field.udpate_by)
+
       await this.$axios
-        .put(`/api/admin/users/${this.$route.params.id}`, {
-          //data yang dikirim
-          user_name: this.field.user_name,
-          name: this.field.name,
-          email: this.field.email,
-          password: this.field.password,
-          created_at: this.field.created_at,
-          updated_at: this.field.updated_at,
-        })
+        .post('/api/admin/user_has_role', formData)
         .then(() => {
           //sweet alert
           this.$swal.fire({
             title: 'BERHASIL!',
-            text: 'Data Berhasil Diupdate!',
+            text: 'Data Berhasil Disimpan!',
             icon: 'success',
             showConfirmButton: false,
             timer: 2000,
           })
-          //redirect ke route "post"
-          this.$router.push({
-            name: 'system-user',
-          })
+          this.back()
         })
         .catch((error) => {
-          //assign error validasi
+          //assign error to state "validation"
           this.validation = error.response.data
+          // this.validation= "sdgs"
         })
+
+      //   this.back()
     },
   },
+
   computed: {
     disabled() {
       return this.state === 'disabled'
@@ -255,4 +316,9 @@ export default {
   },
 }
 </script>
-<style></style>
+
+<style>
+.ck-editor__editable {
+  min-height: 200px;
+}
+</style>
