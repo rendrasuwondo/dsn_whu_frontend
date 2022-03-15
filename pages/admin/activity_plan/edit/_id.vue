@@ -232,7 +232,7 @@ export default {
           this.show_rate = false
         } //if (response.data.data.activity_name.indexOf('RATE') > 0) {
 
-        this.field.qty = response.data.data.qty
+        this.field.qty = response.data.data.qty ?? 0
         this.field.description = response.data.data.description
         this.field.activity_description =
           response.data.data.activity_id +
@@ -241,15 +241,7 @@ export default {
         // console.log(response.data.data.man_days)
         // console.log(this.field.man_days)
 
-        // if (this.field.activity_id.name.indexOf('RATE') > 0) {
-        //   this.show_hk = false
-        //   this.show_rate = true
-        //   this.field.man_days = ''
-        // } else {
-        //   this.show_hk = true
-        //   this.show_rate = false
-        //   this.field.flexrate = ''
-        // }
+       
       })
 
     this.$axios

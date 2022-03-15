@@ -45,7 +45,7 @@
               <multiselect
                 v-model="field.foreman_employee_id"
                 :options="foreman"
-                label="employee_description"
+                label="employee_description_position"
                 track-by="id"
                 :searchable="true"
               ></multiselect>
@@ -61,7 +61,7 @@
               <multiselect
                 v-model="field.labour"
                 :options="labour"
-                label="employee_description"
+                label="employee_description_detail"
                 track-by="id"
                 :multiple="true"
                 :searchable="true"
@@ -265,7 +265,7 @@ export default {
         //Dropdown Mandor
         this.$axios
           .get(
-            `/api/admin/lov_employee_activity_group/${this.company_code}/${this.department_code}`
+            `/api/admin/lov_employee_activity_group/${this.company_code}/${this.department_code}/mandor`
           )
 
           .then((response) => {
