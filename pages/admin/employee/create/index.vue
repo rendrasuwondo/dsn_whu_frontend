@@ -52,7 +52,6 @@
                 label="code"
                 track-by="id"
                 :searchable="true"
-                @input="onChange"
               ></multiselect>
               <!-- <div v-if="validation.company_id" class="mt-2">
                 <b-alert show variant="danger">{{
@@ -70,7 +69,6 @@
                 label="code"
                 track-by="id"
                 :searchable="true"
-                @input="onChange"
               ></multiselect>
               <!-- <div v-if="validation.department_id" class="mt-2">
                 <b-alert show variant="danger">{{
@@ -88,7 +86,6 @@
                 label="code"
                 track-by="id"
                 :searchable="true"
-                @input="onChange"
               ></multiselect>
               <!-- <div v-if="validation.location_id" class="mt-2">
                 <b-alert show variant="danger">{{
@@ -106,7 +103,6 @@
                 label="code"
                 track-by="id"
                 :searchable="true"
-                @input="onChange"
               ></multiselect>
               <!-- <div v-if="validation.location_id" class="mt-2">
                 <b-alert show variant="danger">{{
@@ -295,10 +291,11 @@ export default {
 
     //Data company
     this.$axios
-      .get('/api/admin/company')
+      .get('/api/admin/lov_company')
 
       .then((response) => {
-        this.company = response.data.data.data
+        console.log(response.data.data[0])
+        this.company = response.data.data
       })
 
     //Data department
@@ -317,20 +314,17 @@ export default {
         this.location = response.data.data.data
       })
 
-    //Data position
+    // Data position
     this.$axios
       .get('/api/admin/lov_position')
 
       .then((response) => {
-        this.position = response.data.data.data
+        this.position = response.data.data
       })
   },
 
   methods: {
-    onChange() {
-      this.field.man_days = ''
-      this.field.man_days = ''
-    },
+   
     back() {
       this.$router.push({
         name: 'admin-employee',
