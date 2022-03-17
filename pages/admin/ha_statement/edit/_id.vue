@@ -8,178 +8,149 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-folder"></i> EDIT EMPLOYEE
+            <i class="nav-icon fas fa-book-open"></i> EDIT HA STATEMENT
           </h3>
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
           <form @submit.prevent="update">
             <div class="form-group">
-              <label>NIK</label>
+              <label>Block</label>
               <input
                 type="text"
-                v-model="field.nik"
-                placeholder="Masukkan NIK"
+                v-model="field.block"
+                placeholder="Masukkan Nama Block"
                 class="form-control"
-                ref="nik"
+                ref="block"
               />
-              <div v-if="validation.nik" class="mt-2">
-                <b-alert show variant="danger">{{ validation.nik[0] }}</b-alert>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Nama</label>
-              <input
-                type="text"
-                v-model="field.name"
-                placeholder="Masukkan Nama Karyawan"
-                class="form-control"
-              />
-              <div v-if="validation.name" class="mt-2">
+              <div v-if="validation.block" class="mt-2">
                 <b-alert show variant="danger">{{
-                  validation.name[0]
+                  validation.block[0]
                 }}</b-alert>
               </div>
             </div>
 
             <div class="form-group">
-              <label>PT</label>
+              <label>Block SAP</label>
               <input
                 type="text"
-                v-model="field.company_id"
-                placeholder=""
+                v-model="field.block_sap"
+                placeholder="Masukkan Blok SAP"
                 class="form-control"
-                readonly
               />
-              <!-- <multiselect
-                v-model="field.company_id"
-                :options="company"
-                label="code"
-                track-by="id"
-                :searchable="true"
-                @input="onChange"
-              ></multiselect> -->
-              <!-- <div v-if="validation.company_id" class="mt-2">
+              <div v-if="validation.block" class="mt-2">
                 <b-alert show variant="danger">{{
-                  validation.company_id[0]
-                }}</b-alert>
-              </div> -->
-            </div>
-
-            <div class="form-group">
-              <label>Department</label>
-              <input
-                type="text"
-                v-model="field.department_id"
-                placeholder=""
-                class="form-control"
-                readonly
-              />
-              <!-- <multiselect
-                v-model="field.department_id"
-                :options="department"
-                label="code"
-                track-by="id"
-                :searchable="true"
-                @input="onChange"
-              ></multiselect> -->
-              <!-- <div v-if="validation.department_id" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.department_id[0]
-                }}</b-alert>
-              </div> -->
-            </div>
-
-            <div class="form-group">
-              <label>Posisi</label>
-              <input
-                type="text"
-                v-model="field.position_id"
-                placeholder=""
-                class="form-control"
-                readonly
-              />
-              <!-- <multiselect
-                v-model="field.position_id"
-                :options="position"
-                label="code"
-                track-by="id"
-                :searchable="true"
-                @input="onChange"
-              ></multiselect> -->
-              <!-- <div v-if="validation.location_id" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.location_id[0]
-                }}</b-alert>
-              </div> -->
-            </div>
-
-            <div class="form-group">
-              <label>Lokasi</label>
-              <input
-                type="text"
-                v-model="field.location_id"
-                placeholder=""
-                class="form-control"
-                readonly
-              />
-              <!-- <multiselect
-                v-model="field.location_id"
-                :options="location"
-                label="code"
-                track-by="id"
-                :searchable="true"
-                @input="onChange"
-              ></multiselect> -->
-              <!-- <div v-if="validation.location_id" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.location_id[0]
-                }}</b-alert>
-              </div> -->
-            </div>
-
-            <div class="form-group">
-              <label>Alamat Email</label>
-              <input
-                type="email"
-                v-model="field.email"
-                placeholder="Masukkan Alamat Email"
-                class="form-control"
-              />
-            </div>
-
-            <div class="form-group">
-              <label>Aktif?</label>
-              <b-form-select v-model="field.is_active" :options="options">
-              </b-form-select>
-            </div>
-
-            <div class="form-group">
-              <label>Employee status</label>
-              <input
-                type="text"
-                v-model="field.employee_status"
-                placeholder="Masukkan Employee status"
-                class="form-control"
-              />
-            </div>
-
-            <div class="form-group">
-              <label>Keterangan</label>
-
-              <textarea
-                v-model="field.description"
-                class="form-control"
-                rows="3"
-                placeholder="Masukkan Deskripsi Singkat"
-              ></textarea>
-              <div v-if="validation.description" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.description[0]
+                  validation.block[0]
                 }}</b-alert>
               </div>
             </div>
+
+            <div class="form-group">
+              <label>Afdeling</label>
+              <input
+                type="text"
+                v-model="field.afdeling_id"
+                placeholder=""
+                class="form-control"
+                readonly
+              />
+              <!-- <multiselect
+                v-model="field.afdeling_id"
+                :options="afdeling"
+                label="code"
+                track-by="id"
+                :searchable="true"
+                @input="onChange"
+              ></multiselect> -->
+              <!-- <div v-if="validation.afdeling_id" class="mt-2">
+                <b-alert show variant="danger">{{ validation.afdeling_id[0] }}</b-alert>
+              </div> -->
+            </div>
+
+            <div class="form-group">
+              <label>Progeny</label>
+              <input
+                type="text"
+                v-model="field.progeny_id"
+                placeholder=""
+                class="form-control"
+                readonly
+              />
+              <!-- <multiselect
+                v-model="field.progeny_id"
+                :options="progeny"
+                label="code"
+                track-by="id"
+                :searchable="true"
+                @input="onChange"
+              ></multiselect> -->
+              <!-- <div v-if="validation.progeny_id" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.progeny_id[0]
+                }}</b-alert>
+              </div> -->
+            </div>
+
+            <div class="form-group">
+              <label>Plant Month</label>
+              <number
+                class="form-control"
+                placeholder="Masukkan Jumlah Plant Month"
+                v-model="field.plant_month"
+                prefix=""
+              ></number>
+              <!-- <div v-if="validation.block" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.block[0]
+                }}</b-alert>
+              </div> -->
+            </div>
+
+            <div class="form-group">
+              <label>Plant Year</label>
+              <number
+                class="form-control"
+                placeholder="Masukkan Jumlah Plant Year"
+                v-model="field.plant_year"
+                prefix=""
+              ></number>
+              <!-- <div v-if="validation.block" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.block[0]
+                }}</b-alert>
+              </div> -->
+            </div>
+
+            <div class="form-group">
+              <label>Wide</label>
+              <input
+                type="text"
+                v-model="field.wide"
+                placeholder="Masukkan Wide"
+                class="form-control"
+              />
+              <!-- <div v-if="validation.block" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.block[0]
+                }}</b-alert>
+              </div> -->
+            </div>
+
+            <div class="form-group">
+              <label>Point</label>
+              <input
+                type="text"
+                v-model="field.point"
+                placeholder="Masukkan Point"
+                class="form-control"
+              />
+              <!-- <div v-if="validation.block" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.block[0]
+                }}</b-alert>
+              </div> -->
+            </div>
+
             <div class="form-group">
               <b-row>
                 <b-col>
@@ -233,6 +204,7 @@
                 </b-col>
               </b-row>
             </div>
+
             <div class="form-group"></div>
 
             <button class="btn btn-info mr-1 btn-submit" type="submit">
@@ -265,37 +237,26 @@ export default {
 
   data() {
     return {
-      options: [
-        { value: 'Y', text: 'Ya' },
-        { value: 'N', text: 'Tidak' },
-      ],
-
       state: 'disabled',
 
       field: {
-        location_id: '',
-        department_id: '',
-        company_id: '',
-        position_id: '',
-        nik: '',
-        name: '',
-        email: '',
-        is_active: '',
-        employee_status: '',
-        description: '',
+        afdeling_id: '',
+        block: '',
+        block_sap: '',
+        progeny_id: '',
+        plant_month: '',
+        plant_year: '',
+        wide: '',
+        point: '',
         created_at: '',
         created_by: '',
         updated_at: '',
         updated_by: '',
       },
 
-      company: [],
+      afdeling: [],
 
-      department: [],
-
-      location: [],
-
-      position: [],
+      progeny: [],
 
       //state validation
       validation: [],
@@ -305,65 +266,46 @@ export default {
   mounted() {
     //get data field by ID
     this.$axios
-      .get(`/api/admin/employee/${this.$route.params.id}`)
+      .get(`/api/admin/ha_statement/${this.$route.params.id}`)
       .then((response) => {
         //data yang diambil
-        this.field.location_id = response.data.data.location_id
-        this.field.department_id = response.data.data.department_id
-        this.field.company_id = response.data.data.company_id
-        this.field.position_id = response.data.data.position_id
+        this.field.afdeling_id = response.data.data.afdeling_id
+        this.field.progeny_id = response.data.data.progeny_id
+        this.field.block = response.data.data.block
+        this.field.block_sap = response.data.data.block_sap
+        this.field.plant_month = response.data.data.plant_month
+        this.field.plant_year = response.data.data.plant_year
+        this.field.wide = response.data.data.wide
+        this.field.point = response.data.data.point
         this.field.created_at = response.data.data.created_at
         this.field.created_by = response.data.data.created_by
         this.field.updated_at = response.data.data.updated_at
         this.field.updated_by = response.data.data.updated_by
-        this.field.description = response.data.data.description
-        this.field.nik = response.data.data.nik
-        this.field.nik = response.data.data.nik
-        this.field.name = response.data.data.name
-        this.field.email = response.data.data.nik
-        this.field.is_active = response.data.data.is_active
-        this.field.employee_status = response.data.data.employee_status
       })
 
-    //Data company
+    this.$refs.block.focus()
+
+    //Data afdeling
     this.$axios
-      .get('/api/admin/company')
+      .get('/api/admin/afdeling')
 
       .then((response) => {
-        this.company = response.data.data.data
+        this.afdeling = response.data.data.data
       })
 
-    //Data department
+    //Data progeny
     this.$axios
-      .get('/api/admin/department')
+      .get('/api/admin/progeny')
 
       .then((response) => {
-        this.department = response.data.data.data
+        this.progeny = response.data.data.data
       })
-
-    //Data location
-    this.$axios
-      .get('/api/admin/location')
-
-      .then((response) => {
-        this.location = response.data.data.data
-      })
-
-    //Data position
-    this.$axios
-      .get('/api/admin/position')
-
-      .then((response) => {
-        this.position = response.data.data.data
-      })
-
-    this.$refs.nik.focus()
   },
 
   methods: {
     back() {
       this.$router.push({
-        name: 'admin-employee',
+        name: 'admin-ha_statement',
         params: { id: this.$route.params.id, r: 1 },
       })
     },
@@ -374,23 +316,20 @@ export default {
 
       //send data ke Rest API untuk update
       await this.$axios
-        .put(`/api/admin/employee/${this.$route.params.id}`, {
+        .put(`/api/admin/ha_statement/${this.$route.params.id}`, {
           //data yang dikirim
-          location_id: this.field.location_id,
-          department_id: this.field.department_id,
-          company_id: this.field.company_id,
-          position_id: this.field.position_id,
-          nik: this.field.nik,
-          name: this.field.name,
-          email: this.field.email,
-          is_active: this.field.is_active,
-          code_sap: this.field.code_sap,
+          afdeling_id: this.field.afdeling_id,
+          progeny_id: this.field.progeny_id,
+          block: this.field.block,
+          block_sap: this.field.block_sap,
+          plant_month: this.field.plant_month,
+          plant_year: this.field.plant_year,
+          wide: this.field.wide,
+          point: this.field.point,
           created_at: this.field.created_at,
           updated_at: this.field.updated_at,
           created_by: this.field.created_by,
           updated_by: this.field.updated_by,
-          description: this.field.description,
-          employee_status: this.field.employee_status,
         })
         .then(() => {
           //sweet alert
@@ -403,7 +342,7 @@ export default {
           })
           //redirect ke route "post"
           this.$router.push({
-            name: 'admin-company',
+            name: 'admin-ha_statement',
           })
         })
         .catch((error) => {
