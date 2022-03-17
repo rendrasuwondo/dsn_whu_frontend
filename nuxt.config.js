@@ -31,7 +31,7 @@ export default {
         link: [{
                 rel: 'icon',
                 type: 'image/x-icon',
-                href: '/icon-logo.png',
+                href: '/favicon.ico',
             },
             {
                 rel: 'stylesheet',
