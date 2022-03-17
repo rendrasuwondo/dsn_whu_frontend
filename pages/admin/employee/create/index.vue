@@ -21,7 +21,7 @@
                 v-model="field.nik"
                 placeholder="Masukkan NIK"
                 class="form-control"
-                ref="nik"
+                refs="nik"
               />
               <div v-if="validation.nik" class="mt-2">
                 <b-alert show variant="danger">{{ validation.nik[0] }}</b-alert>
@@ -291,7 +291,7 @@ export default {
     this.field.updated_by =
       this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
 
-    this.$refs.nik.focus()
+    // this.$refs.nik.focus()
 
     //Data company
     this.$axios
@@ -319,7 +319,7 @@ export default {
 
     //Data position
     this.$axios
-      .get('/api/admin/position')
+      .get('/api/admin/lov_position')
 
       .then((response) => {
         this.position = response.data.data.data
