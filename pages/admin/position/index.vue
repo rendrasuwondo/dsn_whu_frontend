@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-id-card"></i> JABATAN
+            <i class="nav-icon fas fa-user-tie"></i> JABATAN
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -114,7 +114,7 @@ export default {
         },
         {
           label: 'Aktif',
-          key: 'is_active',
+          key: 'is_active_code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
       ],
