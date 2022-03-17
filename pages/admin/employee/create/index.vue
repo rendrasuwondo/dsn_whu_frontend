@@ -82,14 +82,14 @@
             <div class="form-group">
               <label>Posisi</label>
 
-              <!-- <multiselect
+              <multiselect
                 v-model="field.position_id"
                 :options="position"
                 label="code"
                 track-by="id"
                 :searchable="true"
                 @input="onChange"
-              ></multiselect> -->
+              ></multiselect>
               <!-- <div v-if="validation.location_id" class="mt-2">
                 <b-alert show variant="danger">{{
                   validation.location_id[0]
