@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-book-open"></i> RKH
+            <i class="nav-icon fas fa-book-open"></i> Realisasi
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -17,7 +17,7 @@
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <nuxt-link
-                  :to="{ name: 'admin-activity_plan-create' }"
+                  :to="{ name: 'admin-company-create' }"
                   class="btn btn-info btn-sm"
                   style="padding-top: 8px"
                   ><i class="fa fa-plus-circle"></i> TAMBAH</nuxt-link
@@ -38,7 +38,6 @@
               </div>
             </div>
           </div>
-
           <!-- table -->
           <b-table
             small
@@ -53,7 +52,7 @@
             <template v-slot:cell(actions)="row">
               <b-button
                 :to="{
-                  name: 'admin-activity_plan-edit-id',
+                  name: 'admin-company-edit-id',
                   params: { id: row.item.id },
                 }"
                 variant="link"
@@ -62,7 +61,6 @@
               >
                 <i class="fa fa-pencil-alt"></i>
               </b-button>
-
               <b-button
                 variant="link"
                 size="sm"
@@ -71,21 +69,7 @@
                 ><i class="fa fa-trash"></i
               ></b-button>
             </template>
-            <template v-slot:cell(detail)="row">
-              <b-button
-                :to="{
-                  name: 'admin-activity_plan_detail-id',
-                  params: { id: row.item.id },
-                }"
-                variant="link"
-                size=""
-                title="Detail"
-              >
-                <i class="fa fa-file-alt"></i>
-              </b-button>
-            </template>
           </b-table>
-
           <b-row>
             <b-col>
               <!-- pagination -->
@@ -108,20 +92,15 @@
 
 <script>
 export default {
-  //layout
   layout: 'admin',
 
-  //meta
   head() {
     return {
-      title: 'RKH',
+      title: 'Realisasi',
     }
   },
-
-  //data function
   data() {
     return {
-      //table header
       fields: [
         {
           label: 'Actions',
@@ -129,50 +108,48 @@ export default {
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          label: 'Detail',
-          key: 'detail',
-          tdClass: 'align-middle text-center',
-        },
-        {
           label: 'Tanggal',
           key: 'activitied_at',
-          tdClass: 'align-middle',
-        },
-        {
-          label: 'Afdeling',
-          key: 'afdeling_id',
-          tdClass: 'align-middle',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
           label: 'KDKJ',
           key: 'activity_description',
-          tdClass: 'align-middle text-nowrap',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          label: 'Mandor',
+          key: 'foreman_employee',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          label: 'SKU',
+          key: 'labour_employee',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+         {
+          label: 'Blok',
+          key: 'block',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
           label: 'HK',
-          key: 'man_daysFormat',
-          tdClass: 'align-middle text-right',
+          key: 'man_days',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
           label: 'Volume',
-          key: 'qtyFormat',
-          tdClass: 'align-middle text-right',
+          key: 'qty',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
           label: 'Rate',
-          key: 'flexrateFormat',
-          tdClass: 'align-middle text-left text-nowrap',
+          key: 'flexrate',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
       ],
-
-
-
-      //state search
-      search: '',
     }
   },
-
-  //watch query URL
   watchQuery: ['q', 'page'],
 
   async asyncData({ $axios, query }) {
@@ -184,11 +161,8 @@ export default {
 
     //fetching posts
     const posts = await $axios.$get(
-      `/api/admin/activity_plan?q=${search}&page=${page}`
+      `/api/admin/activity_actual?q=${search}&page=${page}`
     )
-
-    console.log(posts.data.total);
-    // this.rowcount = posts.data.total
 
     return {
       posts: posts.data.data,
@@ -197,20 +171,8 @@ export default {
       rowcount: posts.data.total
     }
   },
-  mounted() {
-    // this.search = this.$route.query.q
-    // document.onreadystatechange = () => {
-    //   if (document.readyState == 'complete') {
-    //     console.log('Page completed with image and files!' + this.$route.query.q)
-    //     // fetch to next page or some code
-    //   }
-    // }
-    // console.log('sadsa')
-    // console.log(this.$route.query.q)
-  },
 
   methods: {
-    //change page pagination
     changePage(page) {
       this.$router.push({
         path: this.$route.path,
@@ -220,7 +182,6 @@ export default {
         },
       })
     },
-
     //searchData
     searchData() {
       this.$router.push({
@@ -248,7 +209,7 @@ export default {
           if (result.isConfirmed) {
             //delete tag from server
 
-            this.$axios.delete(`/api/admin/activity_plan/${id}`).then(() => {
+            this.$axios.delete(`/api/admin/company/${id}`).then(() => {
               //feresh data
               this.$nuxt.refresh()
 
@@ -268,4 +229,4 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped></style>

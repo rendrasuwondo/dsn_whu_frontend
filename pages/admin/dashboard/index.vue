@@ -5,7 +5,7 @@
       <div class="container-fluid"></div>
     </section>
 
-    <section class="content">
+    <!-- <section class="content">
       <div class="row">
         <div class="col-md-3 col-sm-6 col-12">
           <div class="info-box">
@@ -57,7 +57,7 @@
           </div>
         </div>
       </div>
-    </section>
+    </section> -->
   </div>
 </template>
 

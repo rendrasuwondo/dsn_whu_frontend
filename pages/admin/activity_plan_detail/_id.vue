@@ -331,8 +331,8 @@ export default {
 
       .then((response) => {
         //console.log(JSON.stringify(response.data.data))
-        // console.log('rdr')
-        console.log(response.data.data.afdeling_id)
+        console.log('rdr')
+        console.log(response.data.data)
         this.header.push(response.data.data)
         // this.detail(response.data)
         // console.log(this.detail)
