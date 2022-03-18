@@ -46,7 +46,7 @@
             <div class="form-group">
               <label>PT</label>
               <multiselect
-                v-model="field.company_code"
+                v-model="field.company_id"
                 :options="company"
                 label="code"
                 track-by="id"
@@ -258,7 +258,6 @@ export default {
         created_by: '',
         updated_at: '',
         updated_by: '',
-        company_code: '',
       },
 
       company: [],
@@ -351,10 +350,12 @@ export default {
       await this.$axios
         .put(`/api/admin/employee/${this.$route.params.id}`, {
           //data yang dikirim
-          location_id: this.field.location_id,
-          department_id: this.field.department_id,
-          company_id: this.field.company_id,
-          position_id: this.field.position_id,
+          location_id: this.field.location_id ? this.field.location_id.id : '',
+          department_id: this.field.department_id
+            ? this.field.department_id.id
+            : '',
+          company_id: this.field.company_id ? this.field.company_id.id : '',
+          position_id: this.field.position_id ? this.field.position_id.id : '',
           nik: this.field.nik,
           name: this.field.name,
           email: this.field.email,
