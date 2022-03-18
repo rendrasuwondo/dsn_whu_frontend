@@ -190,23 +190,7 @@ export default {
       show_rate: false,
       price: '',
       value: undefined,
-      //state post
-      // post: {
-      //   image: '',
-      //   title: '',
-      //   category_id: '',
-      //   content: '',
-      //   description: '',
-      //   tags: [],
-      // },
-      /* number: {
-          decimal: '.',
-          separator: ',',
-          prefix: '$ ',
-          suffix: ' #',
-          precision: 2,
-          masked: false
-        }, */
+    
       field: {
         afdeling_id: this.$auth.user.employee.afdeling_id,
         activity_id: '',
@@ -245,7 +229,11 @@ export default {
   mounted() {
     this.field.activitied_at = this.currentDate()
 
-    console.log(this.field.activitied_at)
+    const current0 = new Date()
+
+    current0.setDate(current0.getDate() + 1);
+
+    console.log(current0)
 
     //fetching data categories
     this.$axios
@@ -310,10 +298,10 @@ export default {
 
     currentDate() {
       const current = new Date()
+      current.setDate(current.getDate() + 1);
       const date = `${current.getFullYear()}-${
         current.getMonth() + 1
       }-${current.getDate()}`
-
       return date
     },
 

@@ -13,6 +13,62 @@
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
+          <b-card
+            border-variant="primary"
+            header="Filter"
+            header-bg-variant="info"
+            header-text-variant="white"
+          >
+            <b-card-text>
+              <div>
+                <b-row>
+                  <b-col cols="1">Tanggal</b-col>
+                  <b-col
+                    >
+                    <b-input-group>
+                    <b-form-datepicker
+                      v-model="activitied_at_start"
+                      :date-format-options="{
+                        year: 'numeric',
+                        month: 'short',
+                        day: '2-digit',
+                        weekday: 'short',
+                      }"
+                      size="sm"
+                    ></b-form-datepicker>
+                    <template #append>
+                        <b-btn size="sm" @click="activitied_at_start = ''"><i class="fa fa-trash"></i></b-btn>
+                        &nbsp s.d
+                      </template>
+                        
+                   </b-input-group>
+                 
+                  </b-col>
+                  <b-col>
+                    <b-input-group>
+                      <b-datepicker
+                        v-model="activitied_at_end"
+                        reset-button
+                        size="sm"
+                        :date-format-options="{
+                        year: 'numeric',
+                        month: 'short',
+                        day: '2-digit',
+                        weekday: 'short',
+                      }"
+                      ></b-datepicker>
+                      <template #append>
+                        <b-btn size="sm" @click="activitied_at_end = ''"><i class="fa fa-trash"></i></b-btn>
+                      </template>
+                    </b-input-group>
+                  </b-col>
+                  <b-col></b-col>
+                 
+                </b-row>
+              </div>
+            </b-card-text>
+          </b-card>
+
           <div class="form-group">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
@@ -70,6 +126,7 @@
               ></b-button>
             </template>
           </b-table>
+
           <b-row>
             <b-col>
               <!-- pagination -->
@@ -82,7 +139,9 @@
                 class="mt-3"
               ></b-pagination>
             </b-col>
-            <b-col class="text-right" align-self="center">{{ rowcount }} data</b-col>
+            <b-col class="text-right" align-self="center"
+              >{{ rowcount }} data</b-col
+            >
           </b-row>
         </div>
       </div>
@@ -101,6 +160,8 @@ export default {
   },
   data() {
     return {
+      activitied_at_start: '',
+      activitied_at_end: '',
       fields: [
         {
           label: 'Actions',
@@ -127,7 +188,7 @@ export default {
           key: 'labour_employee',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
-         {
+        {
           label: 'Blok',
           key: 'block',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
@@ -168,7 +229,7 @@ export default {
       posts: posts.data.data,
       pagination: posts.data,
       search: search,
-      rowcount: posts.data.total
+      rowcount: posts.data.total,
     }
   },
 
@@ -188,6 +249,7 @@ export default {
         path: this.$route.path,
         query: {
           q: this.search,
+          activitied_at_start: this.activitied_at_start
         },
       })
     },
