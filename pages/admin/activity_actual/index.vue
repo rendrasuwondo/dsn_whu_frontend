@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-book-open"></i> Realisasi
+            <i class="nav-icon fas fa-hard-hat"></i> Realisasi
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -82,7 +82,9 @@
                 class="mt-3"
               ></b-pagination>
             </b-col>
-            <b-col class="text-right" align-self="center">{{ rowcount }} data</b-col>
+            <b-col class="text-right" align-self="center"
+              >{{ rowcount }} data</b-col
+            >
           </b-row>
         </div>
       </div>
@@ -127,7 +129,7 @@ export default {
           key: 'labour_employee',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
-         {
+        {
           label: 'Blok',
           key: 'block',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
@@ -168,7 +170,7 @@ export default {
       posts: posts.data.data,
       pagination: posts.data,
       search: search,
-      rowcount: posts.data.total
+      rowcount: posts.data.total,
     }
   },
 

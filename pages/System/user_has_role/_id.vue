@@ -11,7 +11,7 @@
             <table>
               <tr>
                 <td>
-                  <nuxt-link :to="{ name: 'admin-site' }" class="nav-link">
+                  <nuxt-link :to="{ name: 'admin-role' }" class="nav-link">
                     <i class="nav-icon fas fa-book-open"></i>
                     Role
                   </nuxt-link>

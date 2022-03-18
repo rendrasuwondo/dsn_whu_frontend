@@ -45,21 +45,13 @@
 
             <div class="form-group">
               <label>PT</label>
-              <input
-                type="text"
-                v-model="field.company_id"
-                placeholder=""
-                class="form-control"
-                readonly
-              />
-              <!-- <multiselect
-                v-model="field.company_id"
+              <multiselect
+                v-model="field.company_code"
                 :options="company"
                 label="code"
                 track-by="id"
                 :searchable="true"
-                @input="onChange"
-              ></multiselect> -->
+              ></multiselect>
               <!-- <div v-if="validation.company_id" class="mt-2">
                 <b-alert show variant="danger">{{
                   validation.company_id[0]
@@ -69,21 +61,14 @@
 
             <div class="form-group">
               <label>Department</label>
-              <input
-                type="text"
-                v-model="field.department_id"
-                placeholder=""
-                class="form-control"
-                readonly
-              />
-              <!-- <multiselect
+
+              <multiselect
                 v-model="field.department_id"
                 :options="department"
                 label="code"
                 track-by="id"
                 :searchable="true"
-                @input="onChange"
-              ></multiselect> -->
+              ></multiselect>
               <!-- <div v-if="validation.department_id" class="mt-2">
                 <b-alert show variant="danger">{{
                   validation.department_id[0]
@@ -93,21 +78,14 @@
 
             <div class="form-group">
               <label>Posisi</label>
-              <input
-                type="text"
-                v-model="field.position_id"
-                placeholder=""
-                class="form-control"
-                readonly
-              />
-              <!-- <multiselect
+
+              <multiselect
                 v-model="field.position_id"
                 :options="position"
                 label="code"
                 track-by="id"
                 :searchable="true"
-                @input="onChange"
-              ></multiselect> -->
+              ></multiselect>
               <!-- <div v-if="validation.location_id" class="mt-2">
                 <b-alert show variant="danger">{{
                   validation.location_id[0]
@@ -117,21 +95,14 @@
 
             <div class="form-group">
               <label>Lokasi</label>
-              <input
-                type="text"
-                v-model="field.location_id"
-                placeholder=""
-                class="form-control"
-                readonly
-              />
-              <!-- <multiselect
+
+              <multiselect
                 v-model="field.location_id"
                 :options="location"
                 label="code"
                 track-by="id"
                 :searchable="true"
-                @input="onChange"
-              ></multiselect> -->
+              ></multiselect>
               <!-- <div v-if="validation.location_id" class="mt-2">
                 <b-alert show variant="danger">{{
                   validation.location_id[0]
@@ -287,6 +258,7 @@ export default {
         created_by: '',
         updated_at: '',
         updated_by: '',
+        company_code: '',
       },
 
       company: [],
@@ -325,12 +297,15 @@ export default {
         this.field.employee_status = response.data.data.employee_status
       })
 
-    //Data company
+    ///Data company
     this.$axios
-      .get('/api/admin/company')
+      .get('/api/admin/lov_company')
 
       .then((response) => {
-        this.company = response.data.data.data
+        console.log(response.data.data[0])
+        this.company = response.data.data
+        this.field.company_code =
+          response.data.data.company_id + ' ' + response.data.data.company.code
       })
 
     //Data department
@@ -349,12 +324,12 @@ export default {
         this.location = response.data.data.data
       })
 
-    //Data position
+    // Data position
     this.$axios
-      .get('/api/admin/position')
+      .get('/api/admin/lov_position')
 
       .then((response) => {
-        this.position = response.data.data.data
+        this.position = response.data.data
       })
 
     this.$refs.nik.focus()

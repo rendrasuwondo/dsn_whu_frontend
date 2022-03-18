@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-book-open"></i> EDIT HA STATEMENT
+            <i class="nav-icon fas fa-file-signature"></i> EDIT HA STATEMENT
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -47,21 +47,13 @@
 
             <div class="form-group">
               <label>Afdeling</label>
-              <input
-                type="text"
-                v-model="field.afdeling_id"
-                placeholder=""
-                class="form-control"
-                readonly
-              />
-              <!-- <multiselect
+              <multiselect
                 v-model="field.afdeling_id"
                 :options="afdeling"
-                label="code"
+                label="id"
                 track-by="id"
                 :searchable="true"
-                @input="onChange"
-              ></multiselect> -->
+              ></multiselect>
               <!-- <div v-if="validation.afdeling_id" class="mt-2">
                 <b-alert show variant="danger">{{ validation.afdeling_id[0] }}</b-alert>
               </div> -->
@@ -69,21 +61,14 @@
 
             <div class="form-group">
               <label>Progeny</label>
-              <input
-                type="text"
-                v-model="field.progeny_id"
-                placeholder=""
-                class="form-control"
-                readonly
-              />
-              <!-- <multiselect
+
+              <multiselect
                 v-model="field.progeny_id"
                 :options="progeny"
                 label="code"
                 track-by="id"
                 :searchable="true"
-                @input="onChange"
-              ></multiselect> -->
+              ></multiselect>
               <!-- <div v-if="validation.progeny_id" class="mt-2">
                 <b-alert show variant="danger">{{
                   validation.progeny_id[0]
@@ -252,6 +237,7 @@ export default {
         created_by: '',
         updated_at: '',
         updated_by: '',
+        afdeling_code: '',
       },
 
       afdeling: [],
@@ -281,24 +267,28 @@ export default {
         this.field.created_by = response.data.data.created_by
         this.field.updated_at = response.data.data.updated_at
         this.field.updated_by = response.data.data.updated_by
+        this.field.afdeling_code =
+          response.data.data.afdeling_id +
+          ' ' +
+          response.data.data.afdeling.code
       })
 
     this.$refs.block.focus()
 
     //Data afdeling
     this.$axios
-      .get('/api/admin/afdeling')
+      .get('/api/admin/lov_afdeling')
 
       .then((response) => {
-        this.afdeling = response.data.data.data
+        this.afdeling = response.data.data
       })
 
     //Data progeny
     this.$axios
-      .get('/api/admin/progeny')
+      .get('/api/admin/lov_progeny')
 
       .then((response) => {
-        this.progeny = response.data.data.data
+        this.progeny = response.data.data
       })
   },
 

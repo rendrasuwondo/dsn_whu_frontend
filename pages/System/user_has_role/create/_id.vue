@@ -8,71 +8,32 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-book-open"></i> TAMBAH USER
+            <i class="nav-icon fas fa-user"></i> TAMBAH USER
           </h3>
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
           <form @submit.prevent="storePost">
             <div class="form-group">
-              <label>User Name</label>
-              <input
-                type="text"
-                v-model="field.user_name"
-                placeholder="Masukkan User Name"
-                class="form-control"
-                ref="user_name"
-              />
-              <div v-if="validation.user_name" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.user_name[0]
-                }}</b-alert>
-              </div>
-            </div>
+              <label>Nama User</label>
+              <multiselect
+                v-model="field.user_id"
+                :options="users"
+                label="name"
+                track-by="id"
+                :searchable="true"
+              ></multiselect>
 
-            <div class="form-group">
-              <label>Nama</label>
-              <input
-                type="text"
-                v-model="field.name"
-                placeholder="Masukkan Nama User"
-                class="form-control"
-              />
-              <div v-if="validation.name" class="mt-2">
+              <!-- <div v-if="validation.name" class="mt-2">
                 <b-alert show variant="danger">{{
                   validation.name[0]
-                }}</b-alert>
-              </div>
+                }}</b-alert> -->
+              <!-- </div> -->
             </div>
-
             <div class="form-group">
-              <label>Email</label>
-              <input
-                type="emial"
-                v-model="field.email"
-                placeholder="Masukkan Alamat Email "
-                class="form-control"
-              />
-              <div v-if="validation.email" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.email[0]
-                }}</b-alert>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Password</label>
-              <input
-                type="password"
-                v-model="field.password"
-                placeholder="Masukkan Password"
-                class="form-control"
-              />
-              <div v-if="validation.password" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.password[0]
-                }}</b-alert>
-              </div>
+              <label>Aktif?</label>
+              <b-form-select v-model="field.is_active" :options="options">
+              </b-form-select>
             </div>
 
             <div class="form-group">
@@ -170,7 +131,6 @@ export default {
 
   data() {
     return {
-      is_active: { value: 'Y', text: 'Ya' },
       options: [
         { value: 'Y', text: 'Ya' },
         { value: 'N', text: 'Tidak' },
@@ -180,29 +140,19 @@ export default {
       value: undefined,
 
       field: {
-        user_name: '',
-        name: '',
-        email: '',
-        password: '',
+        user_id: '',
+        role_id: '',
+        is_active: 'Y',
+        description: '',
         created_at: '',
         updated_at: '',
         created_by: '',
         updated_by: '',
-        employee_id: '',
       },
 
       role_id: '',
-      //state categories
-      //   activity: [],
-      //   ha_statement: [],
-      //   foreman: [],
-      //   labour: [],
 
-      //state categories
-      //   categories: [],
-
-      //   //state tags
-      //   tags: [],
+      users: [],
 
       //state validation
       validation: [],
@@ -224,7 +174,7 @@ export default {
       this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
     this.field.updated_by =
       this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
-    this.$refs.code.focus()
+    // this.$refs.user_name.focus()
 
     this.$axios
       .get(`/api/admin/master/role/${this.$route.params.id}`)
@@ -234,22 +184,15 @@ export default {
         this.role_id = response.data.data.id
 
         this.$nuxt.$loading.start()
-      }) //.get(`/api/admin/master/activity_plan/${this.$route.params.id}`)
+      })
 
-    //fetching data categories
-    // this.$axios
-    //   .get('/api/admin/site')
+    //Data user
+    this.$axios
+      .get('/api/admin/users')
 
-    //   .then((response) => {
-    //     // this.activity = response.data.data
-    //     response.data.data.forEach((dt) => {
-    //       if (dt.activity_group_code != 'PANEN') {
-    //         this.activity.push(dt)
-    //       }
-    //     })
-    //   })
-
-    // console.log(this.$auth.user.employee.afdeling_id)
+      .then((response) => {
+        this.users = response.data.data.data
+      })
   },
 
   methods: {
@@ -273,9 +216,12 @@ export default {
       //define formData
       let formData = new FormData()
 
-      formData.append('site_id', this.$route.params.id)
-      formData.append('code', this.field.code)
-      formData.append('name', this.field.name)
+      formData.append(
+        'user_id',
+        this.field.user_id ? this.field.user_id.id : ''
+      )
+      formData.append('role_id', this.$route.params.id)
+      // formData.append('user_id', this.$route.params.id)
       formData.append('is_active', this.field.is_active)
       formData.append('description', this.field.description)
       formData.append('created_at', this.field.created_at)
@@ -301,8 +247,6 @@ export default {
           this.validation = error.response.data
           // this.validation= "sdgs"
         })
-
-      //   this.back()
     },
   },
 

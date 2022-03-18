@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-book-open"></i> RKH
+            <i class="nav-icon fas fa-clipboard-list"></i> RKH
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -98,7 +98,9 @@
                 class="mt-3"
               ></b-pagination>
             </b-col>
-            <b-col class="text-right" align-self="center">{{ rowcount }} data</b-col>
+            <b-col class="text-right" align-self="center"
+              >{{ rowcount }} data</b-col
+            >
           </b-row>
         </div>
       </div>
@@ -165,8 +167,6 @@ export default {
         },
       ],
 
-
-
       //state search
       search: '',
     }
@@ -187,14 +187,14 @@ export default {
       `/api/admin/activity_plan?q=${search}&page=${page}`
     )
 
-    console.log(posts.data.total);
+    console.log(posts.data.total)
     // this.rowcount = posts.data.total
 
     return {
       posts: posts.data.data,
       pagination: posts.data,
       search: search,
-      rowcount: posts.data.total
+      rowcount: posts.data.total,
     }
   },
   mounted() {

@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-book-open"></i> TAMBAH RKH
+            <i class="nav-icon fas fa-clipboard-list"></i> TAMBAH RKH
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -31,7 +31,7 @@
             </div>
 
             <div class="form-group">
-                          <label>KDKJ</label>
+              <label>KDKJ</label>
               <multiselect
                 v-model="field.activity_id"
                 :options="activity"
@@ -184,7 +184,7 @@ export default {
         { name: 'Rails', language: 'Ruby' },
         { name: 'Sinatra', language: 'Ruby' },
         { name: 'Laravel', language: 'PHP', $isDisabled: true },
-        { name: 'Phoenix', language: 'Elixir' }
+        { name: 'Phoenix', language: 'Elixir' },
       ],
       show_hk: true,
       show_rate: false,
@@ -397,13 +397,13 @@ export default {
     },
   },
   computed: {
-      disabled() {
-        return this.state === 'disabled'
-      },
-      readonly() {
-        return this.state === 'readonly'
-      }
-    }
+    disabled() {
+      return this.state === 'disabled'
+    },
+    readonly() {
+      return this.state === 'readonly'
+    },
+  },
 }
 </script>
 

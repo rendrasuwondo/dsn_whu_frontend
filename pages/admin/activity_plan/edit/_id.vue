@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-folder"></i> EDIT RKH
+            <i class="nav-icon fas fa-clipboard-list"></i> EDIT RKH
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -240,8 +240,6 @@ export default {
           response.data.data.activity.name
         // console.log(response.data.data.man_days)
         // console.log(this.field.man_days)
-
-       
       })
 
     this.$axios

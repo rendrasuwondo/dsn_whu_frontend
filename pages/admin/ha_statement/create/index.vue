@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-book-open"></i> TAMBAH HA STATEMENT
+            <i class="nav-icon fas fa-file-signature"></i> TAMBAH HA STATEMENT
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -50,10 +50,9 @@
               <multiselect
                 v-model="field.afdeling_id"
                 :options="afdeling"
-                label="code"
+                label="id"
                 track-by="id"
                 :searchable="true"
-                @input="onChange"
               ></multiselect>
               <!-- <div v-if="validation.afdeling_id" class="mt-2">
                 <b-alert show variant="danger">{{ validation.afdeling_id[0] }}</b-alert>
@@ -69,7 +68,6 @@
                 label="code"
                 track-by="id"
                 :searchable="true"
-                @input="onChange"
               ></multiselect>
               <!-- <div v-if="validation.progeny_id" class="mt-2">
                 <b-alert show variant="danger">{{
@@ -266,26 +264,22 @@ export default {
 
     //Data afdeling
     this.$axios
-      .get('/api/admin/afdeling')
+      .get('/api/admin/lov_afdeling')
 
       .then((response) => {
-        this.afdeling = response.data.data.data
+        this.afdeling = response.data.data
       })
 
     //Data progeny
     this.$axios
-      .get('/api/admin/progeny')
+      .get('/api/admin/lov_progeny')
 
       .then((response) => {
-        this.progeny = response.data.data.data
+        this.progeny = response.data.data
       })
   },
 
   methods: {
-    onChange() {
-      //   this.field.man_days = ''
-      //   this.field.man_days = ''
-    },
     back() {
       this.$router.push({
         name: 'admin-ha_statement',
