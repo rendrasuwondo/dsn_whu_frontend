@@ -7,7 +7,7 @@
       <div class="title-2">
         <i
           >Enterprise Resource Planning <br />
-          Muara Wahau Test</i
+          Muara Wahau</i
         >
       </div>
     </div>

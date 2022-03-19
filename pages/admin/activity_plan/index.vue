@@ -13,16 +13,83 @@
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
+          <b-card
+            border-variant="primary"
+            header="Filter"
+            header-bg-variant="info"
+            header-text-variant="white"
+            v-show="show_filter"
+          >
+            <b-card-text>
+              <div>
+                <b-row>
+                  <b-col cols="1">Tanggal</b-col>
+                  <b-col>
+                    <b-input-group>
+                      <b-form-datepicker
+                        v-model="activitied_at_start"
+                        :date-format-options="{
+                          year: 'numeric',
+                          month: 'short',
+                          day: '2-digit',
+                          weekday: 'short',
+                        }"
+                        size="sm"
+                      ></b-form-datepicker>
+                      <template #append>
+                        <b-btn size="sm" @click="activitied_at_start = ''"
+                          ><i class="fa fa-trash"></i
+                        ></b-btn>
+                        &nbsp s.d
+                      </template>
+                    </b-input-group>
+                  </b-col>
+                  <b-col>
+                    <b-input-group>
+                      <b-datepicker
+                        v-model="activitied_at_end"
+                        reset-button
+                        size="sm"
+                        :date-format-options="{
+                          year: 'numeric',
+                          month: 'short',
+                          day: '2-digit',
+                          weekday: 'short',
+                        }"
+                      ></b-datepicker>
+                      <template #append>
+                        <b-btn size="sm" @click="activitied_at_end = ''"
+                          ><i class="fa fa-trash"></i
+                        ></b-btn>
+                      </template>
+                    </b-input-group>
+                  </b-col>
+                  <b-col></b-col>
+                </b-row>
+              </div>
+            </b-card-text>
+          </b-card>
+
           <div class="form-group">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
-                <nuxt-link
-                  :to="{ name: 'admin-activity_plan-create' }"
-                  class="btn btn-info btn-sm"
-                  style="padding-top: 8px"
-                  ><i class="fa fa-plus-circle"></i> TAMBAH</nuxt-link
-                >
+                <b-button-group>
+                  <nuxt-link
+                    :to="{ name: 'admin-activity_plan-create' }"
+                    class="btn btn-info btn-sm"
+                    style="padding-top: 8px"
+                    ><i class="fa fa-plus-circle"></i> TAMBAH</nuxt-link
+                  >
+                  <button
+                    title="Filter"
+                    @click="filterData"
+                    class="btn btn-info"
+                  >
+                    <i class="fa fa-filter"></i>
+                  </button>
+                </b-button-group>
               </div>
+
               <input
                 type="text"
                 class="form-control"
@@ -167,6 +234,9 @@ export default {
         },
       ],
 
+      activitied_at_start: '',
+      activitied_at_end: '',
+
       //state search
       search: '',
     }
@@ -229,6 +299,10 @@ export default {
           q: this.search,
         },
       })
+    },
+
+    filterData() {
+      show_filter = true
     },
 
     //deletePost method
