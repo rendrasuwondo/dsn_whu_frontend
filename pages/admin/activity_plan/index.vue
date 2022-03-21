@@ -235,8 +235,8 @@ export default {
       ],
 
       activitied_at_start: '',
-      activitied_at_end: '',
-
+      activitied_at_end: '', 
+      show_filter: false,
       //state search
       search: '',
     }
@@ -302,7 +302,15 @@ export default {
     },
 
     filterData() {
+<<<<<<< HEAD
       show_filter = true
+=======
+      if (this.show_filter==false) {
+         this.show_filter=true 
+      } else {
+      this.show_filter=false
+      }
+>>>>>>> 1defe3a64ab1740a21fe4180874d5f2219aa292b
     },
 
     //deletePost method
