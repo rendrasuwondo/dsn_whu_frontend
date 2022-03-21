@@ -128,12 +128,11 @@
 
             <div class="form-group">
               <label>Employee status</label>
-              <input
-                type="text"
+              <b-form-select
                 v-model="field.employee_status"
-                placeholder="Masukkan Employee status"
-                class="form-control"
-              />
+                :options="options_status"
+              >
+              </b-form-select>
             </div>
 
             <div class="form-group">
@@ -239,6 +238,11 @@ export default {
       options: [
         { value: 'Y', text: 'Ya' },
         { value: 'N', text: 'Tidak' },
+      ],
+      options_status: [
+        { value: null, text: '' },
+        { value: 'SKU', text: 'SKU' },
+        { value: 'BHL', text: 'BHL' },
       ],
 
       state: 'disabled',

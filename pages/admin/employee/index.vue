@@ -143,6 +143,10 @@ export default {
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
       ],
+      sweet_alert: {
+        title: '',
+        icon: '',
+      },
     }
   },
   watchQuery: ['q', 'page'],
@@ -203,15 +207,22 @@ export default {
           if (result.isConfirmed) {
             //delete tag from server
 
-            this.$axios.delete(`/api/admin/employee/${id}`).then(() => {
+            this.$axios.delete(`/api/admin/employee/${id}`).then((response) => {
               //feresh data
               this.$nuxt.refresh()
+              if (response.data.success == true) {
+                this.sweet_alert.title = 'BERHASIL!'
+                this.sweet_alert.icon = 'success'
+              } else {
+                this.sweet_alert.title = 'GAGAL!'
+                this.sweet_alert.icon = 'error'
+              }
 
               //alert
               this.$swal.fire({
-                title: 'BERHASIL!',
-                text: 'Data Berhasil Dihapus!',
-                icon: 'success',
+                title: this.sweet_alert.title,
+                text: response.data.message,
+                icon: this.sweet_alert.icon,
                 showConfirmButton: false,
                 timer: 2000,
               })
