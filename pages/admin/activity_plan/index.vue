@@ -229,7 +229,7 @@ export default {
 
       activitied_at_start: '',
       activitied_at_end: '', 
-
+      show_filter: false,
       //state search
       search: '',
     }
@@ -295,7 +295,11 @@ export default {
     },
 
     filterData() {
-      show_filter=true
+      if (this.show_filter==false) {
+         this.show_filter=true 
+      } else {
+      this.show_filter=false
+      }
     },
 
     //deletePost method
