@@ -71,14 +71,14 @@
             </template> -->
           </b-table>
           <!-- pagination -->
-          <b-pagination
+          <!-- <b-pagination
             v-model="pagination.current_page"
             :total-rows="pagination.total"
             :per-page="pagination.per_page"
             @change="changePage"
             align="right"
             class="mt-3"
-          ></b-pagination>
+          ></b-pagination> -->
         </div>
       </div>
     </section>
@@ -131,14 +131,14 @@ export default {
 
     //fetching posts
     const posts = await $axios.$get(
-      `/api/admin/report?q=${search}&page=${page}`
+     `/api/admin/report0/?q=${search}&page=${page}`
     )
 
-    return {
-      posts: posts.data.data.data,
-      pagination: posts.data,
-      search: search,
-    }
+  //   return {
+  //     posts: posts.data.data.data,
+  //     pagination: posts.data,
+  //     search: search,
+  //   }
   },
 
   methods: {
