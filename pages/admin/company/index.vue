@@ -20,8 +20,17 @@
                   :to="{ name: 'admin-company-create' }"
                   class="btn btn-info btn-sm"
                   style="padding-top: 8px"
-                  ><i class="fa fa-plus-circle"></i> TAMBAH</nuxt-link
+                  title="Tambah"
+                  ><i class="fa fa-plus-circle"></i>
+                </nuxt-link>
+                <button
+                  title="Export To Excel"
+                  class="btn btn-info"
+                  @click="exportData"
                 >
+                  <i class="fa fa-file-excel"></i>
+                </button>
+               
               </div>
               <input
                 type="text"
@@ -214,6 +223,30 @@ export default {
             })
           }
         })
+    },
+
+    exportData() {
+     
+      const headers = {
+              "Content-Type": "application/json"
+            };
+
+      this.$axios({
+              url: `/api/admin/export`,
+              method: "GET",
+              responseType: "blob",
+              headers: headers, // important
+            }).then((response) => {
+              this.isLoading = false;
+              const url = window.URL.createObjectURL(new Blob([response.data]));
+              const link = document.createElement("a");
+              link.href = url;
+              var fileName =
+                "fa-fiskal.xls";
+              link.setAttribute("download", fileName); //or any other extension
+              document.body.appendChild(link);
+              link.click();
+            });
     },
   },
 }

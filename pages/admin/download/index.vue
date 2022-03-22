@@ -8,13 +8,21 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-download"></i> Download Template eLHMs
+            <i class="nav-icon fas fa-download"></i> DOWNLOAD Template
           </h3>
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
           <div class="form-group">
             <div class="input-group mb-3">
+              <!-- <div class="input-group-prepend">
+                <nuxt-link
+                  :to="{ name: 'admin-employee-create' }"
+                  class="btn btn-info btn-sm"
+                  style="padding-top: 8px"
+                  ><i class="fa fa-plus-circle"></i> TAMBAH</nuxt-link
+                >
+              </div> -->
               <input
                 type="text"
                 class="form-control"
@@ -41,16 +49,36 @@
             :fields="fields"
             show-empty
           >
+            <!-- <template v-slot:cell(actions)="row">
+              <b-button
+                :to="{
+                  name: 'admin-employee-edit-id',
+                  params: { id: row.item.id },
+                }"
+                variant="link"
+                size="sm"
+                title="Edit"
+              >
+                <i class="fa fa-pencil-alt"></i>
+              </b-button>
+              <b-button
+                variant="link"
+                size="sm"
+                @click="deletePost(row.item.id)"
+                title="Hapus"
+                ><i class="fa fa-trash"></i
+              ></b-button>
+            </template> -->
           </b-table>
           <!-- pagination -->
-          <b-pagination
+          <!-- <b-pagination
             v-model="pagination.current_page"
             :total-rows="pagination.total"
             :per-page="pagination.per_page"
             @change="changePage"
             align="right"
             class="mt-3"
-          ></b-pagination>
+          ></b-pagination> -->
         </div>
       </div>
     </section>
@@ -63,7 +91,7 @@ export default {
 
   head() {
     return {
-      title: 'Download Template eLHM',
+      title: 'Attendance',
     }
   },
   data() {
@@ -103,13 +131,14 @@ export default {
 
     //fetching posts
     const posts = await $axios.$get(
-      `/api/admin/download?q=${search}&page=${page}`
+     `/api/admin/master/activity_plan/1120_SW22C_2022-03-18?q=${search}&page=${page}`
     )
 
-    return {
-      posts: posts.data.data,
-      pagination: posts.data,
-    }
+  //   return {
+  //     posts: posts.data.data.data,
+  //     pagination: posts.data,
+  //     search: search,
+  //   }
   },
 
   methods: {
