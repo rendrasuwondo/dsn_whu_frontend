@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-id-badge"></i> EMPLOYEE
+            <i class="nav-icon fas fa-tasks"></i> ACTIVITY
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -17,7 +17,7 @@
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <nuxt-link
-                  :to="{ name: 'admin-employee-create' }"
+                  :to="{ name: 'admin-activity-create' }"
                   class="btn btn-info btn-sm"
                   style="padding-top: 8px"
                   ><i class="fa fa-plus-circle"></i> TAMBAH</nuxt-link
@@ -52,7 +52,7 @@
             <template v-slot:cell(actions)="row">
               <b-button
                 :to="{
-                  name: 'admin-employee-edit-id',
+                  name: 'admin-activity-edit-id',
                   params: { id: row.item.id },
                 }"
                 variant="link"
@@ -68,32 +68,6 @@
                 title="Hapus"
                 ><i class="fa fa-trash"></i
               ></b-button>
-            </template>
-            <template v-slot:cell(employee_afdeling)="row">
-              <b-button
-                :to="{
-                  name: 'admin-employee_afdeling-id',
-                  params: { id: row.item.id },
-                }"
-                variant="link"
-                size=""
-                title="Employee Afdeling"
-              >
-                <i class="fa fa-file-alt"></i>
-              </b-button>
-            </template>
-            <template v-slot:cell(employee_activity_group)="row">
-              <b-button
-                :to="{
-                  name: 'admin-employee_activity_group-id',
-                  params: { id: row.item.id },
-                }"
-                variant="link"
-                size=""
-                title="Employee Activity Group"
-              >
-                <i class="fa fa-file-alt"></i>
-              </b-button>
             </template>
           </b-table>
           <!-- pagination -->
@@ -117,7 +91,7 @@ export default {
 
   head() {
     return {
-      title: 'EMPLOYEE',
+      title: 'Activity',
     }
   },
   data() {
@@ -129,18 +103,8 @@ export default {
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          label: 'employee_afdeling',
-          key: 'employee_afdeling',
-          tdClass: 'align-middle text-center',
-        },
-        {
-          label: 'employee_activity_group',
-          key: 'employee_activity_group',
-          tdClass: 'align-middle text-center',
-        },
-        {
-          label: 'NIK',
-          key: 'nik',
+          label: 'Kode',
+          key: 'code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
@@ -149,33 +113,38 @@ export default {
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          label: 'Alamat Email',
-          key: 'email',
+          label: 'Grup ',
+          key: 'activity_group_code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          label: 'PT',
-          key: 'company_code',
+          label: 'hkont_1',
+          key: 'hkont_1',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          label: 'Site',
-          key: 'site_code',
+          label: 'hkont_2',
+          key: 'hkont_2',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          label: 'Lokasi',
-          key: 'location_code',
+          label: 'anln2_5',
+          key: 'anln2_5',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          label: 'Posisi',
-          key: 'position_code',
+          label: 'anln2_6',
+          key: 'anln2_6',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          label: 'Aktif',
-          key: 'is_active_code',
+          label: 'anln2_7',
+          key: 'anln2_7',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          label: 'anln2_8',
+          key: 'anln2_8',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
       ],
@@ -196,7 +165,7 @@ export default {
 
     //fetching posts
     const posts = await $axios.$get(
-      `/api/admin/employee?q=${search}&page=${page}`
+      `/api/admin/activity?q=${search}&page=${page}`
     )
 
     return {
@@ -243,7 +212,7 @@ export default {
           if (result.isConfirmed) {
             //delete tag from server
 
-            this.$axios.delete(`/api/admin/employee/${id}`).then((response) => {
+            this.$axios.delete(`/api/admin/activity/${id}`).then((response) => {
               //feresh data
               this.$nuxt.refresh()
               if (response.data.success == true) {
