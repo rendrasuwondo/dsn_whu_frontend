@@ -89,6 +89,26 @@ export default {
           key: 'foreman_employee',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
+        {
+          label: 'SKU',
+          key: 'labour_employee',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          label: 'HK',
+          key: 'man_days',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          label: 'Volume',
+          key: 'qty',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          label: 'Rate',
+          key: 'flexrate',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
       ],
     }
   },

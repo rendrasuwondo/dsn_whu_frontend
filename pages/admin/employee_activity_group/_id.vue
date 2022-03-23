@@ -8,16 +8,39 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-id-badge"></i> KARYAWAN
+            <table>
+              <tr>
+                <td>
+                  <nuxt-link :to="{ name: 'admin-site' }" class="nav-link">
+                    <i class="nav-icon fas fa-id-badge"></i>
+                    Employee
+                  </nuxt-link>
+                </td>
+                <td>/ Grup</td>
+              </tr>
+            </table>
           </h3>
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
           <div class="form-group">
+            <b-table
+              striped
+              bordered
+              hover
+              :items="header"
+              :fields="fields_header"
+              show-empty
+            ></b-table>
+          </div>
+          <div class="form-group">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <nuxt-link
-                  :to="{ name: 'admin-employee-create' }"
+                  :to="{
+                    name: 'admin-employee_activiy_group-create-id',
+                    params: { id: employee_id, r: 1 },
+                  }"
                   class="btn btn-info btn-sm"
                   style="padding-top: 8px"
                   ><i class="fa fa-plus-circle"></i> TAMBAH</nuxt-link
@@ -28,7 +51,7 @@
                 class="form-control"
                 v-model="search"
                 @keypress.enter="searchData"
-                placeholder=""
+                placeholder="cari berdasarkan nama tag"
               />
               <div class="input-group-append">
                 <button @click="searchData" class="btn btn-info">
@@ -38,7 +61,9 @@
               </div>
             </div>
           </div>
+
           <!-- table -->
+
           <b-table
             small
             responsive
@@ -49,53 +74,44 @@
             :fields="fields"
             show-empty
           >
+            <template v-slot:cell(comments)="row">
+              <i class="fa fa-comments"></i> {{ row.item.comments.length }}
+            </template>
             <template v-slot:cell(actions)="row">
               <b-button
                 :to="{
-                  name: 'admin-employee-edit-id',
-                  params: { id: row.item.id },
+                  name: 'admin-employee_activiy_group-edit-id',
+                  params: { id: row.item.id, r: 1 },
                 }"
                 variant="link"
-                size="sm"
+                size=""
                 title="Edit"
               >
                 <i class="fa fa-pencil-alt"></i>
               </b-button>
+
               <b-button
                 variant="link"
-                size="sm"
-                @click="deletePost(row.item.id)"
+                size=""
                 title="Hapus"
+                @click="deletePost(row.item.id)"
                 ><i class="fa fa-trash"></i
               ></b-button>
             </template>
-            <template v-slot:cell(employee_afdeling)="row">
+            <template v-slot:cell(detail)="row">
               <b-button
                 :to="{
-                  name: 'admin-employee_afdeling-id',
+                  name: 'admin-employee_activiy_group',
                   params: { id: row.item.id },
                 }"
-                variant="link"
-                size=""
-                title="Employee Afdeling"
+                variant=""
+                size="sm"
               >
-                <i class="fa fa-file-alt"></i>
-              </b-button>
-            </template>
-            <template v-slot:cell(employee_activity_group)="row">
-              <b-button
-                :to="{
-                  name: 'admin-employee_activity_group-id',
-                  params: { id: row.item.id },
-                }"
-                variant="link"
-                size=""
-                title="Employee Activity Group"
-              >
-                <i class="fa fa-file-alt"></i>
+                Detail<i class="fa fa-plus-circle"></i>
               </b-button>
             </template>
           </b-table>
+
           <!-- pagination -->
           <b-pagination
             v-model="pagination.current_page"
@@ -113,100 +129,117 @@
 
 <script>
 export default {
+  //layout
   layout: 'admin',
 
+  //meta
   head() {
     return {
-      title: 'EMPLOYEE',
+      title: 'Grup',
     }
   },
+
+  //data function
   data() {
     return {
+      //table header
       fields: [
         {
           label: 'Actions',
           key: 'actions',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          tdClass: '',
         },
         {
-          label: 'Afdeling',
-          key: 'employee_afdeling',
-          tdClass: 'align-middle text-center',
+          label: 'Kode',
+          key: 'activity_group_code',
+          tdClass: '',
         },
         {
-          label: 'Grup',
-          key: 'employee_activity_group',
-          tdClass: 'align-middle text-center',
+          label: 'Aktif',
+          key: 'is_active_code',
         },
+      ],
+
+      header: [],
+
+      employee_id: this.$route.params.id,
+
+      fields_header: [
         {
           label: 'NIK',
           key: 'nik',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          tdClass: 'text-left',
         },
         {
           label: 'Nama',
           key: 'name',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          tdClass: '',
         },
         {
           label: 'Alamat Email',
           key: 'email',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
-        {
-          label: 'PT',
-          key: 'company_code',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
-          label: 'Site',
-          key: 'site_code',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
-          label: 'Lokasi',
-          key: 'location_code',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
-          label: 'Jabatan',
-          key: 'position_code',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
+        // {
+        //   label: 'PT',
+        //   key: 'company_code',
+        //   tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        // },
+        // {
+        //   label: 'Site',
+        //   key: 'site_code',
+        //   tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        // },
+        // {
+        //   label: 'Lokasi',
+        //   key: 'location_code',
+        //   tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        // },
+        // {
+        //   label: 'Jabatan',
+        //   key: 'position_code',
+        //   tdClass: '',
+        // },
+        // {
+        //   label: 'Department',
+        //   key: 'department_code',
+        //   tdClass: '',
+        // },
         {
           label: 'Aktif',
           key: 'is_active_code',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          tdClass: 'text-left',
         },
       ],
-      sweet_alert: {
-        title: '',
-        icon: '',
-      },
+      //state search
+      search: '',
     }
   },
+
+  //watch query URL
   watchQuery: ['q', 'page'],
 
-  async asyncData({ $axios, query }) {
+  async asyncData({ $axios, query, route }) {
     //page
     let page = query.page ? parseInt(query.page) : ''
 
     //search
     let search = query.q ? query.q : ''
 
-    //fetching posts
+    const { id } = route.params
+
     const posts = await $axios.$get(
-      `/api/admin/employee?q=${search}&page=${page}`
+      `/api/admin/detail/employee_activity_group/${id}?q=${search}&page=${page}`
     )
 
     return {
       posts: posts.data.data,
       pagination: posts.data,
-      search: search,
     }
   },
 
   methods: {
+    //change page pagination
     changePage(page) {
       this.$router.push({
         path: this.$route.path,
@@ -216,6 +249,7 @@ export default {
         },
       })
     },
+
     //searchData
     searchData() {
       this.$router.push({
@@ -243,31 +277,36 @@ export default {
           if (result.isConfirmed) {
             //delete tag from server
 
-            this.$axios.delete(`/api/admin/employee/${id}`).then((response) => {
-              //feresh data
-              this.$nuxt.refresh()
-              if (response.data.success == true) {
-                this.sweet_alert.title = 'BERHASIL!'
-                this.sweet_alert.icon = 'success'
-              } else {
-                this.sweet_alert.title = 'GAGAL!'
-                this.sweet_alert.icon = 'error'
-              }
+            this.$axios
+              .delete(`/api/admin/employee_activiy_group/${id}`)
+              .then(() => {
+                //feresh data
+                this.$nuxt.refresh()
 
-              //alert
-              this.$swal.fire({
-                title: this.sweet_alert.title,
-                text: response.data.message,
-                icon: this.sweet_alert.icon,
-                showConfirmButton: false,
-                timer: 2000,
+                //alert
+                this.$swal.fire({
+                  title: 'BERHASIL!',
+                  text: 'Data Berhasil Dihapus!',
+                  icon: 'success',
+                  showConfirmButton: false,
+                  timer: 2000,
+                })
               })
-            })
           }
         })
     },
   },
+
+  mounted() {
+    this.$axios
+      .get(`/api/admin/master/employee/${this.$route.params.id}`)
+
+      .then((response) => {
+        console.log(response.data.data.employee_id)
+        this.header.push(response.data.data)
+      })
+  },
 }
 </script>
 
-<style scoped></style>
+<style></style>

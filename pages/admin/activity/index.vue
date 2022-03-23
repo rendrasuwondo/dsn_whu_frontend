@@ -7,22 +7,12 @@
     <section class="content">
       <div class="card card-outline card-info">
         <div class="card-header">
-          <h3 class="card-title">
-            <i class="nav-icon fas fa-tasks"></i> ACTIVITY
-          </h3>
+          <h3 class="card-title"><i class="nav-icon fas fa-tasks"></i> KDKJ</h3>
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
           <div class="form-group">
             <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <nuxt-link
-                  :to="{ name: 'admin-activity-create' }"
-                  class="btn btn-info btn-sm"
-                  style="padding-top: 8px"
-                  ><i class="fa fa-plus-circle"></i> TAMBAH</nuxt-link
-                >
-              </div>
               <input
                 type="text"
                 class="form-control"
@@ -49,26 +39,6 @@
             :fields="fields"
             show-empty
           >
-            <template v-slot:cell(actions)="row">
-              <b-button
-                :to="{
-                  name: 'admin-activity-edit-id',
-                  params: { id: row.item.id },
-                }"
-                variant="link"
-                size="sm"
-                title="Edit"
-              >
-                <i class="fa fa-pencil-alt"></i>
-              </b-button>
-              <b-button
-                variant="link"
-                size="sm"
-                @click="deletePost(row.item.id)"
-                title="Hapus"
-                ><i class="fa fa-trash"></i
-              ></b-button>
-            </template>
           </b-table>
           <!-- pagination -->
           <b-pagination
@@ -91,17 +61,12 @@ export default {
 
   head() {
     return {
-      title: 'Activity',
+      title: 'KDKJ',
     }
   },
   data() {
     return {
       fields: [
-        {
-          label: 'Actions',
-          key: 'actions',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
         {
           label: 'Kode',
           key: 'code',
@@ -113,40 +78,45 @@ export default {
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
+          label: 'KDKJ',
+          key: 'kdkj_name',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
           label: 'Grup ',
           key: 'activity_group_code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
-        {
-          label: 'hkont_1',
-          key: 'hkont_1',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
-          label: 'hkont_2',
-          key: 'hkont_2',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
-          label: 'anln2_5',
-          key: 'anln2_5',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
-          label: 'anln2_6',
-          key: 'anln2_6',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
-          label: 'anln2_7',
-          key: 'anln2_7',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
-          label: 'anln2_8',
-          key: 'anln2_8',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
+        // {
+        //   label: 'hkont_1',
+        //   key: 'hkont_1',
+        //   tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        // },
+        // {
+        //   label: 'hkont_2',
+        //   key: 'hkont_2',
+        //   tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        // },
+        // {
+        //   label: 'anln2_5',
+        //   key: 'anln2_5',
+        //   tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        // },
+        // {
+        //   label: 'anln2_6',
+        //   key: 'anln2_6',
+        //   tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        // },
+        // {
+        //   label: 'anln2_7',
+        //   key: 'anln2_7',
+        //   tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        // },
+        // {
+        //   label: 'anln2_8',
+        //   key: 'anln2_8',
+        //   tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        // },
       ],
       sweet_alert: {
         title: '',
