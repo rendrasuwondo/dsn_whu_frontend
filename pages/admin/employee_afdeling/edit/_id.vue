@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-id-badge"></i> EDIT AFDELING
+            <i class="nav-icon fas fa-address-card"></i> EDIT AFDELING
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -167,6 +167,8 @@ export default {
 
       id_employee: '',
 
+      afdeling: [],
+
       //state validation
       validation: [],
 
@@ -183,6 +185,15 @@ export default {
   mounted() {
     // this.$refs.code.focus()
 
+    //Data Afdeling
+    this.$axios
+      .get('/api/admin/lov_afdeling')
+
+      .then((response) => {
+        this.afdeling = response.data.data
+      })
+
+    //data employee
     this.$axios
       .get(`/api/admin/master/employee/${this.$route.params.id}`)
 
@@ -236,7 +247,7 @@ export default {
         .put(`api/admin/employee_afdeling/${this.$route.params.id}`, {
           //data yang dikirim
           employee_id: this.field.employee_id,
-          afdeling_id: this.field.afdeling_id,
+          afdeling_id: this.field.afdeling_id ? this.field.afdeling_id.id : '',
           is_active: this.field.is_active,
           description: this.field.description,
         })

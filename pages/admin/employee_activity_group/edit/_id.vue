@@ -8,18 +8,18 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-id-badge"></i> EDIT GRUP
+            <i class="nav-icon fas fa-address-card"></i> EDIT GRUP
           </h3>
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
           <form @submit.prevent="updateData">
             <div class="form-group">
-              <label>Kode Afdeling</label>
+              <label>Kode Grup</label>
               <multiselect
                 v-model="field.activity_group_id"
                 :options="activity_group"
-                label="id"
+                label="code"
                 track-by="id"
                 :searchable="true"
               ></multiselect>
@@ -165,6 +165,8 @@ export default {
         updated_by: '',
       },
 
+      activity_group: [],
+
       id_employee: '',
 
       //state validation
@@ -182,12 +184,19 @@ export default {
 
   mounted() {
     // this.$refs.code.focus()
+    //data activity_group
+    this.$axios
+      .get('/api/admin/lov_activity_group')
 
+      .then((response) => {
+        this.activity_group = response.data.data
+      })
+
+    //data employee
     this.$axios
       .get(`/api/admin/master/employee/${this.$route.params.id}`)
 
       .then((response) => {
-        //  console.log(response.data.data.afdeling_id)
         this.id_employee = response.data.data.id
 
         this.$nuxt.$loading.start()
@@ -236,7 +245,9 @@ export default {
         .put(`api/admin/employee_activity_group/${this.$route.params.id}`, {
           //data yang dikirim
           employee_id: this.field.employee_id,
-          activity_group_id: this.field.activity_group_id,
+          activity_group_id: this.field.activity_group_id
+            ? this.field.activity_group_id.id
+            : '',
           is_active: this.field.is_active,
           description: this.field.description,
         })

@@ -23,26 +23,25 @@
               <div>
                 <b-row>
                   <b-col cols="1">Tanggal</b-col>
-                  <b-col
-                    >
+                  <b-col>
                     <b-input-group>
-                    <b-form-datepicker
-                      v-model="activitied_at_start"
-                      :date-format-options="{
-                        year: 'numeric',
-                        month: 'short',
-                        day: '2-digit',
-                        weekday: 'short',
-                      }"
-                      size="sm"
-                    ></b-form-datepicker>
-                    <template #append>
-                        <b-btn size="sm" @click="activitied_at_start = ''"><i class="fa fa-trash"></i></b-btn>
-                        &nbsp s.d
+                      <b-form-datepicker
+                        v-model="activitied_at_start"
+                        :date-format-options="{
+                          year: 'numeric',
+                          month: 'short',
+                          day: '2-digit',
+                          weekday: 'short',
+                        }"
+                        size="sm"
+                      ></b-form-datepicker>
+                      <template #append>
+                        <b-btn size="sm" @click="activitied_at_start = ''"
+                          ><i class="fa fa-trash"></i
+                        ></b-btn>
+                        s.d
                       </template>
-                        
-                   </b-input-group>
-                 
+                    </b-input-group>
                   </b-col>
                   <b-col>
                     <b-input-group>
@@ -51,19 +50,20 @@
                         reset-button
                         size="sm"
                         :date-format-options="{
-                        year: 'numeric',
-                        month: 'short',
-                        day: '2-digit',
-                        weekday: 'short',
-                      }"
+                          year: 'numeric',
+                          month: 'short',
+                          day: '2-digit',
+                          weekday: 'short',
+                        }"
                       ></b-datepicker>
                       <template #append>
-                        <b-btn size="sm" @click="activitied_at_end = ''"><i class="fa fa-trash"></i></b-btn>
+                        <b-btn size="sm" @click="activitied_at_end = ''"
+                          ><i class="fa fa-trash"></i
+                        ></b-btn>
                       </template>
                     </b-input-group>
                   </b-col>
                   <b-col></b-col>
-                 
                 </b-row>
               </div>
             </b-card-text>
@@ -76,8 +76,16 @@
                   :to="{ name: 'admin-company-create' }"
                   class="btn btn-info btn-sm"
                   style="padding-top: 8px"
-                  ><i class="fa fa-plus-circle"></i> TAMBAH</nuxt-link
+                  title="Tambah"
+                  ><i class="fa fa-plus-circle"></i>
+                </nuxt-link>
+                <button
+                  title="Export To Excel"
+                  class="btn btn-info"
+                  @click="exportData"
                 >
+                  <i class="fa fa-file-excel"></i>
+                </button>
               </div>
               <input
                 type="text"
@@ -249,7 +257,7 @@ export default {
         path: this.$route.path,
         query: {
           q: this.search,
-          activitied_at_start: this.activitied_at_start
+          activitied_at_start: this.activitied_at_start,
         },
       })
     },
@@ -271,7 +279,7 @@ export default {
           if (result.isConfirmed) {
             //delete tag from server
 
-            this.$axios.delete(`/api/admin/company/${id}`).then(() => {
+            this.$axios.delete(`/api/admin/activity_actual/${id}`).then(() => {
               //feresh data
               this.$nuxt.refresh()
 
@@ -286,6 +294,28 @@ export default {
             })
           }
         })
+    },
+
+    exportData() {
+      const headers = {
+        'Content-Type': 'application/json',
+      }
+
+      this.$axios({
+        url: `/api/admin/activity_actual/export`,
+        method: 'GET',
+        responseType: 'blob',
+        headers: headers, // important
+      }).then((response) => {
+        this.isLoading = false
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        var fileName = 'Actual.xlsx'
+        link.setAttribute('download', fileName) //or any other extension
+        document.body.appendChild(link)
+        link.click()
+      })
     },
   },
 }

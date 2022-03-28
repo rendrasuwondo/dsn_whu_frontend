@@ -15,14 +15,15 @@
         <div class="card-body">
           <div class="form-group">
             <div class="input-group mb-3">
-              <!-- <div class="input-group-prepend">
-                <nuxt-link
-                  :to="{ name: 'admin-employee-create' }"
-                  class="btn btn-info btn-sm"
-                  style="padding-top: 8px"
-                  ><i class="fa fa-plus-circle"></i> TAMBAH</nuxt-link
+              <div class="input-group-prepend">
+                <button
+                  title="Export To Excel"
+                  class="btn btn-info"
+                  @click="exportData"
                 >
-              </div> -->
+                  <i class="fa fa-file-excel"></i>
+                </button>
+              </div>
               <input
                 type="text"
                 class="form-control"
@@ -178,6 +179,28 @@ export default {
         query: {
           q: this.search,
         },
+      })
+    },
+
+    exportData() {
+      const headers = {
+        'Content-Type': 'application/json',
+      }
+
+      this.$axios({
+        url: `/api/admin/attendance/export`,
+        method: 'GET',
+        responseType: 'blob',
+        headers: headers, // important
+      }).then((response) => {
+        this.isLoading = false
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        var fileName = 'Attendance.xlsx'
+        link.setAttribute('download', fileName) //or any other extension
+        document.body.appendChild(link)
+        link.click()
       })
     },
   },

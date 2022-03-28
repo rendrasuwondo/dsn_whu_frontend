@@ -136,8 +136,8 @@ export default {
   transition: 0.25s;
   border: none;
   left: 50%;
-  margin-top: 30px;
-  margin-bottom: 10px;
+  margin-top: 25px;
+  margin-bottom: 5px;
   width: 50%;
   font-weight: 600;
 }

@@ -11,7 +11,7 @@
             <table>
               <tr>
                 <td>
-                  <nuxt-link :to="{ name: 'admin-site' }" class="nav-link">
+                  <nuxt-link :to="{ name: 'admin-employee' }" class="nav-link">
                     <i class="nav-icon fas fa-id-badge"></i>
                     Employee
                   </nuxt-link>
@@ -43,8 +43,16 @@
                   }"
                   class="btn btn-info btn-sm"
                   style="padding-top: 8px"
-                  ><i class="fa fa-plus-circle"></i> TAMBAH</nuxt-link
+                  title="Tambah"
+                  ><i class="fa fa-plus-circle"></i>
+                </nuxt-link>
+                <button
+                  title="Export To Excel"
+                  class="btn btn-info"
+                  @click="exportData"
                 >
+                  <i class="fa fa-file-excel"></i>
+                </button>
               </div>
               <input
                 type="text"
@@ -151,12 +159,12 @@ export default {
         },
         {
           label: 'Kode',
-          key: 'afdeling_code',
+          key: 'afdeling_id',
           tdClass: '',
         },
         {
           label: 'Kode SAP',
-          key: 'afdeling_sap',
+          key: 'afdeling_code_sap',
         },
         {
           label: 'Aktif',
@@ -303,6 +311,28 @@ export default {
               })
           }
         })
+    },
+
+    exportData() {
+      const headers = {
+        'Content-Type': 'application/json',
+      }
+
+      this.$axios({
+        url: `/api/admin/employee_afdeling/export`,
+        method: 'GET',
+        responseType: 'blob',
+        headers: headers, // important
+      }).then((response) => {
+        this.isLoading = false
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        var fileName = 'Employee-Afdeling.xls'
+        link.setAttribute('download', fileName) //or any other extension
+        document.body.appendChild(link)
+        link.click()
+      })
     },
   },
 

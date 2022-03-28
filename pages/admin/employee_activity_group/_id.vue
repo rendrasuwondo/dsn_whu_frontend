@@ -11,7 +11,7 @@
             <table>
               <tr>
                 <td>
-                  <nuxt-link :to="{ name: 'admin-site' }" class="nav-link">
+                  <nuxt-link :to="{ name: 'admin-employee' }" class="nav-link">
                     <i class="nav-icon fas fa-id-badge"></i>
                     Employee
                   </nuxt-link>
@@ -38,13 +38,21 @@
               <div class="input-group-prepend">
                 <nuxt-link
                   :to="{
-                    name: 'admin-employee_activiy_group-create-id',
+                    name: 'admin-employee_activity_group-create-id',
                     params: { id: employee_id, r: 1 },
                   }"
                   class="btn btn-info btn-sm"
                   style="padding-top: 8px"
-                  ><i class="fa fa-plus-circle"></i> TAMBAH</nuxt-link
+                  title="Tambah"
+                  ><i class="fa fa-plus-circle"></i>
+                </nuxt-link>
+                <button
+                  title="Export To Excel"
+                  class="btn btn-info"
+                  @click="exportData"
                 >
+                  <i class="fa fa-file-excel"></i>
+                </button>
               </div>
               <input
                 type="text"
@@ -80,7 +88,7 @@
             <template v-slot:cell(actions)="row">
               <b-button
                 :to="{
-                  name: 'admin-employee_activiy_group-edit-id',
+                  name: 'admin-employee_activity_group-edit-id',
                   params: { id: row.item.id, r: 1 },
                 }"
                 variant="link"
@@ -101,7 +109,7 @@
             <template v-slot:cell(detail)="row">
               <b-button
                 :to="{
-                  name: 'admin-employee_activiy_group',
+                  name: 'admin-employee_activity_group',
                   params: { id: row.item.id },
                 }"
                 variant=""
@@ -294,6 +302,28 @@ export default {
               })
           }
         })
+    },
+
+    exportData() {
+      const headers = {
+        'Content-Type': 'application/json',
+      }
+
+      this.$axios({
+        url: `/api/admin/employee_activity_group/export`,
+        method: 'GET',
+        responseType: 'blob',
+        headers: headers, // important
+      }).then((response) => {
+        this.isLoading = false
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        var fileName = 'Employee-Activity-Group.xls'
+        link.setAttribute('download', fileName) //or any other extension
+        document.body.appendChild(link)
+        link.click()
+      })
     },
   },
 

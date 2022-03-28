@@ -1,11 +1,19 @@
 <template>
   <div class="hold-transition login-page">
     <b-img class="img-logo" src="img/dsn_logo.png" alt="logo"></b-img>
-
     <div class="login-box">
       <!-- /.login-logo -->
       <Nuxt />
       <!-- /.card -->
+    </div>
+    <div>
+      <b-button
+        class="download-apk"
+        href="https://drive.google.com/drive/folders/1ym4KwIPbztn6RA4-osKv6O4FPhv_CcKU"
+      >
+        <b-img class="img-download" src="img/drive_logo.png" alt="logo"></b-img>
+        Download Aplikasi <b>eLHM</b>
+      </b-button>
     </div>
   </div>
 </template>
@@ -51,6 +59,21 @@ body {
 }
 
 .img-logo {
-  margin-bottom: 25px;
+  margin-bottom: 20px;
+}
+
+.download-apk {
+  margin-top: 20px;
+  width: 210px;
+  padding: 10px;
+  background: #2d3436;
+  font-size: 13px;
+  box-shadow: 3px 2px #f5f6fabb;
+}
+
+.img-download {
+  width: 25px;
+  height: 25px;
+  margin-right: 3px;
 }
 </style>

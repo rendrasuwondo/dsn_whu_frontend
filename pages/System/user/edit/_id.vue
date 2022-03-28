@@ -46,6 +46,17 @@
             </div>
 
             <div class="form-group">
+              <label>Nama Karyawan</label>
+              <multiselect
+                v-model="field.employee_id"
+                :options="employee"
+                label="name"
+                track-by="id"
+                :searchable="true"
+              ></multiselect>
+            </div>
+
+            <div class="form-group">
               <label>Email</label>
               <input
                 type="emial"
@@ -172,7 +183,10 @@ export default {
         updated_at: '',
         created_by: '',
         updated_by: '',
+        employee_id: '',
       },
+
+      employee: [],
 
       //state validation
       validation: [],
@@ -193,13 +207,23 @@ export default {
         this.field.user_name = response.data.data.user_name
         this.field.name = response.data.data.name
         this.field.email = response.data.data.email
+        this.field.employee_id = response.data.data.employee_id
         this.field.password = response.data.data.password
         this.field.created_at = response.data.data.created_at
         this.field.updated_at = response.data.data.updated_at
-        // this.field.created_by = response.data.data.created_by
-        // this.field.updated_by = response.data.data.updated_by
+        this.field.created_by = response.data.data.created_by
+        this.field.updated_by = response.data.data.updated_by
       })
+
     this.$refs.user_name.focus()
+
+    //Data employee
+    this.$axios
+      .get('/api/admin/lov_employee')
+
+      .then((response) => {
+        this.employee = response.data.data
+      })
   },
 
   methods: {
@@ -221,6 +245,7 @@ export default {
           user_name: this.field.user_name,
           name: this.field.name,
           email: this.field.email,
+          employee_id: this.field.employee_id ? this.field.employee_id.id : '',
           password: this.field.password,
           created_at: this.field.created_at,
           updated_at: this.field.updated_at,

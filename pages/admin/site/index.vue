@@ -20,8 +20,16 @@
                   :to="{ name: 'admin-site-create' }"
                   class="btn btn-info btn-sm"
                   style="padding-top: 8px"
-                  ><i class="fa fa-plus-circle"></i> TAMBAH</nuxt-link
+                  title="Tambah"
+                  ><i class="fa fa-plus-circle"></i>
+                </nuxt-link>
+                <button
+                  title="Export To Excel"
+                  class="btn btn-info"
+                  @click="exportData"
                 >
+                  <i class="fa fa-file-excel"></i>
+                </button>
               </div>
               <input
                 type="text"
@@ -137,9 +145,9 @@ export default {
         },
       ],
       sweet_alert: {
-        title:'',
-        icon:''
-      }
+        title: '',
+        icon: '',
+      },
     }
   },
   watchQuery: ['q', 'page'],
@@ -201,12 +209,12 @@ export default {
             this.$axios.delete(`/api/admin/site/${id}`).then((response) => {
               //feresh data
               this.$nuxt.refresh()
-              
+
               if (response.data.success == true) {
-                this.sweet_alert.title = 'BERHASIL!';
+                this.sweet_alert.title = 'BERHASIL!'
                 this.sweet_alert.icon = 'success'
-              }  else {
-                this.sweet_alert.title = 'GAGAL!';
+              } else {
+                this.sweet_alert.title = 'GAGAL!'
                 this.sweet_alert.icon = 'error'
               }
 
@@ -221,6 +229,28 @@ export default {
             })
           }
         })
+    },
+
+    exportData() {
+      const headers = {
+        'Content-Type': 'application/json',
+      }
+
+      this.$axios({
+        url: `/api/admin/site/export`,
+        method: 'GET',
+        responseType: 'blob',
+        headers: headers, // important
+      }).then((response) => {
+        this.isLoading = false
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        var fileName = 'Site.xls'
+        link.setAttribute('download', fileName) //or any other extension
+        document.body.appendChild(link)
+        link.click()
+      })
     },
   },
 }

@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-id-badge"></i> TAMBAH EMPLOYEE
+            <i class="nav-icon fas fa-id-badge"></i> TAMBAH KARYAWAN
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -305,18 +305,18 @@ export default {
 
     //Data department
     this.$axios
-      .get('/api/admin/department')
+      .get('/api/admin/lov_department')
 
       .then((response) => {
-        this.department = response.data.data.data
+        this.department = response.data.data
       })
 
     //Data location
     this.$axios
-      .get('/api/admin/location')
+      .get('/api/admin/lov_location')
 
       .then((response) => {
-        this.location = response.data.data.data
+        this.location = response.data.data
       })
 
     // Data position

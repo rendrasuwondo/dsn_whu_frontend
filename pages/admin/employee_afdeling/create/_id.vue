@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-book-open"></i> TAMBAH Afdeling
+            <i class="nav-icon fas fa-address-card"></i> TAMBAH Afdeling
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -176,7 +176,7 @@ export default {
 
       afdeling: [],
 
-      site_id: '',
+      employee_id: '',
 
       //state validation
       validation: [],

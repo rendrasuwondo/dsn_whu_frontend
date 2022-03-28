@@ -46,6 +46,17 @@
             </div>
 
             <div class="form-group">
+              <label>Nama Karyawan</label>
+              <multiselect
+                v-model="field.employee_id"
+                :options="employee"
+                label="name"
+                track-by="id"
+                :searchable="true"
+              ></multiselect>
+            </div>
+
+            <div class="form-group">
               <label>Email</label>
               <input
                 type="emial"
@@ -174,10 +185,11 @@ export default {
         created_at: '',
         updated_at: '',
         created_by: '',
-
         updated_by: '',
         employee_id: '',
       },
+
+      employee: [],
 
       //state validation
       validation: [],
@@ -193,6 +205,14 @@ export default {
       this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
 
     this.$refs.user_name.focus()
+
+    //Data Employee
+    this.$axios
+      .get('/api/admin/lov_employee')
+
+      .then((response) => {
+        this.employee = response.data.data
+      })
   },
 
   methods: {
@@ -215,12 +235,14 @@ export default {
     async storePost() {
       //define formData
       let formData = new FormData()
-
+      formData.append(
+        'employee_id',
+        this.field.employee_id ? this.field.employee_id.id : ''
+      )
       formData.append('user_name', this.field.user_name)
       formData.append('name', this.field.name)
       formData.append('email', this.field.email)
-      formData.append(' password', this.field.password)
-      formData.append('employee_id', this.field.employee_id)
+      formData.append('password', this.field.password)
       formData.append('created_at', this.field.created_at)
       formData.append('update_at', this.field.update_at)
 
