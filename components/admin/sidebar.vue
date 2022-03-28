@@ -83,11 +83,11 @@ export default {
       menu : ''
     }
   },
-  async fetch() {
+  // async fetch() {
     // this.mountains = await fetch('https://api.nuxtjs.dev/mountains').then(
     //   (res) => res.json()
     // )
-  },
+  // },
   mounted() {
 
     this.$axios
