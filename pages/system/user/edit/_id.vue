@@ -30,7 +30,7 @@
               </div> -->
             </div>
 
-            <div class="form-group">
+            <!-- <div class="form-group">
               <label>Nama</label>
               <input
                 type="text"
@@ -38,12 +38,8 @@
                 placeholder="Masukkan Nama User"
                 class="form-control"
               />
-              <!-- <div v-if="validation.name" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.name[0]
-                }}</b-alert>
-              </div> -->
-            </div>
+              
+            </div> -->
 
             <div class="form-group">
               <label>Nama Karyawan</label>

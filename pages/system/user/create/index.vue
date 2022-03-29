@@ -30,7 +30,7 @@
               </div>
             </div>
 
-            <div class="form-group">
+            <!-- <div class="form-group">
               <label>Nama</label>
               <input
                 type="text"
@@ -43,7 +43,7 @@
                   validation.name[0]
                 }}</b-alert>
               </div>
-            </div>
+            </div> -->
 
             <div class="form-group">
               <label>Nama Karyawan</label>
@@ -169,7 +169,7 @@ export default {
   //meta
   head() {
     return {
-      title: 'Tambah Role',
+      title: 'Tambah User',
     }
   },
 
