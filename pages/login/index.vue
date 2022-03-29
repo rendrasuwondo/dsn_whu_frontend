@@ -98,7 +98,9 @@ export default {
         .then(() => {
           //profile
           this.$axios.get('/api/admin/profile').then((response) => {
+        
             response.data.data.forEach((dt) => {
+             
               this.$cookies.set('activity_group_id', dt.activity_group_id, {})
               this.$cookies.set(
                 'activity_group_code',
