@@ -125,7 +125,7 @@ export default {
 
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {
-        baseURL: 'http://192.168.202.118:88',
+        baseURL: 'http://localhost:8000',
     },
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
@@ -134,6 +134,6 @@ export default {
     // router: {
     //     base: process.env.MODE == "DEV" ? "/elhm" : "/elhm",
     //     /* mode: 'hash', */
-        
+
     //   },
 }

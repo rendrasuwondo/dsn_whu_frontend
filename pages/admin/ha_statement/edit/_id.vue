@@ -308,8 +308,8 @@ export default {
       await this.$axios
         .put(`/api/admin/ha_statement/${this.$route.params.id}`, {
           //data yang dikirim
-          afdeling_id: this.field.afdeling_id,
-          progeny_id: this.field.progeny_id,
+          afdeling_id: this.field.afdeling_id ? this.field.afdeling_id.id : '',
+          progeny_id: this.field.progeny_id ? this.field.progeny_id.id : '',
           block: this.field.block,
           block_sap: this.field.block_sap,
           plant_month: this.field.plant_month,

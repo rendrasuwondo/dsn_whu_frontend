@@ -10,6 +10,7 @@
       <b-button
         class="download-apk"
         href="https://drive.google.com/drive/folders/1ym4KwIPbztn6RA4-osKv6O4FPhv_CcKU"
+        target="_blank"
       >
         <b-img class="img-download" src="img/drive_logo.png" alt="logo"></b-img>
         Download Aplikasi <b>eLHM</b>
@@ -66,9 +67,12 @@ body {
   margin-top: 20px;
   width: 210px;
   padding: 10px;
-  background: #2d3436;
+  background: #0c0d0e;
   font-size: 13px;
   box-shadow: 3px 2px #f5f6fabb;
+}
+.download-apk:hover {
+  background-color: #020304;
 }
 
 .img-download {
