@@ -240,12 +240,12 @@ export default {
       .get('/api/admin/lov_activity')
 
       .then((response) => {
-        // this.activity = response.data.data
-        response.data.data.forEach((dt) => {
-          if (dt.activity_group_id == this.$cookies.get('activity_group_id')) {
-            this.activity.push(dt)
-          }
-        })
+        this.activity = response.data.data
+        // response.data.data.forEach((dt) => {
+        //   if (dt.activity_group_id == this.$cookies.get('activity_group_id')) {
+        //     this.activity.push(dt)
+        //   }
+        // })
       })
 
     // console.log(this.$cookies.get('activity_group_id'))
