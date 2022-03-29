@@ -50,7 +50,7 @@
               <multiselect
                 v-model="field.employee_id"
                 :options="employee"
-                label="name"
+                label="employee_description"
                 track-by="id"
                 :searchable="true"
               ></multiselect>
