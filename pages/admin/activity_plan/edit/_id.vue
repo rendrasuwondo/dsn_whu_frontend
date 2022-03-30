@@ -223,11 +223,11 @@ export default {
         this.field.activitied_at = response.data.data.activitied_at
 
         if (response.data.data.activity.name.indexOf('RATE') > 0) {
-          this.field.flexrate = response.data.data.flexrate
+          this.field.flexrate = response.data.data.flexrate ?? 0
           this.show_hk = false
           this.show_rate = true
         } else {
-          this.field.man_days = response.data.data.man_days
+          this.field.man_days = response.data.data.man_days ?? 0
           this.show_hk = true
           this.show_rate = false
         } //if (response.data.data.activity_name.indexOf('RATE') > 0) {

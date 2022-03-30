@@ -208,7 +208,8 @@ export default {
         {
           label: 'Detail',
           key: 'detail',
-          tdClass: 'align-middle text-center',
+          tdClass: 'align-middle text-center d-none',
+          thClass: 'd-none'
         },
         {
           label: 'Tanggal',
@@ -338,7 +339,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/employee/export?q=${this.search}`,
+        url: `/api/admin/activity_plan/export?q=${this.search}&activitied_at_start=${this.activitied_at_start}&activitied_at_end=${this.activitied_at_end}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
@@ -347,7 +348,7 @@ export default {
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
-        var fileName = 'Employee.xlsx'
+        var fileName = 'Activity_Plan.xlsx'
         link.setAttribute('download', fileName) //or any other extension
         document.body.appendChild(link)
         link.click()
