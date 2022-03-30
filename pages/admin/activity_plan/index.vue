@@ -78,7 +78,8 @@
                     :to="{ name: 'admin-activity_plan-create' }"
                     class="btn btn-info btn-sm"
                     style="padding-top: 8px"
-                    ><i class="fa fa-plus-circle"></i> TAMBAH</nuxt-link
+                    title="Tambah"
+                    ><i class="fa fa-plus-circle"></i> </nuxt-link
                   >
                   <button
                     title="Filter"
@@ -87,6 +88,13 @@
                   >
                     <i class="fa fa-filter"></i>
                   </button>
+                   <button
+                  title="Export To Excel"
+                  class="btn btn-info"
+                  @click="exportData"
+                >
+                  <i class="fa fa-file-excel"></i>
+                </button>
                 </b-button-group>
               </div>
 
@@ -200,7 +208,8 @@ export default {
         {
           label: 'Detail',
           key: 'detail',
-          tdClass: 'align-middle text-center',
+          tdClass: 'align-middle text-center d-none',
+          thClass: 'd-none'
         },
         {
           label: 'Tanggal',
@@ -208,12 +217,17 @@ export default {
           tdClass: 'align-middle',
         },
         {
-          label: 'Afdeling',
-          key: 'afdeling_id',
+          label: 'Estate',
+          key: 'department_code',
           tdClass: 'align-middle',
         },
         {
-          label: 'KDKJ',
+          label: 'Afdeling',
+          key: 'afdeling_code',
+          tdClass: 'align-middle',
+        },
+        {
+          label: 'Jenis Pekerjaan',
           key: 'activity_description',
           tdClass: 'align-middle text-nowrap',
         },
@@ -243,7 +257,7 @@ export default {
   },
 
   //watch query URL
-  watchQuery: ['q', 'page'],
+  watchQuery: ['q', 'page','activitied_at_start','activitied_at_end'],
 
   async asyncData({ $axios, query }) {
     //page
@@ -252,12 +266,18 @@ export default {
     //search
     let search = query.q ? query.q : ''
 
+    //activitied_at_start
+    let activitied_at_start = query.activitied_at_start ? query.activitied_at_start : ''
+
+    //activitied_at_start
+    let activitied_at_end = query.activitied_at_end ? query.activitied_at_end : ''
+
     //fetching posts
     const posts = await $axios.$get(
-      `/api/admin/activity_plan?q=${search}&page=${page}`
+      `/api/admin/activity_plan?q=${search}&page=${page}&activitied_at_start=${activitied_at_start}&activitied_at_end=${activitied_at_end}`
     )
 
-    console.log(posts.data.total)
+    console.log(posts.data)
     // this.rowcount = posts.data.total
 
     return {
@@ -287,6 +307,8 @@ export default {
         query: {
           q: this.$route.query.q,
           page: page,
+          activitied_at_start: this.$route.query.activitied_at_start,
+          activitied_at_end: this.$route.query.activitied_at_end,
         },
       })
     },
@@ -297,6 +319,8 @@ export default {
         path: this.$route.path,
         query: {
           q: this.search,
+          activitied_at_start: this.activitied_at_start,
+          activitied_at_end: this.activitied_at_end
         },
       })
     },
@@ -307,6 +331,28 @@ export default {
       } else {
         this.show_filter = false
       }
+    },
+
+    exportData() {
+      const headers = {
+        'Content-Type': 'application/json',
+      }
+
+      this.$axios({
+        url: `/api/admin/activity_plan/export?q=${this.search}&activitied_at_start=${this.activitied_at_start}&activitied_at_end=${this.activitied_at_end}`,
+        method: 'GET',
+        responseType: 'blob',
+        headers: headers, // important
+      }).then((response) => {
+        this.isLoading = false
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        var fileName = 'Activity_Plan.xlsx'
+        link.setAttribute('download', fileName) //or any other extension
+        document.body.appendChild(link)
+        link.click()
+      })
     },
 
     //deletePost method
