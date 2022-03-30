@@ -19,7 +19,7 @@
               <multiselect
                 v-model="field.user_id"
                 :options="users"
-                label="name"
+                label="users_description"
                 track-by="id"
                 :searchable="true"
               ></multiselect>
@@ -186,12 +186,12 @@ export default {
         this.$nuxt.$loading.start()
       })
 
-    //Data user
+    //Data Users
     this.$axios
-      .get('/api/admin/users')
+      .get('/api/admin/lov_users')
 
       .then((response) => {
-        this.users = response.data.data.data
+        this.users = response.data.data
       })
   },
 

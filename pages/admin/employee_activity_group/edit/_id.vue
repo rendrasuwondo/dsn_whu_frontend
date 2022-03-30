@@ -22,8 +22,12 @@
                 label="code"
                 track-by="id"
                 :searchable="true"
-              ></multiselect>
-              <!-- <div v-if="validation.code" class="mt-2">
+                :show-labels="true"
+              >
+              </multiselect>
+              <!-- v-selected="this.field.activity_group_id.id" 
+                v-html="placeholder"
+                <div v-if="validation.code" class="mt-2">
                 <b-alert show variant="danger">{{
                   validation.code[0]
                 }}</b-alert>
@@ -132,7 +136,7 @@ export default {
   //meta
   head() {
     return {
-      title: 'Edit Afdeling',
+      title: 'Edit Grup',
     }
   },
 
@@ -276,6 +280,9 @@ export default {
     },
     readonly() {
       return this.state === 'readonly'
+    },
+    placeholder: function () {
+      return this.field.activity_group_id
     },
   },
 }

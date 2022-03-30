@@ -98,11 +98,6 @@ export default {
   data() {
     return {
       fields: [
-        // {
-        //   label: 'Actions',
-        //   key: 'actions',
-        //   tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        // },
         {
           label: 'NIK',
           key: 'nik_employee',
@@ -126,6 +121,16 @@ export default {
         {
           label: 'Kode SAP',
           key: 'code_sap_at',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          label: 'Afdeling',
+          key: 'afdeling_id',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          label: 'Estate',
+          key: 'department_code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {

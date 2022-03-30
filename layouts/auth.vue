@@ -1,6 +1,8 @@
 <template>
   <div class="hold-transition login-page">
-    <b-img class="img-logo" src="img/dsn_logo.png" alt="logo"></b-img>
+    <div>
+      <b-img class="img-logo" src="img/dsn_logo.png" alt="logo"></b-img>
+    </div>
     <div class="login-box">
       <!-- /.login-logo -->
       <Nuxt />
