@@ -20,7 +20,7 @@
             header-text-variant="white"
           >
             <b-card-text>
-              <div>
+              <b-container class="bv-example-row mb-3">
                 <b-row>
                   <b-col cols="1">Tanggal</b-col>
                   <b-col>
@@ -39,7 +39,7 @@
                         <b-btn size="sm" @click="activitied_at_start = ''"
                           ><i class="fa fa-trash"></i
                         ></b-btn>
-                        s.d
+                        &nbsp s.d
                       </template>
                     </b-input-group>
                   </b-col>
@@ -65,7 +65,22 @@
                   </b-col>
                   <b-col></b-col>
                 </b-row>
-              </div>
+              </b-container>
+              <b-container class="bv-example-row">
+                <b-row>
+                  <b-col cols="1">Mandor</b-col>
+                  <b-col cols="7" >
+                    <div class="form-group">
+                      <multiselect
+                        v-model="foreman_employee_id"
+                        :options="foreman"
+                        label="employee_description_position"
+                        track-by="id"
+                        :searchable="true"
+                      ></multiselect></div
+                  ></b-col>
+                </b-row>
+              </b-container>
             </b-card-text>
           </b-card>
 
@@ -168,8 +183,8 @@ export default {
   },
   data() {
     return {
-      activitied_at_start: '',
-      activitied_at_end: '',
+      foreman_employee_id: '',
+      foreman:[],
       fields: [
         {
           label: 'Actions',
@@ -182,13 +197,13 @@ export default {
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          label: 'KDKJ',
-          key: 'activity_description',
+          label: 'Mandor',
+          key: 'foreman_employee',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          label: 'Mandor',
-          key: 'foreman_employee',
+          label: 'Jenis Pekerjaan',
+          key: 'activity_description',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
@@ -217,9 +232,11 @@ export default {
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
       ],
+       company_code: 'DIN',
+      department_code: 'LK3',
     }
   },
-  watchQuery: ['q', 'page'],
+  watchQuery: ['q', 'page', 'activitied_at_prepend','activitied_at_append'],
 
   async asyncData({ $axios, query }) {
     //page
@@ -228,17 +245,50 @@ export default {
     //search
     let search = query.q ? query.q : ''
 
+    //activitied_at_prepend
+    let activitied_at_start = query.activitied_at_prepend ? query.activitied_at_prepend : ''
+
+    //activitied_at_append
+    let activitied_at_end = query.activitied_at_append ? query.activitied_at_append : ''
+
     //fetching posts
     const posts = await $axios.$get(
-      `/api/admin/activity_actual?q=${search}&page=${page}`
+      `/api/admin/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}`
     )
+
+    const foreman_list = await $axios.$get(
+       `/api/admin/lov_employee_activity_group/DIN/LK3/mandor`
+    )
+
+    
+    console.log(foreman_list.data)
 
     return {
       posts: posts.data.data,
       pagination: posts.data,
       search: search,
       rowcount: posts.data.total,
+      activitied_at_start: activitied_at_start,
+      activitied_at_end: activitied_at_end,
+      foreman: foreman_list.data
     }
+
+    
+  },
+
+  mounted() {
+    this.activitied_at_start = this.currentDate()
+    this.activitied_at_end = this.currentDate()
+
+    //Dropdown Mandor
+    this.$axios
+      .get(
+        `/api/admin/lov_employee_activity_group/${this.company_code}/${this.department_code}/mandor`
+      )
+
+      .then((response) => {
+        this.foreman = response.data.data
+      })
   },
 
   methods: {
@@ -246,8 +296,10 @@ export default {
       this.$router.push({
         path: this.$route.path,
         query: {
-          q: this.$route.query.q,
+          q: this.$route.query.q ? this.$route.query.q : this.search,
           page: page,
+          activitied_at_prepend: this.$route.query.activitied_at_prepend ? this.$route.query.activitied_at_prepend : this.activitied_at_start,
+           activitied_at_append: this.$route.query.activitied_at_append ? this.$route.query.activitied_at_append : this.activitied_at_end,
         },
       })
     },
@@ -257,9 +309,21 @@ export default {
         path: this.$route.path,
         query: {
           q: this.search,
-          activitied_at_start: this.activitied_at_start,
+          activitied_at_prepend: this.activitied_at_start,
+          activitied_at_append: this.activitied_at_end,
         },
       })
+
+     
+    },
+
+    currentDate() {
+      const current = new Date()
+      current.setDate(current.getDate())
+      const date = `${current.getFullYear()}-${
+        current.getMonth() + 1
+      }-${current.getDate()}`
+      return date
     },
 
     //deletePost method
