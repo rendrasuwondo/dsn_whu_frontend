@@ -150,7 +150,7 @@
             </template>
           </b-table>
 
-          <b-row>
+          <b-row v-show="show_page">
             <b-col>
               <!-- pagination -->
               <b-pagination
@@ -183,6 +183,7 @@ export default {
   },
   data() {
     return {
+      show_page: false,
       foreman: [],
       fields: [
         {
@@ -243,7 +244,8 @@ export default {
     'foreman_id',
   ],
 
-  async asyncData({ $axios, query }) {
+  async asyncData({ $axios, query, $cookies, $route }) {
+
     function currentDate() {
       const current = new Date()
       current.setDate(current.getDate())
@@ -269,22 +271,27 @@ export default {
       ? query.activitied_at_append
       : currentDate()
 
-    //foreman_id
-    let foreman_employee_id = query.foreman_id ? query.foreman_id : ''
+    let department_code = $cookies.get('department_code')
+    let company_code = $cookies.get('company_code')
 
-    // console.log('rdr')
-    // console.log(activitied_at_start)
+    const foreman_list = await $axios.$get(
+      `/api/admin/lov_employee_activity_group/${company_code}/${department_code}/mandor`
+    )
+    
+
+    //foreman_id
+    let foreman_employee_id = query.foreman_id ? query.foreman_id : 490
+    //  console.log('isa')
+    //  console.log($cookies.get('department_code'))
 
     //fetching posts
     const posts = await $axios.$get(
       `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_employee_id}`
     )
 
-    const foreman_list = await $axios.$get(
-      `/api/admin/lov_employee_activity_group/DIN/LK3/mandor`
-    )
-
-    
+    // const profile = await $axios.$get(
+    // )
+    foreman_employee_id = 490  
 
     return {
       posts: posts.data,
@@ -302,15 +309,20 @@ export default {
     this.activitied_at_start = this.currentDate()
     this.activitied_at_end = this.currentDate()
 
-    //Dropdown Mandor
-    this.$axios
-      .get(
-        `/api/admin/lov_employee_activity_group/${this.company_code}/${this.department_code}/mandor`
-      )
+    // console.log('rdr')
+    // console.log(this.$route.params.foreman_id)
 
-      .then((response) => {
-        this.foreman = response.data.data
-      })
+    this.foreman_employee_id = 490
+
+    // //Dropdown Mandor
+    // this.$axios
+    //   .get(
+    //     `/api/admin/lov_employee_activity_group/${this.company_code}/${this.department_code}/mandor`
+    //   )
+
+    //   .then((response) => {
+    //     this.foreman = response.data.data
+    //   })
   },
 
   methods: {
@@ -393,8 +405,11 @@ export default {
         'Content-Type': 'application/json',
       }
 
+      //  console.log('rdr')
+      //  console.log(this.activitied_at_start)
+
       this.$axios({
-        url: `/api/admin/activity_actual/export`,
+        url: `/api/admin/activity_actual/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&foreman_id=${this.foreman_employee_id}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important

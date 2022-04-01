@@ -101,6 +101,8 @@ export default {
         
             response.data.data.forEach((dt) => {
              
+              this.$cookies.set('department_code', dt.department_code, {})
+              this.$cookies.set('company_code', dt.company_code, {})
               this.$cookies.set('activity_group_id', dt.activity_group_id, {})
               this.$cookies.set(
                 'activity_group_code',
