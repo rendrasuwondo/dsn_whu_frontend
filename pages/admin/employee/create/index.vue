@@ -112,6 +112,23 @@
             </div>
 
             <div class="form-group">
+              <label>Afdeling</label>
+
+              <multiselect
+                v-model="field.afdeling_id"
+                :options="afdeling"
+                label="id"
+                track-by="id"
+                :searchable="true"
+              ></multiselect>
+              <!-- <div v-if="validation.location_id" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.location_id[0]
+                }}</b-alert>
+              </div> -->
+            </div>
+
+            <div class="form-group">
               <label>Alamat Email</label>
               <input
                 type="email"
@@ -255,6 +272,7 @@ export default {
       state: 'disabled',
 
       field: {
+        id: '',
         location_id: '',
         department_id: '',
         company_id: '',
@@ -269,6 +287,8 @@ export default {
         created_by: '',
         updated_at: '',
         updated_by: '',
+        afdeling_id: '',
+        activity_group_id: '',
       },
 
       company: [],
@@ -278,6 +298,8 @@ export default {
       location: [],
 
       position: [],
+
+      afdeling: [],
 
       //state validation
       validation: [],
@@ -326,6 +348,14 @@ export default {
       .then((response) => {
         this.position = response.data.data
       })
+
+    // Data afdeling
+    this.$axios
+      .get('/api/admin/lov_afdeling')
+
+      .then((response) => {
+        this.afdeling = response.data.data
+      })
   },
 
   methods: {
@@ -349,6 +379,8 @@ export default {
       //define formData
       let formData = new FormData()
 
+      formData.append('employee_id', this.field.id)
+
       formData.append(
         'location_id',
         this.field.location_id ? this.field.location_id.id : ''
@@ -367,7 +399,11 @@ export default {
         this.field.department_id ? this.field.department_id.id : ''
       )
 
-      // formData.append('department_id', this.field.department_id)
+      formData.append(
+        'afdeling_id',
+        this.field.afdeling_id ? this.field.afdeling_id.id : ''
+      )
+      formData.append('activity_group_id', this.field.activity_group_id)
       // formData.append('company_id', this.field.company_id)
       // formData.append('position_id', this.field.position_id)
       formData.append('employee_status', this.field.employee_status)
@@ -403,6 +439,8 @@ export default {
           //assign error to state "validation"
           this.validation = error.response.data
         })
+
+      
     },
   },
 

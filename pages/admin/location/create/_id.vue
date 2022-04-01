@@ -276,7 +276,7 @@ export default {
       //define formData
       let formData = new FormData()
 
-      formData.append('site_id', this.$route.params.id)
+      formData.append('site_id', this.field.id)
       formData.append('code', this.field.code)
       formData.append('name', this.field.name)
       formData.append('is_active', this.field.is_active)

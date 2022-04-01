@@ -94,6 +94,23 @@
             </div>
 
             <div class="form-group">
+              <label>Afdeling</label>
+
+              <multiselect
+                v-model="field.afdeling_id"
+                :options="afdeling"
+                label="id"
+                track-by="id"
+                :searchable="true"
+              ></multiselect>
+              <!-- <div v-if="validation.location_id" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.location_id[0]
+                }}</b-alert>
+              </div> -->
+            </div>
+
+            <div class="form-group">
               <label>Lokasi</label>
 
               <multiselect
@@ -272,6 +289,8 @@ export default {
 
       position: [],
 
+      afdeling: [],
+
       //state validation
       validation: [],
     }
@@ -283,10 +302,11 @@ export default {
       .get(`/api/admin/employee/${this.$route.params.id}`)
       .then((response) => {
         //data yang diambil
-        this.field.location_id = response.data.data.location_id
-        this.field.department_id = response.data.data.department_id
-        this.field.company_id = response.data.data.company_id
-        this.field.position_id = response.data.data.position_id
+        this.field.location_id = response.data.data.location
+        this.field.department_id = response.data.data.department
+        this.field.company_id = response.data.data.company
+        this.field.position_id = response.data.data.position
+        this.field.afdeling_id = response.data.data.afdeling
         this.field.created_at = response.data.data.created_at
         this.field.created_by = response.data.data.created_by
         this.field.updated_at = response.data.data.updated_at

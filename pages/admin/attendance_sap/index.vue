@@ -101,6 +101,12 @@ export default {
         },
 
         {
+          label: 'Keterangan',
+          key: 'description',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+
+        {
           label: 'Afdeling',
           key: 'afdeling_code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
