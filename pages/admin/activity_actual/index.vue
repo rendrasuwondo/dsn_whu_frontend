@@ -69,7 +69,7 @@
               <b-container class="bv-example-row">
                 <b-row>
                   <b-col cols="1">Mandor</b-col>
-                  <b-col cols="7" >
+                  <b-col cols="7">
                     <div class="form-group">
                       <multiselect
                         v-model="foreman_employee_id"
@@ -183,8 +183,7 @@ export default {
   },
   data() {
     return {
-      foreman_employee_id: '',
-      foreman:[],
+      foreman: [],
       fields: [
         {
           label: 'Actions',
@@ -232,13 +231,28 @@ export default {
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
       ],
-       company_code: 'DIN',
+      company_code: 'DIN',
       department_code: 'LK3',
     }
   },
-  watchQuery: ['q', 'page', 'activitied_at_prepend','activitied_at_append'],
+  watchQuery: [
+    'q',
+    'page',
+    'activitied_at_prepend',
+    'activitied_at_append',
+    'foreman_id',
+  ],
 
   async asyncData({ $axios, query }) {
+    function currentDate() {
+      const current = new Date()
+      current.setDate(current.getDate())
+      const date = `${current.getFullYear()}-${
+        current.getMonth() + 1
+      }-${current.getDate()}`
+      return date
+    }
+
     //page
     let page = query.page ? parseInt(query.page) : ''
 
@@ -246,34 +260,42 @@ export default {
     let search = query.q ? query.q : ''
 
     //activitied_at_prepend
-    let activitied_at_start = query.activitied_at_prepend ? query.activitied_at_prepend : ''
+    let activitied_at_start = query.activitied_at_prepend
+      ? query.activitied_at_prepend
+      : currentDate()
 
     //activitied_at_append
-    let activitied_at_end = query.activitied_at_append ? query.activitied_at_append : ''
+    let activitied_at_end = query.activitied_at_append
+      ? query.activitied_at_append
+      : currentDate()
+
+    //foreman_id
+    let foreman_employee_id = query.foreman_id ? query.foreman_id : ''
+
+    // console.log('rdr')
+    // console.log(activitied_at_start)
 
     //fetching posts
     const posts = await $axios.$get(
-      `/api/admin/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}`
+      `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_employee_id}`
     )
 
     const foreman_list = await $axios.$get(
-       `/api/admin/lov_employee_activity_group/DIN/LK3/mandor`
+      `/api/admin/lov_employee_activity_group/DIN/LK3/mandor`
     )
 
     
-    console.log(foreman_list.data)
 
     return {
-      posts: posts.data.data,
+      posts: posts.data,
       pagination: posts.data,
       search: search,
       rowcount: posts.data.total,
       activitied_at_start: activitied_at_start,
       activitied_at_end: activitied_at_end,
-      foreman: foreman_list.data
+      foreman: foreman_list.data,
+      foreman_employee_id: foreman_employee_id,
     }
-
-    
   },
 
   mounted() {
@@ -298,8 +320,15 @@ export default {
         query: {
           q: this.$route.query.q ? this.$route.query.q : this.search,
           page: page,
-          activitied_at_prepend: this.$route.query.activitied_at_prepend ? this.$route.query.activitied_at_prepend : this.activitied_at_start,
-           activitied_at_append: this.$route.query.activitied_at_append ? this.$route.query.activitied_at_append : this.activitied_at_end,
+          activitied_at_prepend: this.$route.query.activitied_at_prepend
+            ? this.$route.query.activitied_at_prepend
+            : this.activitied_at_start,
+          activitied_at_append: this.$route.query.activitied_at_append
+            ? this.$route.query.activitied_at_append
+            : this.activitied_at_end,
+          foreman_id: this.$route.query.foreman_id
+            ? this.$route.query.foreman_id
+            : this.foreman_employee_id,
         },
       })
     },
@@ -311,10 +340,9 @@ export default {
           q: this.search,
           activitied_at_prepend: this.activitied_at_start,
           activitied_at_append: this.activitied_at_end,
+          foreman_id: this.foreman_employee_id.employee_id,
         },
       })
-
-     
     },
 
     currentDate() {
