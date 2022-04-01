@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-calendar-check"></i> ABSENSI
+            <i class="nav-icon fas fa-file-alt"></i> ABSENSI
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -16,13 +16,6 @@
           <div class="form-group">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
-                <nuxt-link
-                  :to="{ name: 'admin-attendance-create' }"
-                  class="btn btn-info btn-sm"
-                  style="padding-top: 8px"
-                  title="Tambah"
-                  ><i class="fa fa-plus-circle"></i>
-                </nuxt-link>
                 <button
                   title="Export To Excel"
                   class="btn btn-info"
@@ -57,36 +50,16 @@
             :fields="fields"
             show-empty
           >
-            <template v-slot:cell(actions)="row">
-              <b-button
-                :to="{
-                  name: 'admin-attendance-edit-id',
-                  params: { id: row.item.id },
-                }"
-                variant="link"
-                size="sm"
-                title="Edit"
-              >
-                <i class="fa fa-pencil-alt"></i>
-              </b-button>
-              <b-button
-                variant="link"
-                size="sm"
-                @click="deletePost(row.item.id)"
-                title="Hapus"
-                ><i class="fa fa-trash"></i
-              ></b-button>
-            </template>
           </b-table>
-          <!-- pagination -->
-          <b-pagination
+          <!-- pagination-->
+          <!-- <b-pagination
             v-model="pagination.current_page"
             :total-rows="pagination.total"
             :per-page="pagination.per_page"
             @change="changePage"
             align="right"
             class="mt-3"
-          ></b-pagination>
+          ></b-pagination> -->
         </div>
       </div>
     </section>
@@ -99,17 +72,12 @@ export default {
 
   head() {
     return {
-      title: 'Absensi',
+      title: 'Attendance',
     }
   },
   data() {
     return {
       fields: [
-        {
-          label: 'Actions',
-          key: 'actions',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
         {
           label: 'Tanggal',
           key: 'attendance_date',
@@ -153,39 +121,51 @@ export default {
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
       ],
+      posts: [],
     }
   },
-  watchQuery: ['q', 'page'],
+  watchQuery: ['q'],
 
   async asyncData({ $axios, query }) {
     //page
-    let page = query.page ? parseInt(query.page) : ''
+    // let page = query.page ? parseInt(query.page) : ''
 
     //search
     let search = query.q ? query.q : ''
 
     //fetching posts
-    const posts = await $axios.$get(
-      `/api/admin/attendance?q=${search}&page=${page}`
-    )
+    const posts = await $axios.$get(`/api/admin/attendance_sap?q=${search}`)
 
     return {
       posts: posts.data.data,
-      pagination: posts.data,
+      //   pagination: posts.data,
       search: search,
     }
   },
 
-  methods: {
-    changePage(page) {
-      this.$router.push({
-        path: this.$route.path,
-        query: {
-          q: this.$route.query.q,
-          page: page,
-        },
+  mounted() {
+    //fething ke Rest API
+    this.$axios
+      .get(`/api/admin/attendance_sap`)
+      .then((response) => {
+        //assign response ke state "posts"
+        this.posts = response.data.data
       })
-    },
+      .catch((error) => {
+        console.log(error.response.data)
+      })
+  },
+
+  methods: {
+    // changePage(page) {
+    //   this.$router.push({
+    //     path: this.$route.path,
+    //     query: {
+    //       q: this.$route.query.q,
+    //       page: page,
+    //     },
+    //   })
+    // },
     //searchData
     searchData() {
       this.$router.push({
@@ -202,28 +182,6 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/attendance/export`,
-        method: 'GET',
-        responseType: 'blob',
-        headers: headers, // important
-      }).then((response) => {
-        this.isLoading = false
-        const url = window.URL.createObjectURL(new Blob([response.data]))
-        const link = document.createElement('a')
-        link.href = url
-        var fileName = 'Attendance.xlsx'
-        link.setAttribute('download', fileName) //or any other extension
-        document.body.appendChild(link)
-        link.click()
-      })
-    },
-
-    exportDataSAP() {
-      const headers = {
-        'Content-Type': 'application/json',
-      }
-
-      this.$axios({
         url: `/api/admin/template_sap/export`,
         method: 'GET',
         responseType: 'blob',
@@ -233,7 +191,7 @@ export default {
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
-        var fileName = 'Template SAP.xlsx'
+        var fileName = 'Template SAP Absensi.xls'
         link.setAttribute('download', fileName) //or any other extension
         document.body.appendChild(link)
         link.click()
