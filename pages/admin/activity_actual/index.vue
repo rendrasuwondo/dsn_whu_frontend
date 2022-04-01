@@ -69,7 +69,7 @@
               <b-container class="bv-example-row">
                 <b-row>
                   <b-col cols="1">Mandor</b-col>
-                  <b-col cols="7" >
+                  <b-col cols="7">
                     <div class="form-group">
                       <multiselect
                         v-model="foreman_employee_id"
@@ -150,7 +150,7 @@
             </template>
           </b-table>
 
-          <b-row>
+          <b-row v-show="show_page">
             <b-col>
               <!-- pagination -->
               <b-pagination
@@ -183,8 +183,8 @@ export default {
   },
   data() {
     return {
-      foreman_employee_id: '',
-      foreman:[],
+      show_page: false,
+      foreman: [],
       fields: [
         {
           label: 'Actions',
@@ -232,13 +232,29 @@ export default {
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
       ],
-       company_code: 'DIN',
+      company_code: 'DIN',
       department_code: 'LK3',
     }
   },
-  watchQuery: ['q', 'page', 'activitied_at_prepend','activitied_at_append'],
+  watchQuery: [
+    'q',
+    'page',
+    'activitied_at_prepend',
+    'activitied_at_append',
+    'foreman_id',
+  ],
 
-  async asyncData({ $axios, query }) {
+  async asyncData({ $axios, query, $cookies, $route }) {
+
+    function currentDate() {
+      const current = new Date()
+      current.setDate(current.getDate())
+      const date = `${current.getFullYear()}-${
+        current.getMonth() + 1
+      }-${current.getDate()}`
+      return date
+    }
+
     //page
     let page = query.page ? parseInt(query.page) : ''
 
@@ -246,49 +262,67 @@ export default {
     let search = query.q ? query.q : ''
 
     //activitied_at_prepend
-    let activitied_at_start = query.activitied_at_prepend ? query.activitied_at_prepend : ''
+    let activitied_at_start = query.activitied_at_prepend
+      ? query.activitied_at_prepend
+      : currentDate()
 
     //activitied_at_append
-    let activitied_at_end = query.activitied_at_append ? query.activitied_at_append : ''
+    let activitied_at_end = query.activitied_at_append
+      ? query.activitied_at_append
+      : currentDate()
+
+    let department_code = $cookies.get('department_code')
+    let company_code = $cookies.get('company_code')
+
+    const foreman_list = await $axios.$get(
+      `/api/admin/lov_employee_activity_group/${company_code}/${department_code}/mandor`
+    )
+    
+
+    //foreman_id
+    let foreman_employee_id = query.foreman_id ? query.foreman_id : 490
+    //  console.log('isa')
+    //  console.log($cookies.get('department_code'))
 
     //fetching posts
     const posts = await $axios.$get(
-      `/api/admin/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}`
+      `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_employee_id}`
     )
 
-    const foreman_list = await $axios.$get(
-       `/api/admin/lov_employee_activity_group/DIN/LK3/mandor`
-    )
-
-    
-    console.log(foreman_list.data)
+    // const profile = await $axios.$get(
+    // )
+    foreman_employee_id = 490  
 
     return {
-      posts: posts.data.data,
+      posts: posts.data,
       pagination: posts.data,
       search: search,
       rowcount: posts.data.total,
       activitied_at_start: activitied_at_start,
       activitied_at_end: activitied_at_end,
-      foreman: foreman_list.data
+      foreman: foreman_list.data,
+      foreman_employee_id: foreman_employee_id,
     }
-
-    
   },
 
   mounted() {
     this.activitied_at_start = this.currentDate()
     this.activitied_at_end = this.currentDate()
 
-    //Dropdown Mandor
-    this.$axios
-      .get(
-        `/api/admin/lov_employee_activity_group/${this.company_code}/${this.department_code}/mandor`
-      )
+    // console.log('rdr')
+    // console.log(this.$route.params.foreman_id)
 
-      .then((response) => {
-        this.foreman = response.data.data
-      })
+    this.foreman_employee_id = 490
+
+    // //Dropdown Mandor
+    // this.$axios
+    //   .get(
+    //     `/api/admin/lov_employee_activity_group/${this.company_code}/${this.department_code}/mandor`
+    //   )
+
+    //   .then((response) => {
+    //     this.foreman = response.data.data
+    //   })
   },
 
   methods: {
@@ -298,8 +332,15 @@ export default {
         query: {
           q: this.$route.query.q ? this.$route.query.q : this.search,
           page: page,
-          activitied_at_prepend: this.$route.query.activitied_at_prepend ? this.$route.query.activitied_at_prepend : this.activitied_at_start,
-           activitied_at_append: this.$route.query.activitied_at_append ? this.$route.query.activitied_at_append : this.activitied_at_end,
+          activitied_at_prepend: this.$route.query.activitied_at_prepend
+            ? this.$route.query.activitied_at_prepend
+            : this.activitied_at_start,
+          activitied_at_append: this.$route.query.activitied_at_append
+            ? this.$route.query.activitied_at_append
+            : this.activitied_at_end,
+          foreman_id: this.$route.query.foreman_id
+            ? this.$route.query.foreman_id
+            : this.foreman_employee_id,
         },
       })
     },
@@ -311,10 +352,9 @@ export default {
           q: this.search,
           activitied_at_prepend: this.activitied_at_start,
           activitied_at_append: this.activitied_at_end,
+          foreman_id: this.foreman_employee_id.employee_id,
         },
       })
-
-     
     },
 
     currentDate() {
@@ -365,8 +405,11 @@ export default {
         'Content-Type': 'application/json',
       }
 
+      //  console.log('rdr')
+      //  console.log(this.activitied_at_start)
+
       this.$axios({
-        url: `/api/admin/activity_actual/export`,
+        url: `/api/admin/activity_actual/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&foreman_id=${this.foreman_employee_id}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
