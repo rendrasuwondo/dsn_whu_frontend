@@ -61,7 +61,7 @@
             </div>
 
             <div class="form-group">
-              <label>Department</label>
+              <label>Departemen</label>
 
               <multiselect
                 v-model="field.department_id"
@@ -78,7 +78,7 @@
             </div>
 
             <div class="form-group">
-              <label>Posisi</label>
+              <label>Jabatan</label>
 
               <multiselect
                 v-model="field.position_id"
@@ -121,15 +121,22 @@
                 track-by="id"
                 :searchable="true"
               ></multiselect>
-              <!-- <div v-if="validation.location_id" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.location_id[0]
-                }}</b-alert>
-              </div> -->
             </div>
 
             <div class="form-group">
-              <label>Alamat Email</label>
+              <label>Grup</label>
+
+              <multiselect
+                v-model="field.activity_group_id"
+                :options="activity_group"
+                label="code"
+                track-by="id"
+                :searchable="true"
+              ></multiselect>
+            </div>
+
+            <div class="form-group">
+              <label>Email</label>
               <input
                 type="email"
                 v-model="field.email"
@@ -139,17 +146,17 @@
             </div>
 
             <div class="form-group">
-              <label>Aktif?</label>
-              <b-form-select v-model="field.is_active" :options="options">
-              </b-form-select>
-            </div>
-
-            <div class="form-group">
-              <label>Employee status</label>
+              <label>Status</label>
               <b-form-select
                 v-model="field.employee_status"
                 :options="options_status"
               >
+              </b-form-select>
+            </div>
+
+            <div class="form-group">
+              <label>Aktif?</label>
+              <b-form-select v-model="field.is_active" :options="options">
               </b-form-select>
             </div>
 
@@ -301,6 +308,8 @@ export default {
 
       afdeling: [],
 
+      activity_group: [],
+
       //state validation
       validation: [],
     }
@@ -321,7 +330,7 @@ export default {
       .get('/api/admin/lov_company')
 
       .then((response) => {
-        console.log(response.data.data[0])
+        // console.log(response.data.data[0])
         this.company = response.data.data
       })
 
@@ -355,6 +364,14 @@ export default {
 
       .then((response) => {
         this.afdeling = response.data.data
+      })
+
+      // Data activity_group
+    this.$axios
+      .get('/api/admin/lov_activity_group')
+
+      .then((response) => {
+        this.activity_group = response.data.data
       })
   },
 
@@ -403,7 +420,7 @@ export default {
         'afdeling_id',
         this.field.afdeling_id ? this.field.afdeling_id.id : ''
       )
-      formData.append('activity_group_id', this.field.activity_group_id)
+      formData.append('activity_group_id',  this.field.activity_group_id ? this.field.activity_group_id.id : '')
       // formData.append('company_id', this.field.company_id)
       // formData.append('position_id', this.field.position_id)
       formData.append('employee_status', this.field.employee_status)
@@ -416,6 +433,9 @@ export default {
       formData.append('created_by', this.field.created_by)
       formData.append('update_at', this.field.update_at)
       formData.append('udpate_by', this.field.udpate_by)
+
+      console.log('rdr')
+      console.log(this.field.activity_group_id ? this.field.activity_group_id.id : '')
 
       //sending data to server
       await this.$axios
@@ -439,8 +459,6 @@ export default {
           //assign error to state "validation"
           this.validation = error.response.data
         })
-
-      
     },
   },
 

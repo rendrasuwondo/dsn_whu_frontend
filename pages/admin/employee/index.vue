@@ -104,6 +104,12 @@
               </b-button>
             </template>
           </b-table>
+          <b-tooltip target="myAfdeling" triggers="hover" container="myAfdeling">
+            Afdeling
+          </b-tooltip>
+          <b-tooltip target="myDepartment" triggers="hover" container="myDepartment">
+            Departemen
+          </b-tooltip>
           <!-- pagination -->
           <b-pagination
             v-model="pagination.current_page"
@@ -139,7 +145,8 @@ export default {
         {
           label: 'Afdeling',
           key: 'employee_afdeling',
-          tdClass: 'align-middle text-center',
+          tdClass: 'align-middle text-center d-none',
+          thClass: 'd-none',
         },
         {
           label: 'Grup',
@@ -157,7 +164,7 @@ export default {
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          label: 'Alamat Email',
+          label: 'Email',
           key: 'email',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
@@ -172,13 +179,34 @@ export default {
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
+          label: 'Dept.',
+          key: 'department_code',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          thAttr: {
+            id: "myDepartment"
+          }
+        },
+        {
           label: 'Lokasi',
           key: 'location_code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
+          label: 'Afd',
+          key: 'afdeling_code',
+          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+            thAttr: {
+            id: "myAfdeling"
+          }
+        },
+        {
           label: 'Jabatan',
           key: 'position_code',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          label: 'Status',
+          key: 'employee_status',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {

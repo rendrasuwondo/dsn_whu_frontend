@@ -60,7 +60,7 @@
             </div>
 
             <div class="form-group">
-              <label>Department</label>
+              <label>Departemen</label>
 
               <multiselect
                 v-model="field.department_id"
@@ -77,11 +77,28 @@
             </div>
 
             <div class="form-group">
-              <label>Posisi</label>
+              <label>Jabatan</label>
 
               <multiselect
                 v-model="field.position_id"
                 :options="position"
+                label="code"
+                track-by="id"
+                :searchable="true"
+              ></multiselect>
+              <!-- <div v-if="validation.location_id" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.location_id[0]
+                }}</b-alert>
+              </div> -->
+            </div>
+
+            <div class="form-group">
+              <label>Lokasi</label>
+
+              <multiselect
+                v-model="field.location_id"
+                :options="location"
                 label="code"
                 track-by="id"
                 :searchable="true"
@@ -111,24 +128,7 @@
             </div>
 
             <div class="form-group">
-              <label>Lokasi</label>
-
-              <multiselect
-                v-model="field.location_id"
-                :options="location"
-                label="code"
-                track-by="id"
-                :searchable="true"
-              ></multiselect>
-              <!-- <div v-if="validation.location_id" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.location_id[0]
-                }}</b-alert>
-              </div> -->
-            </div>
-
-            <div class="form-group">
-              <label>Alamat Email</label>
+              <label>Email</label>
               <input
                 type="email"
                 v-model="field.email"
@@ -138,17 +138,17 @@
             </div>
 
             <div class="form-group">
-              <label>Aktif?</label>
-              <b-form-select v-model="field.is_active" :options="options">
-              </b-form-select>
-            </div>
-
-            <div class="form-group">
-              <label>Employee status</label>
+              <label>Status</label>
               <b-form-select
                 v-model="field.employee_status"
                 :options="options_status"
               >
+              </b-form-select>
+            </div>
+
+            <div class="form-group">
+              <label>Aktif?</label>
+              <b-form-select v-model="field.is_active" :options="options">
               </b-form-select>
             </div>
 
@@ -266,6 +266,7 @@ export default {
 
       field: {
         location_id: '',
+        afdeling_id: '',
         department_id: '',
         company_id: '',
         position_id: '',
@@ -315,7 +316,7 @@ export default {
         this.field.nik = response.data.data.nik
         this.field.nik = response.data.data.nik
         this.field.name = response.data.data.name
-        this.field.email = response.data.data.nik
+        this.field.email = response.data.data.email
         this.field.is_active = response.data.data.is_active
         this.field.employee_status = response.data.data.employee_status
       })
@@ -355,6 +356,14 @@ export default {
         this.position = response.data.data
       })
 
+      // Data afdeling
+    this.$axios
+      .get('/api/admin/lov_afdeling')
+
+      .then((response) => {
+        this.afdeling = response.data.data
+      })
+
     this.$refs.nik.focus()
   },
 
@@ -375,6 +384,7 @@ export default {
         .put(`/api/admin/employee/${this.$route.params.id}`, {
           //data yang dikirim
           location_id: this.field.location_id ? this.field.location_id.id : '',
+          afdeling_id: this.field.afdeling_id ? this.field.afdeling_id.id : '',
           department_id: this.field.department_id
             ? this.field.department_id.id
             : '',
