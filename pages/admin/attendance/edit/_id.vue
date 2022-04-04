@@ -19,7 +19,7 @@
               <multiselect
                 v-model="field.employee_id"
                 :options="employee"
-                label="employee_description"
+                label="name"
                 track-by="id"
                 :searchable="true"
               ></multiselect>
@@ -177,8 +177,8 @@ export default {
       .get(`/api/admin/attendance/${this.$route.params.id}`)
       .then((response) => {
         //data yang diambil
-        this.field.employee_id = response.data.data.employee_id
-        this.field.attendance_type_id = response.data.data.attendance_type_id
+        this.field.employee_id = response.data.data.employee
+        this.field.attendance_type_id = response.data.data.attendance_type
         this.field.attendance_date = response.data.data.attendance_date
         this.field.description = response.data.data.description
         this.field.created_at = response.data.data.created_at

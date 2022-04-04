@@ -255,8 +255,8 @@ export default {
       .get(`/api/admin/ha_statement/${this.$route.params.id}`)
       .then((response) => {
         //data yang diambil
-        this.field.afdeling_id = response.data.data.afdeling_id
-        this.field.progeny_id = response.data.data.progeny_id
+        this.field.afdeling_id = response.data.data.afdeling
+        this.field.progeny_id = response.data.data.progeny
         this.field.block = response.data.data.block
         this.field.block_sap = response.data.data.block_sap
         this.field.plant_month = response.data.data.plant_month

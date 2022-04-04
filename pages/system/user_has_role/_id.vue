@@ -188,7 +188,7 @@ export default {
         },
         {
           label: 'Nama',
-          key: 'name',
+          key: 'name_employee',
           tdClass: '',
         },
         {
@@ -225,7 +225,7 @@ export default {
     const { id } = route.params
 
     const posts = await $axios.$get(
-      `/api/admin/detail/user_has_role_2/${id}?q=${search}&page=${page}`
+      `/api/admin/detail/user_has_role/${id}?q=${search}&page=${page}`
     )
 
     return {

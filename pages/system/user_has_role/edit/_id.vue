@@ -201,7 +201,7 @@ export default {
       .then((response) => {
         //data yang diambil
         this.field.role_id = response.data.data.role_id
-        this.field.user_id = response.data.data.user_id
+        this.field.user_id = response.data.data.users
         this.field.is_active = response.data.data.is_active
         this.field.description = response.data.data.description
         this.field.created_at = response.data.data.created_at
