@@ -76,23 +76,7 @@
               </div> -->
             </div>
 
-            <div class="form-group">
-              <label>Jabatan</label>
-
-              <multiselect
-                v-model="field.position_id"
-                :options="position"
-                label="code"
-                track-by="id"
-                :searchable="true"
-              ></multiselect>
-              <!-- <div v-if="validation.location_id" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.location_id[0]
-                }}</b-alert>
-              </div> -->
-            </div>
-
+           
             <div class="form-group">
               <label>Lokasi</label>
 
@@ -126,6 +110,36 @@
                 }}</b-alert>
               </div> -->
             </div>
+
+             <div class="form-group">
+              <label>Jabatan</label>
+
+              <multiselect
+                v-model="field.position_id"
+                :options="position"
+                label="code"
+                track-by="id"
+                :searchable="true"
+              ></multiselect>
+              <!-- <div v-if="validation.location_id" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.location_id[0]
+                }}</b-alert>
+              </div> -->
+            </div>
+
+             <div class="form-group">
+              <label>Grup</label>
+
+              <multiselect
+                v-model="field.activity_group_id"
+                :options="activity_group"
+                label="code"
+                track-by="id"
+                :searchable="true"
+              ></multiselect>
+            </div>
+
 
             <div class="form-group">
               <label>Email</label>
@@ -280,6 +294,7 @@ export default {
         created_by: '',
         updated_at: '',
         updated_by: '',
+        activity_group_id: '',
       },
 
       company: [],
@@ -294,6 +309,8 @@ export default {
 
       //state validation
       validation: [],
+
+      activity_group: [],
     }
   },
 
@@ -308,6 +325,7 @@ export default {
         this.field.company_id = response.data.data.company
         this.field.position_id = response.data.data.position
         this.field.afdeling_id = response.data.data.afdeling
+        this.field.activity_group_id = response.data.data.activity_group
         this.field.created_at = response.data.data.created_at
         this.field.created_by = response.data.data.created_by
         this.field.updated_at = response.data.data.updated_at
@@ -364,6 +382,14 @@ export default {
         this.afdeling = response.data.data
       })
 
+      // Data activity_group
+    this.$axios
+      .get('/api/admin/lov_activity_group')
+
+      .then((response) => {
+        this.activity_group = response.data.data
+      })
+
     this.$refs.nik.focus()
   },
 
@@ -385,6 +411,7 @@ export default {
           //data yang dikirim
           location_id: this.field.location_id ? this.field.location_id.id : '',
           afdeling_id: this.field.afdeling_id ? this.field.afdeling_id.id : '',
+          activity_group_id: this.field.activity_group_id ? this.field.activity_group_id.id : '',
           department_id: this.field.department_id
             ? this.field.department_id.id
             : '',

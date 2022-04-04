@@ -151,7 +151,8 @@ export default {
         {
           label: 'Grup',
           key: 'employee_activity_group',
-          tdClass: 'align-middle text-center',
+          tdClass: 'align-middle text-center d-none',
+          thClass: 'd-none',
         },
         {
           label: 'NIK',
@@ -202,6 +203,11 @@ export default {
         {
           label: 'Jabatan',
           key: 'position_code',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+         {
+          label: 'Grup',
+          key: 'activity_group_code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
