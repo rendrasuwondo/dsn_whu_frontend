@@ -11,7 +11,7 @@
             <table>
               <tr>
                 <td>
-                  <nuxt-link :to="{ name: 'admin-role' }" class="nav-link">
+                  <nuxt-link :to="{ name: 'system-role' }" class="nav-link">
                     <i class="nav-icon fas fa-book-open"></i>
                     Role
                   </nuxt-link>
@@ -225,8 +225,7 @@ export default {
     const { id } = route.params
 
     const posts = await $axios.$get(
-      // `/api/admin/location/site_detail/${id}?q=${search}&page=${page}`
-      `/api/admin/detail/user_has_role/${id}?q=${search}&page=${page}`
+      `/api/admin/detail/user_has_role_2/${id}?q=${search}&page=${page}`
     )
 
     return {
@@ -331,7 +330,7 @@ export default {
       .then((response) => {
         //console.log(JSON.stringify(response.data.data))
         // console.log('rdr')
-        console.log(response.data.data.site_id)
+        console.log(response.data.data.role_id)
         this.header.push(response.data.data)
         // this.detail(response.data)
         // console.log(this.detail)

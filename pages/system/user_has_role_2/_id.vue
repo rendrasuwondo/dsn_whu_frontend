@@ -8,33 +8,39 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-users"></i> USERS
+            <table>
+              <tr>
+                <td>
+                  <nuxt-link :to="{ name: 'system-user' }" class="nav-link">
+                    <i class="nav-icon fas fa-users"></i>
+                    Users
+                  </nuxt-link>
+                </td>
+                <td>/ Role</td>
+              </tr>
+            </table>
           </h3>
-          <div class="card-tools">
-            <button
-              type="button"
-              class="btn btn-tool"
-              data-card-widget="collapse"
-              title="Collapse"
-            >
-              <i class="fas fa-minus"></i>
-            </button>
-            <button
-              type="button"
-              class="btn btn-tool"
-              data-card-widget="remove"
-              title="Remove"
-            >
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
+          <div class="card-tools"></div>
         </div>
         <div class="card-body">
+          <div class="form-group">
+            <b-table
+              striped
+              bordered
+              hover
+              :items="header"
+              :fields="fields_header"
+              show-empty
+            ></b-table>
+          </div>
           <div class="form-group">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <nuxt-link
-                  :to="{ name: 'system-user-create' }"
+                  :to="{
+                    name: 'system-user_has_role_2-create-id',
+                    params: { id: user_id, r: 1 },
+                  }"
                   class="btn btn-info btn-sm"
                   style="padding-top: 8px"
                   title="Tambah"
@@ -53,7 +59,7 @@
                 class="form-control"
                 v-model="search"
                 @keypress.enter="searchData"
-                placeholder="cari berdasarkan nama user"
+                placeholder="cari berdasarkan nama tag"
               />
               <div class="input-group-append">
                 <button @click="searchData" class="btn btn-info">
@@ -65,46 +71,51 @@
           </div>
 
           <!-- table -->
+
           <b-table
+            small
+            responsive
             striped
             bordered
             hover
-            :items="users"
+            :items="posts"
             :fields="fields"
             show-empty
           >
+            <template v-slot:cell(comments)="row">
+              <i class="fa fa-comments"></i> {{ row.item.comments.length }}
+            </template>
             <template v-slot:cell(actions)="row">
               <b-button
                 :to="{
-                  name: 'system-user-edit-id',
-                  params: { id: row.item.id },
-                }"
-                variant="link"
-                size="sm"
-                title="Edit"
-              >
-                <i class="fa fa-pencil-alt"></i
-              ></b-button>
-              <b-button
-                variant="link"
-                size="sm"
-                title="Delete"
-                @click="deleteUser(row.item.id)"
-              >
-                <i class="fa fa-trash"></i
-              ></b-button>
-            </template>
-            <template v-slot:cell(role)="row">
-              <b-button
-                :to="{
-                  name: 'system-user_has_role_2-id',
-                  params: { id: row.item.id },
+                  name: 'system-user_has_role_2-edit-id',
+                  params: { id: row.item.id, r: 1 },
                 }"
                 variant="link"
                 size=""
-                title="Role"
+                title="Edit"
               >
-                <i class="fa fa-file-alt"></i>
+                <i class="fa fa-pencil-alt"></i>
+              </b-button>
+
+              <b-button
+                variant="link"
+                size=""
+                title="Hapus"
+                @click="deletePost(row.item.id)"
+                ><i class="fa fa-trash"></i
+              ></b-button>
+            </template>
+            <template v-slot:cell(detail)="row">
+              <b-button
+                :to="{
+                  name: 'system-user_has_role_2',
+                  params: { id: row.item.id },
+                }"
+                variant=""
+                size="sm"
+              >
+                Detail<i class="fa fa-plus-circle"></i>
               </b-button>
             </template>
           </b-table>
@@ -132,7 +143,7 @@ export default {
   //meta
   head() {
     return {
-      title: 'Users',
+      title: 'Role',
     }
   },
 
@@ -147,17 +158,35 @@ export default {
           tdClass: '',
         },
         {
-          label: 'Role',
-          key: 'role',
-          tdClass: 'align-middle text-center',
-        },
-        {
-          label: 'User Name',
-          key: 'user_name',
+          label: 'Kode',
+          key: 'code_role',
+          tdClass: 'text-left',
         },
         {
           label: 'Nama',
-          key: 'name_employee',
+          key: 'name_eole',
+          tdClass: '',
+        },
+        {
+          label: 'Aktif',
+          key: 'is_active_role_code',
+          tdClass: 'text-left',
+        },
+      ],
+
+      header: [],
+
+      user_id: this.$route.params.id,
+
+      fields_header: [
+        {
+          label: 'User Name',
+          key: 'user_name',
+          tdClass: '',
+        },
+        {
+          label: 'Name',
+          key: 'name',
         },
         {
           label: 'Email',
@@ -177,19 +206,27 @@ export default {
   //watch query URL
   watchQuery: ['q', 'page'],
 
-  async asyncData({ $axios, query }) {
+  async asyncData({ $axios, query, route }) {
     //page
     let page = query.page ? parseInt(query.page) : ''
 
     //search
     let search = query.q ? query.q : ''
 
-    //fetching users
-    const users = await $axios.$get(`/api/admin/users?q=${search}&page=${page}`)
+    //fetching posts
+    // const posts = await $axios.$get(
+    //   `/api/admin/site?q=${search}&page=${page}`
+    // )
+
+    const { id } = route.params
+
+    const posts = await $axios.$get(
+      `/api/admin/detail/user_has_role_2/${id}?q=${search}&page=${page}`
+    )
 
     return {
-      users: users.data.data,
-      pagination: users.data,
+      posts: posts.data.data,
+      pagination: posts.data,
     }
   },
 
@@ -216,7 +253,7 @@ export default {
     },
 
     //deletePost method
-    deleteUser(id) {
+    deletePost(id) {
       this.$swal
         .fire({
           title: 'APAKAH ANDA YAKIN ?',
@@ -232,26 +269,28 @@ export default {
           if (result.isConfirmed) {
             //delete tag from server
 
-            this.$axios.delete(`/api/admin/users/${id}`).then((response) => {
-              //feresh data
-              this.$nuxt.refresh()
-              if (response.data.success == true) {
-                this.sweet_alert.title = 'BERHASIL!'
-                this.sweet_alert.icon = 'success'
-              } else {
-                this.sweet_alert.title = 'GAGAL!'
-                this.sweet_alert.icon = 'error'
-              }
+            this.$axios
+              .delete(`/api/admin/user_has_role/${id}`)
+              .then((response) => {
+                //feresh data
+                this.$nuxt.refresh()
+                if (response.data.success == true) {
+                  this.sweet_alert.title = 'BERHASIL!'
+                  this.sweet_alert.icon = 'success'
+                } else {
+                  this.sweet_alert.title = 'GAGAL!'
+                  this.sweet_alert.icon = 'error'
+                }
 
-              //alert
-              this.$swal.fire({
-                title: this.sweet_alert.title,
-                text: response.data.message,
-                icon: this.sweet_alert.icon,
-                showConfirmButton: false,
-                timer: 2000,
+                //alert
+                this.$swal.fire({
+                  title: this.sweet_alert.title,
+                  text: response.data.message,
+                  icon: this.sweet_alert.icon,
+                  showConfirmButton: false,
+                  timer: 2000,
+                })
               })
-            })
           }
         })
     },
@@ -262,7 +301,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/users/export`,
+        url: `/api/admin/user_has_role/export`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
@@ -271,12 +310,28 @@ export default {
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
-        var fileName = 'Users.xlsx'
+        var fileName = 'User-Has-Role.xlsx'
         link.setAttribute('download', fileName) //or any other extension
         document.body.appendChild(link)
         link.click()
       })
     },
+  },
+
+  mounted() {
+    this.$axios
+      .get(`/api/admin/master/users/${this.$route.params.id}`)
+      // .get(`/api/admin/site/site_loc/${this.$route.params.id}`)
+
+      .then((response) => {
+        //console.log(JSON.stringify(response.data.data))
+        console.log('rrd')
+        console.log(response.data.data)
+        console.log(this.$route.params.id)
+        this.header.push(response.data.data)
+        // this.detail(response.data)
+        // console.log(this.detail)
+      })
   },
 }
 </script>
