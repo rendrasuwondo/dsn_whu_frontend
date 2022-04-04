@@ -199,6 +199,9 @@ export default {
     this.$axios
       .get(`/api/admin/user_has_role/${this.$route.params.id}`)
       .then((response) => {
+
+        console.log('rdr')
+        console.log(response.data.data)
         //data yang diambil
         this.field.role_id = response.data.data.role
         this.field.user_id = response.data.data.user_id

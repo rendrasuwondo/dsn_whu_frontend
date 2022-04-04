@@ -190,6 +190,7 @@ export default {
     return {
       users: users.data.data,
       pagination: users.data,
+      search: search,
     }
   },
 
