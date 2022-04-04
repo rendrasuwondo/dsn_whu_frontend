@@ -88,7 +88,7 @@
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <nuxt-link
-                  :to="{ name: 'admin-company-create' }"
+                  :to="{ name: 'admin-activty_actual-create' }"
                   class="btn btn-info btn-sm"
                   style="padding-top: 8px"
                   title="Tambah"
@@ -131,7 +131,7 @@
             <template v-slot:cell(actions)="row">
               <b-button
                 :to="{
-                  name: 'admin-company-edit-id',
+                  name: 'admin-activity_actual-edit-id',
                   params: { id: row.item.id },
                 }"
                 variant="link"
@@ -189,8 +189,7 @@ export default {
         {
           label: 'Actions',
           key: 'actions',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass d-none',
-          thClass: 'd-none',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass ',
         },
         {
           label: 'Tanggal',
@@ -246,7 +245,6 @@ export default {
   ],
 
   async asyncData({ $axios, query, $cookies, $route }) {
-
     function currentDate() {
       const current = new Date()
       current.setDate(current.getDate())
@@ -278,7 +276,6 @@ export default {
     const foreman_list = await $axios.$get(
       `/api/admin/lov_employee_activity_group/${company_code}/${department_code}/mandor`
     )
-    
 
     //foreman_id
     let foreman_employee_id = query.foreman_id ? query.foreman_id : ''
@@ -292,7 +289,7 @@ export default {
 
     // const profile = await $axios.$get(
     // )
-    // foreman_employee_id = 490  
+    // foreman_employee_id = 490
 
     return {
       posts: posts.data,

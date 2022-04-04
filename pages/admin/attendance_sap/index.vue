@@ -127,7 +127,6 @@ export default {
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
       ],
-      posts: [],
     }
   },
   watchQuery: ['q'],
@@ -141,7 +140,8 @@ export default {
 
     //fetching posts
     const posts = await $axios.$get(`/api/admin/attendance_sap?q=${search}`)
-
+    console.log('aida')
+    console.log(posts)
     return {
       posts: posts.data.data,
       //   pagination: posts.data,
@@ -149,18 +149,18 @@ export default {
     }
   },
 
-  mounted() {
-    //fething ke Rest API
-    this.$axios
-      .get(`/api/admin/attendance_sap`)
-      .then((response) => {
-        //assign response ke state "posts"
-        this.posts = response.data.data
-      })
-      .catch((error) => {
-        console.log(error.response.data)
-      })
-  },
+  // mounted() {
+  //   //fething ke Rest API
+  //   this.$axios
+  //     .get(`/api/admin/attendance_sap`)
+  //     .then((response) => {
+  //       //assign response ke state "posts"
+  //       this.posts = response.data.data
+  //     })
+  //     .catch((error) => {
+  //       console.log(error.response.data)
+  //     })
+  // },
 
   methods: {
     // changePage(page) {

@@ -8,17 +8,17 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-id-badge"></i> EDIT KARYAWAN
+            <i class="nav-icon fas fa-tasks"></i> EDIT REALISASI
           </h3>
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
           <form @submit.prevent="update">
             <div class="form-group">
-              <label>Nama Karyawan</label>
+              <label>Mandor</label>
               <multiselect
                 v-model="field.employee_id"
-                :options="employee"
+                :options="options"
                 :custom-label="customLabel"
                 track-by="id"
                 :searchable="true"
@@ -26,32 +26,63 @@
             </div>
 
             <div class="form-group">
-              <label>Kode Absensi</label>
+              <label>Jenis Pekerjaan</label>
               <multiselect
-                v-model="field.attendance_type_id"
-                :options="attendance_type"
-                label="name"
+                v-model="field.activity_plan_detail_id"
+                :options="options"
+                :custom-label="customLabel"
                 track-by="id"
                 :searchable="true"
               ></multiselect>
+              <!-- <div v-if="validation.code" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.code[0]
+                }}</b-alert> 
+              </div>-->
+            </div>
+
+            <div class="form-group" v-show="show_hk">
+              <label>HK</label>
+              <input
+                type="text"
+                v-model="field.man_days"
+                placeholder="Masukkan Jumlah HK"
+                class="form-control"
+              />
             </div>
 
             <div class="form-group">
-              <label>Tanggal</label>
-              <b-form-datepicker
-                v-model="field.attendance_date"
-                :date-format-options="{
-                  year: 'numeric',
-                  month: 'short',
-                  day: '2-digit',
-                  weekday: 'short',
-                }"
-              ></b-form-datepicker>
+              <label>Volume</label>
+
+              <input
+                class="form-control"
+                v-model.lazy="field.qty"
+                v-money="{}"
+              />
+            </div>
+
+            <div class="form-group" v-show="show_rate">
+              <label>Rate</label>
+              <input
+                class="form-control"
+                v-model.lazy="field.flexrate"
+                v-money="{ prefix: 'Rp ', precision: 2 }"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Status</label>
+              <input
+                type="text"
+                v-model="field.activity_status"
+                placeholder="Masukkan Status Activity"
+                class="form-control"
+                ref="code"
+              />
             </div>
 
             <div class="form-group">
               <label>Keterangan</label>
-
               <textarea
                 v-model="field.description"
                 class="form-control"
@@ -63,6 +94,39 @@
                   validation.description[0]
                 }}</b-alert>
               </div>
+            </div>
+
+            <div class="form-group">
+              <label>Latitude</label>
+              <input
+                type="text"
+                v-model="field.latitude"
+                placeholder="Masukkan latitude"
+                class="form-control"
+                ref="code"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Longitude</label>
+              <input
+                type="text"
+                v-model="field.longitude"
+                placeholder="Masukkan longitude"
+                class="form-control"
+                ref="code"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Status</label>
+              <input
+                type="text"
+                v-model="field.activity_status"
+                placeholder="Masukkan Status Activity"
+                class="form-control"
+                ref="code"
+              />
             </div>
             <div class="form-group">
               <b-row>
@@ -117,8 +181,6 @@
                 </b-col>
               </b-row>
             </div>
-            <div class="form-group"></div>
-
             <button class="btn btn-info mr-1 btn-submit" type="submit">
               <i class="fa fa-paper-plane"></i> SIMPAN
             </button>
@@ -143,7 +205,7 @@ export default {
   //meta
   head() {
     return {
-      title: 'Edit Absensi',
+      title: 'Edit Activity',
     }
   },
 
@@ -152,19 +214,22 @@ export default {
       state: 'disabled',
 
       field: {
-        employee_id: '',
-        attendance_type_id: '',
-        attendance_date: '',
+        activity_plan_detail_id: '',
+        man_days: '',
+        qty: '',
+        flexrate: '',
+        activity_status: '',
         description: '',
+        latitude: '',
+        longitude: '',
+        is_assistance: '',
         created_at: '',
         updated_at: '',
         created_by: '',
         updated_by: '',
       },
 
-      employee: [],
-
-      attendance_type: [],
+      options: [],
 
       //state validation
       validation: [],
@@ -174,46 +239,45 @@ export default {
   mounted() {
     //get data field by ID
     this.$axios
-      .get(`/api/admin/attendance/${this.$route.params.id}`)
+      .get(`/api/admin/activity/${this.$route.params.id}`)
       .then((response) => {
         //data yang diambil
-        this.field.employee_id = response.data.data.employee
-        this.field.attendance_type_id = response.data.data.attendance_type
-        this.field.attendance_date = response.data.data.attendance_date
+        this.field.activity_plan_detail_id =
+          response.data.data.activity_plan_detail_id
+        this.field.man_days = response.data.data.man_days
+        this.field.qty = response.data.data.qty
+        this.field.flexrate = response.data.data.flexrate
+        this.field.activity_status = response.data.data.activity_status
         this.field.description = response.data.data.description
+        this.field.latitude = response.data.data.latitude
+        this.field.longitude = response.data.data.longitude
+        this.field.is_assistance = response.data.data.is_assistance
         this.field.created_at = response.data.data.created_at
         this.field.created_by = response.data.data.created_by
         this.field.updated_at = response.data.data.updated_at
         this.field.updated_by = response.data.data.updated_by
       })
 
-    //Data Employee
+    ///Data company
+    //Data department
     this.$axios
-      .get('/api/admin/lov_employee')
+      .get('/api/admin/lov_activity_plan_detail')
 
       .then((response) => {
-        this.employee = response.data.data
-      })
-
-    //Data Attendance Type
-    this.$axios
-      .get('/api/admin/lov_attendance_type')
-
-      .then((response) => {
-        this.attendance_type = response.data.data
+        this.options = response.data.data
       })
   },
 
   methods: {
     back() {
       this.$router.push({
-        name: 'admin-attendance',
+        name: 'admin-activity_actual',
         params: { id: this.$route.params.id, r: 1 },
       })
     },
 
-    customLabel(employee) {
-      return `${employee.nik}` + '-' + `${employee.name}`
+    customLabel(option) {
+      return `${option.nik}` + '-' + `${option.name}`
     },
 
     // update method
@@ -222,14 +286,20 @@ export default {
 
       //send data ke Rest API untuk update
       await this.$axios
-        .put(`/api/admin/attendance/${this.$route.params.id}`, {
+        .put(`/api/admin/activity_actual/${this.$route.params.id}`, {
           //data yang dikirim
-          employee_id: this.field.employee_id ? this.field.employee_id.id : '',
-          attendance_type_id: this.field.attendance_type_id
-            ? this.field.attendance_type_id.id
+          activity_plan_detail_id: this.field.activity_plan_detail_id
+            ? this.field.activity_plan_detail_id.id
             : '',
-          attendance_date: this.field.attendance_date,
+          //   activity_plan_detail_id: this.field.activity_plan_detail_id,
+          man_days: this.field.man_days,
+          qty: this.field.qty,
+          flexrate: this.field.flexrate,
+          activity_status: this.field.activity_status,
           description: this.field.description,
+          latitude: this.field.latitude,
+          longitude: this.field.longitude,
+          is_assistance: this.field.is_assistance,
           created_at: this.field.created_at,
           updated_at: this.field.updated_at,
           created_by: this.field.created_by,
@@ -246,7 +316,7 @@ export default {
           })
           //redirect ke route "post"
           this.$router.push({
-            name: 'admin-attendance',
+            name: 'admin-activity_actual',
           })
         })
         .catch((error) => {

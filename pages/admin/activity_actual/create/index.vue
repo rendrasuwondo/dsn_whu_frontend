@@ -1,5 +1,5 @@
 <template>
-  <div class="content-wrapper">
+  <div class="content-wrapper mb-5">
     <section class="content-header">
       <div class="container-fluid"></div>
     </section>
@@ -8,50 +8,59 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-id-badge"></i> EDIT KARYAWAN
+            <i class="nav-icon fas fa-hard-hat"></i> TAMBAH REALISASI
           </h3>
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
-          <form @submit.prevent="update">
+          <form @submit.prevent="storePost">
             <div class="form-group">
-              <label>Nama Karyawan</label>
+              <label>activity_plan_detail_id</label>
               <multiselect
-                v-model="field.employee_id"
-                :options="employee"
-                :custom-label="customLabel"
+                v-model="field.activity_plan_detail_id"
+                :options="company"
+                label="code"
                 track-by="id"
                 :searchable="true"
               ></multiselect>
+              <!-- <div v-if="validation.code" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.code[0]
+                }}</b-alert> 
+              </div>-->
+            </div>
+
+            <div class="form-group" v-show="show_hk">
+              <label>HK</label>
+              <input
+                type="text"
+                v-model="field.man_days"
+                placeholder="Masukkan Jumlah HK"
+                class="form-control"
+              />
             </div>
 
             <div class="form-group">
-              <label>Kode Absensi</label>
-              <multiselect
-                v-model="field.attendance_type_id"
-                :options="attendance_type"
-                label="name"
-                track-by="id"
-                :searchable="true"
-              ></multiselect>
+              <label>Volume</label>
+
+              <input
+                class="form-control"
+                v-model.lazy="field.qty"
+                v-money="{}"
+              />
             </div>
 
-            <div class="form-group">
-              <label>Tanggal</label>
-              <b-form-datepicker
-                v-model="field.attendance_date"
-                :date-format-options="{
-                  year: 'numeric',
-                  month: 'short',
-                  day: '2-digit',
-                  weekday: 'short',
-                }"
-              ></b-form-datepicker>
+            <div class="form-group" v-show="show_rate">
+              <label>Rate</label>
+              <input
+                class="form-control"
+                v-model.lazy="field.flexrate"
+                v-money="{ prefix: 'Rp ', precision: 2 }"
+              />
             </div>
 
             <div class="form-group">
               <label>Keterangan</label>
-
               <textarea
                 v-model="field.description"
                 class="form-control"
@@ -64,6 +73,7 @@
                 }}</b-alert>
               </div>
             </div>
+
             <div class="form-group">
               <b-row>
                 <b-col>
@@ -117,6 +127,7 @@
                 </b-col>
               </b-row>
             </div>
+
             <div class="form-group"></div>
 
             <button class="btn btn-info mr-1 btn-submit" type="submit">
@@ -135,7 +146,11 @@
     </section>
   </div>
 </template>
+
 <script>
+/* import { VNumber  } from '@coders-tm/vue-number-format' */
+/* import { number } from '@coders-tm/vue-number-format' */
+
 export default {
   //layout
   layout: 'admin',
@@ -143,7 +158,7 @@ export default {
   //meta
   head() {
     return {
-      title: 'Edit Absensi',
+      title: 'Tambah Activity',
     }
   },
 
@@ -152,19 +167,23 @@ export default {
       state: 'disabled',
 
       field: {
-        employee_id: '',
-        attendance_type_id: '',
-        attendance_date: '',
-        description: '',
+        code: '',
+        name: '',
+        hkont_1: '',
+        hkont_2: '',
+        anln2_5: '',
+        anln2_6: '',
+        anln2_7: '',
+        anln2_8: '',
+        activity_unit_id: '',
+        activity_group_id: '',
         created_at: '',
         updated_at: '',
         created_by: '',
         updated_by: '',
       },
 
-      employee: [],
-
-      attendance_type: [],
+      activity_group: [],
 
       //state validation
       validation: [],
@@ -172,89 +191,89 @@ export default {
   },
 
   mounted() {
-    //get data field by ID
-    this.$axios
-      .get(`/api/admin/attendance/${this.$route.params.id}`)
-      .then((response) => {
-        //data yang diambil
-        this.field.employee_id = response.data.data.employee
-        this.field.attendance_type_id = response.data.data.attendance_type
-        this.field.attendance_date = response.data.data.attendance_date
-        this.field.description = response.data.data.description
-        this.field.created_at = response.data.data.created_at
-        this.field.created_by = response.data.data.created_by
-        this.field.updated_at = response.data.data.updated_at
-        this.field.updated_by = response.data.data.updated_by
-      })
+    this.field.created_at = this.currentDate()
+    this.field.updated_at = this.currentDate()
+    this.field.created_by =
+      this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+    this.field.updated_by =
+      this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
 
-    //Data Employee
+    this.$refs.code.focus()
+
+    // Data activity_group
     this.$axios
-      .get('/api/admin/lov_employee')
+      .get('/api/admin/lov_activity_group')
 
       .then((response) => {
-        this.employee = response.data.data
-      })
-
-    //Data Attendance Type
-    this.$axios
-      .get('/api/admin/lov_attendance_type')
-
-      .then((response) => {
-        this.attendance_type = response.data.data
+        this.activity_group = response.data.data
       })
   },
 
   methods: {
     back() {
       this.$router.push({
-        name: 'admin-attendance',
+        name: 'admin-activity',
         params: { id: this.$route.params.id, r: 1 },
       })
     },
 
-    customLabel(employee) {
-      return `${employee.nik}` + '-' + `${employee.name}`
+    currentDate() {
+      const current = new Date()
+      const date = `${current.getFullYear()}-${
+        current.getMonth() + 1
+      }-${current.getDate()}`
+
+      return date
     },
 
-    // update method
-    async update(e) {
-      e.preventDefault()
+    async storePost() {
+      //define formData
+      let formData = new FormData()
 
-      //send data ke Rest API untuk update
+      formData.append(
+        'activity_group_id',
+        this.field.activity_group_id ? this.field.activity_group_id.id : ''
+      )
+
+      formData.append('code', this.field.code)
+      formData.append('name', this.field.name)
+      formData.append('hkont_1', this.field.hkont_1)
+      formData.append('hkont_2', this.field.hkont_2)
+      formData.append('anln2_5', this.field.anln2_5)
+      formData.append('anln2_6', this.field.anln2_6)
+      formData.append('anln2_7', this.field.anln2_7)
+      formData.append('anln2_8', this.field.anln2_8)
+      formData.append('activity_unit_id', this.field.activity_unit_id)
+      formData.append('created_at', this.field.created_at)
+      formData.append('created_by', this.field.created_by)
+      formData.append('update_at', this.field.update_at)
+      formData.append('udpate_by', this.field.udpate_by)
+
+      //sending data to server
       await this.$axios
-        .put(`/api/admin/attendance/${this.$route.params.id}`, {
-          //data yang dikirim
-          employee_id: this.field.employee_id ? this.field.employee_id.id : '',
-          attendance_type_id: this.field.attendance_type_id
-            ? this.field.attendance_type_id.id
-            : '',
-          attendance_date: this.field.attendance_date,
-          description: this.field.description,
-          created_at: this.field.created_at,
-          updated_at: this.field.updated_at,
-          created_by: this.field.created_by,
-          updated_by: this.field.updated_by,
-        })
+        .post('/api/admin/activity', formData)
         .then(() => {
           //sweet alert
           this.$swal.fire({
             title: 'BERHASIL!',
-            text: 'Data Berhasil Diupdate!',
+            text: 'Data Berhasil Disimpan!',
             icon: 'success',
             showConfirmButton: false,
             timer: 2000,
           })
-          //redirect ke route "post"
+
+          //redirect, if success store data
           this.$router.push({
-            name: 'admin-attendance',
+            name: 'admin-activity',
           })
         })
         .catch((error) => {
-          //assign error validasi
+          //assign error to state "validation"
           this.validation = error.response.data
         })
     },
   },
+
   computed: {
     disabled() {
       return this.state === 'disabled'
@@ -265,4 +284,9 @@ export default {
   },
 }
 </script>
-<style></style>
+
+<style>
+.ck-editor__editable {
+  min-height: 200px;
+}
+</style>
