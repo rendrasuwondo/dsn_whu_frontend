@@ -189,7 +189,8 @@ export default {
         {
           label: 'Actions',
           key: 'actions',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass d-none',
+          thClass: 'd-none',
         },
         {
           label: 'Tanggal',
@@ -280,7 +281,7 @@ export default {
     
 
     //foreman_id
-    let foreman_employee_id = query.foreman_id ? query.foreman_id : 490
+    let foreman_employee_id = query.foreman_id ? query.foreman_id : ''
     //  console.log('isa')
     //  console.log($cookies.get('department_code'))
 
@@ -291,7 +292,7 @@ export default {
 
     // const profile = await $axios.$get(
     // )
-    foreman_employee_id = 490  
+    // foreman_employee_id = 490  
 
     return {
       posts: posts.data,
