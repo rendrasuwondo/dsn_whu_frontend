@@ -132,9 +132,6 @@ export default {
   watchQuery: ['q'],
 
   async asyncData({ $axios, query }) {
-    //page
-    // let page = query.page ? parseInt(query.page) : ''
-
     //search
     let search = query.q ? query.q : ''
 
@@ -143,36 +140,12 @@ export default {
     console.log('aida')
     console.log(posts)
     return {
-      posts: posts.data.data,
-      //   pagination: posts.data,
+      posts: posts.data,
       search: search,
     }
   },
 
-  // mounted() {
-  //   //fething ke Rest API
-  //   this.$axios
-  //     .get(`/api/admin/attendance_sap`)
-  //     .then((response) => {
-  //       //assign response ke state "posts"
-  //       this.posts = response.data.data
-  //     })
-  //     .catch((error) => {
-  //       console.log(error.response.data)
-  //     })
-  // },
-
   methods: {
-    // changePage(page) {
-    //   this.$router.push({
-    //     path: this.$route.path,
-    //     query: {
-    //       q: this.$route.query.q,
-    //       page: page,
-    //     },
-    //   })
-    // },
-    //searchData
     searchData() {
       this.$router.push({
         path: this.$route.path,
