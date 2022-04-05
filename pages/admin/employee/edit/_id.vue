@@ -100,7 +100,7 @@
               <multiselect
                 v-model="field.afdeling_id"
                 :options="afdeling"
-                label="id"
+                :custom-label="customLabel"
                 track-by="id"
                 :searchable="true"
               ></multiselect>
@@ -394,6 +394,9 @@ export default {
   },
 
   methods: {
+    customLabel (option) {
+      return `${option.code} ${option.id}`
+    },
     back() {
       this.$router.push({
         name: 'admin-employee',

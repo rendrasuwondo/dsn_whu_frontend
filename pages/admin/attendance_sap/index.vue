@@ -138,6 +138,7 @@ export default {
     //fetching posts
     const posts = await $axios.$get(`/api/admin/attendance_sap?q=${search}`)
     console.log('aida')
+    console.log(`/api/admin/attendance_sap?q=${search}`)
     console.log(posts)
     return {
       posts: posts.data,
