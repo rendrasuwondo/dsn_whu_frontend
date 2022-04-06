@@ -174,9 +174,9 @@
             </div>
 
             <div class="form-group">
-              <label>Status Verivikasi</label>
+              <label>Status Verifikasi</label>
               <b-form-select
-                v-model="field.verivication_status"
+                v-model="field.verification_status"
                 :options="options_status"
               ></b-form-select>
             </div>
@@ -305,8 +305,9 @@ export default {
         activitied_at: '',
         labour_employee: '',
         afdeling_id: '',
-        verivication_status: '',
+        verification_status: '',
         foreman_employee: '',
+        is_revision: 'Y',
       },
 
       company_code: '',
@@ -371,6 +372,8 @@ export default {
       .then((response) => {
         this.field.activity_plan_detail_id =
           response.data.data.activity_plan_detail_id
+        this.field.activity_description =
+          response.data.data.activity_description
         this.field.activitied_at = response.data.data.activitied_at
         this.field.foreman_employee = response.data.data.foreman_employee
         this.field.block = response.data.data.block
@@ -382,7 +385,7 @@ export default {
         this.field.qty = response.data.data.qty
         this.field.flexrate = response.data.data.flexrate
         this.field.description = response.data.data.description
-        this.field.verivication_status = response.data.data.verivication_status
+        this.field.verification_status = response.data.data.verification_status
         this.field.activity_status = response.data.data.activity_status
         this.field.created_at = response.data.data.created_at
         this.field.created_by = response.data.data.created_by
@@ -473,11 +476,12 @@ export default {
           latitude: this.field.latitude,
           longitude: this.field.longitude,
           is_assistance: this.field.is_assistance,
-          verivication_status: this.field.verivication_status,
+          verification_status: this.field.verification_status,
           created_at: this.field.created_at,
           updated_at: this.field.updated_at,
           created_by: this.field.created_by,
           updated_by: this.field.updated_by,
+          is_revision: this.field.is_revision,
         })
         .then(() => {
           //sweet alert
