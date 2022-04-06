@@ -8,18 +8,18 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-map-marker-alt"></i> TAMBAH SITE
+            <i class="nav-icon fas fa-th"></i> EDIT SUB MENU
           </h3>
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
-          <form @submit.prevent="storeP">
+          <form @submit.prevent="updateData">
             <div class="form-group">
               <label>Kode</label>
               <input
                 type="text"
                 v-model="field.code"
-                placeholder="Masukkan kode Site"
+                placeholder="Masukkan Kode Menu"
                 class="form-control"
                 ref="code"
               />
@@ -34,15 +34,35 @@
               <label>Nama</label>
               <input
                 type="text"
-                v-model="field.name"
-                placeholder="Masukkan Nama Site"
+                v-model="field.title"
+                placeholder="Masukkan Nama Menu"
                 class="form-control"
               />
-              <div v-if="validation.name" class="mt-2">
+              <div v-if="validation.title" class="mt-2">
                 <b-alert show variant="danger">{{
-                  validation.name[0]
+                  validation.title[0]
                 }}</b-alert>
               </div>
+            </div>
+
+            <div class="form-group">
+              <label>Icon</label>
+              <input
+                v-model="field.class"
+                class="form-control"
+                rows="3"
+                placeholder="Masukkan Kode Icon"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Link Menu</label>
+              <input
+                v-model="field.path_file_name"
+                class="form-control"
+                rows="3"
+                placeholder="Masukkan Link Menu"
+              />
             </div>
 
             <div class="form-group">
@@ -53,7 +73,6 @@
 
             <div class="form-group">
               <label>Keterangan</label>
-
               <textarea
                 v-model="field.description"
                 class="form-control"
@@ -66,6 +85,7 @@
                 }}</b-alert>
               </div>
             </div>
+
             <div class="form-group">
               <b-row>
                 <b-col>
@@ -140,9 +160,6 @@
 </template>
 
 <script>
-/* import { VNumber  } from '@coders-tm/vue-number-format' */
-/* import { number } from '@coders-tm/vue-number-format' */
-
 export default {
   //layout
   layout: 'admin',
@@ -150,7 +167,7 @@ export default {
   //meta
   head() {
     return {
-      title: 'Tambah Site',
+      title: 'Edit Sub Menu',
     }
   },
 
@@ -160,44 +177,39 @@ export default {
         return import('@blowstack/ckeditor-nuxt')
       }
     },
-    /*   number, */
   },
 
   data() {
     return {
-      is_active: { value: 'Y', text: 'Ya' },
       options: [
         { value: 'Y', text: 'Ya' },
         { value: 'N', text: 'Tidak' },
       ],
 
+      user_id: { id: '', name: '' },
+
       state: 'disabled',
-      show_hk: true,
-      show_rate: false,
-      price: '',
       value: undefined,
 
       field: {
         code: '',
-        name: '',
+        title: '',
+        class: '',
+        link: '',
+        is_parent: '',
+        parent_id: '',
+        path_file_name: '',
         description: '',
-        is_active: 'Y',
+        is_active: '',
         created_at: '',
-        updated_at: '',
         created_by: '',
+        updated_at: '',
         updated_by: '',
       },
 
-      test: '',
+      parent_id: '',
 
-      //state categories
-      activity: [],
-
-      //state categories
-      categories: [],
-
-      //state tags
-      tags: [],
+      users: [],
 
       //state validation
       validation: [],
@@ -213,23 +225,39 @@ export default {
   },
 
   mounted() {
-    this.field.created_at = this.currentDate()
-    this.field.updated_at = this.currentDate()
-    this.field.created_by =
-      this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
-    this.field.updated_by =
-      this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
-    this.$refs.code.focus()
+    this.$axios
+      .get(`/api/admin/master/menu/${this.$route.params.id}`)
+
+      .then((response) => {
+        //  console.log(response.data.data.afdeling_id)
+        this.parent_id = response.data.data.id
+
+        this.$nuxt.$loading.start()
+      })
+
+    this.$axios
+      .get(`/api/admin/sub_menu/${this.$route.params.id}`)
+      .then((response) => {
+        //data yang diambil
+        this.field.code = response.data.data.code
+        this.field.title = response.data.data.title
+        this.field.class = response.data.data.class
+        this.field.link = response.data.data.link
+        this.field.is_parent = response.data.data.is_parent
+        this.field.parent_id = response.data.data.parent_id
+        this.field.path_file_name = response.data.data.path_file_name
+        this.field.is_active = response.data.data.is_active
+        this.field.description = response.data.data.description
+        this.field.created_at = response.data.data.created_at
+        this.field.created_by = response.data.data.created_by
+        this.field.updated_at = response.data.data.updated_at
+        this.field.updated_by = response.data.data.updated_by
+
+        this.$nuxt.$loading.start()
+      })
   },
 
   methods: {
-    back() {
-      this.$router.push({
-        name: 'admin-site',
-        params: { id: this.$route.params.id, r: 1 },
-      })
-    },
-
     currentDate() {
       const current = new Date()
       const date = `${current.getFullYear()}-${
@@ -239,40 +267,49 @@ export default {
       return date
     },
 
-    // methods create
-    async storeP() {
-      //define formData
-      let formData = new FormData()
+    back() {
+      this.$router.push({
+        name: 'system-sub_menu-id',
+        params: { id: this.field.parent_id, r: 1 },
+      })
+    },
 
-      formData.append('code', this.field.code)
-      formData.append('name', this.field.name)
-      formData.append('is_active', this.field.is_active)
-      formData.append('description', this.field.description)
-      formData.append('created_at', this.field.created_at)
-      formData.append('created_by', this.field.created_by)
-      formData.append('update_at', this.field.update_at)
-      formData.append('udpate_by', this.field.udpate_by)
+    // update method
+    async updateData(e) {
+      e.preventDefault()
 
-      //sending data to server
+      //send data ke Rest API untuk update
       await this.$axios
-        .post('/api/admin/site', formData)
+        .put(`api/admin/sub_menu/${this.$route.params.id}`, {
+          //data yang dikirim
+          code: this.field.code,
+          title: this.field.title,
+          class: this.field.class,
+          link: this.field.link,
+          is_parent: this.field.is_parent,
+          parent_id: this.field.parent_id,
+          path_file_name: this.field.path_file_name,
+          is_active: this.field.is_active,
+          description: this.field.description,
+          created_at: this.field.created_at,
+          updated_at: this.field.updated_at,
+          created_by: this.field.created_by,
+          updated_by: this.field.updated_by,
+        })
         .then(() => {
           //sweet alert
           this.$swal.fire({
             title: 'BERHASIL!',
-            text: 'Data Berhasil Disimpan!',
+            text: 'Data Berhasil Diupdate!',
             icon: 'success',
             showConfirmButton: false,
             timer: 2000,
           })
-
-          //redirect, if success store data
-          this.$router.push({
-            name: 'admin-site',
-          })
+          //redirect ke route "menu"
+          this.back()
         })
         .catch((error) => {
-          //assign error to state "validation"
+          //assign error validasi
           this.validation = error.response.data
         })
     },

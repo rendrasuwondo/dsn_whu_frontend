@@ -12,8 +12,8 @@
               <tr>
                 <td>
                   <nuxt-link :to="{ name: 'system-user' }" class="nav-link">
-                    <i class="nav-icon fas fa-users"></i>
-                    Users
+                    <i class="nav-icon fas fa-th"></i>
+                    Menu
                   </nuxt-link>
                 </td>
                 <td>/ Role</td>
@@ -38,8 +38,8 @@
               <div class="input-group-prepend">
                 <nuxt-link
                   :to="{
-                    name: 'system-user_has_role_2-create-id',
-                    params: { id: user_id, r: 1 },
+                    name: 'system-menu_has_role-create-id',
+                    params: { id: menu_id, r: 1 },
                   }"
                   class="btn btn-info btn-sm"
                   style="padding-top: 8px"
@@ -88,7 +88,7 @@
             <template v-slot:cell(actions)="row">
               <b-button
                 :to="{
-                  name: 'system-user_has_role_2-edit-id',
+                  name: 'system-menu_has_role-edit-id',
                   params: { id: row.item.id, r: 1 },
                 }"
                 variant="link"
@@ -109,7 +109,7 @@
             <template v-slot:cell(detail)="row">
               <b-button
                 :to="{
-                  name: 'system-user_has_role_2',
+                  name: 'system-menu_has_role',
                   params: { id: row.item.id },
                 }"
                 variant=""
@@ -165,10 +165,10 @@ export default {
         {
           label: 'Nama',
           key: 'name_role',
-          tdClass: '',
+          tdClass: 'text-left',
         },
         {
-          label: 'Aktif',
+          label: 'Aktif?',
           key: 'is_active_role_code',
           tdClass: 'text-left',
         },
@@ -176,21 +176,21 @@ export default {
 
       header: [],
 
-      user_id: this.$route.params.id,
+      menu_id: this.$route.params.id,
 
       fields_header: [
         {
-          label: 'User Name',
-          key: 'user_name',
+          label: 'Kode',
+          key: 'code',
           tdClass: '',
         },
         {
-          label: 'Name',
-          key: 'name',
+          label: 'Menu',
+          key: 'title',
         },
         {
-          label: 'Email',
-          key: 'email',
+          label: 'Aktif?',
+          key: 'is_active_code',
         },
       ],
       sweet_alert: {
@@ -221,7 +221,7 @@ export default {
     const { id } = route.params
 
     const posts = await $axios.$get(
-      `/api/admin/detail/user_has_role_2/${id}?q=${search}&page=${page}`
+      `/api/admin/detail/menu_has_role/${id}?q=${search}&page=${page}`
     )
 
     return {
@@ -270,7 +270,7 @@ export default {
             //delete tag from server
 
             this.$axios
-              .delete(`/api/admin/user_has_role/${id}`)
+              .delete(`/api/admin/menu_has_role/${id}`)
               .then((response) => {
                 //feresh data
                 this.$nuxt.refresh()
@@ -301,7 +301,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/user_has_role/export`,
+        url: `/api/admin/menu_has_role/export`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
@@ -310,7 +310,7 @@ export default {
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
-        var fileName = 'User-Has-Role.xlsx'
+        var fileName = 'Menu-Has-Role.xlsx'
         link.setAttribute('download', fileName) //or any other extension
         document.body.appendChild(link)
         link.click()
@@ -320,7 +320,7 @@ export default {
 
   mounted() {
     this.$axios
-      .get(`/api/admin/master/users/${this.$route.params.id}`)
+      .get(`/api/admin/master/menu/${this.$route.params.id}`)
       // .get(`/api/admin/site/site_loc/${this.$route.params.id}`)
 
       .then((response) => {

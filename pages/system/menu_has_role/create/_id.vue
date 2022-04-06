@@ -8,41 +8,21 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-map-marker-alt"></i> TAMBAH SITE
+            <i class="nav-icon fas fa-book-open"></i> TAMBAH ROLE
           </h3>
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
-          <form @submit.prevent="storeP">
+          <form @submit.prevent="storePost">
             <div class="form-group">
-              <label>Kode</label>
-              <input
-                type="text"
-                v-model="field.code"
-                placeholder="Masukkan kode Site"
-                class="form-control"
-                ref="code"
-              />
-              <div v-if="validation.code" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.code[0]
-                }}</b-alert>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Nama</label>
-              <input
-                type="text"
-                v-model="field.name"
-                placeholder="Masukkan Nama Site"
-                class="form-control"
-              />
-              <div v-if="validation.name" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.name[0]
-                }}</b-alert>
-              </div>
+              <label>Nama Role</label>
+              <multiselect
+                v-model="field.role_id"
+                :options="role"
+                label="code"
+                track-by="id"
+                :searchable="true"
+              ></multiselect>
             </div>
 
             <div class="form-group">
@@ -51,21 +31,6 @@
               </b-form-select>
             </div>
 
-            <div class="form-group">
-              <label>Keterangan</label>
-
-              <textarea
-                v-model="field.description"
-                class="form-control"
-                rows="3"
-                placeholder="Masukkan Deskripsi Singkat"
-              ></textarea>
-              <div v-if="validation.description" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.description[0]
-                }}</b-alert>
-              </div>
-            </div>
             <div class="form-group">
               <b-row>
                 <b-col>
@@ -140,9 +105,6 @@
 </template>
 
 <script>
-/* import { VNumber  } from '@coders-tm/vue-number-format' */
-/* import { number } from '@coders-tm/vue-number-format' */
-
 export default {
   //layout
   layout: 'admin',
@@ -150,7 +112,7 @@ export default {
   //meta
   head() {
     return {
-      title: 'Tambah Site',
+      title: 'Tambah Role',
     }
   },
 
@@ -160,44 +122,32 @@ export default {
         return import('@blowstack/ckeditor-nuxt')
       }
     },
-    /*   number, */
   },
 
   data() {
     return {
-      is_active: { value: 'Y', text: 'Ya' },
       options: [
         { value: 'Y', text: 'Ya' },
         { value: 'N', text: 'Tidak' },
       ],
 
       state: 'disabled',
-      show_hk: true,
-      show_rate: false,
-      price: '',
       value: undefined,
 
       field: {
-        code: '',
-        name: '',
-        description: '',
+        menu_id: '',
+        role_id: '',
         is_active: 'Y',
+        description: '',
         created_at: '',
         updated_at: '',
         created_by: '',
         updated_by: '',
       },
 
-      test: '',
+      menu_id: '',
 
-      //state categories
-      activity: [],
-
-      //state categories
-      categories: [],
-
-      //state tags
-      tags: [],
+      role: [],
 
       //state validation
       validation: [],
@@ -219,17 +169,28 @@ export default {
       this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
     this.field.updated_by =
       this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
-    this.$refs.code.focus()
+    // this.$refs.user_name.focus()
+
+    this.$axios
+      .get(`/api/admin/master/menu/${this.$route.params.id}`)
+
+      .then((response) => {
+        //  console.log(response.data.data.afdeling_id)
+        this.menu_id = response.data.data.id
+
+        this.$nuxt.$loading.start()
+      })
+
+    //Data Users
+    this.$axios
+      .get('/api/admin/lov_role')
+
+      .then((response) => {
+        this.role = response.data.data
+      })
   },
 
   methods: {
-    back() {
-      this.$router.push({
-        name: 'admin-site',
-        params: { id: this.$route.params.id, r: 1 },
-      })
-    },
-
     currentDate() {
       const current = new Date()
       const date = `${current.getFullYear()}-${
@@ -239,13 +200,23 @@ export default {
       return date
     },
 
-    // methods create
-    async storeP() {
+    back() {
+      this.$router.push({
+        name: 'system-menu_has_role-id',
+        params: { id: this.$route.params.id, r: 1 },
+      })
+    },
+
+    async storePost() {
       //define formData
       let formData = new FormData()
 
-      formData.append('code', this.field.code)
-      formData.append('name', this.field.name)
+      formData.append(
+        'role_id',
+        this.field.role_id ? this.field.role_id.id : ''
+      )
+      formData.append('menu_id', this.$route.params.id)
+      // formData.append('user_id', this.$route.params.id)
       formData.append('is_active', this.field.is_active)
       formData.append('description', this.field.description)
       formData.append('created_at', this.field.created_at)
@@ -253,9 +224,8 @@ export default {
       formData.append('update_at', this.field.update_at)
       formData.append('udpate_by', this.field.udpate_by)
 
-      //sending data to server
       await this.$axios
-        .post('/api/admin/site', formData)
+        .post('/api/admin/menu_has_role', formData)
         .then(() => {
           //sweet alert
           this.$swal.fire({
@@ -265,15 +235,12 @@ export default {
             showConfirmButton: false,
             timer: 2000,
           })
-
-          //redirect, if success store data
-          this.$router.push({
-            name: 'admin-site',
-          })
+          this.back()
         })
         .catch((error) => {
           //assign error to state "validation"
           this.validation = error.response.data
+          // this.validation= "sdgs"
         })
     },
   },

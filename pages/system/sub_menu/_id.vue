@@ -12,7 +12,7 @@
               <tr>
                 <td>
                   <nuxt-link :to="{ name: 'system-menu' }" class="nav-link">
-                    <i class="nav-icon fas fa-map-marker-alt"></i>
+                    <i class="nav-icon fas fa-th"></i>
                     Menu
                   </nuxt-link>
                 </td>
@@ -38,7 +38,7 @@
               <div class="input-group-prepend">
                 <nuxt-link
                   :to="{
-                    name: 'system-menu-create-id',
+                    name: 'system-sub_menu-create-id',
                     params: { id: parent_id, r: 1 },
                   }"
                   class="btn btn-info btn-sm"
@@ -152,11 +152,11 @@ export default {
     return {
       //table header
       fields: [
-        // {
-        //   label: 'Actions',
-        //   key: 'actions',
-        //   tdClass: '',
-        // },
+        {
+          label: 'Actions',
+          key: 'actions',
+          tdClass: '',
+        },
         {
           label: 'Kode',
           key: 'code',
@@ -175,7 +175,7 @@ export default {
 
       header: [],
 
-      id: this.$route.params.id,
+      parent_id: this.$route.params.id,
 
       fields_header: [
         {
@@ -239,6 +239,8 @@ export default {
         },
       })
     },
+
+    exportData() {},
 
     //searchData
     searchData() {

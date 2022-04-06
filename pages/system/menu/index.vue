@@ -55,6 +55,26 @@
             :fields="fields"
             show-empty
           >
+            <template v-slot:cell(actions)="row">
+              <b-button
+                :to="{
+                  name: 'system-menu-edit-id',
+                  params: { id: row.item.id },
+                }"
+                variant="link"
+                size="sm"
+                title="Edit"
+              >
+                <i class="fa fa-pencil-alt"></i>
+              </b-button>
+              <b-button
+                variant="link"
+                size="sm"
+                @click="deletePost(row.item.id)"
+                title="Hapus"
+                ><i class="fa fa-trash"></i
+              ></b-button>
+            </template>
             <template v-slot:cell(sub_menu)="row">
               <b-button
                 :to="{
@@ -71,12 +91,12 @@
             <template v-slot:cell(role)="row">
               <b-button
                 :to="{
-                  name: 'system-sub_menu-id',
+                  name: 'system-menu_has_role-id',
                   params: { id: row.item.id },
                 }"
                 variant="link"
                 size=""
-                title="Detail"
+                title="Role"
               >
                 <i class="fa fa-file-alt"></i>
               </b-button>
@@ -110,6 +130,11 @@ export default {
     return {
       fields: [
         {
+          label: 'Actions',
+          key: 'actions',
+          tdClass: '',
+        },
+        {
           label: 'Kode',
           key: 'code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
@@ -127,7 +152,7 @@ export default {
         {
           label: 'Role',
           key: 'role',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          tdClass: 'align-middle text-center',
         },
         {
           label: 'Aktif',
@@ -179,6 +204,8 @@ export default {
         },
       })
     },
+
+    exportData() {},
 
     //deletePost method
     deletePost(id) {
