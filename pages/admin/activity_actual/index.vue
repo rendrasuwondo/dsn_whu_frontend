@@ -133,7 +133,10 @@
                 :to="{
                   name: 'admin-activity_actual-edit-id',
                   params: { id: row.item.id },
-                  query: {activitied_at_prepend : param_activitied_at_prepend,activitied_at_append :param_activitied_at_append}
+                  query: {
+                    activitied_at_prepend: param_activitied_at_prepend,
+                    activitied_at_append: param_activitied_at_append,
+                  },
                 }"
                 variant="link"
                 size="sm"
@@ -141,13 +144,6 @@
               >
                 <i class="fa fa-pencil-alt"></i>
               </b-button>
-              <b-button
-                variant="link"
-                size="sm"
-                @click="deletePost(row.item.id)"
-                title="Hapus"
-                ><i class="fa fa-trash"></i
-              ></b-button>
             </template>
           </b-table>
 
@@ -241,7 +237,7 @@ export default {
       company_code: 'DIN',
       department_code: 'LK3',
       param_activitied_at_prepend: this.$route.query.activitied_at_prepend,
-      param_activitied_at_append: this.$route.query.activitied_at_append
+      param_activitied_at_append: this.$route.query.activitied_at_append,
     }
   },
   watchQuery: [
@@ -312,8 +308,6 @@ export default {
   },
 
   mounted() {
-    
-
     // console.log('rdr')
     // console.log(this.$route.query.activitied_at_prepend)
 
