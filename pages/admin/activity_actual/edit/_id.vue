@@ -16,6 +16,7 @@
           <form @submit.prevent="update">
             <div class="form-group">
               <label>Tanggal</label>
+
               <b-form-datepicker
                 v-model="field.activitied_at"
                 :date-format-options="{
@@ -35,7 +36,15 @@
 
             <div class="form-group">
               <label>Mandor</label>
+              <input
+                type="text"
+                v-model="field.foreman_employee"
+                placeholder=""
+                class="form-control"
+                readonly
+              />
               <multiselect
+                v-show="false"
                 v-model="field.foreman_employee_id"
                 :options="foreman"
                 :custom-label="customLabel"
@@ -46,7 +55,16 @@
 
             <div class="form-group">
               <label>Jenis Pekerjaan</label>
+
+              <input
+                type="text"
+                v-model="field.foreman_employee"
+                placeholder=""
+                class="form-control"
+                readonly
+              />
               <multiselect
+                v-show="false"
                 v-model="field.activity_id"
                 :options="activity"
                 label="name"
@@ -62,7 +80,15 @@
 
             <div class="form-group">
               <label>SKU</label>
+              <input
+                type="text"
+                v-model="field.labour_employee"
+                placeholder=""
+                class="form-control"
+                readonly
+              />
               <multiselect
+                v-show="false"
                 v-model="field.labour"
                 :options="labour"
                 label="employee_description_detail"
@@ -77,7 +103,7 @@
               </div> -->
             </div>
 
-             <div class="form-group">
+            <div class="form-group">
               <label>Afdeling</label>
               <input
                 type="text"
@@ -91,6 +117,31 @@
                   validation.afdeling[0]
                 }}</b-alert>
               </div>
+            </div>
+
+            <div class="form-group">
+              <label>Block</label>
+              <input
+                type="text"
+                v-model="field.block"
+                placeholder=""
+                class="form-control"
+                readonly
+              />
+              <multiselect
+                v-show="false"
+                v-model="field.labour"
+                :options="labour"
+                label="employee_description_detail"
+                track-by="id"
+                :multiple="false"
+                :searchable="true"
+              ></multiselect>
+              <!-- <div v-if="validation.employee_id" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.employee_id[0]
+                }}</b-alert>
+              </div> -->
             </div>
 
             <div class="form-group">
@@ -123,14 +174,11 @@
             </div>
 
             <div class="form-group">
-              <label>Status</label>
-              <input
-                type="text"
-                v-model="field.activity_status"
-                placeholder="Masukkan Status Activity"
-                class="form-control"
-                ref="code"
-              />
+              <label>Status Verivikasi</label>
+              <b-form-select
+                v-model="field.verivication_status"
+                :options="options_status"
+              ></b-form-select>
             </div>
 
             <div class="form-group">
@@ -148,38 +196,6 @@
               </div>
             </div>
 
-            <div class="form-group">
-              <label>Latitude</label>
-              <input
-                type="text"
-                v-model="field.latitude"
-                placeholder="Masukkan latitude"
-                class="form-control"
-                ref="code"
-              />
-            </div>
-
-            <div class="form-group">
-              <label>Longitude</label>
-              <input
-                type="text"
-                v-model="field.longitude"
-                placeholder="Masukkan longitude"
-                class="form-control"
-                ref="code"
-              />
-            </div>
-
-            <div class="form-group">
-              <label>Status</label>
-              <input
-                type="text"
-                v-model="field.activity_status"
-                placeholder="Masukkan Status Activity"
-                class="form-control"
-                ref="code"
-              />
-            </div>
             <div class="form-group">
               <b-row>
                 <b-col>
@@ -264,11 +280,16 @@ export default {
   data() {
     return {
       state: 'disabled',
-
+      options_status: [
+        { value: null, text: '' },
+        { value: 'A', text: 'Approve' },
+        { value: 'R', text: 'Reject' },
+      ],
       field: {
-        foreman_employee_id: '',
+        // foreman_employee_id: '',
         activity_plan_detail_id: '',
         man_days: '',
+        block: '',
         qty: '',
         flexrate: '',
         activity_status: '',
@@ -282,8 +303,10 @@ export default {
         updated_by: '',
         activity_id: '',
         activitied_at: '',
-        labour: '',
+        labour_employee: '',
         afdeling_id: '',
+        verivication_status: '',
+        foreman_employee: '',
       },
 
       company_code: '',
@@ -306,8 +329,7 @@ export default {
   mounted() {
     // console.log(this.user.employee.company_code)
     this.company_code = this.user.employee.company_code
-    this.department_code = this.user.employee.department_code
-    
+    this.foreman_employee = this.user.employee.foreman_employee
 
     // console.log(this.$route.query.activitied_at_prepend)
 
@@ -325,16 +347,16 @@ export default {
 
     // Jenis pekerjaan
     // this.$axios
-    //   .get('/api/admin/lov_activity')
+    //   .get('/api/admin/lov_act')
 
     //   .then((response) => {
     //     this.activity = response.data.data
-    //     // response.data.data.forEach((dt) => {
-    //     //   if (dt.activity_group_id == this.$cookies.get('activity_group_id')) {
-    //     //     this.activity.push(dt)
-    //     //   }
-    //     // })
-    //   })
+    // response.data.data.forEach((dt) => {
+    //   if (dt.activity_group_id == this.$cookies.get('activity_group_id')) {
+    //     this.activity.push(dt)
+    //   }
+    // })
+    // })
 
     //Dropdown SKU
     // this.$axios
@@ -347,11 +369,29 @@ export default {
     this.$axios
       .get(`/api/admin/activity_actual/${this.$route.params.id}`)
       .then((response) => {
+        this.field.activity_plan_detail_id =
+          response.data.data.activity_plan_detail_id
+        this.field.activitied_at = response.data.data.activitied_at
+        this.field.foreman_employee = response.data.data.foreman_employee
+        this.field.block = response.data.data.block
+        this.field.activity_description =
+          response.data.data.activity_description
+        this.field.labour_employee = response.data.data.labour_employee
+        this.field.afdeling_id = response.data.data.afdeling_id
+        this.field.man_days = response.data.data.man_days
+        this.field.qty = response.data.data.qty
+        this.field.flexrate = response.data.data.flexrate
+        this.field.description = response.data.data.description
+        this.field.verivication_status = response.data.data.verivication_status
+        this.field.activity_status = response.data.data.activity_status
+        this.field.created_at = response.data.data.created_at
+        this.field.created_by = response.data.data.created_by
+        this.field.updated_at = response.data.data.updated_at
+        this.field.updated_by = response.data.data.updated_by
+        this.field.latitude = response.data.data.latitude
+        this.field.longitude = response.data.data.longitude
+        this.field.is_assistance = response.data.data.is_assistance
 
-        // console.log(response.data.data)
-
-        this.activitied_at = response.data.data.activitied_at
-     
         // this.id = response.data.data.id.split('_')
         // console.log(this.id[0])
 
@@ -423,9 +463,7 @@ export default {
       await this.$axios
         .put(`/api/admin/activity_actual/${this.$route.params.id}`, {
           //data yang dikirim
-          activity_plan_detail_id: this.field.activity_plan_detail_id
-            ? this.field.activity_plan_detail_id.id
-            : '',
+          activity_plan_detail_id: this.field.activity_plan_detail_id,
           //   activity_plan_detail_id: this.field.activity_plan_detail_id,
           man_days: this.field.man_days,
           qty: this.field.qty,
@@ -435,6 +473,7 @@ export default {
           latitude: this.field.latitude,
           longitude: this.field.longitude,
           is_assistance: this.field.is_assistance,
+          verivication_status: this.field.verivication_status,
           created_at: this.field.created_at,
           updated_at: this.field.updated_at,
           created_by: this.field.created_by,
