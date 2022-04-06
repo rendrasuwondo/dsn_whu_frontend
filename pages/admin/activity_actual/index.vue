@@ -133,6 +133,7 @@
                 :to="{
                   name: 'admin-activity_actual-edit-id',
                   params: { id: row.item.id },
+                  query: {activitied_at_prepend : param_activitied_at_prepend,activitied_at_append :param_activitied_at_append}
                 }"
                 variant="link"
                 size="sm"
@@ -212,6 +213,11 @@ export default {
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
+          label: 'Afd',
+          key: 'afdeling_code',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
           label: 'Blok',
           key: 'block',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
@@ -234,6 +240,8 @@ export default {
       ],
       company_code: 'DIN',
       department_code: 'LK3',
+      param_activitied_at_prepend: this.$route.query.activitied_at_prepend,
+      param_activitied_at_append: this.$route.query.activitied_at_append
     }
   },
   watchQuery: [
@@ -304,11 +312,10 @@ export default {
   },
 
   mounted() {
-    this.activitied_at_start = this.currentDate()
-    this.activitied_at_end = this.currentDate()
+    
 
     // console.log('rdr')
-    // console.log(this.$route.params.foreman_id)
+    // console.log(this.$route.query.activitied_at_prepend)
 
     this.foreman_employee_id = 490
 
