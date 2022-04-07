@@ -15,14 +15,15 @@
         <div class="card-body">
           <form @submit.prevent="storePost">
             <div class="form-group">
-              <label>activity_plan_detail_id</label>
+              <label>Activity</label>
               <multiselect
                 v-model="field.activity_plan_detail_id"
-                :options="company"
-                label="code"
+                :options="activity_description"
+                :custom-label="customLabel"
                 track-by="id"
                 :searchable="true"
               ></multiselect>
+
               <!-- <div v-if="validation.code" class="mt-2">
                 <b-alert show variant="danger">{{
                   validation.code[0]
@@ -30,7 +31,7 @@
               </div>-->
             </div>
 
-            <div class="form-group" v-show="show_hk">
+            <div class="form-group">
               <label>HK</label>
               <input
                 type="text"
@@ -50,12 +51,32 @@
               />
             </div>
 
-            <div class="form-group" v-show="show_rate">
+            <div class="form-group">
               <label>Rate</label>
               <input
                 class="form-control"
                 v-model.lazy="field.flexrate"
                 v-money="{ prefix: 'Rp ', precision: 2 }"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Latitude</label>
+              <input
+                type="text"
+                v-model="field.latitude"
+                placeholder="Masukkan Jumlah HK"
+                class="form-control"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Longitude</label>
+              <input
+                type="text"
+                v-model="field.longitude"
+                placeholder="Masukkan Jumlah HK"
+                class="form-control"
               />
             </div>
 
@@ -158,7 +179,7 @@ export default {
   //meta
   head() {
     return {
-      title: 'Tambah Activity',
+      title: 'Tambah Realisasi',
     }
   },
 
@@ -167,23 +188,25 @@ export default {
       state: 'disabled',
 
       field: {
-        code: '',
-        name: '',
-        hkont_1: '',
-        hkont_2: '',
-        anln2_5: '',
-        anln2_6: '',
-        anln2_7: '',
-        anln2_8: '',
-        activity_unit_id: '',
-        activity_group_id: '',
+        activity_plan_detail_id: '',
+        man_days: '',
+        qty: '',
+        flexrate: '',
+        activity_status: '',
+        description: '',
+        latitude: '',
+        longitude: '',
+        is_assistance: '',
         created_at: '',
         updated_at: '',
         created_by: '',
         updated_by: '',
+        verification_status: '',
+        is_revision: '',
       },
+      activity_description: [],
 
-      activity_group: [],
+      // activity_group: [],
 
       //state validation
       validation: [],
@@ -198,23 +221,37 @@ export default {
     this.field.updated_by =
       this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
 
-    this.$refs.code.focus()
+    // this.$refs.code.focus()
+
+    // Data activity_group
+    // this.$axios
+    //   .get('/api/admin/lov_activity_group')
+
+    //   .then((response) => {
+    //     this.activity_group = response.data.data
+    //   })
 
     // Data activity_group
     this.$axios
-      .get('/api/admin/lov_activity_group')
+      .get('/api/admin/lov_activity_plan_detail')
 
       .then((response) => {
-        this.activity_group = response.data.data
+        this.activity_description = response.data.data
+        console.log('da)')
+        console.log(response.data.data)
       })
   },
 
   methods: {
     back() {
       this.$router.push({
-        name: 'admin-activity',
+        name: 'admin-activity_actual',
         params: { id: this.$route.params.id, r: 1 },
       })
+    },
+
+    customLabel(activity_description) {
+      return `${activity_description.activity_description}-${activity_description.employee_description}-${activity_description.position_code}`
     },
 
     currentDate() {
@@ -231,19 +268,27 @@ export default {
       let formData = new FormData()
 
       formData.append(
-        'activity_group_id',
-        this.field.activity_group_id ? this.field.activity_group_id.id : ''
+        'id',
+        this.field.activity_plan_detail_id
+          ? this.field.activity_plan_detail_id.id
+          : ''
       )
-
-      formData.append('code', this.field.code)
-      formData.append('name', this.field.name)
-      formData.append('hkont_1', this.field.hkont_1)
-      formData.append('hkont_2', this.field.hkont_2)
-      formData.append('anln2_5', this.field.anln2_5)
-      formData.append('anln2_6', this.field.anln2_6)
-      formData.append('anln2_7', this.field.anln2_7)
-      formData.append('anln2_8', this.field.anln2_8)
-      formData.append('activity_unit_id', this.field.activity_unit_id)
+      formData.append(
+        'activity_plan_detail_id',
+        this.field.activity_plan_detail_id
+          ? this.field.activity_plan_detail_id.id
+          : ''
+      )
+      formData.append('man_days', this.field.man_days)
+      formData.append('qty', this.field.qty)
+      formData.append('flexrate', this.field.flexrate)
+      formData.append('activity_status', this.field.activity_status)
+      formData.append('description', this.field.description)
+      formData.append('latitude', this.field.latitude)
+      formData.append('longitude', this.field.longitude)
+      formData.append('is_assistance', this.field.is_assistance)
+      formData.append('verification_status', this.field.verification_status)
+      formData.append('is_revision', this.field.is_revision)
       formData.append('created_at', this.field.created_at)
       formData.append('created_by', this.field.created_by)
       formData.append('update_at', this.field.update_at)
@@ -251,7 +296,7 @@ export default {
 
       //sending data to server
       await this.$axios
-        .post('/api/admin/activity', formData)
+        .post('/api/admin/activity_actual', formData)
         .then(() => {
           //sweet alert
           this.$swal.fire({
@@ -264,7 +309,7 @@ export default {
 
           //redirect, if success store data
           this.$router.push({
-            name: 'admin-activity',
+            name: 'admin-activity_actual',
           })
         })
         .catch((error) => {

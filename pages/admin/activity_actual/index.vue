@@ -88,7 +88,7 @@
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <nuxt-link
-                  :to="{ name: 'admin-activty_actual-create' }"
+                  :to="{ name: 'admin-activity_actual-create' }"
                   class="btn btn-info btn-sm"
                   style="padding-top: 8px"
                   title="Tambah"
