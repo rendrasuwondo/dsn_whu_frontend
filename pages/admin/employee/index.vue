@@ -62,6 +62,7 @@
                 :to="{
                   name: 'admin-employee-edit-id',
                   params: { id: row.item.id },
+                   query: {q: param_q}
                 }"
                 variant="link"
                 size="sm"
@@ -136,6 +137,7 @@ export default {
   },
   data() {
     return {
+      param_q:this.$route.query.q,
       fields: [
         {
           label: 'Actions',

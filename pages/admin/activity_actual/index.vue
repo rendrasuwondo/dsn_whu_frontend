@@ -238,6 +238,7 @@ export default {
       department_code: 'LK3',
       param_activitied_at_prepend: this.$route.query.activitied_at_prepend,
       param_activitied_at_append: this.$route.query.activitied_at_append,
+      query_foreman_id: '',
     }
   },
   watchQuery: [
@@ -282,13 +283,64 @@ export default {
     )
 
     //foreman_id
-    let foreman_employee_id = query.foreman_id ? query.foreman_id : ''
-    //  console.log('isa')
-    //  console.log($cookies.get('department_code'))
+    let foreman_id = query.foreman_id ? query.foreman_id : ''
+    let foreman_employee_id = []
 
+    try {
+      if (query.foreman_id) {
+         //Mandor
+        this.$axios
+          .get(`/api/admin/lov_employee_activity_group/${company_code}/${department_code}/mandor?id=${foreman_id}`)
+          .then((response) => {
+            foreman_employee_id = response.data.data
+          }) 
+
+        foreman_employee_id = {
+          id: 14,
+          employee_id: 1364,
+          nik: '0009357',
+          name: 'IDA HARYADI',
+          employee_description: '0009357-IDA HARYADI',
+          employee_description_position: '0009357-IDA HARYADI (MANDOR HPT)',
+          company_id: 3,
+          company_code: 'DIN',
+          department_id: 31,
+          department_code: 'LK2',
+          position_id: 240,
+          position_code: 'MANDOR HPT',
+          activity_group_id: 3,
+          activity_group_code: 'HPT',
+          is_active: 'Y',
+          is_active_code: 'Ya',
+          afdeling_id: 'DI22D',
+          afdeling_code: '8',
+          afdeling_code_sap: 'D',
+          description: null,
+          created_at: '2022-03-23 17:00:00',
+          created_by: 'SYSTEM',
+          updated_at: '2022-03-23 17:00:00',
+          updated_by: 'SYSTEM',
+        }
+      } else {
+        foreman_employee_id = []
+
+        foreman_id = foreman_employee_id.employee_id
+      } //if (query.foreman_id) {
+
+      //  console.log('isa')
+      //  console.log($cookies.get('department_code'))
+    } catch (err) {
+      foreman_id = ''
+    }
     //fetching posts
+    console.log('rendra')
+
+    if (foreman_id == undefined) {
+      foreman_id = ''
+    }
+    console.log(foreman_id)
     const posts = await $axios.$get(
-      `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_employee_id}`
+      `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_id}`
     )
 
     // const profile = await $axios.$get(
@@ -310,15 +362,12 @@ export default {
   mounted() {
     // console.log('rdr')
     // console.log(this.$route.query.activitied_at_prepend)
-
-    this.foreman_employee_id = 490
-
+    // this.foreman_employee_id = 490
     // //Dropdown Mandor
     // this.$axios
     //   .get(
     //     `/api/admin/lov_employee_activity_group/${this.company_code}/${this.department_code}/mandor`
     //   )
-
     //   .then((response) => {
     //     this.foreman = response.data.data
     //   })
@@ -345,13 +394,25 @@ export default {
     },
     //searchData
     searchData() {
+      console.log('search')
+    
+      try {
+        if (this.foreman_employee_id.employee_id === null) {
+          this.query_foreman_id = ''
+        } else {
+          this.query_foreman_id = this.foreman_employee_id.employee_id
+            ? this.foreman_employee_id.employee_id
+            : ''
+        }
+      } catch (err) {}
+
       this.$router.push({
         path: this.$route.path,
         query: {
           q: this.search,
           activitied_at_prepend: this.activitied_at_start,
           activitied_at_append: this.activitied_at_end,
-          foreman_id: this.foreman_employee_id.employee_id,
+          foreman_id: this.query_foreman_id,
         },
       })
     },
