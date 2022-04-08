@@ -39,7 +39,7 @@
                         <b-btn size="sm" @click="activitied_at_start = ''"
                           ><i class="fa fa-trash"></i
                         ></b-btn>
-                        &nbsp s.d
+                        &nbsp; s.d
                       </template>
                     </b-input-group>
                   </b-col>

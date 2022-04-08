@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-file-signature"></i> HA STATEMENT
+            <i class="nav-icon fas fa-hard-hat"></i> Realisasi
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -16,17 +16,19 @@
           <div class="form-group">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
-                <nuxt-link
-                  :to="{ name: 'admin-ha_statement-create' }"
-                  class="btn btn-info btn-sm"
-                  style="padding-top: 8px"
-                  title="Tambah"
-                  ><i class="fa fa-plus-circle"></i>
-                </nuxt-link>
                 <button
-                  title="Export To Excel"
+                  title="Download Activity Actual"
                   class="btn btn-info"
                   @click="exportData"
+                >
+                  <i class="fa fa-file-alt"></i>
+                </button>
+              </div>
+              <div class="input-group-prepend">
+                <button
+                  title="Download Template Activity Actual"
+                  class="btn btn-info"
+                  @click="exportData2"
                 >
                   <i class="fa fa-file-excel"></i>
                 </button>
@@ -57,28 +59,8 @@
             :fields="fields"
             show-empty
           >
-            <template v-slot:cell(actions)="row">
-              <b-button
-                :to="{
-                  name: 'admin-ha_statement-edit-id',
-                  params: { id: row.item.id },
-                }"
-                variant="link"
-                size="sm"
-                title="Edit"
-              >
-                <i class="fa fa-pencil-alt"></i>
-              </b-button>
-              <b-button
-                variant="link"
-                size="sm"
-                @click="deletePost(row.item.id)"
-                title="Hapus"
-                ><i class="fa fa-trash"></i
-              ></b-button>
-            </template>
           </b-table>
-          <!-- pagination -->
+          <!-- pagination-->
           <b-pagination
             v-model="pagination.current_page"
             :total-rows="pagination.total"
@@ -99,84 +81,82 @@ export default {
 
   head() {
     return {
-      title: 'HA STATEMENT',
+      title: 'Realisasi',
     }
   },
   data() {
     return {
       fields: [
         {
-          label: 'Actions',
-          key: 'actions',
+          label: 'Tanggal',
+          key: 'activitied_at',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          label: 'Site',
-          key: 'site_code',
+          label: 'Mandor',
+          key: 'foreman_employee',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          label: 'Department',
+          label: 'Jenis Pekerjaan',
+          key: 'activity_description',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          label: 'SKU',
+          key: 'labour_employee',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+
+        {
+          label: 'Estate',
           key: 'department_code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          label: 'PT',
-          key: 'company_code',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
-          label: 'Afdeling',
+          label: 'Afd',
           key: 'afdeling_code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          label: 'Block',
+          label: 'Blok',
           key: 'block',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          label: 'Progeny',
-          key: 'progeny_code',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-
-        {
-          label: 'Point',
-          key: 'point',
+          label: 'HK',
+          key: 'man_days',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          label: 'Status',
-          key: 'plant_status',
+          label: 'Volume',
+          key: 'qty',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          label: 'Wide',
-          key: 'wide',
+          label: 'Rate',
+          key: 'flexrate',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
       ],
-      sweet_alert: {
-        title: '',
-        icon: '',
-      },
     }
   },
-  watchQuery: ['q', 'page'],
+  watchQuery: ['q'],
 
   async asyncData({ $axios, query }) {
-    //page
-    let page = query.page ? parseInt(query.page) : ''
-
     //search
     let search = query.q ? query.q : ''
 
+    //page
+    let page = query.page ? parseInt(query.page) : ''
+
     //fetching posts
     const posts = await $axios.$get(
-      `/api/admin/ha_statement?q=${search}&page=${page}`
+      `/api/admin/download_activity_actual?q=${search}`
     )
-
+    console.log('aida')
+    console.log(`/api/admin/download_activity_actual?q=${search}`)
+    console.log(posts)
     return {
       posts: posts.data.data,
       pagination: posts.data,
@@ -194,57 +174,15 @@ export default {
         },
       })
     },
-    //searchData
+
     searchData() {
       this.$router.push({
         path: this.$route.path,
         query: {
-          q: this.search,
+          q: this.$route.query.q,
+          page: page,
         },
       })
-    },
-
-    //deletePost method
-    deletePost(id) {
-      this.$swal
-        .fire({
-          title: 'APAKAH ANDA YAKIN ?',
-          text: 'INGIN MENGHAPUS DATA INI !',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#d33',
-          cancelButtonColor: '#3085d6',
-          confirmButtonText: 'YA, HAPUS!',
-          cancelButtonText: 'TIDAK',
-        })
-        .then((result) => {
-          if (result.isConfirmed) {
-            //delete tag from server
-
-            this.$axios
-              .delete(`/api/admin/ha_statement/${id}`)
-              .then((response) => {
-                //feresh data
-                this.$nuxt.refresh()
-                if (response.data.success == true) {
-                  this.sweet_alert.title = 'BERHASIL!'
-                  this.sweet_alert.icon = 'success'
-                } else {
-                  this.sweet_alert.title = 'GAGAL!'
-                  this.sweet_alert.icon = 'error'
-                }
-
-                //alert
-                this.$swal.fire({
-                  title: this.sweet_alert.title,
-                  text: response.data.message,
-                  icon: this.sweet_alert.icon,
-                  showConfirmButton: false,
-                  timer: 2000,
-                })
-              })
-          }
-        })
     },
 
     exportData() {
@@ -253,7 +191,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/ha_statement/export`,
+        url: `/api/admin/activity_actual/export`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
@@ -262,7 +200,29 @@ export default {
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
-        var fileName = 'HaStatement.xlsx'
+        var fileName = 'Activity Actual.xlsx'
+        link.setAttribute('download', fileName) //or any other extension
+        document.body.appendChild(link)
+        link.click()
+      })
+    },
+
+    exportData2() {
+      const headers = {
+        'Content-Type': 'application/json',
+      }
+
+      this.$axios({
+        url: `/api/admin/download_activity_actual/export`,
+        method: 'GET',
+        responseType: 'blob',
+        headers: headers, // important
+      }).then((response) => {
+        this.isLoading = false
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        var fileName = 'Template Activity Actual.xlsx'
         link.setAttribute('download', fileName) //or any other extension
         document.body.appendChild(link)
         link.click()

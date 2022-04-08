@@ -40,7 +40,7 @@
                         <b-btn size="sm" @click="activitied_at_start = ''"
                           ><i class="fa fa-trash"></i
                         ></b-btn>
-                        &nbsp s.d
+                        &nbsp; s.d
                       </template>
                     </b-input-group>
                   </b-col>
@@ -79,8 +79,8 @@
                     class="btn btn-info btn-sm"
                     style="padding-top: 8px"
                     title="Tambah"
-                    ><i class="fa fa-plus-circle"></i> </nuxt-link
-                  >
+                    ><i class="fa fa-plus-circle"></i>
+                  </nuxt-link>
                   <button
                     title="Filter"
                     @click="filterData"
@@ -88,13 +88,13 @@
                   >
                     <i class="fa fa-filter"></i>
                   </button>
-                   <button
-                  title="Export To Excel"
-                  class="btn btn-info"
-                  @click="exportData"
-                >
-                  <i class="fa fa-file-excel"></i>
-                </button>
+                  <button
+                    title="Export To Excel"
+                    class="btn btn-info"
+                    @click="exportData"
+                  >
+                    <i class="fa fa-file-excel"></i>
+                  </button>
                 </b-button-group>
               </div>
 
@@ -209,7 +209,7 @@ export default {
           label: 'Detail',
           key: 'detail',
           tdClass: 'align-middle text-center d-none',
-          thClass: 'd-none'
+          thClass: 'd-none',
         },
         {
           label: 'Tanggal',
@@ -257,7 +257,7 @@ export default {
   },
 
   //watch query URL
-  watchQuery: ['q', 'page','activitied_at_start','activitied_at_end'],
+  watchQuery: ['q', 'page', 'activitied_at_start', 'activitied_at_end'],
 
   async asyncData({ $axios, query }) {
     //page
@@ -267,10 +267,14 @@ export default {
     let search = query.q ? query.q : ''
 
     //activitied_at_start
-    let activitied_at_start = query.activitied_at_start ? query.activitied_at_start : ''
+    let activitied_at_start = query.activitied_at_start
+      ? query.activitied_at_start
+      : ''
 
     //activitied_at_start
-    let activitied_at_end = query.activitied_at_end ? query.activitied_at_end : ''
+    let activitied_at_end = query.activitied_at_end
+      ? query.activitied_at_end
+      : ''
 
     //fetching posts
     const posts = await $axios.$get(
@@ -320,7 +324,7 @@ export default {
         query: {
           q: this.search,
           activitied_at_start: this.activitied_at_start,
-          activitied_at_end: this.activitied_at_end
+          activitied_at_end: this.activitied_at_end,
         },
       })
     },
