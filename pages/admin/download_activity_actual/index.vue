@@ -21,7 +21,7 @@
                   class="btn btn-info"
                   @click="exportData"
                 >
-                  <i class="fa fa-file-alt"></i>
+                  <i class="fa fa-file-excel"></i>
                 </button>
               </div>
               <div class="input-group-prepend">
@@ -30,7 +30,7 @@
                   class="btn btn-info"
                   @click="exportData2"
                 >
-                  <i class="fa fa-file-excel"></i>
+                  <i class="fa fa-file-alt"></i>
                 </button>
               </div>
               <input

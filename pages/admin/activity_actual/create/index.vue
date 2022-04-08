@@ -283,6 +283,12 @@ export default {
       company_code: '',
       department_code: '',
 
+      options_status: [
+        { value: null, text: '' },
+        { value: 'A', text: 'Aprove' },
+        { value: 'R', text: 'Reject' },
+      ],
+
       field: {
         activity_id: '',
         foreman_employee_id: '',
@@ -292,7 +298,7 @@ export default {
         man_days: '',
         qty: '',
         flexrate: '',
-        activity_status: '',
+        activity_status: null,
         description: '',
         latitude: '',
         longitude: '',
@@ -413,6 +419,15 @@ export default {
       )
 
       formData.append(
+        'activity_plan_id',
+        this.field.activity_id.id +
+          '_' +
+          this.field.afdeling_id +
+          '_' +
+          this.field.activitied_at
+      )
+
+      formData.append(
         'foreman_id',
         this.field.foreman_employee_id.employee_id
           ? this.field.foreman_employee_id.employee_id
@@ -429,6 +444,10 @@ export default {
         this.field.labour.id ? this.field.labour.id : ''
       )
 
+      formData.append('afdeling_id', this.field.afdeling_id)
+      formData.append('activitied_at', this.field.activitied_at)
+      formData.append('ha_statement_id', this.field.ha_statement_id)
+
       formData.append('man_days', this.field.man_days)
       formData.append('qty', this.field.qty)
       formData.append('flexrate', this.field.flexrate)
@@ -436,7 +455,7 @@ export default {
       formData.append('description', this.field.description)
       formData.append('verification_status', this.field.verification_status)
       formData.append('is_revision', this.field.is_revision)
-      
+
       //sending data to server
       await this.$axios
         .post('/api/admin/activity_actual', formData)

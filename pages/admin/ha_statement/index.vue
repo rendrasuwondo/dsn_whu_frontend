@@ -140,7 +140,6 @@ export default {
           key: 'progeny_code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
-
         {
           label: 'Point',
           key: 'point',
