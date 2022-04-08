@@ -76,7 +76,6 @@
               </div> -->
             </div>
 
-           
             <div class="form-group">
               <label>Lokasi</label>
 
@@ -111,7 +110,7 @@
               </div> -->
             </div>
 
-             <div class="form-group">
+            <div class="form-group">
               <label>Jabatan</label>
 
               <multiselect
@@ -128,7 +127,7 @@
               </div> -->
             </div>
 
-             <div class="form-group">
+            <div class="form-group">
               <label>Grup</label>
 
               <multiselect
@@ -139,7 +138,6 @@
                 :searchable="true"
               ></multiselect>
             </div>
-
 
             <div class="form-group">
               <label>Email</label>
@@ -374,7 +372,7 @@ export default {
         this.position = response.data.data
       })
 
-      // Data afdeling
+    // Data afdeling
     this.$axios
       .get('/api/admin/lov_afdeling')
 
@@ -382,7 +380,7 @@ export default {
         this.afdeling = response.data.data
       })
 
-      // Data activity_group
+    // Data activity_group
     this.$axios
       .get('/api/admin/lov_activity_group')
 
@@ -394,13 +392,16 @@ export default {
   },
 
   methods: {
-    customLabel (option) {
+    customLabel(option) {
       return `${option.code} ${option.id}`
     },
     back() {
       this.$router.push({
         name: 'admin-employee',
         params: { id: this.$route.params.id, r: 1 },
+        query: {
+          q: this.$route.query.q,
+        },
       })
     },
 
@@ -414,7 +415,9 @@ export default {
           //data yang dikirim
           location_id: this.field.location_id ? this.field.location_id.id : '',
           afdeling_id: this.field.afdeling_id ? this.field.afdeling_id.id : '',
-          activity_group_id: this.field.activity_group_id ? this.field.activity_group_id.id : '',
+          activity_group_id: this.field.activity_group_id
+            ? this.field.activity_group_id.id
+            : '',
           department_id: this.field.department_id
             ? this.field.department_id.id
             : '',
@@ -444,6 +447,9 @@ export default {
           //redirect ke route "post"
           this.$router.push({
             name: 'admin-employee',
+            query: {
+              q: this.$route.query.q,
+            },
           })
         })
         .catch((error) => {
