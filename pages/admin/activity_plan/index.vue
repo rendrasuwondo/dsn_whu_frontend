@@ -246,6 +246,11 @@ export default {
           key: 'flexrateFormat',
           tdClass: 'align-middle text-left text-nowrap',
         },
+        {
+          label: 'Keterangan',
+          key: 'description',
+          tdClass: 'align-middle text-left text-nowrap',
+        },
       ],
 
       activitied_at_start: '',

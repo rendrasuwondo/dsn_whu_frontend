@@ -15,40 +15,125 @@
         <div class="card-body">
           <form @submit.prevent="storePost">
             <div class="form-group">
-              <label>Activity</label>
+              <label>Tanggal</label>
+              <b-form-datepicker
+                v-model="field.activitied_at"
+                :date-format-options="{
+                  year: 'numeric',
+                  month: 'short',
+                  day: '2-digit',
+                  weekday: 'short',
+                }"
+              ></b-form-datepicker>
+              <div v-if="validation.activitied_at" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.activitied_at[0]
+                }}</b-alert>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Mandor</label>
               <multiselect
-                v-model="field.activity_plan_detail_id"
-                :options="activity_description"
-                :custom-label="customLabel"
+                v-model="field.foreman_employee_id"
+                :options="foreman"
+                label="employee_description_position"
                 track-by="id"
                 :searchable="true"
               ></multiselect>
-
-              <!-- <div v-if="validation.code" class="mt-2">
+              <div v-if="validation.foreman_id" class="mt-2">
                 <b-alert show variant="danger">{{
-                  validation.code[0]
-                }}</b-alert> 
-              </div>-->
+                  validation.foreman_id[0]
+                }}</b-alert>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Jenis Pekerjaan</label>
+
+              <multiselect
+                v-model="field.activity_id"
+                :options="activity"
+                label="name"
+                track-by="id"
+                :searchable="true"
+              ></multiselect>
+              <div v-if="validation.activity_id" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.activity_id[0]
+                }}</b-alert>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>SKU</label>
+
+              <multiselect
+                v-model="field.labour"
+                :options="labour"
+                label="employee_description_detail"
+                track-by="id"
+                :multiple="false"
+                :searchable="true"
+              ></multiselect>
+              <div v-if="validation.labour_id" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.labour_id[0]
+                }}</b-alert>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Afdeling</label>
+              <input
+                type="text"
+                v-model="field.afdeling_code"
+                placeholder=""
+                class="form-control"
+                readonly
+              />
+              <div v-if="validation.afdeling" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.afdeling[0]
+                }}</b-alert>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Blok</label>
+              <multiselect
+                v-model="field.ha_statement_id"
+                :options="ha_statement"
+                label="block_lov"
+                track-by="id"
+                :searchable="true"
+              ></multiselect>
+              <div v-if="validation.ha_statement_id" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.ha_statement_id[0]
+                }}</b-alert>
+              </div>
             </div>
 
             <div class="form-group">
               <label>HK</label>
-              <input
-                type="text"
-                v-model="field.man_days"
-                placeholder="Masukkan Jumlah HK"
+              <number
                 class="form-control"
-              />
+                placeholder="Masukkan Jumlah HK"
+                v-model="field.man_days"
+                prefix=""
+              ></number>
             </div>
 
             <div class="form-group">
               <label>Volume</label>
 
-              <input
+              <number
                 class="form-control"
-                v-model.lazy="field.qty"
-                v-money="{}"
-              />
+                placeholder="Masukkan Jumlah Volume"
+                v-model="field.qty"
+                prefix=""
+              ></number>
             </div>
 
             <div class="form-group">
@@ -61,6 +146,14 @@
             </div>
 
             <div class="form-group">
+              <label>Status Verifikasi</label>
+              <b-form-select
+                v-model="field.verification_status"
+                :options="options_status"
+              ></b-form-select>
+            </div>
+
+            <div class="form-group" v-show="false">
               <label>Latitude</label>
               <input
                 type="text"
@@ -70,7 +163,7 @@
               />
             </div>
 
-            <div class="form-group">
+            <div class="form-group" v-show="false">
               <label>Longitude</label>
               <input
                 type="text"
@@ -187,7 +280,14 @@ export default {
     return {
       state: 'disabled',
 
+      company_code: '',
+      department_code: '',
+
       field: {
+        activity_id: '',
+        foreman_employee_id: '',
+        ha_statement_id: '',
+        labour: '',
         activity_plan_detail_id: '',
         man_days: '',
         qty: '',
@@ -205,7 +305,10 @@ export default {
         is_revision: '',
       },
       activity_description: [],
-
+      foreman: [],
+      activity: [],
+      labour: [],
+      ha_statement: [],
       // activity_group: [],
 
       //state validation
@@ -214,6 +317,10 @@ export default {
   },
 
   mounted() {
+    this.field.afdeling_id = this.user.employee.afdeling_id
+    this.field.afdeling_code = this.user.employee.afdeling_code
+    // console.log(this.user)
+
     this.field.created_at = this.currentDate()
     this.field.updated_at = this.currentDate()
     this.field.created_by =
@@ -221,24 +328,47 @@ export default {
     this.field.updated_by =
       this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
 
-    // this.$refs.code.focus()
+    this.field.activitied_at = this.currentDate()
 
-    // Data activity_group
-    // this.$axios
-    //   .get('/api/admin/lov_activity_group')
+    this.company_code = this.user.employee.company_code
+    this.department_code = this.user.employee.department_code
 
-    //   .then((response) => {
-    //     this.activity_group = response.data.data
-    //   })
-
-    // Data activity_group
+    //Dropdown Mandor
     this.$axios
-      .get('/api/admin/lov_activity_plan_detail')
+      .get(
+        `/api/admin/lov_employee_activity_group/${this.company_code}/${this.department_code}/mandor`
+      )
 
       .then((response) => {
-        this.activity_description = response.data.data
-        console.log('da)')
-        console.log(response.data.data)
+        this.foreman = response.data.data
+      })
+
+    // Jenis pekerjaan
+    this.$axios
+      .get('/api/admin/lov_activity')
+
+      .then((response) => {
+        this.activity = response.data.data
+        // response.data.data.forEach((dt) => {
+        //   if (dt.activity_group_id == this.$cookies.get('activity_group_id')) {
+        //     this.activity.push(dt)
+        //   }
+        // })
+      })
+
+    //Dropdown SKU
+    this.$axios
+      .get(`/api/admin/lov_labour/${this.company_code}/${this.department_code}`)
+      .then((response) => {
+        this.labour = response.data.data
+      })
+
+    //Dropdown Block
+    this.$axios
+      .get(`/api/admin/lov_ha_statement_afdeling/${this.field.afdeling_id}`)
+
+      .then((response) => {
+        this.ha_statement = response.data.data
       })
   },
 
@@ -269,31 +399,44 @@ export default {
 
       formData.append(
         'id',
-        this.field.activity_plan_detail_id
-          ? this.field.activity_plan_detail_id.id
-          : ''
+        this.field.activity_id.id +
+          '_' +
+          this.field.afdeling_id +
+          '_' +
+          this.field.activitied_at +
+          '_' +
+          this.field.foreman_employee_id.employee_id +
+          '_' +
+          this.field.ha_statement_id.id +
+          '_' +
+          this.field.labour.id
       )
+
       formData.append(
-        'activity_plan_detail_id',
-        this.field.activity_plan_detail_id
-          ? this.field.activity_plan_detail_id.id
+        'foreman_id',
+        this.field.foreman_employee_id.employee_id
+          ? this.field.foreman_employee_id.employee_id
           : ''
       )
+
+      formData.append(
+        'activity_id',
+        this.field.activity_id.id ? this.field.activity_id.id : ''
+      )
+
+      formData.append(
+        'labour_id',
+        this.field.labour.id ? this.field.labour.id : ''
+      )
+
       formData.append('man_days', this.field.man_days)
       formData.append('qty', this.field.qty)
       formData.append('flexrate', this.field.flexrate)
       formData.append('activity_status', this.field.activity_status)
       formData.append('description', this.field.description)
-      formData.append('latitude', this.field.latitude)
-      formData.append('longitude', this.field.longitude)
-      formData.append('is_assistance', this.field.is_assistance)
       formData.append('verification_status', this.field.verification_status)
       formData.append('is_revision', this.field.is_revision)
-      formData.append('created_at', this.field.created_at)
-      formData.append('created_by', this.field.created_by)
-      formData.append('update_at', this.field.update_at)
-      formData.append('udpate_by', this.field.udpate_by)
-
+      
       //sending data to server
       await this.$axios
         .post('/api/admin/activity_actual', formData)
@@ -320,6 +463,9 @@ export default {
   },
 
   computed: {
+    user() {
+      return this.$auth.user
+    },
     disabled() {
       return this.state === 'disabled'
     },

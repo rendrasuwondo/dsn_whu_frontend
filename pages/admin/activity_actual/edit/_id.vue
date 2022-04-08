@@ -58,7 +58,7 @@
 
               <input
                 type="text"
-                v-model="field.foreman_employee"
+                v-model="field.activity_description"
                 placeholder=""
                 class="form-control"
                 readonly
@@ -146,22 +146,23 @@
 
             <div class="form-group">
               <label>HK</label>
-              <input
-                type="text"
-                v-model="field.man_days"
-                placeholder="Masukkan Jumlah HK"
+              <number
                 class="form-control"
-              />
+                placeholder="Masukkan Jumlah HK"
+                v-model="field.man_days"
+                prefix=""
+              ></number>
             </div>
 
             <div class="form-group">
               <label>Volume</label>
 
-              <input
+              <number
                 class="form-control"
-                v-model.lazy="field.qty"
-                v-money="{}"
-              />
+                placeholder="Masukkan Jumlah Volume"
+                v-model="field.qty"
+                prefix=""
+              ></number>
             </div>
 
             <div class="form-group">
