@@ -42,7 +42,7 @@
             width="35"
             height="35"
           />
-          {{ user.employee.nik }}-{{ user.user.name }}
+          {{ user.employee.nik }}-{{ user.employee.name }}
         </a>
         <ul
           aria-labelledby="dropdownSubMenu1"
