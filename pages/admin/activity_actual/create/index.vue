@@ -284,8 +284,7 @@ export default {
       department_code: '',
 
       options_status: [
-        { value: null, text: '' },
-        { value: 'A', text: 'Aprove' },
+        { value: 'A', text: 'Approve' },
         { value: 'R', text: 'Reject' },
       ],
 
@@ -339,6 +338,7 @@ export default {
     this.company_code = this.user.employee.company_code
     this.department_code = this.user.employee.department_code
 
+   
     //Dropdown Mandor
     this.$axios
       .get(
@@ -429,24 +429,24 @@ export default {
 
       formData.append(
         'foreman_id',
-        this.field.foreman_employee_id.employee_id
+        this.field.foreman_employee_id
           ? this.field.foreman_employee_id.employee_id
           : ''
       )
 
       formData.append(
         'activity_id',
-        this.field.activity_id.id ? this.field.activity_id.id : ''
+        this.field.activity_id ? this.field.activity_id.id : ''
       )
 
       formData.append(
         'labour_id',
-        this.field.labour.id ? this.field.labour.id : ''
+        this.field.labour ? this.field.labour.id : ''
       )
 
       formData.append('afdeling_id', this.field.afdeling_id)
       formData.append('activitied_at', this.field.activitied_at)
-      formData.append('ha_statement_id', this.field.ha_statement_id)
+      formData.append('ha_statement_id', this.field.ha_statement_id.id)
 
       formData.append('man_days', this.field.man_days)
       formData.append('qty', this.field.qty)

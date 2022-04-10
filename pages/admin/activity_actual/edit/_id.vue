@@ -146,32 +146,34 @@
 
             <div class="form-group">
               <label>HK</label>
-              <number
-                class="form-control"
-                placeholder="Masukkan Jumlah HK"
+              <money
                 v-model="field.man_days"
-                prefix=""
-              ></number>
+                v-bind="money"
+                precision="2"
+                class="form-control"
+              ></money>
             </div>
 
             <div class="form-group">
               <label>Volume</label>
 
-              <number
-                class="form-control"
-                placeholder="Masukkan Jumlah Volume"
+              <money
                 v-model="field.qty"
-                prefix=""
-              ></number>
+                v-bind="money"
+                precision="2"
+                class="form-control"
+              ></money>
             </div>
 
             <div class="form-group">
               <label>Rate</label>
-              <input
+              <money
+                v-model="field.flexrate"
+                v-bind="money"
+                precision="2"
+                prefix="Rp "
                 class="form-control"
-                v-model.lazy="field.flexrate"
-                v-money="{ prefix: 'Rp ', precision: 2 }"
-              />
+              ></money>
             </div>
 
             <div class="form-group">
@@ -333,44 +335,12 @@ export default {
     this.company_code = this.user.employee.company_code
     this.foreman_employee = this.user.employee.foreman_employee
 
-    // console.log(this.$route.query.activitied_at_prepend)
-
-    //Dropdown Mandor
-    // this.$axios
-    //   .get(
-    //     `/api/admin/lov_employee_activity_group/${this.company_code}/${this.department_code}/mandor`
-    //   )
-
-    //   .then((response) => {
-    //     // console.log(`/api/admin/lov_employee_activity_group/${this.company_code}/${this.department_code}/mandor`)
-    //     // console.log(response.data.data)
-    //     this.foreman = response.data.data
-    //   })
-
-    // Jenis pekerjaan
-    // this.$axios
-    //   .get('/api/admin/lov_act')
-
-    //   .then((response) => {
-    //     this.activity = response.data.data
-    // response.data.data.forEach((dt) => {
-    //   if (dt.activity_group_id == this.$cookies.get('activity_group_id')) {
-    //     this.activity.push(dt)
-    //   }
-    // })
-    // })
-
-    //Dropdown SKU
-    // this.$axios
-    //   .get(`/api/admin/lov_labour/${this.company_code}/${this.department_code}`)
-    //   .then((response) => {
-    //     this.labour = response.data.data
-    //   })
-
     //get data field by ID
     this.$axios
       .get(`/api/admin/activity_actual/${this.$route.params.id}`)
       .then((response) => {
+        console.log('rdr')
+        console.log(response.data.data.man_days)
         this.field.activity_plan_detail_id =
           response.data.data.activity_plan_detail_id
         this.field.activity_description =
@@ -382,7 +352,7 @@ export default {
           response.data.data.activity_description
         this.field.labour_employee = response.data.data.labour_employee
         this.field.afdeling_id = response.data.data.afdeling_id
-        this.field.man_days = response.data.data.man_days
+        this.field.man_days =  response.data.data.man_days
         this.field.qty = response.data.data.qty
         this.field.flexrate = response.data.data.flexrate
         this.field.description = response.data.data.description
@@ -395,51 +365,8 @@ export default {
         this.field.latitude = response.data.data.latitude
         this.field.longitude = response.data.data.longitude
         this.field.is_assistance = response.data.data.is_assistance
-
-        // this.id = response.data.data.id.split('_')
-        // console.log(this.id[0])
-
-        // this.field.activitied_at = this.id[2]
-        // // this.field.activity_plan_detail_id =
-        // //   response.data.data.activity_plan_detail_id
-        // this.field.man_days = response.data.data.man_days
-        // this.field.qty = response.data.data.qty
-        // this.field.flexrate = response.data.data.flexrate
-        // this.field.activity_status = response.data.data.activity_status
-        // this.field.description = response.data.data.description
-        // this.field.latitude = response.data.data.latitude
-        // this.field.longitude = response.data.data.longitude
-        // this.field.is_assistance = response.data.data.is_assistance
-        // this.field.created_at = response.data.data.created_at
-        // this.field.created_by = response.data.data.created_by
-        // this.field.updated_at = response.data.data.updated_at
-        // this.field.updated_by = response.data.data.updated_by
-
-        // console.log(response.data.data)
-
-        // // this.employee_id = response.data.data.activity_plan_detail.employee_id
-        // this.field.afdeling_id = response.data.data.afdeling_code
-
-        // //Mandor
-        // this.$axios
-        //   .get(`/api/admin/employee/${this.employee_id}`)
-        //   .then((response) => {
-        //     this.field.foreman_employee_id = response.data.data
-        //   })
-
-        // //Jenis Pekerjaan
-        // this.$axios
-        //   .get(`/api/admin/lov_activity?id=${this.id[0]}`)
-        //   .then((response) => {
-        //     this.field.activity_id = response.data.data
-        //   })
-
-        //   //SKU
-        // this.$axios
-        //   .get(`/api/admin/lov_labour/${this.company_code}/${this.department_code}?id=${this.id[5]}`)
-        //   .then((response) => {
-        //     this.field.labour = response.data.data
-        //   })
+  
+     
       })
   },
 

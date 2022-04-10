@@ -127,6 +127,7 @@
             :items="posts"
             :fields="fields"
             show-empty
+            v-model="visibleRows"
           >
             <template v-slot:cell(actions)="row">
               <b-button
@@ -144,6 +145,13 @@
               >
                 <i class="fa fa-pencil-alt"></i>
               </b-button>
+            </template>
+            <template v-slot:custom-foot="data">
+              <b-tr>
+                <b-td colspan="7" >Total</b-td>
+                <b-td align="right"> {{ TOTAL_HK }}</b-td>
+                <b-td align="right"> {{ TOTAL_VOLUME }}</b-td>
+              </b-tr>
             </template>
           </b-table>
 
@@ -180,6 +188,7 @@ export default {
   },
   data() {
     return {
+      visibleRows: [],
       show_page: false,
       foreman: [],
       fields: [
@@ -211,7 +220,7 @@ export default {
         {
           label: 'Afd',
           key: 'afdeling_code',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
           label: 'Blok',
@@ -221,16 +230,21 @@ export default {
         {
           label: 'HK',
           key: 'man_days',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
           label: 'Volume',
           key: 'qty',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
           label: 'Rate',
           key: 'flexrate',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          label: 'Status',
+          key: 'verification_status_code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
       ],
@@ -286,41 +300,49 @@ export default {
     let foreman_id = query.foreman_id ? query.foreman_id : ''
     let foreman_employee_id = []
 
-    try {
-      if (query.foreman_id) {
-         //Mandor
-        this.$axios
-          .get(`/api/admin/lov_employee_activity_group/${company_code}/${department_code}/mandor?id=${foreman_id}`)
-          .then((response) => {
-            foreman_employee_id = response.data.data
-          }) 
+    // console.log('rdr')
+    // console.log(foreman_id)
 
-        foreman_employee_id = {
-          id: 14,
-          employee_id: 1364,
-          nik: '0009357',
-          name: 'IDA HARYADI',
-          employee_description: '0009357-IDA HARYADI',
-          employee_description_position: '0009357-IDA HARYADI (MANDOR HPT)',
-          company_id: 3,
-          company_code: 'DIN',
-          department_id: 31,
-          department_code: 'LK2',
-          position_id: 240,
-          position_code: 'MANDOR HPT',
-          activity_group_id: 3,
-          activity_group_code: 'HPT',
-          is_active: 'Y',
-          is_active_code: 'Ya',
-          afdeling_id: 'DI22D',
-          afdeling_code: '8',
-          afdeling_code_sap: 'D',
-          description: null,
-          created_at: '2022-03-23 17:00:00',
-          created_by: 'SYSTEM',
-          updated_at: '2022-03-23 17:00:00',
-          updated_by: 'SYSTEM',
-        }
+    // try {
+      if (query.foreman_id) {
+        
+
+        //Mandor
+        $axios
+          .get(
+            `/api/admin/lov_employee_activity_group/${company_code}/${department_code}/mandor?id=${foreman_id}`
+          )
+          .then((response) => {
+           
+            foreman_employee_id = response.data.data
+          })
+
+        // foreman_employee_id = {
+        //   id: 14,
+        //   employee_id: 1364,
+        //   nik: '0009357',
+        //   name: 'IDA HARYADI',
+        //   employee_description: '0009357-IDA HARYADI',
+        //   employee_description_position: '0009357-IDA HARYADI (MANDOR HPT)',
+        //   company_id: 3,
+        //   company_code: 'DIN',
+        //   department_id: 31,
+        //   department_code: 'LK2',
+        //   position_id: 240,
+        //   position_code: 'MANDOR HPT',
+        //   activity_group_id: 3,
+        //   activity_group_code: 'HPT',
+        //   is_active: 'Y',
+        //   is_active_code: 'Ya',
+        //   afdeling_id: 'DI22D',
+        //   afdeling_code: '8',
+        //   afdeling_code_sap: 'D',
+        //   description: null,
+        //   created_at: '2022-03-23 17:00:00',
+        //   created_by: 'SYSTEM',
+        //   updated_at: '2022-03-23 17:00:00',
+        //   updated_by: 'SYSTEM',
+        // }
       } else {
         foreman_employee_id = []
 
@@ -329,16 +351,16 @@ export default {
 
       //  console.log('isa')
       //  console.log($cookies.get('department_code'))
-    } catch (err) {
-      foreman_id = ''
-    }
+    // } catch (err) {
+    //   foreman_id = ''
+    // }
     //fetching posts
-    console.log('rendra')
+    // console.log('rendra')
 
     if (foreman_id == undefined) {
       foreman_id = ''
     }
-    console.log(foreman_id)
+    // console.log(foreman_id)
     const posts = await $axios.$get(
       `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_id}`
     )
@@ -394,8 +416,8 @@ export default {
     },
     //searchData
     searchData() {
-      console.log('search')
-    
+      // console.log('search')
+
       try {
         if (this.foreman_employee_id.employee_id === null) {
           this.query_foreman_id = ''
@@ -485,6 +507,14 @@ export default {
       })
     },
   },
+  computed: {
+   TOTAL_HK() {
+      return this.visibleRows.reduce((accum, item) => { return accum + item.man_days }, 0.0)
+    },
+   TOTAL_VOLUME() {
+      return this.visibleRows.reduce((accum, item) => { return accum + item.qty }, 0.0)
+    },
+  }
 }
 </script>
 
