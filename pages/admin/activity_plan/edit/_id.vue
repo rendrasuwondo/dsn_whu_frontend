@@ -267,6 +267,11 @@ export default {
   },
 
   mounted() {
+    this.field.created_by =
+      this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+    this.field.updated_by =
+      this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+
     //fetching data by ID
     this.$axios
       .get(`/api/admin/activity_plan/${this.$route.params.id}`)
@@ -299,7 +304,7 @@ export default {
           response.data.data.activity.name
         // console.log(response.data.data.man_days)
         console.log(this.field.created_at)
-        this.field.created_at = response.data.data.update_at
+        this.field.created_at = response.data.data.created_at
         this.field.created_by = response.data.data.created_by
         this.field.updated_at = response.data.data.updated_at
         this.field.updated_by = response.data.data.updated_by
@@ -324,15 +329,6 @@ export default {
         name: 'admin-activity_plan',
         params: { id: this.$route.params.id, r: 1 },
       })
-    },
-
-    currentDate() {
-      const current = new Date()
-      const date = `${current.getFullYear()}-${
-        current.getMonth() + 1
-      }-${current.getDate()}`
-
-      return date
     },
 
     handleFileChange(e) {

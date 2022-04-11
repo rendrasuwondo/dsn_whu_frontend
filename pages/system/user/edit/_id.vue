@@ -203,16 +203,18 @@ export default {
         this.field.user_name = response.data.data.user_name
         this.field.name = response.data.data.name
         this.field.email = response.data.data.email
-        this.field.employee_id = response.data.data.employee
-
+        this.field.employee_id = {
+          id: response.data.data.employee.id,
+          employee_description:
+            response.data.data.employee.nik +
+            '-' +
+            response.data.data.employee.name,
+        }
         this.field.password = response.data.data.password
         this.field.created_at = response.data.data.created_at
         this.field.updated_at = response.data.data.updated_at
         this.field.created_by = response.data.data.created_by
         this.field.updated_by = response.data.data.updated_by
-        console.log('aida')
-        console.log(response)
-        console.log(response.data.data.employee)
       })
 
     this.$refs.user_name.focus()
@@ -249,6 +251,8 @@ export default {
           password: this.field.password,
           created_at: this.field.created_at,
           updated_at: this.field.updated_at,
+          created_by: this.field.created_by,
+          updated_by: this.field.updated_by,
         })
         .then(() => {
           //sweet alert

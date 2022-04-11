@@ -244,8 +244,9 @@ export default {
       formData.append('email', this.field.email)
       formData.append('password', this.field.password)
       formData.append('created_at', this.field.created_at)
-      formData.append('update_at', this.field.update_at)
-
+      formData.append('updated_at', this.field.updated_at)
+      formData.append('created_by', this.field.created_by)
+      formData.append('updated_by', this.field.updated_by)
       //sending data to server
       await this.$axios
         .post('/api/admin/users', formData)
