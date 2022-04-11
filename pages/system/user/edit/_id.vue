@@ -195,6 +195,14 @@ export default {
     this.field.updated_by =
       this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
 
+    //Data employee
+    this.$axios
+      .get('/api/admin/lov_employee')
+
+      .then((response) => {
+        this.employee = response.data.data
+      })
+
     //get data field by ID
     this.$axios
       .get(`/api/admin/users/${this.$route.params.id}`)
@@ -203,27 +211,17 @@ export default {
         this.field.user_name = response.data.data.user_name
         this.field.name = response.data.data.name
         this.field.email = response.data.data.email
-        this.field.employee_id = response.data.data.employee
-
+        // this.field.employee_id = response.data.data.employee
+        this.field.employee_id = {"id": response.data.data.employee.id ,"employee_description" : response.data.data.employee.nik + "-" + response.data.data.employee.name }
+        console.log(response.data.data.employee.nik)
         this.field.password = response.data.data.password
         this.field.created_at = response.data.data.created_at
         this.field.updated_at = response.data.data.updated_at
         this.field.created_by = response.data.data.created_by
         this.field.updated_by = response.data.data.updated_by
-        console.log('aida')
-        console.log(response)
-        console.log(response.data.data.employee)
       })
 
     this.$refs.user_name.focus()
-
-    //Data employee
-    this.$axios
-      .get('/api/admin/lov_employee')
-
-      .then((response) => {
-        this.employee = response.data.data
-      })
   },
 
   methods: {
