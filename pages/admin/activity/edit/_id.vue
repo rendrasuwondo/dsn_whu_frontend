@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-tasks"></i> EDIT ACTIVITY
+            <i class="nav-icon fas fa-tasks"></i> EDIT JENIS PEKERJAAN
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -197,7 +197,7 @@ export default {
   //meta
   head() {
     return {
-      title: 'Edit Activity',
+      title: 'Edit Jenis Pekerjaan',
     }
   },
 

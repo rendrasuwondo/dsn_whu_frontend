@@ -7,7 +7,9 @@
     <section class="content">
       <div class="card card-outline card-info">
         <div class="card-header">
-          <h3 class="card-title"><i class="nav-icon fas fa-tasks"></i> KDKJ</h3>
+          <h3 class="card-title">
+            <i class="nav-icon fas fa-tasks"></i> JENIS PEKERJAAN
+          </h3>
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
@@ -70,7 +72,7 @@ export default {
 
   head() {
     return {
-      title: 'KDKJ',
+      title: 'Jenis Pekerjaan',
     }
   },
   data() {

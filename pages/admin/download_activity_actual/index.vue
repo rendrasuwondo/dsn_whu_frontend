@@ -191,7 +191,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/activity_actual/export`,
+        url: `/api/admin/realisasi/export`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
