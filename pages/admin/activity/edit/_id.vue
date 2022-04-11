@@ -46,19 +46,31 @@
             </div>
 
             <div class="form-group">
+              <label>KDKJ</label>
+              <multiselect
+                v-model="field.kdkj_id"
+                :options="kdkj"
+                label="name"
+                track-by="id"
+                :searchable="true"
+              ></multiselect>
+            </div>
+
+            <div class="form-group">
               <label>Unit</label>
-              <input
-                type="text"
+              <multiselect
                 v-model="field.activity_unit_id"
-                placeholder="Masukkan activity_unit_id"
-                class="form-control"
-              />
+                :options="activity_unit"
+                label="name"
+                track-by="id"
+                :searchable="true"
+              ></multiselect>
             </div>
 
             <div class="form-group">
               <label>Grup</label>
               <multiselect
-                v-model="field.acivity_group_id"
+                v-model="field.activity_group_id"
                 :options="activity_group"
                 label="code"
                 track-by="id"
@@ -224,6 +236,10 @@ export default {
 
       activity_group: [],
 
+      activity_unit: [],
+
+      kdkj: [],
+
       //state validation
       validation: [],
     }
@@ -243,13 +259,38 @@ export default {
         this.field.anln2_6 = response.data.data.anln2_6
         this.field.anln2_7 = response.data.data.anln2_7
         this.field.anln2_8 = response.data.data.anln2_8
-        this.field.activity_unit_id = response.data.data.activity_unit_id
-        this.field.activity_group_id = response.data.data.activity_group_id
+        this.field.activity_unit_id = response.data.data.activity_unit
+        this.field.activity_group_id = response.data.data.activity_group
         this.field.created_at = response.data.data.created_at
         this.field.created_by = response.data.data.created_by
         this.field.updated_at = response.data.data.updated_at
         this.field.updated_by = response.data.data.updated_by
       })
+
+    //Data activity_group
+    this.$axios
+      .get('/api/admin/lov_activity_group')
+
+      .then((response) => {
+        this.activity_group = response.data.data
+      })
+
+    //Data activity_gr0up
+    this.$axios
+      .get('/api/admin/lov_activity_unit')
+
+      .then((response) => {
+        this.activity_unit = response.data.data
+      })
+
+    //Data kdkj
+    this.$axios
+      .get('/api/admin/lov_kdkj')
+
+      .then((response) => {
+        this.kdkj = response.data.data
+      })
+
     this.$refs.code.focus()
   },
 
@@ -277,7 +318,9 @@ export default {
           anln2_6: this.field.anln2_6,
           anln2_7: this.field.anln2_7,
           anln2_8: this.field.anln2_8,
-          activity_unit_id: this.field.activity_unit_id,
+          activity_unit_id: this.field.activity_unit
+            ? this.field.activity_unit.id
+            : '',
           activity_group_id: this.field.activity_group_id
             ? this.field.activity_group_id.id
             : '',
@@ -285,6 +328,8 @@ export default {
           updated_at: this.field.updated_at,
           created_by: this.field.created_by,
           updated_by: this.field.updated_by,
+
+          kdkj_id: this.field.kdkj_id ? this.field.kdkj_id.id : '',
         })
         .then(() => {
           //sweet alert

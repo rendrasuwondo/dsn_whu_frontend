@@ -149,6 +149,60 @@
               </div>
             </div>
 
+            <div class="form-group">
+              <b-row>
+                <b-col>
+                  <label>Tanggal Buat </label>
+                  <b-form-datepicker
+                    v-model="field.created_at"
+                    :date-format-options="{
+                      year: 'numeric',
+                      month: 'short',
+                      day: '2-digit',
+                      weekday: 'short',
+                    }"
+                    :disabled="disabled"
+                  ></b-form-datepicker>
+                </b-col>
+                <b-col
+                  ><label>Pembuat</label>
+                  <input
+                    type="text"
+                    v-model="field.created_by"
+                    class="form-control"
+                    readonly
+                /></b-col>
+              </b-row>
+            </div>
+
+            <div class="form-group">
+              <b-row>
+                <b-col
+                  ><label>Tanggal Ubah </label>
+
+                  <b-form-datepicker
+                    v-model="field.updated_at"
+                    :date-format-options="{
+                      year: 'numeric',
+                      month: 'short',
+                      day: '2-digit',
+                      weekday: 'short',
+                    }"
+                    :disabled="disabled"
+                  ></b-form-datepicker
+                ></b-col>
+                <b-col>
+                  <label>Pengubah</label>
+                  <input
+                    type="text"
+                    v-model="field.updated_by"
+                    class="form-control"
+                    readonly
+                  />
+                </b-col>
+              </b-row>
+            </div>
+
             <button class="btn btn-info mr-1 btn-submit" type="submit">
               <i class="fa fa-paper-plane"></i> SIMPAN
             </button>
@@ -188,6 +242,7 @@ export default {
         image: '',
         name: '',
       },
+      state: 'disabled',
 
       field: {
         afdeling_id: '',
@@ -199,6 +254,10 @@ export default {
         is_mobile: '',
         description: '',
         activity_description: '',
+        created_at: '',
+        updated_at: '',
+        created_by: '',
+        updated_by: '',
       },
 
       activity: [],
@@ -239,7 +298,11 @@ export default {
           ' ' +
           response.data.data.activity.name
         // console.log(response.data.data.man_days)
-        // console.log(this.field.man_days)
+        console.log(this.field.created_at)
+        this.field.created_at = response.data.data.update_at
+        this.field.created_by = response.data.data.created_by
+        this.field.updated_at = response.data.data.updated_at
+        this.field.updated_by = response.data.data.updated_by
       })
 
     this.$axios
@@ -261,6 +324,15 @@ export default {
         name: 'admin-activity_plan',
         params: { id: this.$route.params.id, r: 1 },
       })
+    },
+
+    currentDate() {
+      const current = new Date()
+      const date = `${current.getFullYear()}-${
+        current.getMonth() + 1
+      }-${current.getDate()}`
+
+      return date
     },
 
     handleFileChange(e) {
@@ -305,6 +377,10 @@ export default {
         this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
       )
       formData.append('_method', 'PATCH')
+      formData.append('created_at', this.field.created_at)
+      formData.append('created_by', this.field.created_by)
+      formData.append('update_at', this.field.update_at)
+      formData.append('udpate_by', this.field.udpate_by)
 
       //sending data to server
       await this.$axios
@@ -330,6 +406,15 @@ export default {
         })
     },
   },
+  computed: {
+    disabled() {
+      return this.state === 'disabled'
+    },
+    readonly() {
+      return this.state === 'readonly'
+    },
+  },
+
   watch: {},
 }
 </script>

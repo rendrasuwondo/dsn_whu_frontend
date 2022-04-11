@@ -135,6 +135,62 @@
               </div>
             </div>
 
+            <div class="form-group">
+              <b-row>
+                <b-col>
+                  <label>Tanggal Buat </label>
+                  <b-form-datepicker
+                    v-model="field.created_at"
+                    :date-format-options="{
+                      year: 'numeric',
+                      month: 'short',
+                      day: '2-digit',
+                      weekday: 'short',
+                    }"
+                    :disabled="disabled"
+                  ></b-form-datepicker>
+                </b-col>
+                <b-col
+                  ><label>Pembuat</label>
+                  <input
+                    type="text"
+                    v-model="field.created_by"
+                    class="form-control"
+                    readonly
+                /></b-col>
+              </b-row>
+            </div>
+
+            <div class="form-group">
+              <b-row>
+                <b-col
+                  ><label>Tanggal Ubah </label>
+
+                  <b-form-datepicker
+                    v-model="field.updated_at"
+                    :date-format-options="{
+                      year: 'numeric',
+                      month: 'short',
+                      day: '2-digit',
+                      weekday: 'short',
+                    }"
+                    :disabled="disabled"
+                  ></b-form-datepicker
+                ></b-col>
+                <b-col>
+                  <label>Pengubah</label>
+                  <input
+                    type="text"
+                    v-model="field.updated_by"
+                    class="form-control"
+                    readonly
+                  />
+                </b-col>
+              </b-row>
+            </div>
+
+            <div class="form-group"></div>
+
             <button class="btn btn-info mr-1 btn-submit" type="submit">
               <i class="fa fa-paper-plane"></i> SIMPAN
             </button>
@@ -190,7 +246,8 @@ export default {
       show_rate: false,
       price: '',
       value: undefined,
-    
+      state: 'disabled',
+
       field: {
         afdeling_id: this.$auth.user.employee.afdeling_id,
         activity_id: '',
@@ -200,6 +257,10 @@ export default {
         flexrate: '',
         is_mobile: '',
         description: '',
+        created_at: '',
+        updated_at: '',
+        created_by: '',
+        updated_by: '',
       },
 
       test: '',
@@ -231,9 +292,16 @@ export default {
 
     const current0 = new Date()
 
-    current0.setDate(current0.getDate() + 1);
+    current0.setDate(current0.getDate() + 1)
 
     console.log(current0)
+
+    this.field.created_at = this.currentDate()
+    this.field.updated_at = this.currentDate()
+    this.field.created_by =
+      this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+    this.field.updated_by =
+      this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
 
     //fetching data categories
     this.$axios
@@ -298,10 +366,10 @@ export default {
 
     currentDate() {
       const current = new Date()
-      current.setDate(current.getDate() + 1);
       const date = `${current.getFullYear()}-${
         current.getMonth() + 1
       }-${current.getDate()}`
+
       return date
     },
 
@@ -359,6 +427,10 @@ export default {
         'updated_by',
         this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
       )
+      formData.append('created_at', this.field.created_at)
+      formData.append('created_by', this.field.created_by)
+      formData.append('update_at', this.field.update_at)
+      formData.append('udpate_by', this.field.udpate_by)
 
       //sending data to server
       await this.$axios

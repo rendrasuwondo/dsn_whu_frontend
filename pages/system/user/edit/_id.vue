@@ -204,11 +204,15 @@ export default {
         this.field.name = response.data.data.name
         this.field.email = response.data.data.email
         this.field.employee_id = response.data.data.employee
+
         this.field.password = response.data.data.password
         this.field.created_at = response.data.data.created_at
         this.field.updated_at = response.data.data.updated_at
         this.field.created_by = response.data.data.created_by
         this.field.updated_by = response.data.data.updated_by
+        console.log('aida')
+        console.log(response)
+        console.log(response.data.data.employee)
       })
 
     this.$refs.user_name.focus()

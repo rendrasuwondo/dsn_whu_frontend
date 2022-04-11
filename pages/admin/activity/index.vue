@@ -50,6 +50,19 @@
             :fields="fields"
             show-empty
           >
+            <template v-slot:cell(actions)="row">
+              <b-button
+                :to="{
+                  name: 'admin-activity-edit-id',
+                  params: { id: row.item.id },
+                }"
+                variant="link"
+                size="sm"
+                title="Edit"
+              >
+                <i class="fa fa-pencil-alt"></i>
+              </b-button>
+            </template>
           </b-table>
           <!-- pagination -->
           <b-pagination
@@ -78,6 +91,11 @@ export default {
   data() {
     return {
       fields: [
+        {
+          label: 'Actions',
+          key: 'actions',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass ',
+        },
         {
           label: 'Kode',
           key: 'code',
