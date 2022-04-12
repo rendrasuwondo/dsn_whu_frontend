@@ -143,7 +143,7 @@ export default {
         {
           label: 'Point',
           key: 'point',
-          formatter: "#,###",
+          formatter: (value, key, item) => value.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}),
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
