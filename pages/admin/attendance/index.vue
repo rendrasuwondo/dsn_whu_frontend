@@ -13,6 +13,63 @@
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
+          <b-card
+            border-variant="primary"
+            header="Filter"
+            header-bg-variant="info"
+            header-text-variant="white"
+            v-show="show_filter"
+          >
+            <b-card-text>
+              <div>
+                <b-row>
+                  <b-col cols="1">Tanggal</b-col>
+                  <b-col>
+                    <b-input-group>
+                      <b-form-datepicker
+                        v-model="activitied_at_start"
+                        :date-format-options="{
+                          year: 'numeric',
+                          month: 'short',
+                          day: '2-digit',
+                          weekday: 'short',
+                        }"
+                        size="sm"
+                      ></b-form-datepicker>
+                      <template #append>
+                        <b-btn size="sm" @click="activitied_at_start = ''"
+                          ><i class="fa fa-trash"></i
+                        ></b-btn>
+                        &nbsp; s.d
+                      </template>
+                    </b-input-group>
+                  </b-col>
+                  <b-col>
+                    <b-input-group>
+                      <b-datepicker
+                        v-model="activitied_at_end"
+                        reset-button
+                        size="sm"
+                        :date-format-options="{
+                          year: 'numeric',
+                          month: 'short',
+                          day: '2-digit',
+                          weekday: 'short',
+                        }"
+                      ></b-datepicker>
+                      <template #append>
+                        <b-btn size="sm" @click="activitied_at_end = ''"
+                          ><i class="fa fa-trash"></i
+                        ></b-btn>
+                      </template>
+                    </b-input-group>
+                  </b-col>
+                  <b-col></b-col>
+                </b-row>
+              </div>
+            </b-card-text>
+          </b-card>
+
           <div class="form-group">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
@@ -23,6 +80,9 @@
                   title="Tambah"
                   ><i class="fa fa-plus-circle"></i>
                 </nuxt-link>
+                <button title="Filter" @click="filterData" class="btn btn-info">
+                  <i class="fa fa-filter"></i>
+                </button>
                 <button
                   title="Export To Excel"
                   class="btn btn-info"
@@ -153,9 +213,14 @@ export default {
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
       ],
+      activitied_at_start: '',
+      activitied_at_end: '',
+      show_filter: false,
+      //state search
+      search: '',
     }
   },
-  watchQuery: ['q', 'page'],
+  watchQuery: ['q', 'page', 'activitied_at_start', 'activitied_at_end'],
 
   async asyncData({ $axios, query }) {
     //page
@@ -164,9 +229,19 @@ export default {
     //search
     let search = query.q ? query.q : ''
 
+    //activitied_at_start
+    let activitied_at_start = query.activitied_at_start
+      ? query.activitied_at_start
+      : ''
+
+    //activitied_at_start
+    let activitied_at_end = query.activitied_at_end
+      ? query.activitied_at_end
+      : ''
+
     //fetching posts
     const posts = await $axios.$get(
-      `/api/admin/attendance?q=${search}&page=${page}`
+      `/api/admin/attendance?q=${search}&page=${page}&activitied_at_start=${activitied_at_start}&activitied_at_end=${activitied_at_end}`
     )
 
     return {
@@ -192,8 +267,18 @@ export default {
         path: this.$route.path,
         query: {
           q: this.search,
+          activitied_at_start: this.activitied_at_start,
+          activitied_at_end: this.activitied_at_end,
         },
       })
+    },
+
+    filterData() {
+      if (this.show_filter == false) {
+        this.show_filter = true
+      } else {
+        this.show_filter = false
+      }
     },
 
     exportData() {

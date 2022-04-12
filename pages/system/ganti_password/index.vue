@@ -13,7 +13,7 @@
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
-          <form @submit.prevent="storePost">
+          <form @submit.prevent="update">
             <div class="form-group">
               <label>Password Lama</label>
               <input
@@ -28,7 +28,7 @@
               <label>Password Baru</label>
               <input
                 type="password"
-                v-model="field.newPassword"
+                v-model="field.new_password"
                 placeholder="Masukkan Password Baru"
                 class="form-control"
               />
@@ -38,7 +38,7 @@
               <label>Konfirmasi Password</label>
               <input
                 type="password"
-                v-model="field.confirmPassword"
+                v-model="field.confirm_password"
                 placeholder="Masukkan Password Baru Kembali"
                 class="form-control"
               />
@@ -48,13 +48,6 @@
 
             <button class="btn btn-info mr-1 btn-submit" type="submit">
               <i class="fa fa-paper-plane"></i> SIMPAN
-            </button>
-            <button
-              v-on:click="back()"
-              class="btn btn-warning btn-reset"
-              type="reset"
-            >
-              <i class="fa fa-redo"></i> BATAL
             </button>
           </form>
         </div>
@@ -83,16 +76,14 @@ export default {
       state: 'disabled',
 
       field: {
-        user_name: '',
-        name: '',
-        email: '',
+        new_password: '',
+        confirm_password: '',
         password: '',
         created_at: '',
         updated_at: '',
         created_by: '',
         updated_by: '',
         employee_id: '',
-        nameUser: '',
       },
 
       employee: [],
@@ -103,63 +94,57 @@ export default {
   },
 
   mounted() {
+    this.field.created_by =
+      this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+    this.field.updated_by =
+      this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+
+    //get data field by ID
     this.$axios
-      .get(`/api/admin/users/${this.$auth.user.employee.id}`)
+      .get(`/api/admin/change_password/${this.$route.params.id}`)
       .then((response) => {
         //data yang diambil
-        this.field.user_name = response.data.data.user_name
-        this.field.name = response.data.data.name
-        this.field.email = response.data.data.email
-        this.field.employee_id = {
-          id: response.data.data.employee.id,
-          employee_description:
-            response.data.data.employee.nik +
-            '-' +
-            response.data.data.employee.name,
-        }
         this.field.password = response.data.data.password
-        this.field.created_at = response.data.data.created_at
-        this.field.updated_at = response.data.data.updated_at
-        this.field.created_by = response.data.data.created_by
-        this.field.updated_by = response.data.data.updated_by
+      })
+
+    //Data employee
+    this.$axios
+      .get('/api/admin/lov_employee')
+
+      .then((response) => {
+        this.employee = response.data.data
       })
   },
 
   methods: {
-    async storePost() {
-      //define formData
-      let formData = new FormData()
+    // update method
+    async update(e) {
+      e.preventDefault()
 
-      formData.append('name', this.field.name)
-      formData.append('email', this.field.is_active)
-      formData.append('code_sap', this.field.code_sap)
-      formData.append('created_at', this.field.created_at)
-      formData.append('created_by', this.field.created_by)
-      formData.append('update_at', this.field.update_at)
-      formData.append('udpate_by', this.field.udpate_by)
-      formData.append('description', this.field.description)
-      formData.append('sbu', this.field.sbu)
-
-      //sending data to server
+      //send data ke Rest API untuk update
       await this.$axios
-        .post('/api/admin/company', formData)
+        .put(`/api/admin/change_password/${this.$route.params.id}`, {
+          //data yang dikirim
+          password: this.field.password,
+          new_password: this.field.new_password,
+          confirm_password: this.field.confirm_password,
+        })
         .then(() => {
           //sweet alert
           this.$swal.fire({
             title: 'BERHASIL!',
-            text: 'Data Berhasil Disimpan!',
+            text: 'Data Berhasil Diupdate!',
             icon: 'success',
             showConfirmButton: false,
             timer: 2000,
           })
-
-          //redirect, if success store data
+          //redirect ke route "post"
           this.$router.push({
-            name: 'admin-company',
+            name: 'login',
           })
         })
         .catch((error) => {
-          //assign error to state "validation"
+          //assign error validasi
           this.validation = error.response.data
         })
     },
