@@ -368,7 +368,9 @@ export default {
     // const profile = await $axios.$get(
     // )
     // foreman_employee_id = 490
+    console.log('rdr')
 
+    console.log(posts)
     return {
       posts: posts.data,
       pagination: posts.data,

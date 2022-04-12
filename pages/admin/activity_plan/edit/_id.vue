@@ -272,6 +272,9 @@ export default {
       .get(`/api/admin/activity_plan/${this.$route.params.id}`)
 
       .then((response) => {
+console.log('rdr')
+console.log(response.data.data)
+
         //assing response data to state "raw data"
         this.field.afdeling_id = response.data.data.afdeling.code.concat(
           ' (' + response.data.data.afdeling_id + ')'
@@ -297,9 +300,8 @@ export default {
           response.data.data.activity_id +
           ' ' +
           response.data.data.activity.name
-        // console.log(response.data.data.man_days)
-        console.log(this.field.created_at)
-        this.field.created_at = response.data.data.update_at
+    
+        this.field.created_at = response.data.data.created_at
         this.field.created_by = response.data.data.created_by
         this.field.updated_at = response.data.data.updated_at
         this.field.updated_by = response.data.data.updated_by

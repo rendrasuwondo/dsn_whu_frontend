@@ -317,6 +317,9 @@ export default {
     this.$axios
       .get(`/api/admin/employee/${this.$route.params.id}`)
       .then((response) => {
+        console.log('rdr')
+        console.log(response.data.data)
+
         //data yang diambil
         this.field.location_id = response.data.data.location
         this.field.department_id = response.data.data.department

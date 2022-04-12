@@ -143,7 +143,8 @@ export default {
         {
           label: 'Point',
           key: 'point',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          formatter: "#,###",
+          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
           label: 'Status',
