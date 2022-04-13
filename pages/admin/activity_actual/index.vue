@@ -129,6 +129,21 @@
             show-empty
             v-model="visibleRows"
           >
+            <template v-slot:head(selected)="data">
+              <span
+                ><b-form-checkbox
+                  @click.native.stop
+                  @change="select"
+                  v-model="allSelected"
+                >
+                </b-form-checkbox
+              ></span>
+            </template>
+            <template v-slot:cell(selected)="row">
+              <b-form-group>
+                <input type="checkbox" v-model="row.item.selected" />
+              </b-form-group>
+            </template>
             <template v-slot:cell(actions)="row">
               <b-button
                 :to="{
@@ -148,7 +163,12 @@
             </template>
             <template v-slot:custom-foot="data">
               <b-tr>
-                <b-td colspan="8" >Total</b-td>
+                <b-td colspan="3"
+                  ><b-button size="sm" variant="outline-primary" @click="Submit"
+                    >Approve</b-button
+                  ></b-td
+                >
+                <b-td colspan="4">Total</b-td>
                 <b-td align="right"> {{ TOTAL_HK }}</b-td>
                 <b-td align="right"> {{ TOTAL_VOLUME }}</b-td>
               </b-tr>
@@ -173,6 +193,11 @@
           </b-row>
         </div>
       </div>
+
+<div v-if="loading" class="loading-page">
+    <p>Loading...</p>
+  </div>
+
     </section>
   </div>
 </template>
@@ -188,10 +213,18 @@ export default {
   },
   data() {
     return {
+      loading: false,
+      allSelected: false,
       visibleRows: [],
       show_page: false,
       foreman: [],
       fields: [
+        {
+          label: 'Approve',
+          key: 'selected',
+          tdClass: 'align-middle text-center text-nowrap nameOfTheClass ',
+          sortable: false,
+        },
         {
           label: 'Actions',
           key: 'actions',
@@ -304,53 +337,50 @@ export default {
     // console.log(foreman_id)
 
     // try {
-      if (query.foreman_id) {
-        
+    if (query.foreman_id) {
+      //Mandor
+      $axios
+        .get(
+          `/api/admin/lov_employee_activity_group/${company_code}/${department_code}/mandor?id=${foreman_id}`
+        )
+        .then((response) => {
+          foreman_employee_id = response.data.data
+        })
 
-        //Mandor
-        $axios
-          .get(
-            `/api/admin/lov_employee_activity_group/${company_code}/${department_code}/mandor?id=${foreman_id}`
-          )
-          .then((response) => {
-           
-            foreman_employee_id = response.data.data
-          })
+      // foreman_employee_id = {
+      //   id: 14,
+      //   employee_id: 1364,
+      //   nik: '0009357',
+      //   name: 'IDA HARYADI',
+      //   employee_description: '0009357-IDA HARYADI',
+      //   employee_description_position: '0009357-IDA HARYADI (MANDOR HPT)',
+      //   company_id: 3,
+      //   company_code: 'DIN',
+      //   department_id: 31,
+      //   department_code: 'LK2',
+      //   position_id: 240,
+      //   position_code: 'MANDOR HPT',
+      //   activity_group_id: 3,
+      //   activity_group_code: 'HPT',
+      //   is_active: 'Y',
+      //   is_active_code: 'Ya',
+      //   afdeling_id: 'DI22D',
+      //   afdeling_code: '8',
+      //   afdeling_code_sap: 'D',
+      //   description: null,
+      //   created_at: '2022-03-23 17:00:00',
+      //   created_by: 'SYSTEM',
+      //   updated_at: '2022-03-23 17:00:00',
+      //   updated_by: 'SYSTEM',
+      // }
+    } else {
+      foreman_employee_id = []
 
-        // foreman_employee_id = {
-        //   id: 14,
-        //   employee_id: 1364,
-        //   nik: '0009357',
-        //   name: 'IDA HARYADI',
-        //   employee_description: '0009357-IDA HARYADI',
-        //   employee_description_position: '0009357-IDA HARYADI (MANDOR HPT)',
-        //   company_id: 3,
-        //   company_code: 'DIN',
-        //   department_id: 31,
-        //   department_code: 'LK2',
-        //   position_id: 240,
-        //   position_code: 'MANDOR HPT',
-        //   activity_group_id: 3,
-        //   activity_group_code: 'HPT',
-        //   is_active: 'Y',
-        //   is_active_code: 'Ya',
-        //   afdeling_id: 'DI22D',
-        //   afdeling_code: '8',
-        //   afdeling_code_sap: 'D',
-        //   description: null,
-        //   created_at: '2022-03-23 17:00:00',
-        //   created_by: 'SYSTEM',
-        //   updated_at: '2022-03-23 17:00:00',
-        //   updated_by: 'SYSTEM',
-        // }
-      } else {
-        foreman_employee_id = []
+      foreman_id = foreman_employee_id.employee_id
+    } //if (query.foreman_id) {
 
-        foreman_id = foreman_employee_id.employee_id
-      } //if (query.foreman_id) {
-
-      //  console.log('isa')
-      //  console.log($cookies.get('department_code'))
+    //  console.log('isa')
+    //  console.log($cookies.get('department_code'))
     // } catch (err) {
     //   foreman_id = ''
     // }
@@ -508,15 +538,96 @@ export default {
         link.click()
       })
     },
+    select() {
+      // alert('sa')
+      // this.allSelected = !this.allSelected;
+      this.posts.forEach((el) => {
+        el.selected = this.allSelected
+      })
+    },
+    Submit() {
+   
+      this.$swal
+        .fire({
+          title: 'APAKAH ANDA YAKIN ?',
+          text: 'Melakukan Approve !',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#3085d6',
+          confirmButtonText: 'YA, HAPUS!',
+          cancelButtonText: 'TIDAK',
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.selectedData = []
+            this.posts.forEach((el) => {
+              // if (el.selected == true) {
+              //   this.selectedData.push(el)
+              // }
+              this.selectedData.push(el)
+            })
+            // console.log(this.selectedData)
+
+            var i = 0
+            let n = this.selectedData.length
+            this.selectedData.forEach((element) => {
+              // alert(element.id)
+              this.$axios
+                .post(`/api/admin/update_activity_actual_status`, {
+                  id: element.id,
+                  selected: element.selected,
+                })
+                .then(() => {
+                  // this.$nuxt.refresh()
+                  // this.$swal.fire({
+                  //   title: 'BERHASIL!',
+                  //   text: 'Data Berhasil Diupdate!',
+                  //   icon: 'success',
+                  //   showConfirmButton: false,
+                  //   timer: 2000,
+                  // })
+                  i = i + 1
+                  console.log(i)
+
+                  if (i >= n) {
+                    
+
+                    this.$swal.fire({
+                      title: 'BERHASIL!',
+                      text: 'Data Berhasil Diupdate!',
+                      icon: 'success',
+                      showConfirmButton: false,
+                      timer: 2000,
+                    })
+
+                    this.$nuxt.refresh()
+                  }
+                })
+
+              // if (i>=n) {
+              //   alert('dsfs')
+              // }
+
+              // console.log(i)
+              // console.log(n)
+            })
+          }
+        })
+    },
   },
   computed: {
-   TOTAL_HK() {
-      return this.visibleRows.reduce((accum, item) => { return accum + item.man_days }, 0.0)
+    TOTAL_HK() {
+      return this.visibleRows.reduce((accum, item) => {
+        return accum + item.man_days
+      }, 0.0)
     },
-   TOTAL_VOLUME() {
-      return this.visibleRows.reduce((accum, item) => { return accum + item.qty }, 0.0)
+    TOTAL_VOLUME() {
+      return this.visibleRows.reduce((accum, item) => {
+        return accum + item.qty
+      }, 0.0)
     },
-  }
+  },
 }
 </script>
 
