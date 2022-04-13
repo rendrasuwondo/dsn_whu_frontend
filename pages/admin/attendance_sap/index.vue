@@ -137,7 +137,7 @@ export default {
 
   head() {
     return {
-      title: 'Attendance',
+      title: 'Absensi',
     }
   },
   data() {
@@ -217,15 +217,12 @@ export default {
     let activitied_at_end = query.activitied_at_append
       ? query.activitied_at_append
       : currentDate()
-    // console.log('aida')
-    // console.log(
-    //   `/api/admin/attendance_sap?q=${search}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}`
-    // )
+
     //fetching posts
-    const posts = await $axios.$get(`/api/admin/attendance_sap?q=${search}`)
-    // console.log('aida')
-    // console.log(`/api/admin/attendance_sap?q=${search}`)
-    // console.log(posts)
+    const posts = await $axios.$get(
+      `/api/admin/attendance_sap?q=${search}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}`
+    )
+
     return {
       posts: posts.data,
       search: search,
@@ -252,7 +249,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/download_attendance/export`,
+        url: `/api/admin/download_attendance/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important

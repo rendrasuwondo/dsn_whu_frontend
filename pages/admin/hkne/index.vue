@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-calendar-check"></i> ABSENSI
+            <i class="nav-icon fas fa-file-invoice"></i> HKNE
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -72,21 +72,24 @@
           <div class="form-group">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
-                <nuxt-link
-                  :to="{ name: 'admin-attendance-create' }"
-                  class="btn btn-info btn-sm"
-                  style="padding-top: 8px"
-                  title="Tambah"
-                  ><i class="fa fa-plus-circle"></i>
-                </nuxt-link>
                 <button
-                  title="Export To Excel"
+                  title="Download Absensi"
                   class="btn btn-info"
                   @click="exportData"
                 >
                   <i class="fa fa-file-excel"></i>
                 </button>
               </div>
+              <div class="input-group-prepend">
+                <button
+                  title="Download Template HKNE"
+                  class="btn btn-info"
+                  @click="exportData2"
+                >
+                  <i class="fa fa-file-alt"></i>
+                </button>
+              </div>
+
               <input
                 type="text"
                 class="form-control"
@@ -113,36 +116,16 @@
             :fields="fields"
             show-empty
           >
-            <template v-slot:cell(actions)="row">
-              <b-button
-                :to="{
-                  name: 'admin-attendance-edit-id',
-                  params: { id: row.item.id },
-                }"
-                variant="link"
-                size="sm"
-                title="Edit"
-              >
-                <i class="fa fa-pencil-alt"></i>
-              </b-button>
-              <b-button
-                variant="link"
-                size="sm"
-                @click="deletePost(row.item.id)"
-                title="Hapus"
-                ><i class="fa fa-trash"></i
-              ></b-button>
-            </template>
           </b-table>
-          <!-- pagination -->
-          <b-pagination
+          <!-- pagination-->
+          <!-- <b-pagination
             v-model="pagination.current_page"
             :total-rows="pagination.total"
             :per-page="pagination.per_page"
             @change="changePage"
             align="right"
             class="mt-3"
-          ></b-pagination>
+          ></b-pagination> -->
         </div>
       </div>
     </section>
@@ -155,17 +138,12 @@ export default {
 
   head() {
     return {
-      title: 'Absensi',
+      title: 'HKNE',
     }
   },
   data() {
     return {
       fields: [
-        {
-          label: 'Actions',
-          key: 'actions',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
         {
           label: 'Tanggal',
           key: 'attendance_date',
@@ -208,10 +186,15 @@ export default {
           key: 'is_active_code_at',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
+        {
+          label: 'Keterangan',
+          key: 'description',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
       ],
     }
   },
-  watchQuery: ['q', 'page', 'activitied_at_prepend', 'activitied_at_append'],
+  watchQuery: ['q', 'activitied_at_prepend', 'activitied_at_append'],
 
   async asyncData({ $axios, query }) {
     function currentDate() {
@@ -222,9 +205,6 @@ export default {
       }-${current.getDate()}`
       return date
     }
-
-    //page
-    let page = query.page ? parseInt(query.page) : ''
 
     //search
     let search = query.q ? query.q : ''
@@ -241,12 +221,11 @@ export default {
 
     //fetching posts
     const posts = await $axios.$get(
-      `/api/admin/attendance?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}`
+      `/api/admin/hkne?q=${search}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}`
     )
 
     return {
-      posts: posts.data.data,
-      pagination: posts.data,
+      posts: posts.data,
       search: search,
       activitied_at_start: activitied_at_start,
       activitied_at_end: activitied_at_end,
@@ -254,22 +233,6 @@ export default {
   },
 
   methods: {
-    changePage(page) {
-      this.$router.push({
-        path: this.$route.path,
-        query: {
-          q: this.$route.query.q,
-          page: page,
-          activitied_at_prepend: this.$route.query.activitied_at_prepend
-            ? this.$route.query.activitied_at_prepend
-            : this.activitied_at_start,
-          activitied_at_append: this.$route.query.activitied_at_append
-            ? this.$route.query.activitied_at_append
-            : this.activitied_at_end,
-        },
-      })
-    },
-    //searchData
     searchData() {
       this.$router.push({
         path: this.$route.path,
@@ -287,7 +250,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/attendance/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}`,
+        url: `/api/admin/hkne/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
@@ -296,20 +259,20 @@ export default {
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
-        var fileName = 'Absensi.xlsx'
+        var fileName = 'HKNE.xlsx'
         link.setAttribute('download', fileName) //or any other extension
         document.body.appendChild(link)
         link.click()
       })
     },
 
-    exportDataSAP() {
+    exportData2() {
       const headers = {
         'Content-Type': 'application/json',
       }
 
       this.$axios({
-        url: `/api/admin/template_sap/export`,
+        url: `/api/admin/template_hkne/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
@@ -318,7 +281,7 @@ export default {
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
-        var fileName = 'Template SAP.xlsx'
+        var fileName = 'Template HKNE.xlsx'
         link.setAttribute('download', fileName) //or any other extension
         document.body.appendChild(link)
         link.click()
