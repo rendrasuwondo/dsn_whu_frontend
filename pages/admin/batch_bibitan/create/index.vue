@@ -1,19 +1,18 @@
 <template>
-  <div class="content-wrapper">
+  <div class="content-wrapper mb-5">
     <section class="content-header">
       <div class="container-fluid"></div>
     </section>
-
     <section class="content">
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-file-signature"></i> EDIT HA STATEMENT
+            <i class="nav-icon fas fa-seedling"></i> TAMBAH BATCH BIBITAN
           </h3>
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
-          <form @submit.prevent="update">
+          <form @submit.prevent="storePost">
             <div class="form-group">
               <label>Block</label>
               <input
@@ -54,9 +53,6 @@
                 track-by="id"
                 :searchable="true"
               ></multiselect>
-              <!-- <div v-if="validation.afdeling_id" class="mt-2">
-                <b-alert show variant="danger">{{ validation.afdeling_id[0] }}</b-alert>
-              </div> -->
             </div>
 
             <div class="form-group">
@@ -69,11 +65,18 @@
                 track-by="id"
                 :searchable="true"
               ></multiselect>
-              <!-- <div v-if="validation.progeny_id" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.progeny_id[0]
-                }}</b-alert>
-              </div> -->
+            </div>
+
+            <div class="form-group">
+              <label>Status</label>
+
+              <multiselect
+                v-model="field.plant_status_id"
+                :options="plant_status"
+                label="code"
+                track-by="id"
+                :searchable="true"
+              ></multiselect>
             </div>
 
             <div class="form-group">
@@ -84,11 +87,6 @@
                 v-model="field.plant_month"
                 prefix=""
               ></number>
-              <!-- <div v-if="validation.block" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.block[0]
-                }}</b-alert>
-              </div> -->
             </div>
 
             <div class="form-group">
@@ -99,11 +97,6 @@
                 v-model="field.plant_year"
                 prefix=""
               ></number>
-              <!-- <div v-if="validation.block" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.block[0]
-                }}</b-alert>
-              </div> -->
             </div>
 
             <div class="form-group">
@@ -114,11 +107,6 @@
                 placeholder="Masukkan Wide"
                 class="form-control"
               />
-              <!-- <div v-if="validation.block" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.block[0]
-                }}</b-alert>
-              </div> -->
             </div>
 
             <div class="form-group">
@@ -129,11 +117,6 @@
                 placeholder="Masukkan Point"
                 class="form-control"
               />
-              <!-- <div v-if="validation.block" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.block[0]
-                }}</b-alert>
-              </div> -->
             </div>
 
             <div class="form-group">
@@ -208,7 +191,11 @@
     </section>
   </div>
 </template>
+
 <script>
+/* import { VNumber  } from '@coders-tm/vue-number-format' */
+/* import { number } from '@coders-tm/vue-number-format' */
+
 export default {
   //layout
   layout: 'admin',
@@ -216,7 +203,7 @@ export default {
   //meta
   head() {
     return {
-      title: 'Edit Ha Statement',
+      title: 'Tambah Batch Bibitan',
     }
   },
 
@@ -225,6 +212,7 @@ export default {
       state: 'disabled',
 
       field: {
+        plant_status_id: '',
         afdeling_id: '',
         block: '',
         block_sap: '',
@@ -237,12 +225,13 @@ export default {
         created_by: '',
         updated_at: '',
         updated_by: '',
-        afdeling_code: '',
       },
 
       afdeling: [],
 
       progeny: [],
+
+      plant_status: [],
 
       //state validation
       validation: [],
@@ -250,28 +239,12 @@ export default {
   },
 
   mounted() {
-    //get data field by ID
-    this.$axios
-      .get(`/api/admin/ha_statement/${this.$route.params.id}`)
-      .then((response) => {
-        //data yang diambil
-        this.field.afdeling_id = response.data.data.afdeling
-        this.field.progeny_id = response.data.data.progeny
-        this.field.block = response.data.data.block
-        this.field.block_sap = response.data.data.block_sap
-        this.field.plant_month = response.data.data.plant_month
-        this.field.plant_year = response.data.data.plant_year
-        this.field.wide = response.data.data.wide
-        this.field.point = response.data.data.point
-        this.field.created_at = response.data.data.created_at
-        this.field.created_by = response.data.data.created_by
-        this.field.updated_at = response.data.data.updated_at
-        this.field.updated_by = response.data.data.updated_by
-        this.field.afdeling_code =
-          response.data.data.afdeling_id +
-          ' ' +
-          response.data.data.afdeling.code
-      })
+    this.field.created_at = this.currentDate()
+    this.field.updated_at = this.currentDate()
+    this.field.created_by =
+      this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+    this.field.updated_by =
+      this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
 
     this.$refs.block.focus()
 
@@ -290,57 +263,85 @@ export default {
       .then((response) => {
         this.progeny = response.data.data
       })
+
+    //Data progeny
+    this.$axios
+      .get('/api/admin/lov_plant_status')
+
+      .then((response) => {
+        this.plant_status = response.data.data
+      })
   },
 
   methods: {
     back() {
       this.$router.push({
-        name: 'admin-ha_statement',
+        name: 'admin-batch_bibitan',
         params: { id: this.$route.params.id, r: 1 },
       })
     },
 
-    // update method
-    async update(e) {
-      e.preventDefault()
+    currentDate() {
+      const current = new Date()
+      const date = `${current.getFullYear()}-${
+        current.getMonth() + 1
+      }-${current.getDate()}`
 
-      //send data ke Rest API untuk update
+      return date
+    },
+
+    async storePost() {
+      //define formData
+      let formData = new FormData()
+
+      formData.append(
+        'afdeling_id',
+        this.field.afdeling_id ? this.field.afdeling_id.id : ''
+      )
+      formData.append(
+        'progeny_id',
+        this.field.progeny_id ? this.field.progeny_id.id : ''
+      )
+      formData.append(
+        'plant_status_id',
+        this.field.plant_status_id ? this.field.plant_status_id.id : ''
+      )
+      formData.append('block', this.field.block)
+      formData.append('block_sap', this.field.block_sap)
+      formData.append('plant_month', this.field.plant_month)
+      formData.append('plant_year', this.field.plant_year)
+      formData.append('wide', this.field.wide)
+      formData.append('point', this.field.point)
+      formData.append('created_at', this.field.created_at)
+      formData.append('created_by', this.field.created_by)
+      formData.append('update_at', this.field.update_at)
+      formData.append('udpate_by', this.field.udpate_by)
+
+      //sending data to server
       await this.$axios
-        .put(`/api/admin/ha_statement/${this.$route.params.id}`, {
-          //data yang dikirim
-          afdeling_id: this.field.afdeling_id ? this.field.afdeling_id.id : '',
-          progeny_id: this.field.progeny_id ? this.field.progeny_id.id : '',
-          block: this.field.block,
-          block_sap: this.field.block_sap,
-          plant_month: this.field.plant_month,
-          plant_year: this.field.plant_year,
-          wide: this.field.wide,
-          point: this.field.point,
-          created_at: this.field.created_at,
-          updated_at: this.field.updated_at,
-          created_by: this.field.created_by,
-          updated_by: this.field.updated_by,
-        })
+        .post('/api/admin/batch_bibitan', formData)
         .then(() => {
           //sweet alert
           this.$swal.fire({
             title: 'BERHASIL!',
-            text: 'Data Berhasil Diupdate!',
+            text: 'Data Berhasil Disimpan!',
             icon: 'success',
             showConfirmButton: false,
             timer: 2000,
           })
-          //redirect ke route "post"
+
+          //redirect, if success store data
           this.$router.push({
-            name: 'admin-ha_statement',
+            name: 'admin-batch_bibitan',
           })
         })
         .catch((error) => {
-          //assign error validasi
+          //assign error to state "validation"
           this.validation = error.response.data
         })
     },
   },
+
   computed: {
     disabled() {
       return this.state === 'disabled'
@@ -351,4 +352,9 @@ export default {
   },
 }
 </script>
-<style></style>
+
+<style>
+.ck-editor__editable {
+  min-height: 200px;
+}
+</style>

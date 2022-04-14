@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-file-signature"></i> EDIT HA STATEMENT
+            <i class="nav-icon fas fa-seedling"></i> EDIT BATCH BIBITAN
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -54,14 +54,10 @@
                 track-by="id"
                 :searchable="true"
               ></multiselect>
-              <!-- <div v-if="validation.afdeling_id" class="mt-2">
-                <b-alert show variant="danger">{{ validation.afdeling_id[0] }}</b-alert>
-              </div> -->
             </div>
 
             <div class="form-group">
               <label>Progeny</label>
-
               <multiselect
                 v-model="field.progeny_id"
                 :options="progeny"
@@ -69,11 +65,18 @@
                 track-by="id"
                 :searchable="true"
               ></multiselect>
-              <!-- <div v-if="validation.progeny_id" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.progeny_id[0]
-                }}</b-alert>
-              </div> -->
+            </div>
+
+            <div class="form-group">
+              <label>Status</label>
+
+              <multiselect
+                v-model="field.plant_status_id"
+                :options="plant_status"
+                label="code"
+                track-by="id"
+                :searchable="true"
+              ></multiselect>
             </div>
 
             <div class="form-group">
@@ -84,11 +87,6 @@
                 v-model="field.plant_month"
                 prefix=""
               ></number>
-              <!-- <div v-if="validation.block" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.block[0]
-                }}</b-alert>
-              </div> -->
             </div>
 
             <div class="form-group">
@@ -99,11 +97,6 @@
                 v-model="field.plant_year"
                 prefix=""
               ></number>
-              <!-- <div v-if="validation.block" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.block[0]
-                }}</b-alert>
-              </div> -->
             </div>
 
             <div class="form-group">
@@ -114,11 +107,6 @@
                 placeholder="Masukkan Wide"
                 class="form-control"
               />
-              <!-- <div v-if="validation.block" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.block[0]
-                }}</b-alert>
-              </div> -->
             </div>
 
             <div class="form-group">
@@ -129,11 +117,6 @@
                 placeholder="Masukkan Point"
                 class="form-control"
               />
-              <!-- <div v-if="validation.block" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.block[0]
-                }}</b-alert>
-              </div> -->
             </div>
 
             <div class="form-group">
@@ -216,7 +199,7 @@ export default {
   //meta
   head() {
     return {
-      title: 'Edit Ha Statement',
+      title: 'Edit Batch Bibitan',
     }
   },
 
@@ -238,11 +221,14 @@ export default {
         updated_at: '',
         updated_by: '',
         afdeling_code: '',
+        plant_status_id: '',
       },
 
       afdeling: [],
 
       progeny: [],
+
+      plant_status: [],
 
       //state validation
       validation: [],
@@ -252,9 +238,10 @@ export default {
   mounted() {
     //get data field by ID
     this.$axios
-      .get(`/api/admin/ha_statement/${this.$route.params.id}`)
+      .get(`/api/admin/batch_bibitan/${this.$route.params.id}`)
       .then((response) => {
         //data yang diambil
+        this.field.plant_status_id = response.data.data.plant_status
         this.field.afdeling_id = response.data.data.afdeling
         this.field.progeny_id = response.data.data.progeny
         this.field.block = response.data.data.block
@@ -290,12 +277,20 @@ export default {
       .then((response) => {
         this.progeny = response.data.data
       })
+
+    //Data progeny
+    this.$axios
+      .get('/api/admin/lov_plant_status')
+
+      .then((response) => {
+        this.plant_status = response.data.data
+      })
   },
 
   methods: {
     back() {
       this.$router.push({
-        name: 'admin-ha_statement',
+        name: 'admin-batch_bibitan',
         params: { id: this.$route.params.id, r: 1 },
       })
     },
@@ -310,6 +305,9 @@ export default {
           //data yang dikirim
           afdeling_id: this.field.afdeling_id ? this.field.afdeling_id.id : '',
           progeny_id: this.field.progeny_id ? this.field.progeny_id.id : '',
+          plant_status_id: this.field.plant_status_id
+            ? this.field.plant_status_id.id
+            : '',
           block: this.field.block,
           block_sap: this.field.block_sap,
           plant_month: this.field.plant_month,
@@ -332,7 +330,7 @@ export default {
           })
           //redirect ke route "post"
           this.$router.push({
-            name: 'admin-ha_statement',
+            name: 'admin-batch_bibitan',
           })
         })
         .catch((error) => {
