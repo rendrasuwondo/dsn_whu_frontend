@@ -57,7 +57,6 @@
                   day: '2-digit',
                   weekday: 'short',
                 }"
-                :disabled="disabled"
               ></b-form-datepicker>
               <div v-if="validation.activitied_at" class="mt-2">
                 <b-alert show variant="danger">{{

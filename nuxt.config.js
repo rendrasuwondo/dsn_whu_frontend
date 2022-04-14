@@ -125,7 +125,7 @@ export default {
 
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {
-        baseURL: 'http://localhost:8000',
+        baseURL: 'http://192.168.202.118:88',
     },
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
@@ -136,4 +136,5 @@ export default {
     //     /* mode: 'hash', */
 
     //   },
+    loading: '~/components/LoadingBar.vue'
 }

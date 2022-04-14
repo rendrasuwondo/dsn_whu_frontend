@@ -179,11 +179,11 @@
             align="fill"
             class="mt-3"
           ></b-pagination>
-          <!-- </b-col>
+          </b-col>
             <b-col class="text-right" align-self="center"
               >{{ rowcount }} data</b-col
             >
-          </b-row> -->
+          </b-row>
         </div>
       </div>
     </section>

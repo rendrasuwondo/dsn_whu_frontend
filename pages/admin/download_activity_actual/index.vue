@@ -270,7 +270,7 @@ export default {
       this.$router.push({
         path: this.$route.path,
         query: {
-          q: this.$route.query.q,
+           q: this.search,
           activitied_at_prepend: this.activitied_at_start,
           activitied_at_append: this.activitied_at_end,
         },

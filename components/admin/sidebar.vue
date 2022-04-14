@@ -1,12 +1,17 @@
 <template>
-<nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <!-- Add icons to the links using the .nav-icon class
+  <nav class="mt-2">
+    <ul
+      class="nav nav-pills nav-sidebar flex-column"
+      data-widget="treeview"
+      role="menu"
+      data-accordion="false"
+    >
+      <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-          <div v-html="menu" ></div>   
-          
-          
-          <!-- <li class="nav-item has-treeview">
+      <div v-html="menu"></div>
+     
+
+      <!-- <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
@@ -65,15 +70,9 @@
             </ul>
           </li>
          -->
-         
-        
-         
-         
-          
-        </ul>
-      </nav>
-      <!-- /.sidebar-menu -->
-    </div>
+    </ul>
+  </nav>
+  <!-- /.sidebar-menu -->
 </template>
 
 <script>
@@ -81,28 +80,30 @@ export default {
   data() {
     return {
       mountains: [],
-      menu : ''
+      menu: '',
+      loading: false
     }
   },
   // async fetch() {
-    // this.mountains = await fetch('https://api.nuxtjs.dev/mountains').then(
-    //   (res) => res.json()
-    // )
+  // this.mountains = await fetch('https://api.nuxtjs.dev/mountains').then(
+  //   (res) => res.json()
+  // )
   // },
   mounted() {
-
     this.$axios
-      .get(`/api/admin/menu_user/${this.$route.path.replaceAll("/", "*")}`)
+      .get(`/api/admin/menu_user/${this.$route.path.replaceAll('/', '*')}`)
 
       .then((response) => {
         //console.log(JSON.stringify(response.data.data))
         // console.log('rdr')
         // console.log(response.data.data)
-       this.menu = response.data.data
+        this.menu = response.data.data
         // this.detail(response.data)
         // console.log(this.detail)
       })
-  }
+  },
+
+ 
 }
 </script>
 <style scoped>
