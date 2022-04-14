@@ -57,7 +57,7 @@
                   day: '2-digit',
                   weekday: 'short',
                 }"
-                :disabled="disabled"
+                
               ></b-form-datepicker>
               <div v-if="validation.activitied_at" class="mt-2">
                 <b-alert show variant="danger">{{
@@ -366,11 +366,12 @@ export default {
 
     currentDate() {
       const current = new Date()
+      current.setDate(current.getDate()+1);
       const date = `${current.getFullYear()}-${
         current.getMonth() + 1
-      }-${current.getDate()}`
+      }-${current.getDate()}` 
 
-      return date
+      return date 
     },
 
     handleFileChange(e) {
