@@ -289,11 +289,11 @@ export default {
           label: 'Rate',
           key: 'flexrate',
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-          formatter: (value, key, item) =>
-            value.toLocaleString(undefined, {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            }),
+          // formatter: (value, key, item) =>
+          //   value.toLocaleString(undefined, {
+          //     minimumFractionDigits: 2,
+          //     maximumFractionDigits: 2,
+          //   }),
         },
       ],
       company_code: 'DIN',
