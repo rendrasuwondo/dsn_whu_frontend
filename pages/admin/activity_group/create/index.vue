@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-map-marker-alt"></i> TAMBAH SITE
+            <i class="nav-icon fas fa-layer-group"></i> TAMBAH GRUP
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -150,7 +150,7 @@ export default {
   //meta
   head() {
     return {
-      title: 'Tambah Site',
+      title: 'Tambah Grup',
     }
   },
 
@@ -224,7 +224,7 @@ export default {
   methods: {
     back() {
       this.$router.push({
-        name: 'admin-site',
+        name: 'admin-activity_group',
         params: { id: this.$route.params.id, r: 1 },
       })
     },
@@ -254,7 +254,7 @@ export default {
 
       //sending data to server
       await this.$axios
-        .post('/api/admin/site', formData)
+        .post('/api/admin/activity_group', formData)
         .then(() => {
           //sweet alert
           this.$swal.fire({
@@ -267,7 +267,7 @@ export default {
 
           //redirect, if success store data
           this.$router.push({
-            name: 'admin-site',
+            name: 'admin-activity_group',
           })
         })
         .catch((error) => {

@@ -46,9 +46,7 @@
 
             <div class="form-group">
               <label>Aktif?</label>
-              <b-form-select v-model="field.is_active">
-                <b-form-select-option value="Y">Ya</b-form-select-option>
-                <b-form-select-option value="N">Tidak</b-form-select-option>
+              <b-form-select v-model="field.is_active" :options="options">
               </b-form-select>
             </div>
 
