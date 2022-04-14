@@ -136,4 +136,5 @@ export default {
     //     /* mode: 'hash', */
 
     //   },
+    loading: '~/components/LoadingBar.vue'
 }

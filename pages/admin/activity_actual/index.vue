@@ -164,16 +164,21 @@
             <template v-slot:custom-foot="data">
               <b-tr>
                 <b-td colspan="3"
-                  ><b-button size="sm" variant="outline-primary" @click="Submit"
-                    >Approve</b-button
+                  ><b-button size="sm" variant="outline-primary" @click="Submit" v-if="rowcount>0"
+                    >Verifikasi</b-button
                   ></b-td
                 >
-                <b-td colspan="4">Total</b-td>
+                <b-td colspan="6">Total</b-td>
                 <b-td align="right"> {{ TOTAL_HK }}</b-td>
                 <b-td align="right"> {{ TOTAL_VOLUME }}</b-td>
               </b-tr>
             </template>
           </b-table>
+          <b-row>
+            <b-col class="text-right" align-self="center"
+              >{{ rowcount }} data</b-col
+            >
+          </b-row>
 
           <b-row v-show="show_page">
             <b-col>
@@ -193,11 +198,6 @@
           </b-row>
         </div>
       </div>
-
-<div v-if="loading" class="loading-page">
-    <p>Loading...</p>
-  </div>
-
     </section>
   </div>
 </template>
@@ -205,7 +205,6 @@
 <script>
 export default {
   layout: 'admin',
-
   head() {
     return {
       title: 'Realisasi',
@@ -213,10 +212,11 @@ export default {
   },
   data() {
     return {
-      loading: false,
+      loading: true,
       allSelected: false,
       visibleRows: [],
       show_page: false,
+      show_submit: true,
       foreman: [],
       fields: [
         {
@@ -269,16 +269,31 @@ export default {
           label: 'HK',
           key: 'man_days',
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+          formatter: (value, key, item) =>
+            value.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }),
         },
         {
           label: 'Volume',
           key: 'qty',
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+          formatter: (value, key, item) =>
+            value.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }),
         },
         {
           label: 'Rate',
           key: 'flexrate',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+          formatter: (value, key, item) =>
+            value.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }),
         },
       ],
       company_code: 'DIN',
@@ -400,12 +415,12 @@ export default {
     // foreman_employee_id = 490
     console.log('rdr')
 
-    console.log(posts)
+    console.log(posts.data.length)
     return {
       posts: posts.data,
       pagination: posts.data,
       search: search,
-      rowcount: posts.data.total,
+      rowcount: posts.data.length,
       activitied_at_start: activitied_at_start,
       activitied_at_end: activitied_at_end,
       foreman: foreman_list.data,
@@ -414,17 +429,7 @@ export default {
   },
 
   mounted() {
-    // console.log('rdr')
-    // console.log(this.$route.query.activitied_at_prepend)
-    // this.foreman_employee_id = 490
-    // //Dropdown Mandor
-    // this.$axios
-    //   .get(
-    //     `/api/admin/lov_employee_activity_group/${this.company_code}/${this.department_code}/mandor`
-    //   )
-    //   .then((response) => {
-    //     this.foreman = response.data.data
-    //   })
+   
   },
 
   methods: {
@@ -546,16 +551,15 @@ export default {
       })
     },
     Submit() {
-   
       this.$swal
         .fire({
           title: 'APAKAH ANDA YAKIN ?',
-          text: 'Melakukan Approve !',
+          text: 'Melakukan verifikasi !',
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#d33',
           cancelButtonColor: '#3085d6',
-          confirmButtonText: 'YA, HAPUS!',
+          confirmButtonText: 'YA',
           cancelButtonText: 'TIDAK',
         })
         .then((result) => {
@@ -567,68 +571,69 @@ export default {
               // }
               this.selectedData.push(el)
             })
-            // console.log(this.selectedData)
+            console.log(this.selectedData)
 
             var i = 0
             let n = this.selectedData.length
-            this.selectedData.forEach((element) => {
-              // alert(element.id)
-              this.$axios
-                .post(`/api/admin/update_activity_actual_status`, {
-                  id: element.id,
-                  selected: element.selected,
-                })
-                .then(() => {
-                  // this.$nuxt.refresh()
-                  // this.$swal.fire({
-                  //   title: 'BERHASIL!',
-                  //   text: 'Data Berhasil Diupdate!',
-                  //   icon: 'success',
-                  //   showConfirmButton: false,
-                  //   timer: 2000,
-                  // })
-                  i = i + 1
-                  console.log(i)
 
-                  if (i >= n) {
-                    
-
-                    this.$swal.fire({
-                      title: 'BERHASIL!',
-                      text: 'Data Berhasil Diupdate!',
-                      icon: 'success',
-                      showConfirmButton: false,
-                      timer: 2000,
-                    })
-
-                    this.$nuxt.refresh()
-                  }
+            this.$axios
+              .post(
+                `/api/admin/update_activity_actual_status`,
+                this.selectedData
+              )
+              .then(() => {
+                this.$swal.fire({
+                  title: 'BERHASIL!',
+                  text: 'Data Berhasil Diupdate!',
+                  icon: 'success',
+                  showConfirmButton: false,
+                  timer: 2000,
                 })
 
-              // if (i>=n) {
-              //   alert('dsfs')
-              // }
+                this.$nuxt.refresh()
+              })
 
-              // console.log(i)
-              // console.log(n)
-            })
           }
         })
     },
   },
   computed: {
     TOTAL_HK() {
-      return this.visibleRows.reduce((accum, item) => {
-        return accum + item.man_days
-      }, 0.0)
+      return this.visibleRows
+        .reduce((accum, item) => {
+          return accum + item.man_days
+        }, 0.0)
+        .toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
     },
     TOTAL_VOLUME() {
-      return this.visibleRows.reduce((accum, item) => {
-        return accum + item.qty
-      }, 0.0)
+      return this.visibleRows
+        .reduce((accum, item) => {
+          return accum + item.qty
+        }, 0.0)
+        .toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
     },
   },
+  
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.loading-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  padding-top: 200px;
+  font-size: 30px;
+  font-family: sans-serif;
+}
+</style>
