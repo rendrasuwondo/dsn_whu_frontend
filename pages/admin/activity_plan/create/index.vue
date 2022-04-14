@@ -366,9 +366,9 @@ export default {
 
     currentDate() {
       const current = new Date()
-      const date = `${current.getFullYear()}-${
-        current.getMonth() + 1
-      }-${current.getDate()}`
+      const date = `${current.getFullYear()}-${current.getMonth() + 1}-${
+        current.getDate() + 1
+      }`
 
       return date
     },

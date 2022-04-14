@@ -194,10 +194,9 @@
         </div>
       </div>
 
-<div v-if="loading" class="loading-page">
-    <p>Loading...</p>
-  </div>
-
+      <div v-if="loading" class="loading-page">
+        <p>Loading...</p>
+      </div>
     </section>
   </div>
 </template>
@@ -546,7 +545,6 @@ export default {
       })
     },
     Submit() {
-   
       this.$swal
         .fire({
           title: 'APAKAH ANDA YAKIN ?',
@@ -591,8 +589,6 @@ export default {
                   console.log(i)
 
                   if (i >= n) {
-                    
-
                     this.$swal.fire({
                       title: 'BERHASIL!',
                       text: 'Data Berhasil Diupdate!',

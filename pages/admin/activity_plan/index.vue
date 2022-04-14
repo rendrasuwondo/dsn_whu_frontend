@@ -66,6 +66,21 @@
                   <b-col></b-col>
                 </b-row>
               </b-container>
+              <b-container class="bv-example-row">
+                <b-row>
+                  <b-col cols="2">Jenis Pekerjaan</b-col>
+                  <b-col cols="7">
+                    <div class="form-group">
+                      <multiselect
+                        v-model="id_activity"
+                        :options="activity"
+                        label="code"
+                        track-by="id"
+                        :searchable="true"
+                      ></multiselect></div
+                  ></b-col>
+                </b-row>
+              </b-container>
             </b-card-text>
           </b-card>
 
@@ -190,7 +205,7 @@ export default {
   //data function
   data() {
     return {
-      //table header
+      activity: [],
       fields: [
         {
           label: 'Actions',
@@ -248,7 +263,13 @@ export default {
   },
 
   //watch query URL
-  watchQuery: ['q', 'page', 'activitied_at_prepend', 'activitied_at_append'],
+  watchQuery: [
+    'q',
+    'page',
+    'activitied_at_prepend',
+    'activitied_at_append',
+    'activity_id',
+  ],
 
   async asyncData({ $axios, query }) {
     function currentDate() {
@@ -276,6 +297,27 @@ export default {
       ? query.activitied_at_append
       : currentDate()
 
+    const activity_list = await $axios.$get(`/api/admin/lov_activity`)
+
+    //activity_id
+    let activity_id = query.activity_id ? query.activity_id : ''
+    let id_activity = []
+
+    if (query.foreman_id) {
+      //Mandor
+      $axios.get(`/api/admin/lov_activity`).then((response) => {
+        id_activity = response.data.data
+      })
+    } else {
+      id_activity = []
+
+      activity_id = id_activity.activity_id
+    }
+
+    if (activity_id == undefined) {
+      activity_id = ''
+    }
+
     //fetching posts
     const posts = await $axios.$get(
       `/api/admin/activity_plan?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}`
@@ -291,6 +333,8 @@ export default {
       rowcount: posts.data.total,
       activitied_at_start: activitied_at_start,
       activitied_at_end: activitied_at_end,
+      activity: activity_list.data,
+      activity_id: activity_id,
     }
   },
   mounted() {
@@ -319,6 +363,9 @@ export default {
           activitied_at_append: this.$route.query.activitied_at_append
             ? this.$route.query.activitied_at_append
             : this.activitied_at_end,
+          activity_id: this.$route.query.activity_id
+            ? this.$route.query.activity_id
+            : this.id_activity,
         },
       })
     },
@@ -331,6 +378,7 @@ export default {
           q: this.search,
           activitied_at_prepend: this.activitied_at_start,
           activitied_at_append: this.activitied_at_end,
+          activity_id: activity_id,
         },
       })
     },
