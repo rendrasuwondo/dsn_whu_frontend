@@ -221,7 +221,7 @@ export default {
             //delete tag from server
 
             this.$axios
-              .delete(`/api/admin/batch_bibitan/${id}`)
+              .delete(`/api/admin/ha_statement/${id}`)
               .then((response) => {
                 //feresh data
                 this.$nuxt.refresh()
