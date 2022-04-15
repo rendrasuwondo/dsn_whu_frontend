@@ -235,11 +235,11 @@ export default {
       `/api/admin/download_activity_actual?q=${search}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}`
     )
 
-    console.log('aida')
-    console.log(
-      `/api/admin/download_activity_actual?q=${search}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}`
-    )
-    console.log(posts)
+    // console.log('aida')
+    // console.log(
+    //   `/api/admin/download_activity_actual?q=${search}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}`
+    // )
+    // console.log(posts)
     return {
       posts: posts.data.data,
       pagination: posts.data,
