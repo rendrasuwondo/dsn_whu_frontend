@@ -118,14 +118,23 @@
           >
           </b-table>
           <!-- pagination-->
-          <b-pagination
-            v-model="pagination.current_page"
-            :total-rows="pagination.total"
-            :per-page="pagination.per_page"
-            @change="changePage"
-            align="right"
-            class="mt-3"
-          ></b-pagination>
+
+          <b-row 
+            >
+            <b-col
+              ><b-pagination
+                v-model="pagination.current_page"
+                :total-rows="pagination.total"
+                :per-page="pagination.per_page"
+                @change="changePage"
+                align="left"
+                class="mt-1"
+              ></b-pagination
+            ></b-col>
+            <b-col class="text-right" align-self="center"
+              >{{ rowcount }} data</b-col
+            >
+          </b-row>
         </div>
       </div>
     </section>
@@ -198,7 +207,7 @@ export default {
       ],
     }
   },
-  watchQuery: ['q', 'activitied_at_prepend', 'activitied_at_append'],
+  watchQuery: ['q', 'activitied_at_prepend', 'activitied_at_append', 'page'],
 
   async asyncData({ $axios, query }) {
     function currentDate() {
@@ -232,20 +241,21 @@ export default {
     // )
 
     const posts = await $axios.$get(
-      `/api/admin/download_activity_actual?q=${search}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}`
+      `/api/admin/download_activity_actual?q=${search}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&page=${page}`
     )
 
     // console.log('aida')
     // console.log(
     //   `/api/admin/download_activity_actual?q=${search}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}`
     // )
-    // console.log(posts)
+    console.log(posts)
     return {
       posts: posts.data.data,
       pagination: posts.data,
       search: search,
       activitied_at_start: activitied_at_start,
       activitied_at_end: activitied_at_end,
+      rowcount: posts.data.total,
     }
   },
 
@@ -270,7 +280,7 @@ export default {
       this.$router.push({
         path: this.$route.path,
         query: {
-           q: this.search,
+          q: this.search,
           activitied_at_prepend: this.activitied_at_start,
           activitied_at_append: this.activitied_at_end,
         },

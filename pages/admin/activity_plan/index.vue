@@ -168,18 +168,17 @@
             </template>
           </b-table>
 
-          <!-- <b-row>
-            <b-col> -->
-          <!-- pagination -->
-          <b-pagination
-            v-model="pagination.current_page"
-            :total-rows="pagination.total"
-            :per-page="pagination.per_page"
-            @change="changePage"
-            align="fill"
-            class="mt-3"
-          ></b-pagination>
           <b-row>
+            <b-col
+              ><b-pagination
+                v-model="pagination.current_page"
+                :total-rows="pagination.total"
+                :per-page="pagination.per_page"
+                @change="changePage"
+                align="left"
+                class="mt-1"
+              ></b-pagination
+            ></b-col>
             <b-col class="text-right" align-self="center"
               >{{ rowcount }} data</b-col
             >
@@ -231,7 +230,7 @@ export default {
         {
           label: 'Afdeling',
           key: 'afdeling_code',
-          tdClass: 'align-middle',
+          tdClass: 'align-middle text-right',
         },
         {
           label: 'Jenis Pekerjaan',
@@ -375,11 +374,14 @@ export default {
 
     //searchData
     searchData() {
-      // alert('dsfds')
+      // alert(this.activity_id.id)
       try {
         if (this.activity_id.id === null) {
-          this.query_activity_id = ''
-        } else {
+          this.query_activity_id = this.$route.query.q_activity_id
+        } else if (this.activity_id.id === undefined)  {
+            this.query_activity_id = this.$route.query.q_activity_id
+        }
+        else {
           this.query_activity_id = this.activity_id.id
             ? this.activity_id.id
             : ''
@@ -402,8 +404,14 @@ export default {
         'Content-Type': 'application/json',
       }
 
+      console.log(`/api/admin/activity_plan/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_activity_id=${this.activity_id.id}`)
+
       this.$axios({
+<<<<<<< HEAD
         url: `/api/admin/activity_plan/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_activity_id=${q_activity_id}`,
+=======
+        url: `/api/admin/activity_plan/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_activity_id=${this.activity_id}`,
+>>>>>>> f02bfd7e511022e79b75c57e17af5c2f0d156b93
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
