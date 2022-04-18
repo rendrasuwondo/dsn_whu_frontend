@@ -179,7 +179,7 @@
             align="fill"
             class="mt-3"
           ></b-pagination>
-          </b-col>
+          <b-row>
             <b-col class="text-right" align-self="center"
               >{{ rowcount }} data</b-col
             >
@@ -259,7 +259,7 @@ export default {
           tdClass: 'align-middle text-left text-nowrap',
         },
       ],
-       query_activity_id: '',
+      query_activity_id: '',
     }
   },
 
@@ -276,9 +276,9 @@ export default {
     function currentDate() {
       const current = new Date()
       current.setDate(current.getDate())
-      const date = `${current.getFullYear()}-${
-        current.getMonth() + 1
-      }-${current.getDate() + 1}`
+      const date = `${current.getFullYear()}-${current.getMonth() + 1}-${
+        current.getDate() + 1
+      }`
       return date
     }
 
@@ -306,9 +306,11 @@ export default {
 
     if (query.q_activity_id) {
       // console.log('rendra')
-      $axios.get(`/api/admin/lov_activity?q_activity_id=${q_activity_id}`).then((response) => {
-        activity_id = response.data.data
-      })
+      $axios
+        .get(`/api/admin/lov_activity?q_activity_id=${q_activity_id}`)
+        .then((response) => {
+          activity_id = response.data.data
+        })
     } else {
       activity_id = []
 
@@ -401,7 +403,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/activity_plan/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}`,
+        url: `/api/admin/activity_plan/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_activity_id=${q_activity_id}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important

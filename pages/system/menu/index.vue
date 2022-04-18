@@ -135,16 +135,6 @@ export default {
           tdClass: '',
         },
         {
-          label: 'Kode',
-          key: 'code',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
-          label: 'Menu Utama',
-          key: 'title',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
           label: 'Sub Menu',
           key: 'sub_menu',
           tdClass: 'align-middle text-center',
@@ -153,6 +143,16 @@ export default {
           label: 'Role',
           key: 'role',
           tdClass: 'align-middle text-center',
+        },
+        {
+          label: 'Kode',
+          key: 'code',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          label: 'Menu Utama',
+          key: 'title',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
           label: 'Aktif',

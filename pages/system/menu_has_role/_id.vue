@@ -11,7 +11,7 @@
             <table>
               <tr>
                 <td>
-                  <nuxt-link :to="{ name: 'system-user' }" class="nav-link">
+                  <nuxt-link :to="{ name: 'system-menu' }" class="nav-link">
                     <i class="nav-icon fas fa-th"></i>
                     Menu
                   </nuxt-link>

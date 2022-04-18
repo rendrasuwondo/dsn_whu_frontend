@@ -11,12 +11,12 @@
             <table>
               <tr>
                 <td>
-                  <nuxt-link :to="{ name: 'system-menu' }" class="nav-link">
+                  <nuxt-link :to="{ name: 'system-sub_menu' }" class="nav-link">
                     <i class="nav-icon fas fa-th"></i>
-                    Menu
+                    Sub Menu
                   </nuxt-link>
                 </td>
-                <td>/ Sub Menu</td>
+                <td>/ Role</td>
               </tr>
             </table>
           </h3>
@@ -38,8 +38,8 @@
               <div class="input-group-prepend">
                 <nuxt-link
                   :to="{
-                    name: 'system-sub_menu-create-id',
-                    params: { id: parent_id, r: 1 },
+                    name: 'system-menu_has_role_2-create-id',
+                    params: { id: menu_id, r: 1 },
                   }"
                   class="btn btn-info btn-sm"
                   style="padding-top: 8px"
@@ -88,7 +88,7 @@
             <template v-slot:cell(actions)="row">
               <b-button
                 :to="{
-                  name: 'system-sub_menu-edit-id',
+                  name: 'system-menu_has_role_2-edit-id',
                   params: { id: row.item.id, r: 1 },
                 }"
                 variant="link"
@@ -109,26 +109,13 @@
             <template v-slot:cell(detail)="row">
               <b-button
                 :to="{
-                  name: 'admin-sub_menu',
+                  name: 'system-menu_has_role_2',
                   params: { id: row.item.id },
                 }"
                 variant=""
                 size="sm"
               >
                 Detail<i class="fa fa-plus-circle"></i>
-              </b-button>
-            </template>
-            <template v-slot:cell(role)="row">
-              <b-button
-                :to="{
-                  name: 'system-menu_has_role_2-id',
-                  params: { id: row.item.id },
-                }"
-                variant="link"
-                size=""
-                title="Role"
-              >
-                <i class="fa fa-file-alt"></i>
               </b-button>
             </template>
           </b-table>
@@ -156,7 +143,7 @@ export default {
   //meta
   head() {
     return {
-      title: 'Sub Menu',
+      title: 'Role',
     }
   },
 
@@ -171,48 +158,46 @@ export default {
           tdClass: '',
         },
         {
-          label: 'Role',
-          key: 'role',
-          tdClass: 'align-middle text-center',
-        },
-        {
           label: 'Kode',
-          key: 'code',
-          tdClass: '',
+          key: 'code_role',
+          tdClass: 'text-left',
         },
         {
-          label: 'Sub Menu ',
-          key: 'title',
-          tdClass: '',
+          label: 'Nama',
+          key: 'name_role',
+          tdClass: 'text-left',
         },
         {
           label: 'Aktif?',
-          key: 'is_active_code',
+          key: 'is_active_role_code',
+          tdClass: 'text-left',
         },
       ],
 
       header: [],
 
-      parent_id: this.$route.params.id,
+      menu_id: this.$route.params.id,
 
       fields_header: [
         {
           label: 'Kode',
           key: 'code',
-          tdClass: 'text-left',
+          tdClass: '',
         },
         {
-          label: 'Menu Utama',
+          label: 'Sub Menu',
           key: 'title',
-          tdClass: 'text-left',
         },
-
         {
           label: 'Aktif?',
           key: 'is_active_code',
-          tdClass: 'text-left',
         },
       ],
+      sweet_alert: {
+        title: '',
+        icon: '',
+      },
+
       //state search
       search: '',
     }
@@ -236,8 +221,7 @@ export default {
     const { id } = route.params
 
     const posts = await $axios.$get(
-      // `/api/admin/location/site_detail/${id}?q=${search}&page=${page}`
-      `/api/admin/detail/sub_menu/${id}?q=${search}&page=${page}`
+      `/api/admin/detail/menu_has_role/${id}?q=${search}&page=${page}`
     )
 
     return {
@@ -255,28 +239,6 @@ export default {
           q: this.$route.query.q,
           page: page,
         },
-      })
-    },
-
-    exportData() {
-      const headers = {
-        'Content-Type': 'application/json',
-      }
-
-      this.$axios({
-        url: `/api/admin/sub_menu/export`,
-        method: 'GET',
-        responseType: 'blob',
-        headers: headers, // important
-      }).then((response) => {
-        this.isLoading = false
-        const url = window.URL.createObjectURL(new Blob([response.data]))
-        const link = document.createElement('a')
-        link.href = url
-        var fileName = 'Sub-Menu.xlsx'
-        link.setAttribute('download', fileName) //or any other extension
-        document.body.appendChild(link)
-        link.click()
       })
     },
 
@@ -307,21 +269,52 @@ export default {
           if (result.isConfirmed) {
             //delete tag from server
 
-            this.$axios.delete(`/api/admin/menu/${id}`).then(() => {
-              //feresh data
-              this.$nuxt.refresh()
+            this.$axios
+              .delete(`/api/admin/menu_has_role/${id}`)
+              .then((response) => {
+                //feresh data
+                this.$nuxt.refresh()
+                if (response.data.success == true) {
+                  this.sweet_alert.title = 'BERHASIL!'
+                  this.sweet_alert.icon = 'success'
+                } else {
+                  this.sweet_alert.title = 'GAGAL!'
+                  this.sweet_alert.icon = 'error'
+                }
 
-              //alert
-              this.$swal.fire({
-                title: 'BERHASIL!',
-                text: 'Data Berhasil Dihapus!',
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 2000,
+                //alert
+                this.$swal.fire({
+                  title: this.sweet_alert.title,
+                  text: response.data.message,
+                  icon: this.sweet_alert.icon,
+                  showConfirmButton: false,
+                  timer: 2000,
+                })
               })
-            })
           }
         })
+    },
+
+    exportData() {
+      const headers = {
+        'Content-Type': 'application/json',
+      }
+
+      this.$axios({
+        url: `/api/admin/menu_has_role/export`,
+        method: 'GET',
+        responseType: 'blob',
+        headers: headers, // important
+      }).then((response) => {
+        this.isLoading = false
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        var fileName = 'Menu-Has-Role.xlsx'
+        link.setAttribute('download', fileName) //or any other extension
+        document.body.appendChild(link)
+        link.click()
+      })
     },
   },
 
@@ -332,11 +325,12 @@ export default {
 
       .then((response) => {
         //console.log(JSON.stringify(response.data.data))
+        console.log('rrd')
         console.log(response.data.data)
-        console.log('rdr')
         console.log(this.$route.params.id)
         this.header.push(response.data.data)
         // this.detail(response.data)
+        // console.log(this.detail)
       })
   },
 }
