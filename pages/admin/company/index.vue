@@ -94,6 +94,8 @@
 </template>
 
 <script>
+
+
 export default {
   layout: 'admin',
 
@@ -145,6 +147,8 @@ export default {
   watchQuery: ['q', 'page'],
 
   async asyncData({ $axios, query }) {
+   
+
     //page
     let page = query.page ? parseInt(query.page) : ''
 
@@ -246,6 +250,7 @@ export default {
       })
     },
   },
+ 
 }
 </script>
 

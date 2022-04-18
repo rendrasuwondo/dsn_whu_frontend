@@ -3,8 +3,9 @@
     <div class="wrapper">
       <!-- Header -->
       <Header />
-      <!-- /.Hader -->
 
+      <!-- /.Hader -->
+  
       <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <a to="/admin/dashboard" class="brand-link text-center mt-2">
           <span class="brand-text font-weight-bold">ERP - WHU</span>
