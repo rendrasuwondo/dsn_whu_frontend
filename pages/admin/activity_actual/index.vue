@@ -220,7 +220,7 @@ export default {
   },
   data() {
     return {
-      loading: true,
+      loading: false,
       allSelected: false,
       visibleRows: [],
       show_page: false,
@@ -304,8 +304,8 @@ export default {
           //   }),
         },
       ],
-      company_code: 'DIN',
-      department_code: 'LK3',
+      company_code: '',
+      department_code: '',
       param_activitied_at_prepend: this.$route.query.activitied_at_prepend,
       param_activitied_at_append: this.$route.query.activitied_at_append,
       query_foreman_id: '',

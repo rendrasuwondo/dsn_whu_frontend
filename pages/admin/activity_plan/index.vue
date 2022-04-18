@@ -72,9 +72,9 @@
                   <b-col cols="7">
                     <div class="form-group">
                       <multiselect
-                        v-model="id_activity"
+                        v-model="activity_id"
                         :options="activity"
-                        label="code"
+                        label="name"
                         track-by="id"
                         :searchable="true"
                       ></multiselect></div
@@ -259,6 +259,7 @@ export default {
           tdClass: 'align-middle text-left text-nowrap',
         },
       ],
+       query_activity_id: '',
     }
   },
 
@@ -268,7 +269,7 @@ export default {
     'page',
     'activitied_at_prepend',
     'activitied_at_append',
-    'activity_id',
+    'q_activity_id',
   ],
 
   async asyncData({ $axios, query }) {
@@ -277,7 +278,7 @@ export default {
       current.setDate(current.getDate())
       const date = `${current.getFullYear()}-${
         current.getMonth() + 1
-      }-${current.getDate()}`
+      }-${current.getDate() + 1}`
       return date
     }
 
@@ -300,30 +301,30 @@ export default {
     const activity_list = await $axios.$get(`/api/admin/lov_activity`)
 
     //activity_id
-    let activity_id = query.activity_id ? query.activity_id : ''
-    let id_activity = []
+    let q_activity_id = query.q_activity_id ? query.q_activity_id : ''
+    let activity_id = []
 
-    if (query.foreman_id) {
-      //Mandor
-      $axios.get(`/api/admin/lov_activity`).then((response) => {
-        id_activity = response.data.data
+    if (query.q_activity_id) {
+      // console.log('rendra')
+      $axios.get(`/api/admin/lov_activity?q_activity_id=${q_activity_id}`).then((response) => {
+        activity_id = response.data.data
       })
     } else {
-      id_activity = []
+      activity_id = []
 
-      activity_id = id_activity.activity_id
+      q_activity_id = activity_id.id
     }
 
-    if (activity_id == undefined) {
-      activity_id = ''
+    if (q_activity_id == undefined) {
+      q_activity_id = ''
     }
 
     //fetching posts
     const posts = await $axios.$get(
-      `/api/admin/activity_plan?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}`
+      `/api/admin/activity_plan?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_activity_id=${q_activity_id}`
     )
 
-    console.log(posts.data)
+    // console.log(posts.data)
     // this.rowcount = posts.data.total
 
     return {
@@ -372,13 +373,24 @@ export default {
 
     //searchData
     searchData() {
+      // alert('dsfds')
+      try {
+        if (this.activity_id.id === null) {
+          this.query_activity_id = ''
+        } else {
+          this.query_activity_id = this.activity_id.id
+            ? this.activity_id.id
+            : ''
+        }
+      } catch (err) {}
+
       this.$router.push({
         path: this.$route.path,
         query: {
           q: this.search,
           activitied_at_prepend: this.activitied_at_start,
           activitied_at_append: this.activitied_at_end,
-          activity_id: activity_id,
+          q_activity_id: this.query_activity_id,
         },
       })
     },
