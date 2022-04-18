@@ -407,11 +407,7 @@ export default {
       console.log(`/api/admin/activity_plan/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_activity_id=${this.activity_id.id}`)
 
       this.$axios({
-<<<<<<< HEAD
-        url: `/api/admin/activity_plan/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_activity_id=${q_activity_id}`,
-=======
         url: `/api/admin/activity_plan/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_activity_id=${this.activity_id}`,
->>>>>>> f02bfd7e511022e79b75c57e17af5c2f0d156b93
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
@@ -423,11 +419,7 @@ export default {
         var fileName = 'Activity_Plan.xlsx'
         link.setAttribute('download', fileName) //or any other extension
         document.body.appendChild(link)
-        link.click()
       })
-    },
-
-    //deletePost method
     deletePost(id) {
       this.$swal
         .fire({
