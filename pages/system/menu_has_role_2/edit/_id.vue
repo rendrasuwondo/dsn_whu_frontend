@@ -237,6 +237,7 @@ export default {
       this.$router.push({
         name: 'system-menu_has_role_2-id',
         params: { id: this.field.menu_id, r: 1 },
+        query: { sub_menu_id: this.field.menu_id },
       })
     },
 

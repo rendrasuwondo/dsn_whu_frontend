@@ -11,7 +11,15 @@
             <table>
               <tr>
                 <td>
-                  <nuxt-link :to="{ name: 'system-sub_menu' }" class="nav-link">
+                  <nuxt-link
+                    :to="{
+                      name: 'system-sub_menu-id',
+                      params: { id: this.$route.params.id },
+                      query: { menu_id: this.$route.params.parent_id },
+                    }"
+                    class="nav-link"
+                  >
+                    <!-- params: { id: this.$route.query.sub_menu_id }, -->
                     <i class="nav-icon fas fa-th"></i>
                     Sub Menu
                   </nuxt-link>
@@ -40,6 +48,7 @@
                   :to="{
                     name: 'system-menu_has_role_2-create-id',
                     params: { id: menu_id, r: 1 },
+                    query: { sub_menu_id: menu_id },
                   }"
                   class="btn btn-info btn-sm"
                   style="padding-top: 8px"
@@ -90,11 +99,15 @@
                 :to="{
                   name: 'system-menu_has_role_2-edit-id',
                   params: { id: row.item.id, r: 1 },
+                  query: { sub_menu_id: row.item.id },
                 }"
                 variant="link"
                 size=""
                 title="Edit"
               >
+                <!-- query: { sub_menu_id: this.$route.query.sub_menu_id }, -->
+
+                <!-- query: { sub_menu_id: this.$route.query.sub_menu_id }, -->
                 <i class="fa fa-pencil-alt"></i>
               </b-button>
 
@@ -321,7 +334,6 @@ export default {
   mounted() {
     this.$axios
       .get(`/api/admin/master/menu/${this.$route.params.id}`)
-      // .get(`/api/admin/site/site_loc/${this.$route.params.id}`)
 
       .then((response) => {
         //console.log(JSON.stringify(response.data.data))

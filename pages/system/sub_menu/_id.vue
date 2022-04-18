@@ -11,7 +11,12 @@
             <table>
               <tr>
                 <td>
-                  <nuxt-link :to="{ name: 'system-menu' }" class="nav-link">
+                  <nuxt-link
+                    :to="{
+                      name: 'system-menu',
+                    }"
+                    class="nav-link"
+                  >
                     <i class="nav-icon fas fa-th"></i>
                     Menu
                   </nuxt-link>
@@ -106,23 +111,16 @@
                 ><i class="fa fa-trash"></i
               ></b-button>
             </template>
-            <template v-slot:cell(detail)="row">
-              <b-button
-                :to="{
-                  name: 'admin-sub_menu',
-                  params: { id: row.item.id },
-                }"
-                variant=""
-                size="sm"
-              >
-                Detail<i class="fa fa-plus-circle"></i>
-              </b-button>
-            </template>
+
             <template v-slot:cell(role)="row">
               <b-button
                 :to="{
                   name: 'system-menu_has_role_2-id',
                   params: { id: row.item.id },
+                  query: {
+                    menu_id: row.item.parent_id,
+                    sub_menu_id: row.item.id,
+                  },
                 }"
                 variant="link"
                 size=""

@@ -80,6 +80,9 @@
                 :to="{
                   name: 'system-sub_menu-id',
                   params: { id: row.item.id },
+                  query: {
+                    menu_id: row.item.id,
+                  },
                 }"
                 variant="link"
                 size=""
