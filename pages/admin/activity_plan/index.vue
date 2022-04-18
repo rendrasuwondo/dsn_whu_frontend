@@ -378,10 +378,9 @@ export default {
       try {
         if (this.activity_id.id === null) {
           this.query_activity_id = this.$route.query.q_activity_id
-        } else if (this.activity_id.id === undefined)  {
-            this.query_activity_id = this.$route.query.q_activity_id
-        }
-        else {
+        } else if (this.activity_id.id === undefined) {
+          this.query_activity_id = this.$route.query.q_activity_id
+        } else {
           this.query_activity_id = this.activity_id.id
             ? this.activity_id.id
             : ''
@@ -404,7 +403,9 @@ export default {
         'Content-Type': 'application/json',
       }
 
-      console.log(`/api/admin/activity_plan/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_activity_id=${this.activity_id.id}`)
+      console.log(
+        `/api/admin/activity_plan/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_activity_id=${this.activity_id.id}`
+      )
 
       this.$axios({
         url: `/api/admin/activity_plan/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_activity_id=${this.activity_id}`,
@@ -420,6 +421,8 @@ export default {
         link.setAttribute('download', fileName) //or any other extension
         document.body.appendChild(link)
       })
+    },
+
     deletePost(id) {
       this.$swal
         .fire({
