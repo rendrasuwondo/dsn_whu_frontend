@@ -436,9 +436,7 @@ export default {
     }
   },
 
-  mounted() {
-
-  },
+  mounted() {},
 
   methods: {
     changePage(page) {
@@ -584,19 +582,6 @@ export default {
             var i = 0
             let n = this.selectedData.length
 
-<<<<<<< HEAD
-                  if (i >= n) {
-                    this.$swal.fire({
-                      title: 'BERHASIL!',
-                      text: 'Data Berhasil Diupdate!',
-                      icon: 'success',
-                      showConfirmButton: false,
-                      timer: 2000,
-                    })
-
-                    this.$nuxt.refresh()
-                  }
-=======
             this.$axios
               .post(
                 `/api/admin/update_activity_actual_status`,
@@ -609,12 +594,10 @@ export default {
                   icon: 'success',
                   showConfirmButton: false,
                   timer: 2000,
->>>>>>> 6e7457ecd1b0afcdc461a2d9055ed025df2201ef
                 })
 
                 this.$nuxt.refresh()
               })
-
           }
         })
     },
@@ -641,7 +624,6 @@ export default {
         })
     },
   },
-
 }
 </script>
 

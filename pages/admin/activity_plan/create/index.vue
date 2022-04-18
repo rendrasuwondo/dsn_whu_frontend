@@ -234,13 +234,7 @@ export default {
   data() {
     return {
       value: '',
-      options: [
-        { name: 'Vue.js', language: 'JavaScript' },
-        { name: 'Rails', language: 'Ruby' },
-        { name: 'Sinatra', language: 'Ruby' },
-        { name: 'Laravel', language: 'PHP', $isDisabled: true },
-        { name: 'Phoenix', language: 'Elixir' },
-      ],
+
       show_hk: true,
       show_rate: false,
       price: '',
