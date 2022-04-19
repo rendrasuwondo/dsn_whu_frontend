@@ -420,6 +420,7 @@ export default {
         link.setAttribute('download', fileName) //or any other extension
         document.body.appendChild(link)
       })
+    },
     deletePost(id) {
       this.$swal
         .fire({

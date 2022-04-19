@@ -15,7 +15,7 @@
                     :to="{
                       name: 'system-sub_menu-id',
                       params: { id: this.$route.params.id },
-                      query: { menu_id: this.$route.params.parent_id },
+                      query: { menu_id: this.$route.query.menu_id },
                     }"
                     class="nav-link"
                   >
