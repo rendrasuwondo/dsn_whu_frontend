@@ -16,16 +16,17 @@
           <form @submit.prevent="storePost">
             <div class="form-group">
               <label>Afdeling</label>
-              <input
-                type="text"
+              <multiselect
                 v-model="field.afdeling_id"
-                placeholder=""
-                class="form-control"
-                readonly
-              />
-              <div v-if="validation.afdeling" class="mt-2">
+                :options="afdeling"
+                label="id"
+                track-by="id"
+                :searchable="true"
+                @input="onChangeAfdeling"
+              ></multiselect>
+              <div v-if="validation.afdeling_id" class="mt-2">
                 <b-alert show variant="danger">{{
-                  validation.afdeling[0]
+                  validation.afdeling_id[0]
                 }}</b-alert>
               </div>
             </div>
@@ -242,7 +243,8 @@ export default {
       state: 'disabled',
 
       field: {
-        afdeling_id: this.$auth.user.employee.afdeling_id,
+        // afdeling_id: this.$auth.user.employee.afdeling_id,
+        afdeling_id: '',
         activity_id: '',
         activitied_at: '',
         man_days: '',
@@ -260,6 +262,7 @@ export default {
 
       //state categories
       activity: [],
+      afdeling: [],
 
       //state categories
       categories: [],
@@ -287,7 +290,7 @@ export default {
 
     current0.setDate(current0.getDate() + 1)
 
-    console.log(current0)
+    // console.log(this.$auth.user.employee)
 
     this.field.created_at = this.currentDate()
     this.field.updated_at = this.currentDate()
@@ -335,7 +338,25 @@ export default {
         this.tags = response.data.data.data
       })
 
-    console.log(this.$auth.user.employee.afdeling_id)
+    //fetching data tags
+    this.$axios
+      .get(
+        `/api/admin/lov_afdeling?company_id=${this.$auth.user.employee.company_id}`
+      )
+
+      .then((response) => {
+        //assing response data to state "tags"
+        this.afdeling = response.data.data
+      })
+    // console.log(this.$auth.user.employee.afdeling_id)
+
+    this.$axios
+      .get(`/api/admin/lov_afdeling?id=${this.$auth.user.employee.afdeling_id}`)
+      .then((response) => {
+        console.log('rdr')
+        console.log(response.data.data)
+        this.field.afdeling_id = response.data.data
+      })
   },
 
   methods: {
@@ -348,6 +369,19 @@ export default {
         this.show_hk = true
         this.show_rate = false
         this.field.flexrate = ''
+      }
+    },
+    onChangeAfdeling() {
+      // alert(this.$cookies.get('activity_group_code'))
+
+      if (this.$cookies.get('activity_group_code') == 'RAWAT') {
+        this.$axios
+          .get(
+            `/api/admin/lov_afdeling?id=${this.$auth.user.employee.afdeling_id}`
+          )
+          .then((response) => {
+            this.field.afdeling_id = response.data.data
+          })
       }
     },
     back() {
@@ -366,8 +400,12 @@ export default {
       return date
     },
 
+    customLabel(afdeling) {
+      return `${afdeling.id}` + '-' + `${afdeling.code}`
+    },
+
     handleFileChange(e) {
-      //get image
+      id //get image
       let image = (this.post.image = e.target.files[0])
 
       //check fileType
@@ -396,16 +434,31 @@ export default {
 
       this.value = this.field.activitied_at
 
+      if (this.field.afdeling_id.id == undefined) {
+        formData.append('afdeling_id', this.$auth.user.employee.afdeling_id)
+      } else {
+        formData.append(
+          'afdeling_id',
+          this.field.afdeling_id
+            ? this.field.afdeling_id.id
+            : this.$auth.user.employee.afdeling_id
+        )
+      }
+
       formData.append(
         'id',
         this.field.activity_id
           ? this.field.activity_id.id
-          : '' + this.field.afdeling_id + this.field.activitied_at
+          : '' + this.field.afdeling_id.id + this.field.activitied_at
       )
-      formData.append('afdeling_id', this.field.afdeling_id)
       formData.append(
         'activity_id',
         this.field.activity_id ? this.field.activity_id.id : ''
+      )
+
+      formData.append(
+        'activity_group_id',
+        this.$auth.user.employee.activity_group_id
       )
       formData.append('activitied_at', this.field.activitied_at)
       formData.append('man_days', this.field.man_days)
@@ -445,6 +498,16 @@ export default {
         })
         .catch((error) => {
           //assign error to state "validation"
+          // alert(error)
+          // console.log(error.response.data.message)
+
+          this.$swal.fire({
+            title: 'ERROR!',
+            text: error.response.data.message,
+            icon: 'success',
+            showConfirmButton: true,
+          })
+
           this.validation = error.response.data
         })
     },
