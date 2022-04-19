@@ -62,7 +62,7 @@
                 :to="{
                   name: 'admin-employee-edit-id',
                   params: { id: row.item.id },
-                   query: {q: param_q}
+                  query: { q: param_q },
                 }"
                 variant="link"
                 size="sm"
@@ -105,21 +105,36 @@
               </b-button>
             </template>
           </b-table>
-          <b-tooltip target="myAfdeling" triggers="hover" container="myAfdeling">
+          <b-tooltip
+            target="myAfdeling"
+            triggers="hover"
+            container="myAfdeling"
+          >
             Afdeling
           </b-tooltip>
-          <b-tooltip target="myDepartment" triggers="hover" container="myDepartment">
+          <b-tooltip
+            target="myDepartment"
+            triggers="hover"
+            container="myDepartment"
+          >
             Departemen
           </b-tooltip>
           <!-- pagination -->
-          <b-pagination
-            v-model="pagination.current_page"
-            :total-rows="pagination.total"
-            :per-page="pagination.per_page"
-            @change="changePage"
-            align="right"
-            class="mt-3"
-          ></b-pagination>
+          <b-row>
+            <b-col
+              ><b-pagination
+                v-model="pagination.current_page"
+                :total-rows="pagination.total"
+                :per-page="pagination.per_page"
+                @change="changePage"
+                align="left"
+                class="mt-1"
+              ></b-pagination
+            ></b-col>
+            <b-col class="text-right" align-self="center"
+              >{{ rowcount }} data</b-col
+            >
+          </b-row>
         </div>
       </div>
     </section>
@@ -137,7 +152,7 @@ export default {
   },
   data() {
     return {
-      param_q:this.$route.query.q,
+      param_q: this.$route.query.q,
       fields: [
         {
           label: 'Actions',
@@ -186,8 +201,8 @@ export default {
           key: 'department_code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
           thAttr: {
-            id: "myDepartment"
-          }
+            id: 'myDepartment',
+          },
         },
         {
           label: 'Lokasi',
@@ -198,16 +213,16 @@ export default {
           label: 'Afd',
           key: 'afdeling_code',
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-            thAttr: {
-            id: "myAfdeling"
-          }
+          thAttr: {
+            id: 'myAfdeling',
+          },
         },
         {
           label: 'Jabatan',
           key: 'position_code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
-         {
+        {
           label: 'Grup',
           key: 'activity_group_code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
@@ -247,6 +262,7 @@ export default {
       posts: posts.data.data,
       pagination: posts.data,
       search: search,
+      rowcount: posts.data.total,
     }
   },
 

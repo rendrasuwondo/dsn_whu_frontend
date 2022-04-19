@@ -79,14 +79,21 @@
             </template>
           </b-table>
           <!-- pagination -->
-          <b-pagination
-            v-model="pagination.current_page"
-            :total-rows="pagination.total"
-            :per-page="pagination.per_page"
-            @change="changePage"
-            align="right"
-            class="mt-3"
-          ></b-pagination>
+          <b-row>
+            <b-col
+              ><b-pagination
+                v-model="pagination.current_page"
+                :total-rows="pagination.total"
+                :per-page="pagination.per_page"
+                @change="changePage"
+                align="left"
+                class="mt-1"
+              ></b-pagination
+            ></b-col>
+            <b-col class="text-right" align-self="center"
+              >{{ rowcount }} data</b-col
+            >
+          </b-row>
         </div>
       </div>
     </section>
@@ -143,8 +150,11 @@ export default {
         {
           label: 'Point',
           key: 'point',
-          formatter: (value, key, item) => value.toLocaleString(undefined, {minimumFractionDigits: 0,
-		maximumFractionDigits: 1}),
+          formatter: (value, key, item) =>
+            value.toLocaleString(undefined, {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 1,
+            }),
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
@@ -182,6 +192,7 @@ export default {
       posts: posts.data.data,
       pagination: posts.data,
       search: search,
+      rowcount: posts.data.total,
     }
   },
 

@@ -126,6 +126,11 @@
             align="right"
             class="mt-3"
           ></b-pagination> -->
+          <b-row>
+            <b-col class="text-right" align-self="center"
+              >{{ rowcount }} data</b-col
+            >
+          </b-row>
         </div>
       </div>
     </section>
@@ -227,6 +232,8 @@ export default {
     return {
       posts: posts.data,
       search: search,
+      rowcount: posts.data.total,
+
       activitied_at_start: activitied_at_start,
       activitied_at_end: activitied_at_end,
     }
