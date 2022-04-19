@@ -230,10 +230,9 @@ export default {
     )
 
     return {
-      posts: posts.data,
+      posts: posts.data.data,
       search: search,
       rowcount: posts.data.total,
-
       activitied_at_start: activitied_at_start,
       activitied_at_end: activitied_at_end,
     }
