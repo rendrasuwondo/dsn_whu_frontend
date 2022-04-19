@@ -17,7 +17,12 @@
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <nuxt-link
-                  :to="{ name: 'admin-batch_bibitan-create' }"
+                  :to="{
+                    name: 'admin-batch_bibitan-create',
+                    query: {
+                      company_id: this.$auth.user.employee.company_id,
+                    },
+                  }"
                   class="btn btn-info btn-sm"
                   style="padding-top: 8px"
                   title="Tambah"
@@ -62,6 +67,7 @@
                 :to="{
                   name: 'admin-batch_bibitan-edit-id',
                   params: { id: row.item.id },
+                  query: { company_id: row.item.company_id },
                 }"
                 variant="link"
                 size="sm"

@@ -14,7 +14,7 @@
         <div class="card-body">
           <form @submit.prevent="storePost">
             <div class="form-group">
-              <label>Block</label>
+              <label>Batch</label>
               <input
                 type="text"
                 v-model="field.block"
@@ -30,7 +30,7 @@
             </div>
 
             <div class="form-group">
-              <label>Block SAP</label>
+              <label>Batch SAP</label>
               <input
                 type="text"
                 v-model="field.block_sap"
@@ -227,6 +227,7 @@ export default {
         updated_by: '',
       },
 
+      company_id: this.$route.query.company_id,
       afdeling: [],
 
       progeny: [],
@@ -250,7 +251,9 @@ export default {
 
     //Data afdeling
     this.$axios
-      .get('/api/admin/lov_afdeling')
+      .get(
+        '/api/admin/lov_afdeling?company_id=' + this.company_id + '&code_sap=X'
+      )
 
       .then((response) => {
         this.afdeling = response.data.data
