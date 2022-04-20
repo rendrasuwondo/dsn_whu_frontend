@@ -38,11 +38,11 @@
                 placeholder="Masukkan Nama Menu"
                 class="form-control"
               />
-              <div v-if="validation.title" class="mt-2">
+              <!-- <div v-if="validation.title" class="mt-2">
                 <b-alert show variant="danger">{{
                   validation.title[0]
                 }}</b-alert>
-              </div>
+              </div> -->
             </div>
 
             <div class="form-group">

@@ -166,12 +166,12 @@ export default {
         },
         {
           label: 'Kode',
-          key: 'code_role',
+          key: 'role_code',
           tdClass: 'text-left',
         },
         {
           label: 'Nama',
-          key: 'name_role',
+          key: 'role_name',
           tdClass: 'text-left',
         },
         {
@@ -230,7 +230,7 @@ export default {
     const posts = await $axios.$get(
       `/api/admin/detail/menu_has_role/${id}?q=${search}&page=${page}`
     )
-
+    console.log(posts)
     return {
       posts: posts.data.data,
       pagination: posts.data,

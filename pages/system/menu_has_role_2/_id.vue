@@ -179,12 +179,12 @@ export default {
         },
         {
           label: 'Kode',
-          key: 'code_role',
+          key: 'role_code',
           tdClass: 'text-left',
         },
         {
           label: 'Nama',
-          key: 'name_role',
+          key: 'role_name',
           tdClass: 'text-left',
         },
         {
