@@ -414,6 +414,7 @@ export default {
       foreman_id = ''
     }
     // console.log(foreman_id)
+   
     const posts = await $axios.$get(
       `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_id}`
     )
@@ -423,12 +424,12 @@ export default {
     // foreman_employee_id = 490
     console.log('rdr')
 
-    console.log(posts.data.length)
+    console.log(posts.data)
     return {
       posts: posts.data,
       pagination: posts.data,
       search: search,
-      rowcount: posts.data.total,
+      rowcount: posts.data.length,
       activitied_at_start: activitied_at_start,
       activitied_at_end: activitied_at_end,
       foreman: foreman_list.data,
