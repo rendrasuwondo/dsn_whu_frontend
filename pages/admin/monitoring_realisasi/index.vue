@@ -292,16 +292,6 @@ export default {
     let foreman_id = query.foreman_id ? query.foreman_id : ''
     let foreman_employee_id = []
 
-    console.log('rdr')
-    console.log(
-      `/api/admin/monitoring_realisasi/export?activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_id}`
-    )
-
-    // console.log('rendra')
-    // console.log(
-    //   `/api/admin/monitoring_realisasi/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&foreman_id=${this.foreman_id}`
-    // )
-
     // try {
     if (query.foreman_id) {
       //Mandor
@@ -440,7 +430,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/monitoring_realisasi/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&foreman_id=${this.foreman_id}`,
+        url: `/api/admin/monitoring_realisasi/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&foreman_id=${this.$route.query.foreman_id}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
@@ -457,7 +447,7 @@ export default {
 
       console.log('rendra')
       console.log(
-        `/api/admin/monitoring_realisasi/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}`
+        `/api/admin/monitoring_realisasi/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&foreman_id=${this.$route.query.foreman_id}`
       )
     },
 
