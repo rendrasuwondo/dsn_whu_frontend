@@ -284,7 +284,7 @@ export default {
       department_code: '',
 
       options_status: [
-        { value: 'A', text: 'Approve' },
+        { value: 'V', text: 'Verifikasi Asisten' },
         { value: 'R', text: 'Reject' },
       ],
 
@@ -455,6 +455,10 @@ export default {
       formData.append('description', this.field.description)
       formData.append('verification_status', this.field.verification_status)
       formData.append('is_revision', this.field.is_revision)
+      formData.append(
+        'activity_group_id',
+        this.$auth.user.employee.activity_group_id
+      )
 
       //sending data to server
       await this.$axios
