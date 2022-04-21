@@ -124,7 +124,7 @@
           >
             <template v-slot:custom-foot="data">
               <b-tr>
-                <b-td colspan="6">Total</b-td>
+                <b-td colspan="7">Total</b-td>
                 <b-td align="right"> {{ TOTAL_HK }}</b-td>
                 <b-td align="right"> {{ TOTAL_VOLUME }}</b-td>
               </b-tr>
@@ -179,6 +179,11 @@ export default {
       show_submit: true,
       foreman: [],
       fields: [
+        {
+          label: 'Status',
+          key: 'verification_status_code',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
         {
           label: 'Tanggal',
           key: 'activitied_at',
