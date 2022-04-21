@@ -66,7 +66,7 @@
                   <b-col></b-col>
                 </b-row>
               </b-container>
-              <b-container class="bv-example-row">
+              <b-container class="bv-example-row" v-show="false">
                 <b-row>
                   <b-col cols="1">Mandor</b-col>
                   <b-col cols="7">
@@ -353,7 +353,7 @@ export default {
     }
     // console.log(foreman_id)
     const posts = await $axios.$get(
-      `/api/admin/monitoring_realisasi?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_id}`
+      `/api/admin/monitoring_realisasi?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}`
     )
 
     // const profile = await $axios.$get(
@@ -435,7 +435,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/monitoring_realisasi/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&foreman_id=${this.$route.query.foreman_id}`,
+        url: `/api/admin/monitoring_realisasi/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
