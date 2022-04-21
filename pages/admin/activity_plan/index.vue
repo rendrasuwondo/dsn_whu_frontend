@@ -320,7 +320,6 @@ export default {
       q_activity_id = ''
     }
 
-
     //fetching posts
     const posts = await $axios.$get(
       `/api/admin/activity_plan?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_activity_id=${q_activity_id}`
@@ -404,12 +403,26 @@ export default {
         'Content-Type': 'application/json',
       }
 
-      console.log(
-        `/api/admin/activity_plan/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_activity_id=${this.activity_id.id}`
-      )
+        if (this.activity_id === null) {
+          this.query_activity_id = ''
+        } else if (this.activity_id.id === undefined) {
+          if (this.$route.query.q_activity_id === undefined) {
+            this.query_activity_id = ''
+          } else {
+            this.query_activity_id = this.$route.query.q_activity_id
+          }
+        } else {
+          this.query_activity_id = this.activity_id.id
+            ? this.activity_id.id
+            : ''
+        }
+     
 
+      console.log(
+        `/api/admin/activity_plan/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_activity_id=${this.query_activity_id}`
+      )
       this.$axios({
-        url: `/api/admin/activity_plan/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_activity_id=${this.activity_id}`,
+        url: `/api/admin/activity_plan/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_activity_id=${this.query_activity_id}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
@@ -418,9 +431,10 @@ export default {
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
-        var fileName = 'Activity_Plan.xlsx'
+        var fileName = 'ActivityPlan.xlsx'
         link.setAttribute('download', fileName) //or any other extension
         document.body.appendChild(link)
+        link.click()
       })
     },
 
