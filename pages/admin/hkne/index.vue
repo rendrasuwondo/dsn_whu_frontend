@@ -228,9 +228,9 @@ export default {
     const posts = await $axios.$get(
       `/api/admin/hkne?q=${search}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}`
     )
-
+ 
     return {
-      posts: posts.data.data,
+      posts: posts.data,
       search: search,
       rowcount: posts.data.length,
       activitied_at_start: activitied_at_start,

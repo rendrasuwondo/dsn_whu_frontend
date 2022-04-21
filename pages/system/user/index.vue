@@ -167,6 +167,14 @@ export default {
           key: 'name_employee',
         },
         {
+          label: 'Jabatan',
+          key: 'position_code',
+        },
+        {
+          label: 'Departemen',
+          key: 'department_code',
+        },
+        {
           label: 'Email',
           key: 'email',
         },
