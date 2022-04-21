@@ -231,7 +231,7 @@ export default {
     return {
       posts: posts.data,
       search: search,
-      rowcount: posts.data.total,
+      rowcount: posts.data.length,
       activitied_at_start: activitied_at_start,
       activitied_at_end: activitied_at_end,
     }

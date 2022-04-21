@@ -428,7 +428,7 @@ export default {
       posts: posts.data,
       pagination: posts.data,
       search: search,
-      rowcount: posts.data.total,
+      rowcount: posts.data.length,
       activitied_at_start: activitied_at_start,
       activitied_at_end: activitied_at_end,
       foreman: foreman_list.data,

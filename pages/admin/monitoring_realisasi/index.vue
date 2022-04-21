@@ -87,13 +87,6 @@
           <div class="form-group">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
-                <nuxt-link
-                  :to="{ name: 'admin-activity_actual-create' }"
-                  class="btn btn-info btn-sm"
-                  style="padding-top: 8px"
-                  title="Tambah"
-                  ><i class="fa fa-plus-circle"></i>
-                </nuxt-link>
                 <button
                   title="Export To Excel"
                   class="btn btn-info"
@@ -129,49 +122,8 @@
             show-empty
             v-model="visibleRows"
           >
-            <template v-slot:head(selected)="data">
-              <span
-                ><b-form-checkbox
-                  @click.native.stop
-                  @change="select"
-                  v-model="allSelected"
-                >
-                </b-form-checkbox
-              ></span>
-            </template>
-            <template v-slot:cell(selected)="row">
-              <b-form-group>
-                <input type="checkbox" v-model="row.item.selected" />
-              </b-form-group>
-            </template>
-            <template v-slot:cell(actions)="row">
-              <b-button
-                :to="{
-                  name: 'admin-activity_actual-edit-id',
-                  params: { id: row.item.id },
-                  query: {
-                    activitied_at_prepend: param_activitied_at_prepend,
-                    activitied_at_append: param_activitied_at_append,
-                  },
-                }"
-                variant="link"
-                size="sm"
-                title="Edit"
-              >
-                <i class="fa fa-pencil-alt"></i>
-              </b-button>
-            </template>
             <template v-slot:custom-foot="data">
               <b-tr>
-                <b-td colspan="3"
-                  ><b-button
-                    size="sm"
-                    variant="outline-primary"
-                    @click="Submit"
-                    v-if="rowcount > 0"
-                    >Verifikasi</b-button
-                  ></b-td
-                >
                 <b-td colspan="6">Total</b-td>
                 <b-td align="right"> {{ TOTAL_HK }}</b-td>
                 <b-td align="right"> {{ TOTAL_VOLUME }}</b-td>
@@ -187,14 +139,14 @@
           <b-row v-show="show_page">
             <b-col>
               <!-- pagination -->
-              <b-pagination
+              <!-- <b-pagination
                 v-model="pagination.current_page"
                 :total-rows="pagination.total"
                 :per-page="pagination.per_page"
                 @change="changePage"
                 align="fill"
                 class="mt-3"
-              ></b-pagination>
+              ></b-pagination> -->
             </b-col>
             <b-col class="text-right" align-self="center"
               >{{ rowcount }} data</b-col
@@ -227,22 +179,6 @@ export default {
       show_submit: true,
       foreman: [],
       fields: [
-        // {
-        //   label: 'Approve',
-        //   key: 'selected',
-        //   tdClass: 'align-middle text-center text-nowrap nameOfTheClass ',
-        //   sortable: false,
-        // },
-        // {
-        //   label: 'Actions',
-        //   key: 'actions',
-        //   tdClass: 'align-middle text-left text-nowrap nameOfTheClass ',
-        // },
-        {
-          label: 'Status',
-          key: 'verification_status_code',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
         {
           label: 'Tanggal',
           key: 'activitied_at',
@@ -351,13 +287,20 @@ export default {
     const foreman_list = await $axios.$get(
       `/api/admin/lov_employee_activity_group/${company_code}/${department_code}/mandor`
     )
-
+    // alert('coba')
     //foreman_id
     let foreman_id = query.foreman_id ? query.foreman_id : ''
     let foreman_employee_id = []
 
-    // console.log('rdr')
-    // console.log(foreman_id)
+    console.log('rdr')
+    console.log(
+      `/api/admin/monitoring_realisasi/export?activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_id}`
+    )
+
+    // console.log('rendra')
+    // console.log(
+    //   `/api/admin/monitoring_realisasi/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&foreman_id=${this.foreman_id}`
+    // )
 
     // try {
     if (query.foreman_id) {
@@ -415,20 +358,20 @@ export default {
     }
     // console.log(foreman_id)
     const posts = await $axios.$get(
-      `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_id}`
+      `/api/admin/monitoring_realisasi?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_id}`
     )
 
     // const profile = await $axios.$get(
     // )
     // foreman_employee_id = 490
-    console.log('rdr')
+    // console.log('rdr')
 
-    console.log(posts.data.length)
+    // console.log(posts.data.length)
     return {
       posts: posts.data,
       pagination: posts.data,
       search: search,
-      rowcount: posts.data.total,
+      rowcount: posts.data.length,
       activitied_at_start: activitied_at_start,
       activitied_at_end: activitied_at_end,
       foreman: foreman_list.data,
@@ -491,50 +434,13 @@ export default {
       return date
     },
 
-    //deletePost method
-    deletePost(id) {
-      this.$swal
-        .fire({
-          title: 'APAKAH ANDA YAKIN ?',
-          text: 'INGIN MENGHAPUS DATA INI !',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#d33',
-          cancelButtonColor: '#3085d6',
-          confirmButtonText: 'YA, HAPUS!',
-          cancelButtonText: 'TIDAK',
-        })
-        .then((result) => {
-          if (result.isConfirmed) {
-            //delete tag from server
-
-            this.$axios.delete(`/api/admin/activity_actual/${id}`).then(() => {
-              //feresh data
-              this.$nuxt.refresh()
-
-              //alert
-              this.$swal.fire({
-                title: 'BERHASIL!',
-                text: 'Data Berhasil Dihapus!',
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 2000,
-              })
-            })
-          }
-        })
-    },
-
     exportData() {
       const headers = {
         'Content-Type': 'application/json',
       }
 
-      //  console.log('rdr')
-      //  console.log(this.activitied_at_start)
-
       this.$axios({
-        url: `/api/admin/activity_actual/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&foreman_id=${this.foreman_employee_id}`,
+        url: `/api/admin/monitoring_realisasi/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&foreman_id=${this.foreman_id}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
@@ -548,7 +454,13 @@ export default {
         document.body.appendChild(link)
         link.click()
       })
+
+      console.log('rendra')
+      console.log(
+        `/api/admin/monitoring_realisasi/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}`
+      )
     },
+
     select() {
       // alert('sa')
       // this.allSelected = !this.allSelected;
