@@ -320,6 +320,7 @@ export default {
       q_activity_id = ''
     }
 
+
     //fetching posts
     const posts = await $axios.$get(
       `/api/admin/activity_plan?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_activity_id=${q_activity_id}`
