@@ -249,7 +249,7 @@ export default {
       department_code: '',
       param_activitied_at_prepend: this.$route.query.activitied_at_prepend,
       param_activitied_at_append: this.$route.query.activitied_at_append,
-      query_foreman_id: '',
+      query_foreman_employee_id: '',
     }
   },
   watchQuery: [
@@ -257,10 +257,10 @@ export default {
     'page',
     'activitied_at_prepend',
     'activitied_at_append',
-    'q_foreman_id',
+    'q_foreman_employee_id',
   ],
 
-  async asyncData({ $axios, query, $cookies, $route }) {
+  async asyncData({ $axios, query, $cookies, $route, $auth }) {
     function currentDate() {
       const current = new Date()
       current.setDate(current.getDate())
@@ -286,47 +286,49 @@ export default {
       ? query.activitied_at_append
       : currentDate()
 
-    let department_code = $cookies.get('department_code')
-    let company_code = $cookies.get('company_code')
+    let department_code = $auth.user.employee.department_code
+    let company_code = $auth.user.employee.company_code
 
     const foreman_list = await $axios.$get(
       `/api/admin/lov_employee_activity_group/${company_code}/${department_code}/mandor`
     )
-    // alert('coba')
+
+    // console.log('coba')
+    // console.log($auth.user.employee.company_code)
+    // console.log(
+    //   `/api/admin/lov_employee_activity_group/${company_code}/${department_code}/mandor`
+    // )
     //foreman_id
-    let q_foreman_id = query.q_foreman_id ? query.q_foreman_id : ''
+    let q_foreman_employee_id = query.q_foreman_employee_id
+      ? query.q_foreman_employee_id
+      : ''
     let foreman_employee_id = []
 
     // try {
-    if (query.foreman_id) {
+    if (query.q_foreman_employee_id) {
       //Mandor
       $axios
         .get(
-          `/api/admin/lov_employee_activity_group/${company_code}/${department_code}/mandor?id=${q_foreman_id}`
+          `/api/admin/lov_employee_activity_group/${company_code}/${department_code}/mandor?id=${q_foreman_employee_id}`
         )
         .then((response) => {
+          console.log('aida')
+          console.log(response.data)
           foreman_employee_id = response.data.data
         })
     } else {
       foreman_employee_id = []
 
-      q_foreman_id = foreman_employee_id.employee_id
-    } //if (query.foreman_id) {
-
-    //  console.log('isa')
-    //  console.log($cookies.get('department_code'))
-    // } catch (err) {
-    //   foreman_id = ''
-    // }
-    //fetching posts
-    // console.log('rendra')
-
-    if (q_foreman_id == undefined) {
-      q_foreman_id = ''
+      q_foreman_employee_id = foreman_employee_id.employee_id
     }
+
+    if (q_foreman_employee_id == undefined) {
+      q_foreman_employee_id = ''
+    }
+
     // console.log(foreman_id)
     const posts = await $axios.$get(
-      `/api/admin/monitoring_realisasi?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_foreman_id=${q_foreman_id}`
+      `/api/admin/monitoring_realisasi?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_foreman_employee_id=${q_foreman_employee_id}`
     )
 
     // const profile = await $axios.$get(
@@ -362,8 +364,8 @@ export default {
           activitied_at_append: this.$route.query.activitied_at_append
             ? this.$route.query.activitied_at_append
             : this.activitied_at_end,
-          foreman_id: this.$route.query.foreman_id
-            ? this.$route.query.foreman_id
+          foreman_employee_id: this.$route.query.foreman_employee_id
+            ? this.$route.query.foreman_employee_id
             : this.foreman_employee_id,
         },
       })
@@ -374,11 +376,13 @@ export default {
 
       try {
         if (this.foreman_employee_id.employee_id === null) {
-          this.query_foreman_id = this.$route.query.q_foreman_id
+          this.query_foreman_employee_id =
+            this.$route.query.q_foreman_employee_id
         } else if (this.foreman_employee_id.employee_id === undefined) {
-          this.query_foreman_id = this.$route.query.q_foreman_id
+          this.query_foreman_employee_id =
+            this.$route.query.q_foreman_employee_id
         } else {
-          this.query_foreman_id = this.foreman_employee_id.employee_id
+          this.query_foreman_employee_id = this.foreman_employee_id.employee_id
             ? this.foreman_employee_id.employee_id
             : ''
         }
@@ -390,7 +394,7 @@ export default {
           q: this.search,
           activitied_at_prepend: this.activitied_at_start,
           activitied_at_append: this.activitied_at_end,
-          q_foreman_id: this.query_foreman_id,
+          q_foreman_employee_id: this.query_foreman_employee_id,
         },
       })
     },
@@ -409,22 +413,23 @@ export default {
         'Content-Type': 'application/json',
       }
 
-      if (this.foreman_employee_id.employee_id === null) {
-        this.query_foreman_id = ''
+      if (this.foreman_employee_id === null) {
+        this.query_foreman_employee_id = ''
       } else if (this.foreman_employee_id.employee_id === undefined) {
-        if (this.$route.query.q_foreman_id === undefined) {
-          this.query_foreman_id = ''
+        if (this.$route.query.q_foreman_employee_id === undefined) {
+          this.query_foreman_employee_id = ''
         } else {
-          this.query_foreman_id = this.$route.query.q_foreman_id
+          this.query_foreman_employee_id =
+            this.$route.query.q_foreman_employee_id
         }
       } else {
-        this.query_foreman_id = this.foreman_employee_id.employee_id
+        this.query_foreman_employee_id = this.foreman_employee_id.employee_id
           ? this.foreman_employee_id.employee_id
           : ''
       }
 
       this.$axios({
-        url: `/api/admin/monitoring_realisasi/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&foreman_id=${this.query_foreman_id}`,
+        url: `/api/admin/monitoring_realisasi/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_foreman_employee_id=${this.query_foreman_employee_id}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
@@ -441,7 +446,7 @@ export default {
 
       console.log('rendra')
       console.log(
-        `/api/admin/monitoring_realisasi/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&foreman_id=${this.query_foreman_id}`
+        `/api/admin/monitoring_realisasi/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_foreman_employee_id=${this.query_foreman_employee_id}`
       )
     },
 

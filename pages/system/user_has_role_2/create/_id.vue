@@ -244,8 +244,17 @@ export default {
         })
         .catch((error) => {
           //assign error to state "validation"
+          // alert(error)
+          // console.log(error.response.data.message)
+
+          this.$swal.fire({
+            title: 'ERROR!',
+            text: error.response.data.message,
+            icon: 'success',
+            showConfirmButton: true,
+          })
+
           this.validation = error.response.data
-          // this.validation= "sdgs"
         })
     },
   },
