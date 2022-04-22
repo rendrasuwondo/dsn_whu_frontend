@@ -165,7 +165,7 @@ export default {
         },
         {
           label: 'Status',
-          key: 'plant_status_code',
+          key: 'plant_status',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
       ],
