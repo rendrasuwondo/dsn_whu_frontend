@@ -154,7 +154,7 @@ export default {
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          label: 'Point',
+          label: 'Pokok',
           key: 'point',
           formatter: (value, key, item) =>
             value.toLocaleString(undefined, {

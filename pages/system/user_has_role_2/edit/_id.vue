@@ -23,12 +23,11 @@
                 track-by="id"
                 :searchable="true"
               ></multiselect>
-
-              <!-- <div v-if="validation.name" class="mt-2">
+              <div v-if="validation.role_id" class="mt-2">
                 <b-alert show variant="danger">{{
-                  validation.name[0]
-                }}</b-alert> -->
-              <!-- </div> -->
+                  validation.role_id[0]
+                }}</b-alert>
+              </div>
             </div>
             <div class="form-group">
               <label>Aktif?</label>
@@ -199,7 +198,6 @@ export default {
     this.$axios
       .get(`/api/admin/user_has_role/${this.$route.params.id}`)
       .then((response) => {
-
         console.log('rdr')
         console.log(response.data.data)
         //data yang diambil
@@ -271,7 +269,17 @@ export default {
           this.back()
         })
         .catch((error) => {
-          //assign error validasi
+          //assign error to state "validation"
+          // alert(error)
+          // console.log(error.response.data.message)
+
+          this.$swal.fire({
+            title: 'ERROR!',
+            text: error.response.data.message,
+            icon: 'error',
+            showConfirmButton: true,
+          })
+
           this.validation = error.response.data
         })
     },

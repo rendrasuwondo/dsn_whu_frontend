@@ -23,12 +23,11 @@
                 track-by="id"
                 :searchable="true"
               ></multiselect>
-
-              <!-- <div v-if="validation.name" class="mt-2">
+              <div v-if="validation.role_id" class="mt-2">
                 <b-alert show variant="danger">{{
-                  validation.name[0]
-                }}</b-alert> -->
-              <!-- </div> -->
+                  validation.role_id[0]
+                }}</b-alert>
+              </div>
             </div>
             <div class="form-group">
               <label>Aktif?</label>

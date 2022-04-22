@@ -23,12 +23,11 @@
                 track-by="id"
                 :searchable="true"
               ></multiselect>
-
-              <!-- <div v-if="validation.name" class="mt-2">
+              <div v-if="validation.user_id" class="mt-2">
                 <b-alert show variant="danger">{{
-                  validation.name[0]
-                }}</b-alert> -->
-              <!-- </div> -->
+                  validation.user_id[0]
+                }}</b-alert>
+              </div>
             </div>
             <div class="form-group">
               <label>Aktif?</label>
@@ -244,8 +243,17 @@ export default {
         })
         .catch((error) => {
           //assign error to state "validation"
+          // alert(error)
+          // console.log(error.response.data.message)
+
+          this.$swal.fire({
+            title: 'ERROR!',
+            text: error.response.data.message,
+            icon: 'error',
+            showConfirmButton: true,
+          })
+
           this.validation = error.response.data
-          // this.validation= "sdgs"
         })
     },
   },

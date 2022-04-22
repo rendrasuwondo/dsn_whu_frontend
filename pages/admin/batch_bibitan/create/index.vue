@@ -37,9 +37,9 @@
                 placeholder="Masukkan Blok SAP"
                 class="form-control"
               />
-              <div v-if="validation.block" class="mt-2">
+              <div v-if="validation.block_sap" class="mt-2">
                 <b-alert show variant="danger">{{
-                  validation.block[0]
+                  validation.block_sap[0]
                 }}</b-alert>
               </div>
             </div>
@@ -53,6 +53,11 @@
                 track-by="id"
                 :searchable="true"
               ></multiselect>
+              <div v-if="validation.afdeling_id" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.afdeling_id[0]
+                }}</b-alert>
+              </div>
             </div>
 
             <div class="form-group">
@@ -65,6 +70,11 @@
                 track-by="id"
                 :searchable="true"
               ></multiselect>
+              <div v-if="validation.progeny_id" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.progeny_id[0]
+                }}</b-alert>
+              </div>
             </div>
 
             <div class="form-group">
@@ -77,6 +87,11 @@
                 track-by="id"
                 :searchable="true"
               ></multiselect>
+              <div v-if="validation.plant_status_id" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.plant_status_id[0]
+                }}</b-alert>
+              </div>
             </div>
 
             <div class="form-group">
@@ -87,6 +102,11 @@
                 v-model="field.plant_month"
                 prefix=""
               ></number>
+              <div v-if="validation.plant_month" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.plant_month[0]
+                }}</b-alert>
+              </div>
             </div>
 
             <div class="form-group">
@@ -97,26 +117,26 @@
                 v-model="field.plant_year"
                 prefix=""
               ></number>
+              <div v-if="validation.plant_year" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.plant_year[0]
+                }}</b-alert>
+              </div>
             </div>
 
             <div class="form-group">
-              <label>Wide</label>
-              <input
-                type="text"
-                v-model="field.wide"
-                placeholder="Masukkan Wide"
+              <label>Pokok</label>
+              <number
                 class="form-control"
-              />
-            </div>
-
-            <div class="form-group">
-              <label>Point</label>
-              <input
-                type="text"
                 v-model="field.point"
-                placeholder="Masukkan Point"
-                class="form-control"
-              />
+                placeholder="Masukkan Nilai Pokok"
+                prefix=""
+              ></number>
+              <div v-if="validation.point" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.point[0]
+                }}</b-alert>
+              </div>
             </div>
 
             <div class="form-group">
@@ -246,7 +266,8 @@ export default {
       this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
     this.field.updated_by =
       this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
-
+    console.log('aida')
+    console.log(this.$auth.user.employee.name)
     this.$refs.block.focus()
 
     //Data afdeling
@@ -313,12 +334,9 @@ export default {
       formData.append('block_sap', this.field.block_sap)
       formData.append('plant_month', this.field.plant_month)
       formData.append('plant_year', this.field.plant_year)
-      formData.append('wide', this.field.wide)
       formData.append('point', this.field.point)
       formData.append('created_at', this.field.created_at)
-      formData.append('created_by', this.field.created_by)
       formData.append('update_at', this.field.update_at)
-      formData.append('udpate_by', this.field.udpate_by)
 
       //sending data to server
       await this.$axios

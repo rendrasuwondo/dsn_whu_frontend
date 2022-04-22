@@ -38,9 +38,9 @@
                 placeholder="Masukkan Blok SAP"
                 class="form-control"
               />
-              <div v-if="validation.block" class="mt-2">
+              <div v-if="validation.block_sap" class="mt-2">
                 <b-alert show variant="danger">{{
-                  validation.block[0]
+                  validation.block_sap[0]
                 }}</b-alert>
               </div>
             </div>
@@ -54,6 +54,11 @@
                 track-by="id"
                 :searchable="true"
               ></multiselect>
+              <div v-if="validation.afdeling_id" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.afdeling_id[0]
+                }}</b-alert>
+              </div>
             </div>
 
             <div class="form-group">
@@ -65,6 +70,11 @@
                 track-by="id"
                 :searchable="true"
               ></multiselect>
+              <div v-if="validation.progeny_id" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.progeny_id[0]
+                }}</b-alert>
+              </div>
             </div>
 
             <div class="form-group">
@@ -77,46 +87,41 @@
                 track-by="id"
                 :searchable="true"
               ></multiselect>
+              <div v-if="validation.plant_status_id" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.plant_status_id[0]
+                }}</b-alert>
+              </div>
             </div>
 
             <div class="form-group">
               <label>Plant Month</label>
-              <number
-                class="form-control"
-                placeholder="Masukkan Jumlah Plant Month"
-                v-model="field.plant_month"
-                prefix=""
-              ></number>
+              <money v-model="field.plant_month" class="form-control"></money>
+              <div v-if="validation.plant_month" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.plant_month[0]
+                }}</b-alert>
+              </div>
             </div>
 
             <div class="form-group">
               <label>Plant Year</label>
-              <number
-                class="form-control"
-                placeholder="Masukkan Jumlah Plant Year"
-                v-model="field.plant_year"
-                prefix=""
-              ></number>
+              <money v-model="field.plant_year" class="form-control"></money>
+              <div v-if="validation.plant_year" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.plant_year[0]
+                }}</b-alert>
+              </div>
             </div>
 
             <div class="form-group">
-              <label>Wide</label>
-              <input
-                type="text"
-                v-model="field.wide"
-                placeholder="Masukkan Wide"
-                class="form-control"
-              />
-            </div>
-
-            <div class="form-group">
-              <label>Point</label>
-              <input
-                type="text"
-                v-model="field.point"
-                placeholder="Masukkan Point"
-                class="form-control"
-              />
+              <label>Pokok</label>
+              <money v-model="field.point" class="form-control"></money>
+              <div v-if="validation.point" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.point[0]
+                }}</b-alert>
+              </div>
             </div>
 
             <div class="form-group">
@@ -238,6 +243,11 @@ export default {
   },
 
   mounted() {
+    this.field.created_by =
+      this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+    this.field.updated_by =
+      this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
+
     //get data field by ID
     this.$axios
       .get(`/api/admin/batch_bibitan/${this.$route.params.id}`)
