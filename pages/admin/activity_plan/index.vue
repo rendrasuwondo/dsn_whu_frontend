@@ -308,6 +308,7 @@ export default {
       $axios
         .get(`/api/admin/lov_activity?q_activity_id=${q_activity_id}`)
         .then((response) => {
+          
           activity_id = response.data.data
         })
     } else {

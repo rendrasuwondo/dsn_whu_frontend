@@ -270,6 +270,9 @@ export default {
       return date
     }
 
+    console.log('rendra')
+    console.log($auth.user)
+
     //page
     let page = query.page ? parseInt(query.page) : ''
 
