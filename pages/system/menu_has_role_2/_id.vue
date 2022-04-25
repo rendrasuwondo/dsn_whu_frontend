@@ -48,7 +48,10 @@
                   :to="{
                     name: 'system-menu_has_role_2-create-id',
                     params: { id: menu_id, r: 1 },
-                    query: { sub_menu_id: menu_id },
+                    query: {
+                      menu_id: this.$route.query.menu_id,
+                      sub_menu_id: menu_id,
+                    },
                   }"
                   class="btn btn-info btn-sm"
                   style="padding-top: 8px"
@@ -99,7 +102,9 @@
                 :to="{
                   name: 'system-menu_has_role_2-edit-id',
                   params: { id: row.item.id, r: 1 },
-                  query: { sub_menu_id: row.item.id },
+                  query: {
+                    sub_menu_id: menu_id,
+                  },
                 }"
                 variant="link"
                 size=""

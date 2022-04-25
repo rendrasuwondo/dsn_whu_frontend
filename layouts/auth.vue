@@ -8,6 +8,7 @@
       <Nuxt />
       <!-- /.card -->
     </div>
+
     <div>
       <b-button
         class="download-apk"
@@ -16,6 +17,15 @@
       >
         <b-img class="img-download" src="img/drive_logo.png" alt="logo"></b-img>
         Download Aplikasi <b>eLHM</b>
+      </b-button>
+
+      <b-button
+        class="download-pdf"
+        href="https://drive.google.com/drive/u/0/folders/1nZ1ncA1DbqyArap7paiiID-V4iajCM-p"
+        target="_blank"
+      >
+        <b-img class="img-download" src="img/pdf_logo.png" alt="logo"></b-img>
+        Tutorial Penggunaan Aplikasi
       </b-button>
     </div>
   </div>
@@ -67,13 +77,26 @@ body {
 
 .download-apk {
   margin-top: 20px;
+  margin-right: 20px;
   width: 210px;
   padding: 10px;
   background: #0c0d0e;
   font-size: 13px;
-  box-shadow: 3px 2px #f5f6fabb;
+  box-shadow: 3px 2px #f5f6faf5;
 }
 .download-apk:hover {
+  background-color: #020304;
+}
+
+.download-pdf {
+  margin-top: 20px;
+  width: 240px;
+  padding: 10px;
+  background: #0c0d0e;
+  font-size: 13px;
+  box-shadow: 3px 2px #f5f6faf5;
+}
+.download-pdf:hover {
   background-color: #020304;
 }
 
