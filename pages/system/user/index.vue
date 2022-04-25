@@ -151,7 +151,7 @@ export default {
         {
           label: 'Actions',
           key: 'actions',
-          tdClass: '',
+          tdClass: 'text-nowrap',
         },
         {
           label: 'Role',
