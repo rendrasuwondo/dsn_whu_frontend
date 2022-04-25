@@ -103,16 +103,13 @@
                   name: 'system-menu_has_role_2-edit-id',
                   params: { id: row.item.id, r: 1 },
                   query: {
-                    sub_menu_id: menu_id,
+                    menu_id: row.item.parent_id,
                   },
                 }"
                 variant="link"
                 size=""
                 title="Edit"
               >
-                <!-- query: { sub_menu_id: this.$route.query.sub_menu_id }, -->
-
-                <!-- query: { sub_menu_id: this.$route.query.sub_menu_id }, -->
                 <i class="fa fa-pencil-alt"></i>
               </b-button>
 
