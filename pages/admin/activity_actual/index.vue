@@ -319,7 +319,7 @@ export default {
     'foreman_id',
   ],
 
-  async asyncData({ $axios, query, $cookies, $route }) {
+  async asyncData({ $axios, query, $cookies, $route, $auth }) {
     function currentDate() {
       const current = new Date()
       current.setDate(current.getDate())
@@ -345,8 +345,8 @@ export default {
       ? query.activitied_at_append
       : currentDate()
 
-    let department_code = $cookies.get('department_code')
-    let company_code = $cookies.get('company_code')
+    let department_code = $auth.user.employee.department_code
+    let company_code = $auth.user.employee.company_code
 
     const foreman_list = await $axios.$get(
       `/api/admin/lov_employee_activity_group/${company_code}/${department_code}/mandor`

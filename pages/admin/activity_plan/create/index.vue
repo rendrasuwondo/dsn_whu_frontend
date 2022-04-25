@@ -339,9 +339,14 @@ export default {
       })
 
     //fetching data tags
+    let strApi = `/api/admin/lov_afdeling?company_id=${this.$auth.user.employee.company_id}`
+
+    if (this.$auth.user.employee.activity_group_code == "RAWAT") {
+      strApi = `/api/admin/lov_afdeling?company_id=${this.$auth.user.employee.company_id}&id=${this.$auth.user.employee.afdeling_id}`
+    }
+
     this.$axios
-      .get(
-        `/api/admin/lov_afdeling?company_id=${this.$auth.user.employee.company_id}`
+      .get( strApi       
       )
 
       .then((response) => {
@@ -374,7 +379,7 @@ export default {
     onChangeAfdeling() {
       // alert(this.$cookies.get('activity_group_code'))
 
-      if (this.$cookies.get('activity_group_code') == 'RAWAT') {
+      if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
         this.$axios
           .get(
             `/api/admin/lov_afdeling?id=${this.$auth.user.employee.afdeling_id}`
