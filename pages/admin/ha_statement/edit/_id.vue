@@ -100,32 +100,22 @@
 
             <div class="form-group">
               <label>Wide</label>
-              <input
-                type="text"
-                v-model="field.wide"
-                placeholder="Masukkan Wide"
-                class="form-control"
-              />
-              <div v-if="validation.progeny_id" class="mt-2">
+              <money v-model="field.wide" class="form-control"></money>
+              <div v-if="validation.wide" class="mt-2">
                 <b-alert show variant="danger">{{
-                  validation.progeny_id[0]
+                  validation.wide[0]
                 }}</b-alert>
               </div>
             </div>
 
             <div class="form-group">
               <label>Point</label>
-              <input
-                type="text"
-                v-model="field.point"
-                placeholder="Masukkan Point"
-                class="form-control"
-              />
-              <!-- <div v-if="validation.block" class="mt-2">
+              <money v-model="field.point" class="form-control"></money>
+              <div v-if="validation.point" class="mt-2">
                 <b-alert show variant="danger">{{
-                  validation.block[0]
+                  validation.point[0]
                 }}</b-alert>
-              </div> -->
+              </div>
             </div>
 
             <div class="form-group">
