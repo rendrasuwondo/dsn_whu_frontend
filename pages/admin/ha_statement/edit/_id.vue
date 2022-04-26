@@ -54,9 +54,11 @@
                 track-by="id"
                 :searchable="true"
               ></multiselect>
-              <!-- <div v-if="validation.afdeling_id" class="mt-2">
-                <b-alert show variant="danger">{{ validation.afdeling_id[0] }}</b-alert>
-              </div> -->
+              <div v-if="validation.afdeling_id" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.afdeling_id[0]
+                }}</b-alert>
+              </div>
             </div>
 
             <div class="form-group">
@@ -69,41 +71,31 @@
                 track-by="id"
                 :searchable="true"
               ></multiselect>
-              <!-- <div v-if="validation.progeny_id" class="mt-2">
+              <div v-if="validation.progeny_id" class="mt-2">
                 <b-alert show variant="danger">{{
                   validation.progeny_id[0]
                 }}</b-alert>
-              </div> -->
+              </div>
             </div>
 
             <div class="form-group">
               <label>Plant Month</label>
-              <number
-                class="form-control"
-                placeholder="Masukkan Jumlah Plant Month"
-                v-model="field.plant_month"
-                prefix=""
-              ></number>
-              <!-- <div v-if="validation.block" class="mt-2">
+              <money v-model="field.plant_month" class="form-control"></money>
+              <div v-if="validation.plant_month" class="mt-2">
                 <b-alert show variant="danger">{{
-                  validation.block[0]
+                  validation.plant_month[0]
                 }}</b-alert>
-              </div> -->
+              </div>
             </div>
 
             <div class="form-group">
               <label>Plant Year</label>
-              <number
-                class="form-control"
-                placeholder="Masukkan Jumlah Plant Year"
-                v-model="field.plant_year"
-                prefix=""
-              ></number>
-              <!-- <div v-if="validation.block" class="mt-2">
+              <money v-model="field.plant_year" class="form-control"></money>
+              <div v-if="validation.plant_year" class="mt-2">
                 <b-alert show variant="danger">{{
-                  validation.block[0]
+                  validation.plant_year[0]
                 }}</b-alert>
-              </div> -->
+              </div>
             </div>
 
             <div class="form-group">
@@ -114,11 +106,11 @@
                 placeholder="Masukkan Wide"
                 class="form-control"
               />
-              <!-- <div v-if="validation.block" class="mt-2">
+              <div v-if="validation.progeny_id" class="mt-2">
                 <b-alert show variant="danger">{{
-                  validation.block[0]
+                  validation.progeny_id[0]
                 }}</b-alert>
-              </div> -->
+              </div>
             </div>
 
             <div class="form-group">

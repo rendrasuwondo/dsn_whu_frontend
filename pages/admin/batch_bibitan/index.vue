@@ -144,7 +144,7 @@ export default {
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
-          label: 'Block',
+          label: 'Batch',
           key: 'block',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
