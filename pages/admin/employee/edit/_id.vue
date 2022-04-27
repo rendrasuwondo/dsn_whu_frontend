@@ -52,11 +52,11 @@
                 track-by="id"
                 :searchable="true"
               ></multiselect>
-              <!-- <div v-if="validation.company_id" class="mt-2">
+              <div v-if="validation.company_id" class="mt-2">
                 <b-alert show variant="danger">{{
                   validation.company_id[0]
                 }}</b-alert>
-              </div> -->
+              </div>
             </div>
 
             <div class="form-group">
@@ -69,45 +69,11 @@
                 track-by="id"
                 :searchable="true"
               ></multiselect>
-              <!-- <div v-if="validation.department_id" class="mt-2">
+              <div v-if="validation.department_id" class="mt-2">
                 <b-alert show variant="danger">{{
                   validation.department_id[0]
                 }}</b-alert>
-              </div> -->
-            </div>
-
-            <div class="form-group">
-              <label>Lokasi</label>
-
-              <multiselect
-                v-model="field.location_id"
-                :options="location"
-                label="code"
-                track-by="id"
-                :searchable="true"
-              ></multiselect>
-              <!-- <div v-if="validation.location_id" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.location_id[0]
-                }}</b-alert>
-              </div> -->
-            </div>
-
-            <div class="form-group">
-              <label>Afdeling</label>
-
-              <multiselect
-                v-model="field.afdeling_id"
-                :options="afdeling"
-                :custom-label="customLabel"
-                track-by="id"
-                :searchable="true"
-              ></multiselect>
-              <!-- <div v-if="validation.location_id" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.location_id[0]
-                }}</b-alert>
-              </div> -->
+              </div>
             </div>
 
             <div class="form-group">
@@ -120,11 +86,40 @@
                 track-by="id"
                 :searchable="true"
               ></multiselect>
-              <!-- <div v-if="validation.location_id" class="mt-2">
+              <div v-if="validation.location_id" class="mt-2">
                 <b-alert show variant="danger">{{
                   validation.location_id[0]
                 }}</b-alert>
-              </div> -->
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Lokasi</label>
+
+              <multiselect
+                v-model="field.location_id"
+                :options="location"
+                label="code"
+                track-by="id"
+                :searchable="true"
+              ></multiselect>
+              <div v-if="validation.location_id" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.location_id[0]
+                }}</b-alert>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Afdeling</label>
+
+              <multiselect
+                v-model="field.afdeling_id"
+                :options="afdeling"
+                :custom-label="customLabel"
+                track-by="id"
+                :searchable="true"
+              ></multiselect>
             </div>
 
             <div class="form-group">

@@ -87,11 +87,11 @@
                 track-by="id"
                 :searchable="true"
               ></multiselect>
-              <!-- <div v-if="validation.location_id" class="mt-2">
+              <div v-if="validation.location_id" class="mt-2">
                 <b-alert show variant="danger">{{
                   validation.location_id[0]
                 }}</b-alert>
-              </div> -->
+              </div>
             </div>
 
             <div class="form-group">
