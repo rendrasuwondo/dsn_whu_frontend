@@ -53,11 +53,11 @@
                 track-by="id"
                 :searchable="true"
               ></multiselect>
-              <!-- <div v-if="validation.company_id" class="mt-2">
+              <div v-if="validation.company_id" class="mt-2">
                 <b-alert show variant="danger">{{
                   validation.company_id[0]
                 }}</b-alert>
-              </div> -->
+              </div>
             </div>
 
             <div class="form-group">
@@ -70,11 +70,11 @@
                 track-by="id"
                 :searchable="true"
               ></multiselect>
-              <!-- <div v-if="validation.department_id" class="mt-2">
+              <div v-if="validation.department_id" class="mt-2">
                 <b-alert show variant="danger">{{
                   validation.department_id[0]
                 }}</b-alert>
-              </div> -->
+              </div>
             </div>
 
             <div class="form-group">
@@ -104,11 +104,11 @@
                 track-by="id"
                 :searchable="true"
               ></multiselect>
-              <!-- <div v-if="validation.location_id" class="mt-2">
+              <div v-if="validation.location_id" class="mt-2">
                 <b-alert show variant="danger">{{
                   validation.location_id[0]
                 }}</b-alert>
-              </div> -->
+              </div>
             </div>
 
             <div class="form-group">
@@ -366,7 +366,7 @@ export default {
         this.afdeling = response.data.data
       })
 
-      // Data activity_group
+    // Data activity_group
     this.$axios
       .get('/api/admin/lov_activity_group')
 
@@ -420,7 +420,10 @@ export default {
         'afdeling_id',
         this.field.afdeling_id ? this.field.afdeling_id.id : ''
       )
-      formData.append('activity_group_id',  this.field.activity_group_id ? this.field.activity_group_id.id : '')
+      formData.append(
+        'activity_group_id',
+        this.field.activity_group_id ? this.field.activity_group_id.id : ''
+      )
       // formData.append('company_id', this.field.company_id)
       // formData.append('position_id', this.field.position_id)
       formData.append('employee_status', this.field.employee_status)
@@ -435,7 +438,9 @@ export default {
       formData.append('udpate_by', this.field.udpate_by)
 
       console.log('rdr')
-      console.log(this.field.activity_group_id ? this.field.activity_group_id.id : '')
+      console.log(
+        this.field.activity_group_id ? this.field.activity_group_id.id : ''
+      )
 
       //sending data to server
       await this.$axios
