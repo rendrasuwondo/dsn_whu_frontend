@@ -222,6 +222,12 @@ export default {
 
     const { id } = route.params
 
+    //site
+    const site = await $axios.get(`/api/admin/master/site/${id}`)
+
+    const header = [site.data.data]
+
+    //location
     const posts = await $axios.$get(
       // `/api/admin/location/site_detail/${id}?q=${search}&page=${page}`
       `/api/admin/detail/location/${id}?q=${search}&page=${page}`
@@ -232,6 +238,7 @@ export default {
       pagination: posts.data,
       search: search,
       rowcount: posts.data.total,
+      header: header,
     }
   },
 
@@ -315,18 +322,17 @@ export default {
   },
 
   mounted() {
-    this.$axios
-      .get(`/api/admin/master/site/${this.$route.params.id}`)
-      // .get(`/api/admin/site/site_loc/${this.$route.params.id}`)
-
-      .then((response) => {
-        //console.log(JSON.stringify(response.data.data))
-        // console.log('rdr')
-        console.log(response.data.data.site_id)
-        this.header.push(response.data.data)
-        // this.detail(response.data)
-        // console.log(this.detail)
-      })
+    // this.$axios
+    //   .get(`/api/admin/master/site/${this.$route.params.id}`)
+    //   // .get(`/api/admin/site/site_loc/${this.$route.params.id}`)
+    //   .then((response) => {
+    //     //console.log(JSON.stringify(response.data.data))
+    //     // console.log('rdr')
+    //     console.log(response.data.data.site_id)
+    //     this.header.push(response.data.data)
+    //     // this.detail(response.data)
+    //     // console.log(this.detail)
+    //   })
   },
 }
 </script>

@@ -196,7 +196,7 @@ export default {
         },
       ],
 
-      header: [],
+      // header: [],
 
       menu_id: this.$route.params.id,
 
@@ -244,6 +244,8 @@ export default {
     //menu
     const menu = await $axios.get(`/api/admin/master/menu/${id}`)
 
+    const header = [menu.data.data]
+
     //menu_has_role
     const posts = await $axios.$get(
       `/api/admin/detail/menu_has_role/${id}?q=${search}&page=${page}`
@@ -254,7 +256,7 @@ export default {
       pagination: posts.data,
       search: search,
       rowcount: posts.data.total,
-      header: menu.data.data,
+      header: header,
     }
   },
 

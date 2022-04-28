@@ -220,7 +220,7 @@ export default {
     //search
     let search = query.q ? query.q : ''
 
-    let { user_id } = route.params.id
+    // let { user_id } = route.params.id
     //fetching posts
     // const posts = await $axios.$get(
     //   `/api/admin/site?q=${search}&page=${page}`
@@ -229,7 +229,7 @@ export default {
     const { id } = route.params
 
     //user
-    const user = await $axios.get(`/api/admin/master/users/${id}`) 
+    const user = await $axios.get(`/api/admin/master/users/${id}`)
 
     const header = [user.data.data]
 

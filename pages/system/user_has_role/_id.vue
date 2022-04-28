@@ -183,7 +183,7 @@ export default {
         },
       ],
 
-      header: [],
+      // header: [],
 
       role_id: this.$route.params.id,
 
@@ -195,7 +195,7 @@ export default {
         },
         {
           label: 'Nama',
-          key: 'name_employee',
+          key: 'name',
           tdClass: '',
         },
         {
@@ -230,7 +230,12 @@ export default {
     // )
 
     const { id } = route.params
+    //role
+    const role = await $axios.get(`/api/admin/master/role/${id}`)
 
+    const header = [role.data.data]
+
+    //user_has_role
     const posts = await $axios.$get(
       `/api/admin/detail/user_has_role/${id}?q=${search}&page=${page}`
     )
@@ -240,6 +245,7 @@ export default {
       pagination: posts.data,
       rowcount: posts.data.total,
       search: search,
+      header: header,
     }
   },
 
@@ -332,18 +338,17 @@ export default {
   },
 
   mounted() {
-    this.$axios
-      .get(`/api/admin/master/role/${this.$route.params.id}`)
-      // .get(`/api/admin/site/site_loc/${this.$route.params.id}`)
-
-      .then((response) => {
-        //console.log(JSON.stringify(response.data.data))
-        // console.log('rdr')
-        console.log(response.data.data.role_id)
-        this.header.push(response.data.data)
-        // this.detail(response.data)
-        // console.log(this.detail)
-      })
+    // this.$axios
+    //   .get(`/api/admin/master/role/${this.$route.params.id}`)
+    //   // .get(`/api/admin/site/site_loc/${this.$route.params.id}`)
+    //   .then((response) => {
+    //     //console.log(JSON.stringify(response.data.data))
+    //     // console.log('rdr')
+    //     console.log(response.data.data.role_id)
+    //     this.header.push(response.data.data)
+    //     // this.detail(response.data)
+    //     // console.log(this.detail)
+    //   })
   },
 }
 </script>
