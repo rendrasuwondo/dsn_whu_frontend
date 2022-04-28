@@ -239,9 +239,12 @@ export default {
     // const posts = await $axios.$get(
     //   `/api/admin/site?q=${search}&page=${page}`
     // )
-
     const { id } = route.params
 
+    //menu
+    const menu = await $axios.get(`/api/admin/master/menu/${id}`)
+
+    //menu_has_role
     const posts = await $axios.$get(
       `/api/admin/detail/menu_has_role/${id}?q=${search}&page=${page}`
     )
@@ -251,6 +254,7 @@ export default {
       pagination: posts.data,
       search: search,
       rowcount: posts.data.total,
+      header: menu.data.data,
     }
   },
 
@@ -343,18 +347,17 @@ export default {
   },
 
   mounted() {
-    this.$axios
-      .get(`/api/admin/master/menu/${this.$route.params.id}`)
-
-      .then((response) => {
-        //console.log(JSON.stringify(response.data.data))
-        console.log('rrd')
-        console.log(response.data.data)
-        console.log(this.$route.params.id)
-        this.header.push(response.data.data)
-        // this.detail(response.data)
-        // console.log(this.detail)
-      })
+    // this.$axios
+    //   .get(`/api/admin/master/menu/${this.$route.params.id}`)
+    //   .then((response) => {
+    //     //console.log(JSON.stringify(response.data.data))
+    //     console.log('rrd')
+    //     console.log(response.data.data)
+    //     console.log(this.$route.params.id)
+    //     this.header.push(response.data.data)
+    //     // this.detail(response.data)
+    //     // console.log(this.detail)
+    //   })
   },
 }
 </script>

@@ -15,6 +15,7 @@
           target="_blank"
           >LIHAT WEBSITE <i class="fa fa-external-link-alt"></i
         ></nuxt-link>
+        <!-- <b-img class="img-logo" src="img/dsn_logo.png" alt="logo"></b-img> -->
         {{ user.employee.company_code }} ({{ user.employee.company_code_sap }})
         - {{ user.employee.department_code }} ({{
           user.employee.department_code_sap
@@ -54,8 +55,6 @@
       </li>
     </ul>
   </nav>
-
-  
 </template>
 
 <script>

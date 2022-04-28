@@ -1,7 +1,7 @@
 <template>
   <div class="hold-transition login-page">
     <div>
-      <b-img class="img-logo" src="img/dsn_logo.png" alt="logo"></b-img>
+      <b-img class="img-logo" src="/static/img/dsn_icon.png" alt="logo"></b-img>
     </div>
     <div class="login-box">
       <!-- /.login-logo -->
@@ -85,7 +85,13 @@ body {
   box-shadow: 3px 2px #f5f6faf5;
 }
 .download-apk:hover {
-  background-color: #020304;
+  background: linear-gradient(
+    to right,
+    #dcdde1,
+    #2f3542,
+    #1e272e,
+    black
+  ) !important;
 }
 
 .download-pdf {
@@ -97,7 +103,13 @@ body {
   box-shadow: 3px 2px #f5f6faf5;
 }
 .download-pdf:hover {
-  background-color: #020304;
+  background: linear-gradient(
+    to right,
+    #dcdde1,
+    #2f3542,
+    #1e272e,
+    black
+  ) !important;
 }
 
 .img-download {
