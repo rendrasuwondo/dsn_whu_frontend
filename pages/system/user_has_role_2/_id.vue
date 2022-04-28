@@ -181,7 +181,7 @@ export default {
         },
       ],
 
-      header: [],
+      // header: [],
 
       user_id: this.$route.params.id,
 
@@ -229,11 +229,9 @@ export default {
     const { id } = route.params
 
     //user
-    const user = await $axios.get(`/api/admin/master/users/${id}`)
+    const user = await $axios.get(`/api/admin/master/users/${id}`) 
 
-    console.log('aida')
-    console.log(`/api/admin/master/users/${id}`)
-    console.log(user.data.data)
+    const header = [user.data.data]
 
     //user_has_role
     const posts = await $axios.$get(
@@ -245,7 +243,7 @@ export default {
       pagination: posts.data,
       search: search,
       rowcount: posts.data.total,
-      header: user.data.data,
+      header: header,
     }
   },
 
