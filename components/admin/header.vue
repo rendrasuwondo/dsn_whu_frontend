@@ -60,7 +60,7 @@
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
-          class="nav-link dropdown-toggle name-user"
+          class="nav-link dropdown-toggle name-user w-100"
         >
           <img
             :src="`https://ui-avatars.com/api/?name=${user.user.name}&amp;background=4e73df&amp;color=ffffff&amp;size=100`"

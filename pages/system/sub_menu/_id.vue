@@ -278,7 +278,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/sub_menu/export`,
+        url: `/api/admin/sub_menu/export?parent_id=${this.parent_id}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important

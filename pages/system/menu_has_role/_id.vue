@@ -317,7 +317,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/menu_has_role/export`,
+        url: `/api/admin/menu_has_role/export?menu_id=${this.menu_id}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
@@ -326,7 +326,7 @@ export default {
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
-        var fileName = 'Menu-Has-Role.xlsx'
+        var fileName = 'Menu - Role.xlsx'
         link.setAttribute('download', fileName) //or any other extension
         document.body.appendChild(link)
         link.click()

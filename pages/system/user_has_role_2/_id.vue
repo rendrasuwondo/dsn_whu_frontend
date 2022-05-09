@@ -318,7 +318,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/user_has_role/export`,
+        url: `/api/admin/user_has_role_2/export?user_id=${this.user_id}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
@@ -327,7 +327,7 @@ export default {
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
-        var fileName = 'User-Has-Role.xlsx'
+        var fileName = 'User - Role.xlsx'
         link.setAttribute('download', fileName) //or any other extension
         document.body.appendChild(link)
         link.click()
