@@ -85,13 +85,21 @@
 
             <div class="form-group">
               <label>Afdeling</label>
-              <input
+              <!-- <input
                 type="text"
                 v-model="field.afdeling_code"
                 placeholder=""
                 class="form-control"
                 readonly
-              />
+              /> -->
+              <multiselect
+                v-model="field.afdeling_id"
+                :options="afdeling"
+                label="id"
+                track-by="id"
+                :searchable="true"
+                @input="onChangeAfdeling"
+              ></multiselect>
               <div v-if="validation.afdeling" class="mt-2">
                 <b-alert show variant="danger">{{
                   validation.afdeling[0]
@@ -308,12 +316,14 @@ export default {
         updated_by: '',
         verification_status: '',
         is_revision: '',
+        afdeling_id: '',
       },
       activity_description: [],
       foreman: [],
       activity: [],
       labour: [],
       ha_statement: [],
+      afdeling: [],
       // activity_group: [],
 
       //state validation
@@ -338,7 +348,6 @@ export default {
     this.company_code = this.user.employee.company_code
     this.department_code = this.user.employee.department_code
 
-   
     //Dropdown Mandor
     this.$axios
       .get(
@@ -376,9 +385,49 @@ export default {
       .then((response) => {
         this.ha_statement = response.data.data
       })
+
+    //Dropdown Afdeling
+    let strApi = `/api/admin/lov_afdeling?company_id=${this.$auth.user.employee.company_id}`
+
+    if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
+      strApi = `/api/admin/lov_afdeling?company_id=${this.$auth.user.employee.company_id}&id=${this.$auth.user.employee.afdeling_id}`
+    }
+
+    this.$axios
+      .get(strApi)
+
+      .then((response) => {
+        //assing response data to state "tags"
+        this.afdeling = response.data.data
+      })
+    // console.log(this.$auth.user.employee.afdeling_id)
+
+    this.$axios
+      .get(`/api/admin/lov_afdeling?id=${this.$auth.user.employee.afdeling_id}`)
+      .then((response) => {
+        console.log('rdr')
+        console.log(response.data.data)
+        this.field.afdeling_id = response.data.data
+      })
   },
 
   methods: {
+    onChangeAfdeling() {
+      if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
+        this.$axios
+          .get(
+            `/api/admin/lov_afdeling?id=${this.$auth.user.employee.afdeling_id}`
+          )
+          .then((response) => {
+            this.field.afdeling_id = response.data.data
+          })
+      }
+    },
+
+    customLabel(afdeling) {
+      return `${afdeling.id}` + '-' + `${afdeling.code}`
+    },
+
     back() {
       this.$router.push({
         name: 'admin-activity_actual',
@@ -444,7 +493,17 @@ export default {
         this.field.labour ? this.field.labour.id : ''
       )
 
-      formData.append('afdeling_id', this.field.afdeling_id)
+      if (this.field.afdeling_id.id == undefined) {
+        formData.append('afdeling_id', this.$auth.user.employee.afdeling_id)
+      } else {
+        formData.append(
+          'afdeling_id',
+          this.field.afdeling_id
+            ? this.field.afdeling_id.id
+            : this.$auth.user.employee.afdeling_id
+        )
+      }
+
       formData.append('activitied_at', this.field.activitied_at)
       formData.append('ha_statement_id', this.field.ha_statement_id.id)
 
