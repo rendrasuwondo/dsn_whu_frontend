@@ -327,7 +327,7 @@ export default {
 
     //Data company
     this.$axios
-      .get('/api/admin/lov_company')
+      .get('/api/admin/lov_company_table')
 
       .then((response) => {
         // console.log(response.data.data[0])
@@ -360,7 +360,7 @@ export default {
 
     // Data afdeling
     this.$axios
-      .get('/api/admin/lov_afdeling')
+      .get('/api/admin/lov_afdeling_table')
 
       .then((response) => {
         this.afdeling = response.data.data

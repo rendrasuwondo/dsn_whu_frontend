@@ -136,8 +136,8 @@ export default {
   transform: translateY(-50%);
 }
 .navbar-title-1 {
-  font-size: 20px;
-  margin-top: 5px;
+  font-size: 19px;
+  /* margin-top: 4px; */
   margin-left: 60px;
   font-weight: bold;
   width: 220px;
@@ -145,6 +145,7 @@ export default {
 .navbar-title-2 {
   font-size: 14px;
   margin-bottom: 0px;
+  margin-top: -3px;
   margin-left: 60px;
   font-weight: bold;
   color: #dfe4ea;
