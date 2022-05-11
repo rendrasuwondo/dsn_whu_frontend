@@ -383,7 +383,7 @@ export default {
       .get(`/api/admin/lov_ha_statement_afdeling/${this.field.afdeling_id}`)
 
       .then((response) => {
-        this.ha_statement = response.data.data
+        this.ha_statement = response.data
       })
 
     console.log('aida')
@@ -432,7 +432,7 @@ export default {
           .then((response) => {
             console.log('coba')
             console.log(response.data.data)
-            this.ha_statement = response.data.data
+            this.ha_statement = response.data
           })
       }
     },
