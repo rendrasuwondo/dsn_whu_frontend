@@ -386,6 +386,10 @@ export default {
         this.ha_statement = response.data.data
       })
 
+    console.log('aida')
+    console.log(
+      `/api/admin/lov_ha_statement_afdeling/${this.field.afdeling_id}/${this.field.activity_id}`
+    )
     //Dropdown Afdeling
     let strApi = `/api/admin/lov_afdeling?company_id=${this.$auth.user.employee.company_id}`
 
@@ -420,6 +424,15 @@ export default {
           )
           .then((response) => {
             this.field.afdeling_id = response.data.data
+          })
+      } else {
+        this.$axios
+          .get(`/api/admin/lov_ha_statement_afdeling/${this.field.afdeling_id}`)
+
+          .then((response) => {
+            console.log('coba')
+            console.log(response.data.data)
+            this.ha_statement = response.data.data
           })
       }
     },
