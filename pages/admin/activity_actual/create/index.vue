@@ -95,7 +95,7 @@
               <multiselect
                 v-model="field.afdeling_id"
                 :options="afdeling"
-                label="id"
+                :custom-label="customLabel"
                 track-by="id"
                 :searchable="true"
                 @input="onChangeAfdeling"
@@ -427,7 +427,9 @@ export default {
           })
       } else {
         this.$axios
-          .get(`/api/admin/lov_ha_statement_afdeling/${this.field.afdeling_id}`)
+          .get(
+            `/api/admin/lov_ha_statement_afdeling/${this.field.afdeling_id.id}`
+          )
 
           .then((response) => {
             console.log('coba')
@@ -448,9 +450,9 @@ export default {
       })
     },
 
-    customLabel(activity_description) {
-      return `${activity_description.activity_description}-${activity_description.employee_description}-${activity_description.position_code}`
-    },
+    // customLabel(activity_description) {
+    //   return `${activity_description.activity_description}-${activity_description.employee_description}-${activity_description.position_code}`
+    // },
 
     currentDate() {
       const current = new Date()
@@ -465,11 +467,21 @@ export default {
       //define formData
       let formData = new FormData()
 
+      let vafdeling_id
+
+      if (this.field.afdeling_id.id == undefined) {
+        vafdeling_id = this.$auth.user.employee.afdeling_id
+      } else {
+        vafdeling_id = this.field.afdeling_id
+            ? this.field.afdeling_id.id
+            : this.$auth.user.employee.afdeling_id
+      }
+
       formData.append(
         'id',
         this.field.activity_id.id +
           '_' +
-          this.field.afdeling_id +
+         vafdeling_id +
           '_' +
           this.field.activitied_at +
           '_' +
@@ -480,11 +492,12 @@ export default {
           this.field.labour.id
       )
 
+
       formData.append(
         'activity_plan_id',
         this.field.activity_id.id +
           '_' +
-          this.field.afdeling_id +
+          vafdeling_id +
           '_' +
           this.field.activitied_at
       )
