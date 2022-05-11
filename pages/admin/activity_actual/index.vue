@@ -422,9 +422,9 @@ export default {
     // const profile = await $axios.$get(
     // )
     // foreman_employee_id = 490
-    console.log('rdr')
-
-    console.log(posts.data)
+    // console.log('rdr')
+    // console.log(`/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_id}`)
+    // console.log(posts.data)
     return {
       posts: posts.data,
       pagination: posts.data,
