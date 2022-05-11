@@ -289,6 +289,49 @@ export default {
       })
     },
 
+    //deletePost method
+    deletePost(id) {
+      this.$swal
+        .fire({
+          title: 'APAKAH ANDA YAKIN ?',
+          text: 'INGIN MENGHAPUS DATA INI !',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#3085d6',
+          confirmButtonText: 'YA, HAPUS!',
+          cancelButtonText: 'TIDAK',
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            //delete tag from server
+
+            this.$axios
+              .delete(`/api/admin/attendance/${id}`)
+              .then((response) => {
+                //feresh data
+                this.$nuxt.refresh()
+                if (response.data.success == true) {
+                  this.sweet_alert.title = 'BERHASIL!'
+                  this.sweet_alert.icon = 'success'
+                } else {
+                  this.sweet_alert.title = 'GAGAL!'
+                  this.sweet_alert.icon = 'error'
+                }
+
+                //alert
+                this.$swal.fire({
+                  title: this.sweet_alert.title,
+                  text: response.data.message,
+                  icon: this.sweet_alert.icon,
+                  showConfirmButton: false,
+                  timer: 2000,
+                })
+              })
+          }
+        })
+    },
+
     exportData() {
       const headers = {
         'Content-Type': 'application/json',

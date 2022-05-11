@@ -149,7 +149,7 @@ export default {
   margin-left: 60px;
   font-weight: bold;
   color: #dfe4ea;
-  width: 220px;
+  width: 315px;
 }
 .name-user {
   font-size: 15px;
