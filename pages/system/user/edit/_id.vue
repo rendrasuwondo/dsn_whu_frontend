@@ -190,11 +190,6 @@ export default {
   },
 
   mounted() {
-    this.field.created_by =
-      this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
-    this.field.updated_by =
-      this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
-
     //Data employee
     this.$axios
       .get('/api/admin/lov_employee')
