@@ -221,18 +221,14 @@ export default {
   watchQuery: ['q', 'page', 'activitied_at_prepend', 'activitied_at_append'],
 
   async asyncData({ $axios, query }) {
-    function pad(n, width, z) {
-      z = z || '0'
-      n = n + ''
-      return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n
-    }
+    
 
     function currentDate() {
       const current = new Date()
       current.setDate(current.getDate())
       const date = `${current.getFullYear()}-${
-       pad( current.getMonth() + 1,2)
-      }-pad(${current.getDate()},2)`
+      current.getMonth() + 1
+      }-${current.getDate()}`
       return date
     }
 
@@ -251,6 +247,10 @@ export default {
     let activitied_at_end = query.activitied_at_append
       ? query.activitied_at_append
       : currentDate()
+
+    let activitied_at_end_query = query.activitied_at_append
+      ? query.activitied_at_append
+      : currentDate()  
 
     //fetching posts
     const posts = await $axios.$get(
@@ -273,11 +273,6 @@ export default {
   },
 
   methods: {
-    pad(n, width, z) {
-      z = z || '0'
-      n = n + ''
-      return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n
-    },
     changePage(page) {
       this.$router.push({
         path: this.$route.path,
