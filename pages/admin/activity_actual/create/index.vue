@@ -378,18 +378,6 @@ export default {
         this.labour = response.data.data
       })
 
-    //Dropdown Block
-    this.$axios
-      .get(`/api/admin/lov_ha_statement_afdeling/${this.field.afdeling_id}`)
-
-      .then((response) => {
-        this.ha_statement = response.data
-      })
-
-    console.log('aida')
-    console.log(
-      `/api/admin/lov_ha_statement_afdeling/${this.field.afdeling_id}/${this.field.activity_id}`
-    )
     //Dropdown Afdeling
     let strApi = `/api/admin/lov_afdeling?company_id=${this.$auth.user.employee.company_id}`
 
@@ -409,9 +397,17 @@ export default {
     this.$axios
       .get(`/api/admin/lov_afdeling?id=${this.$auth.user.employee.afdeling_id}`)
       .then((response) => {
-        console.log('rdr')
-        console.log(response.data.data)
         this.field.afdeling_id = response.data.data
+      })
+
+    //Dropdown Block
+    this.$axios
+      .get(
+        `/api/admin/lov_ha_statement_afdeling/${this.$auth.user.employee.afdeling_id}`
+      )
+
+      .then((response) => {
+        this.ha_statement = response.data.data
       })
   },
 
@@ -426,15 +422,15 @@ export default {
             this.field.afdeling_id = response.data.data
           })
       } else {
+       this.field.ha_statement_id = ''
         this.$axios
           .get(
             `/api/admin/lov_ha_statement_afdeling/${this.field.afdeling_id.id}`
           )
 
           .then((response) => {
-            console.log('coba')
-            console.log(response.data.data)
-            this.ha_statement = response.data
+    
+            this.ha_statement = response.data.data
           })
       }
     },
@@ -473,15 +469,15 @@ export default {
         vafdeling_id = this.$auth.user.employee.afdeling_id
       } else {
         vafdeling_id = this.field.afdeling_id
-            ? this.field.afdeling_id.id
-            : this.$auth.user.employee.afdeling_id
+          ? this.field.afdeling_id.id
+          : this.$auth.user.employee.afdeling_id
       }
 
       formData.append(
         'id',
         this.field.activity_id.id +
           '_' +
-         vafdeling_id +
+          vafdeling_id +
           '_' +
           this.field.activitied_at +
           '_' +
@@ -491,7 +487,6 @@ export default {
           '_' +
           this.field.labour.id
       )
-
 
       formData.append(
         'activity_plan_id',

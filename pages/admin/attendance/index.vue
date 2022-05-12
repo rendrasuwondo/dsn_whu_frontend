@@ -246,6 +246,10 @@ export default {
       ? query.activitied_at_append
       : currentDate()
 
+    let activitied_at_end_query = query.activitied_at_append
+      ? query.activitied_at_append
+      : currentDate()
+
     //fetching posts
     const posts = await $axios.$get(
       `/api/admin/attendance?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}`
