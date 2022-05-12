@@ -320,12 +320,23 @@ export default {
   ],
 
   async asyncData({ $axios, query, $cookies, $route, $auth }) {
+    // function pad(n, width, z) {
+    //   z = z || '0'
+    //   n = n + ''
+    //   return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n
+    // }
+
     function currentDate() {
       const current = new Date()
       current.setDate(current.getDate())
       const date = `${current.getFullYear()}-${
         current.getMonth() + 1
       }-${current.getDate()}`
+      // const date = `${current.getFullYear()}-${pad(
+      //   current.getMonth() + 1,
+      //   2
+      // )}-pad(${current.getDate()},2)`
+
       return date
     }
 
@@ -414,7 +425,7 @@ export default {
       foreman_id = ''
     }
     // console.log(foreman_id)
-   
+
     const posts = await $axios.$get(
       `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_id}`
     )
@@ -440,6 +451,12 @@ export default {
   mounted() {},
 
   methods: {
+    //     pad(n, width, z) {
+    //   z = z || '0'
+    //   n = n + ''
+    //   return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n
+    // },
+
     changePage(page) {
       this.$router.push({
         path: this.$route.path,

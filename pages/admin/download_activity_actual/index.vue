@@ -119,8 +119,7 @@
           </b-table>
           <!-- pagination-->
 
-          <b-row 
-            >
+          <b-row>
             <b-col
               ><b-pagination
                 v-model="pagination.current_page"
@@ -210,12 +209,22 @@ export default {
   watchQuery: ['q', 'activitied_at_prepend', 'activitied_at_append', 'page'],
 
   async asyncData({ $axios, query }) {
+    // function pad(n, width, z) {
+    //   z = z || '0'
+    //   n = n + ''
+    //   return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n
+    // }
+
     function currentDate() {
       const current = new Date()
       current.setDate(current.getDate())
       const date = `${current.getFullYear()}-${
         current.getMonth() + 1
       }-${current.getDate()}`
+      // const date = `${current.getFullYear()}-${pad(
+      //   current.getMonth() + 1,
+      //   2
+      // )}-pad(${current.getDate()},2)`
       return date
     }
 
@@ -260,6 +269,12 @@ export default {
   },
 
   methods: {
+    // pad(n, width, z) {
+    //   z = z || '0'
+    //   n = n + ''
+    //   return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n
+    // },
+
     changePage(page) {
       this.$router.push({
         path: this.$route.path,

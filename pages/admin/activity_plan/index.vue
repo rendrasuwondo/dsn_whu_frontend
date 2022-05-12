@@ -272,12 +272,22 @@ export default {
   ],
 
   async asyncData({ $axios, query }) {
+    // function pad(n, width, z) {
+    //   z = z || '0'
+    //   n = n + ''
+    //   return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n
+    // }
+
     function currentDate() {
       const current = new Date()
       current.setDate(current.getDate())
-      const date = `${current.getFullYear()}-${current.getMonth() + 1}-${
-        current.getDate() + 1
-      }`
+      const date = `${current.getFullYear()}-${
+        current.getMonth() + 1
+      }-${current.getDate()}`
+      // const date = `${current.getFullYear()}-${pad(
+      //   current.getMonth() + 1,
+      //   2
+      // )}-pad(${current.getDate()},2)`
       return date
     }
 
@@ -308,7 +318,6 @@ export default {
       $axios
         .get(`/api/admin/lov_activity?q_activity_id=${q_activity_id}`)
         .then((response) => {
-          
           activity_id = response.data.data
         })
     } else {
@@ -353,6 +362,12 @@ export default {
   },
 
   methods: {
+    // pad(n, width, z) {
+    //   z = z || '0'
+    //   n = n + ''
+    //   return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n
+    // },
+
     //change page pagination
     changePage(page) {
       this.$router.push({
@@ -404,20 +419,17 @@ export default {
         'Content-Type': 'application/json',
       }
 
-        if (this.activity_id === null) {
+      if (this.activity_id === null) {
+        this.query_activity_id = ''
+      } else if (this.activity_id.id === undefined) {
+        if (this.$route.query.q_activity_id === undefined) {
           this.query_activity_id = ''
-        } else if (this.activity_id.id === undefined) {
-          if (this.$route.query.q_activity_id === undefined) {
-            this.query_activity_id = ''
-          } else {
-            this.query_activity_id = this.$route.query.q_activity_id
-          }
         } else {
-          this.query_activity_id = this.activity_id.id
-            ? this.activity_id.id
-            : ''
+          this.query_activity_id = this.$route.query.q_activity_id
         }
-     
+      } else {
+        this.query_activity_id = this.activity_id.id ? this.activity_id.id : ''
+      }
 
       console.log(
         `/api/admin/activity_plan/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_activity_id=${this.query_activity_id}`

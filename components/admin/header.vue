@@ -136,14 +136,14 @@ export default {
   transform: translateY(-50%);
 }
 .navbar-title-1 {
-  font-size: 19px;
+  font-size: 18px;
   /* margin-top: 4px; */
   margin-left: 60px;
   font-weight: bold;
   width: 220px;
 }
 .navbar-title-2 {
-  font-size: 14px;
+  font-size: 13px;
   margin-bottom: 0px;
   margin-top: -3px;
   margin-left: 60px;
@@ -152,7 +152,7 @@ export default {
   width: 315px;
 }
 .name-user {
-  font-size: 15px;
+  font-size: 14px;
   color: #2f3542;
   font-weight: bold;
 }
