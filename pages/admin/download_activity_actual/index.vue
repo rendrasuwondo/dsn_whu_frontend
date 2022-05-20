@@ -203,6 +203,11 @@ export default {
           key: 'flexrate',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
+        {
+          label: 'Keterangan',
+          key: 'reason',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
       ],
     }
   },

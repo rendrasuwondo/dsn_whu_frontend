@@ -131,6 +131,7 @@
             :items="posts"
             :fields="fields"
             show-empty
+            class="text-vertical-align"
           >
             <!-- <template v-slot:cell(actions)="row">
               <b-button
@@ -153,7 +154,7 @@
                 ><i class="fa fa-trash"></i
               ></b-button>
             </template> -->
-            <!-- <template v-slot:cell(detail)="row">
+            <template v-slot:cell(detail)="row">
               <b-button
                 :to="{
                   name: 'admin-activity_plan_detail-id',
@@ -165,10 +166,10 @@
               >
                 <i class="fa fa-file-alt"></i>
               </b-button>
-            </template> -->
+            </template>
           </b-table>
 
-          <b-row>
+          <!-- <b-row>
             <b-col
               ><b-pagination
                 v-model="pagination.current_page"
@@ -182,7 +183,7 @@
             <b-col class="text-right" align-self="center"
               >{{ rowcount }} data</b-col
             >
-          </b-row>
+          </b-row> -->
         </div>
       </div>
     </section>
@@ -206,57 +207,29 @@ export default {
     return {
       activity: [],
       fields: [
-        {
-          label: 'Actions',
-          key: 'actions',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
-          label: 'Detail',
-          key: 'detail',
-          tdClass: 'align-middle text-center d-none',
-          thClass: 'd-none',
-        },
-        {
-          label: 'Tanggal',
-          key: 'activitied_at',
-          tdClass: 'align-middle',
-        },
-        {
-          label: 'Estate',
-          key: 'department_code',
-          tdClass: 'align-middle',
-        },
-        {
-          label: 'Afdeling',
-          key: 'afdeling_code',
-          tdClass: 'align-middle text-right',
-        },
-        {
-          label: 'Jenis Pekerjaan',
-          key: 'activity_description',
-          tdClass: 'align-middle text-nowrap',
-        },
-        {
-          label: 'HK',
-          key: 'man_daysFormat',
-          tdClass: 'align-middle text-right',
-        },
-        {
-          label: 'Volume',
-          key: 'qtyFormat',
-          tdClass: 'align-middle text-right',
-        },
-        {
-          label: 'Rate',
-          key: 'flexrateFormat',
-          tdClass: 'align-middle text-left text-nowrap',
-        },
-        {
-          label: 'Keterangan',
-          key: 'description',
-          tdClass: 'align-middle text-left text-nowrap',
-        },
+        // // {
+        // //   label: 'Actions',
+        // //   key: 'actions',
+        // //   tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        // // },
+        // {
+        //   label: 'Detail',
+        //   key: 'detail',
+        //   tdClass: 'align-middle text-center d-none',
+        //   thClass: 'd-none',
+        // },
+        // {
+        //   label: ['Jenis Pekerjaan'],
+        //   key: 'jenis_pekerjaan',
+        //   tdClass: 'align-middle',
+        // },
+        // {
+        //   label: 'Afdeling 9',
+        //   key: 'afdeling_9',
+        //   tdClass: 'align-middle',
+        // // },
+        // [1, 2, 3],
+        // [4, 5, 6],
       ],
       query_activity_id: '',
     }
@@ -265,7 +238,7 @@ export default {
   //watch query URL
   watchQuery: [
     'q',
-    'page',
+    // 'page',
     'activitied_at_prepend',
     'activitied_at_append',
     'q_activity_id',
@@ -322,14 +295,14 @@ export default {
 
     //fetching posts
     const posts = await $axios.$get(
-      `/api/admin/activity_plan?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_activity_id=${q_activity_id}`
+      `/api/admin/r_activity_plan?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_activity_id=${q_activity_id}`
     )
 
     // console.log(posts.data)
     // this.rowcount = posts.data.total
 
     return {
-      posts: posts.data.data,
+      posts: posts.data,
       pagination: posts.data,
       search: search,
       rowcount: posts.data.total,
@@ -365,9 +338,9 @@ export default {
           activitied_at_append: this.$route.query.activitied_at_append
             ? this.$route.query.activitied_at_append
             : this.activitied_at_end,
-          //   activity_id: this.$route.query.activity_id
-          //     ? this.$route.query.activity_id
-          //     : this.id_activity,
+          activity_id: this.$route.query.activity_id
+            ? this.$route.query.activity_id
+            : this.id_activity,
         },
       })
     },
@@ -375,17 +348,17 @@ export default {
     //searchData
     searchData() {
       // alert(this.activity_id.id)
-      //   try {
-      //     if (this.activity_id.id === null) {
-      //       this.query_activity_id = this.$route.query.q_activity_id
-      //     } else if (this.activity_id.id === undefined) {
-      //       this.query_activity_id = this.$route.query.q_activity_id
-      //     } else {
-      //       this.query_activity_id = this.activity_id.id
-      //         ? this.activity_id.id
-      //         : ''
-      //     }
-      //   } catch (err) {}
+      try {
+        if (this.activity_id.id === null) {
+          this.query_activity_id = this.$route.query.q_activity_id
+        } else if (this.activity_id.id === undefined) {
+          this.query_activity_id = this.$route.query.q_activity_id
+        } else {
+          this.query_activity_id = this.activity_id.id
+            ? this.activity_id.id
+            : ''
+        }
+      } catch (err) {}
 
       this.$router.push({
         path: this.$route.path,
@@ -393,7 +366,7 @@ export default {
           q: this.search,
           activitied_at_prepend: this.activitied_at_start,
           activitied_at_append: this.activitied_at_end,
-          //   q_activity_id: this.query_activity_id,
+          q_activity_id: this.query_activity_id,
         },
       })
     },
@@ -403,23 +376,23 @@ export default {
         'Content-Type': 'application/json',
       }
 
-      //   if (this.activity_id === null) {
-      //     this.query_activity_id = ''
-      //   } else if (this.activity_id.id === undefined) {
-      //     if (this.$route.query.q_activity_id === undefined) {
-      //       this.query_activity_id = ''
-      //     } else {
-      //       this.query_activity_id = this.$route.query.q_activity_id
-      //     }
-      //   } else {
-      //     this.query_activity_id = this.activity_id.id ? this.activity_id.id : ''
-      //   }
+      if (this.activity_id === null) {
+        this.query_activity_id = ''
+      } else if (this.activity_id.id === undefined) {
+        if (this.$route.query.q_activity_id === undefined) {
+          this.query_activity_id = ''
+        } else {
+          this.query_activity_id = this.$route.query.q_activity_id
+        }
+      } else {
+        this.query_activity_id = this.activity_id.id ? this.activity_id.id : ''
+      }
 
-      //   console.log(
-      //     `/api/admin/activity_plan/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_activity_id=${this.query_activity_id}`
-      //   )
+      console.log(
+        `/api/admin/activity_plan/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_activity_id=${this.query_activity_id}`
+      )
       this.$axios({
-        url: `/api/admin/activity_plan/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_activity_id=${this.query_activity_id}`,
+        url: `/api/admin/r_activity_plan/export`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
@@ -428,47 +401,18 @@ export default {
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
-        var fileName = 'Report-ActivityPlan.xlsx'
+        var fileName = 'ActivityPlan.xlsx'
         link.setAttribute('download', fileName) //or any other extension
         document.body.appendChild(link)
         link.click()
       })
     },
-
-    deletePost(id) {
-      this.$swal
-        .fire({
-          title: 'APAKAH ANDA YAKIN ?',
-          text: 'INGIN MENGHAPUS DATA INI !',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#d33',
-          cancelButtonColor: '#3085d6',
-          confirmButtonText: 'YA, HAPUS!',
-          cancelButtonText: 'TIDAK',
-        })
-        .then((result) => {
-          if (result.isConfirmed) {
-            //delete tag from server
-
-            this.$axios.delete(`/api/admin/activity_plan/${id}`).then(() => {
-              //feresh data
-              this.$nuxt.refresh()
-
-              //alert
-              this.$swal.fire({
-                title: 'BERHASIL!',
-                text: 'Data Berhasil Dihapus!',
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 2000,
-              })
-            })
-          }
-        })
-    },
   },
 }
 </script>
 
-<style></style>
+<style>
+.text-vertical-align {
+  padding: 50% 0;
+}
+</style>
