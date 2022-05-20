@@ -160,12 +160,6 @@ export default {
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          label: 'Afdeling',
-          key: 'employee_afdeling',
-          tdClass: 'align-middle text-center d-none',
-          thClass: 'd-none',
-        },
-        {
           label: 'Grup',
           key: 'employee_activity_group',
           tdClass: 'align-middle text-center d-none',
@@ -211,12 +205,17 @@ export default {
         },
         {
           label: 'Afd',
-          key: 'afdeling_code',
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-          thAttr: {
-            id: 'myAfdeling',
-          },
+          key: 'employee_afdeling',
+          tdClass: 'align-middle text-center ',
         },
+        // {
+        //   label: 'Afd',
+        //   key: 'afdeling_code',
+        //   tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+        //   thAttr: {
+        //     id: 'myAfdeling',
+        //   },
+        // },
         {
           label: 'Jabatan',
           key: 'position_code',

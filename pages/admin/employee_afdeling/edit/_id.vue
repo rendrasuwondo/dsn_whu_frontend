@@ -209,7 +209,7 @@ export default {
       .then((response) => {
         //data yang diambil
         this.field.employee_id = response.data.data.employee_id
-        this.field.afdeling_id = response.data.data.afdeling_id
+        this.field.afdeling_id = response.data.data.afdeling
         this.field.is_active = response.data.data.is_active
         this.field.description = response.data.data.description
         this.field.created_at = response.data.data.created_at

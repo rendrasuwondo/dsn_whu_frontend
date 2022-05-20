@@ -131,7 +131,6 @@
             :items="posts"
             :fields="fields"
             show-empty
-            class="text-vertical-align"
           >
             <!-- <template v-slot:cell(actions)="row">
               <b-button
@@ -413,6 +412,7 @@ export default {
 
 <style>
 .text-vertical-align {
-  padding: 50% 0;
+  /* text-align: inherit; */
+  vertical-align: 70%;
 }
 </style>
