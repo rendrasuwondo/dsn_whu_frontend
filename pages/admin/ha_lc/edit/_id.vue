@@ -56,7 +56,7 @@
               ></multiselect>
             </div>
 
-            <div class="form-group">
+            <!-- <div class="form-group">
               <label>Progeny</label>
               <multiselect
                 v-model="field.progeny_id"
@@ -65,7 +65,7 @@
                 track-by="id"
                 :searchable="true"
               ></multiselect>
-            </div>
+            </div> -->
 
             <div class="form-group">
               <label>Status</label>
@@ -78,7 +78,7 @@
               />
             </div>
 
-            <div class="form-group">
+            <!-- <div class="form-group">
               <label>Plant Month</label>
               <number
                 class="form-control"
@@ -116,7 +116,7 @@
                 placeholder="Masukkan Point"
                 class="form-control"
               />
-            </div>
+            </div> -->
 
             <div class="form-group">
               <b-row>

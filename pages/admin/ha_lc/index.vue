@@ -142,21 +142,21 @@ export default {
           key: 'block',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
-        {
-          label: 'Progeny',
-          key: 'progeny_code',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
-          label: 'Point',
-          key: 'point',
-          formatter: (value, key, item) =>
-            value.toLocaleString(undefined, {
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 1,
-            }),
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
+        // {
+        //   label: 'Progeny',
+        //   key: 'progeny_code',
+        //   tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        // },
+        // {
+        //   label: 'Point',
+        //   key: 'point',
+        //   formatter: (value, key, item) =>
+        //     value.toLocaleString(undefined, {
+        //       minimumFractionDigits: 0,
+        //       maximumFractionDigits: 1,
+        //     }),
+        //   tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+        // },
         {
           label: 'Status',
           key: 'plant_status',

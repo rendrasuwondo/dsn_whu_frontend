@@ -227,8 +227,6 @@ export default {
         //   key: 'afdeling_9',
         //   tdClass: 'align-middle',
         // // },
-        // [1, 2, 3],
-        // [4, 5, 6],
       ],
       query_activity_id: '',
     }
