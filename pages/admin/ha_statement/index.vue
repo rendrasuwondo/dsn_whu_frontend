@@ -291,8 +291,4 @@ export default {
 }
 </script>
 
-<style>
-.thMessage {
-  display: none;
-}
-</style>
+<style></style>
