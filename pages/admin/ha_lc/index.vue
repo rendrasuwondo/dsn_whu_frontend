@@ -46,7 +46,12 @@
                   <nuxt-link
                     :to="{ name: 'admin-ha_lc-create' }"
                     class="btn btn-info btn-sm"
-                    style="padding-top: 8px; padding-bottom: 6px"
+                    style="
+                      padding-top: 8px;
+                      padding-bottom: 6px;
+                      border-top-right-radius: 0px;
+                      border-bottom-right-radius: 0px;
+                    "
                     title="Tambah"
                     ><i class="fa fa-plus-circle"></i>
                   </nuxt-link>
@@ -335,8 +340,22 @@ export default {
         'Content-Type': 'application/json',
       }
 
+      if (this.department_id === null) {
+        this.query_department_id = ''
+      } else if (this.department_id.id === undefined) {
+        if (this.$route.query.q_department_id === undefined) {
+          this.query_department_id = ''
+        } else {
+          this.query_department_id = this.$route.query.q_department_id
+        }
+      } else {
+        this.query_department_id = this.department_id.id
+          ? this.department_id.id
+          : ''
+      }
+
       this.$axios({
-        url: `/api/admin/ha_lc/export`,
+        url: `/api/admin/ha_lc/export?q=${this.search}&q_department_id=${this.query_department_id}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important

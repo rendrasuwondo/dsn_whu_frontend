@@ -13,6 +13,32 @@
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
+          <div v-if="this.$auth.user.employee.department_id === 375">
+            <b-card
+              border-variant="primary"
+              header="Filter"
+              header-bg-variant="info"
+              header-text-variant="white"
+            >
+              <b-card-text>
+                <b-container class="bv-example-row">
+                  <b-row>
+                    <b-col cols="1">Estate</b-col>
+                    <b-col cols="7">
+                      <div class="form-group">
+                        <multiselect
+                          v-model="department_id"
+                          :options="department"
+                          label="code"
+                          track-by="id"
+                          :searchable="true"
+                        ></multiselect></div
+                    ></b-col>
+                  </b-row>
+                </b-container>
+              </b-card-text>
+            </b-card>
+          </div>
           <div class="form-group">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
@@ -20,7 +46,12 @@
                   <nuxt-link
                     :to="{ name: 'admin-ha_statement-create' }"
                     class="btn btn-info btn-sm"
-                    style="padding-top: 8px; padding-bottom: 6px"
+                    style="
+                      padding-top: 8px;
+                      padding-bottom: 6px;
+                      border-top-right-radius: 0px;
+                      border-bottom-right-radius: 0px;
+                    "
                     title="Tambah"
                     ><i class="fa fa-plus-circle"></i>
                   </nuxt-link>
@@ -117,6 +148,7 @@ export default {
   data() {
     return {
       vdepartment_id: this.$auth.user.employee.department_id,
+      department: [],
       fields: [
         {
           label: 'Actions',
@@ -174,13 +206,15 @@ export default {
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
       ],
+      query_department_id: '',
+
       sweet_alert: {
         title: '',
         icon: '',
       },
     }
   },
-  watchQuery: ['q', 'page'],
+  watchQuery: ['q', 'page', 'q_department_id'],
 
   async asyncData({ $axios, query }) {
     //page
@@ -189,9 +223,32 @@ export default {
     //search
     let search = query.q ? query.q : ''
 
+    //department
+    const department_list = await $axios.$get(`/api/admin/lov_department`)
+
+    let q_department_id = query.q_department_id ? query.q_department_id : ''
+    let department_id = []
+
+    if (query.q_department_id) {
+      // console.log('rendra')
+      $axios
+        .get(`/api/admin/lov_department?q_department_id=${q_department_id}`)
+        .then((response) => {
+          department_id = response.data.data
+        })
+    } else {
+      department_id = []
+
+      q_department_id = department_id.id
+    }
+
+    if (q_department_id == undefined) {
+      q_department_id = ''
+    }
+
     //fetching posts
     const posts = await $axios.$get(
-      `/api/admin/ha_statement?q=${search}&page=${page}`
+      `/api/admin/ha_statement?q=${search}&page=${page}&q_department_id=${q_department_id}`
     )
     console.log('aida')
     console.log(posts.data.data)
@@ -200,6 +257,8 @@ export default {
       pagination: posts.data,
       search: search,
       rowcount: posts.data.total,
+      department: department_list.data,
+      department_id: department_id,
     }
   },
 
@@ -210,15 +269,32 @@ export default {
         query: {
           q: this.$route.query.q,
           page: page,
+          department_id: this.$route.query.department_id
+            ? this.$route.query.department_id
+            : this.id_department,
         },
       })
     },
     //searchData
     searchData() {
+      // alert(this.department_id.id)
+      try {
+        if (this.department_id.id === null) {
+          this.query_department_id = this.$route.query.q_department_id
+        } else if (this.department_id.id === undefined) {
+          this.query_department_id = this.$route.query.q_department_id
+        } else {
+          this.query_department_id = this.department_id.id
+            ? this.department_id.id
+            : ''
+        }
+      } catch (err) {}
+
       this.$router.push({
         path: this.$route.path,
         query: {
           q: this.search,
+          q_department_id: this.query_department_id,
         },
       })
     },
@@ -271,8 +347,22 @@ export default {
         'Content-Type': 'application/json',
       }
 
+      if (this.department_id === null) {
+        this.query_department_id = ''
+      } else if (this.department_id.id === undefined) {
+        if (this.$route.query.q_department_id === undefined) {
+          this.query_department_id = ''
+        } else {
+          this.query_department_id = this.$route.query.q_department_id
+        }
+      } else {
+        this.query_department_id = this.department_id.id
+          ? this.department_id.id
+          : ''
+      }
+
       this.$axios({
-        url: `/api/admin/ha_statement/export`,
+        url: `/api/admin/ha_statement/export?q=${this.search}&q_department_id=${this.query_department_id}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important

@@ -270,15 +270,26 @@ export default {
     console.log(this.$auth.user.employee.name)
     this.$refs.block.focus()
 
-    //Data afdeling
-    this.$axios
-      .get(
-        '/api/admin/lov_afdeling?company_id=' + this.company_id + '&code_sap=X'
-      )
+    if (this.$auth.user.employee.department_id != 375) {
+      this.$axios
+        .get(
+          '/api/admin/lov_afdeling?company_id=' +
+            this.company_id +
+            '&code_sap=X'
+        )
 
-      .then((response) => {
-        this.afdeling = response.data.data
-      })
+        .then((response) => {
+          this.afdeling = response.data.data
+        })
+    } else {
+      this.$axios
+        .get('/api/admin/lov_afdeling?code_sap=X')
+
+        .then((response) => {
+          this.afdeling = response.data.data
+        })
+    }
+    //Data afdeling
 
     //Data progeny
     this.$axios
