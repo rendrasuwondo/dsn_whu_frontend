@@ -88,7 +88,16 @@
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <nuxt-link
-                  :to="{ name: 'admin-activity_actual-create' }"
+                  :to="{
+                    name: 'admin-activity_actual-create',
+                    query: {
+                      activitied_at_prepend:
+                        this.$route.query.activitied_at_prepend,
+                      activitied_at_append:
+                        this.$route.query.activitied_at_append,
+                      foreman_id: this.$route.query.foreman_id,
+                    },
+                  }"
                   class="btn btn-info btn-sm"
                   style="padding-top: 8px"
                   title="Tambah"
@@ -152,6 +161,7 @@
                   query: {
                     activitied_at_prepend: param_activitied_at_prepend,
                     activitied_at_append: param_activitied_at_append,
+                    foreman_id: foreman_id,
                   },
                 }"
                 variant="link"
@@ -185,9 +195,9 @@
           </b-row>
 
           <b-row v-show="show_page">
-            <b-col>
-              <!-- pagination -->
-              <b-pagination
+            <!-- <b-col> -->
+            <!-- pagination -->
+            <!-- <b-pagination
                 v-model="pagination.current_page"
                 :total-rows="pagination.total"
                 :per-page="pagination.per_page"
@@ -195,7 +205,7 @@
                 align="fill"
                 class="mt-3"
               ></b-pagination>
-            </b-col>
+            </b-col> -->
             <b-col class="text-right" align-self="center"
               >{{ rowcount }} data</b-col
             >
@@ -308,6 +318,7 @@ export default {
       department_code: '',
       param_activitied_at_prepend: this.$route.query.activitied_at_prepend,
       param_activitied_at_append: this.$route.query.activitied_at_append,
+      foreman_id: this.$route.query.foreman_id,
       query_foreman_id: '',
     }
   },

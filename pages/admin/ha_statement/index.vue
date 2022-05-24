@@ -16,13 +16,15 @@
           <div class="form-group">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
-                <nuxt-link
-                  :to="{ name: 'admin-ha_statement-create' }"
-                  class="btn btn-info btn-sm"
-                  style="padding-top: 8px"
-                  title="Tambah"
-                  ><i class="fa fa-plus-circle"></i>
-                </nuxt-link>
+                <div v-if="this.$auth.user.employee.department_id === 375">
+                  <nuxt-link
+                    :to="{ name: 'admin-ha_statement-create' }"
+                    class="btn btn-info btn-sm"
+                    style="padding-top: 8px; padding-bottom: 6px"
+                    title="Tambah"
+                    ><i class="fa fa-plus-circle"></i>
+                  </nuxt-link>
+                </div>
                 <button
                   title="Export To Excel"
                   class="btn btn-info"
@@ -59,6 +61,7 @@
           >
             <template v-slot:cell(actions)="row">
               <b-button
+                :disabled="vdepartment_id != 375"
                 :to="{
                   name: 'admin-ha_statement-edit-id',
                   params: { id: row.item.id },
@@ -70,12 +73,14 @@
                 <i class="fa fa-pencil-alt"></i>
               </b-button>
               <b-button
+                :disabled="vdepartment_id != 375"
                 variant="link"
                 size="sm"
                 @click="deletePost(row.item.id)"
                 title="Hapus"
                 ><i class="fa fa-trash"></i
               ></b-button>
+              <!-- </div> -->
             </template>
           </b-table>
           <!-- pagination -->
@@ -111,6 +116,7 @@ export default {
   },
   data() {
     return {
+      vdepartment_id: this.$auth.user.employee.department_id,
       fields: [
         {
           label: 'Actions',
@@ -135,7 +141,7 @@ export default {
         {
           label: 'Afdeling',
           key: 'afdeling_code',
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
           label: 'Block',
@@ -165,7 +171,7 @@ export default {
         {
           label: 'Wide',
           key: 'wide',
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
       ],
       sweet_alert: {
@@ -187,7 +193,8 @@ export default {
     const posts = await $axios.$get(
       `/api/admin/ha_statement?q=${search}&page=${page}`
     )
-
+    console.log('aida')
+    console.log(posts.data.data)
     return {
       posts: posts.data.data,
       pagination: posts.data,
@@ -284,4 +291,8 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style>
+.thMessage {
+  display: none;
+}
+</style>

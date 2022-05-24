@@ -88,7 +88,7 @@
                 size=""
                 title="Employee Afdeling"
               >
-                <i class="fa fa-file-alt"></i>
+                {{ row.item.afdeling_code }}
               </b-button>
             </template>
             <template v-slot:cell(employee_activity_group)="row">

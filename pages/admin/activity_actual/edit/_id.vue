@@ -284,10 +284,10 @@ export default {
     return {
       state: 'disabled',
       options_status: [
-        { value: null, text: '' },
-        { value: 'A', text: 'Approve' },
+        { value: 'V', text: 'Verifikasi Asisten' },
         { value: 'R', text: 'Reject' },
       ],
+
       field: {
         // foreman_employee_id: '',
         activity_plan_detail_id: '',
@@ -311,6 +311,7 @@ export default {
         verification_status: '',
         foreman_employee: '',
         is_revision: 'Y',
+        selected: '',
       },
 
       company_code: '',
@@ -352,7 +353,7 @@ export default {
           response.data.data.activity_description
         this.field.labour_employee = response.data.data.labour_employee
         this.field.afdeling_id = response.data.data.afdeling_id
-        this.field.man_days =  response.data.data.man_days
+        this.field.man_days = response.data.data.man_days
         this.field.qty = response.data.data.qty
         this.field.flexrate = response.data.data.flexrate
         this.field.description = response.data.data.description
@@ -365,8 +366,7 @@ export default {
         this.field.latitude = response.data.data.latitude
         this.field.longitude = response.data.data.longitude
         this.field.is_assistance = response.data.data.is_assistance
-  
-     
+        this.field.selected = response.data.data.selected
       })
   },
 
@@ -378,6 +378,7 @@ export default {
         query: {
           activitied_at_prepend: this.$route.query.activitied_at_prepend,
           activitied_at_append: this.$route.query.activitied_at_append,
+          foreman_id: this.$route.query.foreman_id,
         },
       })
     },
@@ -410,6 +411,7 @@ export default {
           created_by: this.field.created_by,
           updated_by: this.field.updated_by,
           is_revision: this.field.is_revision,
+          selected: this.field.verification_status === 'V' ? 1 : 0,
         })
         .then(() => {
           //sweet alert
@@ -421,9 +423,7 @@ export default {
             timer: 2000,
           })
           //redirect ke route "post"
-          this.$router.push({
-            name: 'admin-activity_actual',
-          })
+          this.back()
         })
         .catch((error) => {
           //assign error validasi

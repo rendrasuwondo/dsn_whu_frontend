@@ -317,6 +317,7 @@ export default {
         verification_status: '',
         is_revision: '',
         afdeling_id: '',
+        selected: '',
       },
       activity_description: [],
       foreman: [],
@@ -422,14 +423,13 @@ export default {
             this.field.afdeling_id = response.data.data
           })
       } else {
-       this.field.ha_statement_id = ''
+        this.field.ha_statement_id = ''
         this.$axios
           .get(
             `/api/admin/lov_ha_statement_afdeling/${this.field.afdeling_id.id}`
           )
 
           .then((response) => {
-    
             this.ha_statement = response.data.data
           })
       }
@@ -443,6 +443,11 @@ export default {
       this.$router.push({
         name: 'admin-activity_actual',
         params: { id: this.$route.params.id, r: 1 },
+        query: {
+          activitied_at_prepend: this.$route.query.activitied_at_prepend,
+          activitied_at_append: this.$route.query.activitied_at_append,
+          foreman_id: this.$route.query.foreman_id,
+        },
       })
     },
 
@@ -525,6 +530,13 @@ export default {
         )
       }
 
+      //selected
+      if (this.field.verification_status == 'V') {
+        formData.append('selected', 1)
+      } else {
+        formData.append('selected', 0)
+      }
+
       formData.append('activitied_at', this.field.activitied_at)
       formData.append('ha_statement_id', this.field.ha_statement_id.id)
 
@@ -554,9 +566,7 @@ export default {
           })
 
           //redirect, if success store data
-          this.$router.push({
-            name: 'admin-activity_actual',
-          })
+          this.back()
         })
         .catch((error) => {
           //assign error to state "validation"
