@@ -111,11 +111,12 @@ export default {
   },
   data() {
     return {
+      vtest: 'd-none',
       fields: [
         {
           label: 'Actions',
           key: 'actions',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass ',
         },
         {
           label: 'Kode',
@@ -246,6 +247,8 @@ export default {
       })
     },
   },
+
+ 
 }
 </script>
 
