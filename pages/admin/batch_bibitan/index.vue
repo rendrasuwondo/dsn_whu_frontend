@@ -248,7 +248,7 @@ export default {
 
     //fetching posts
     const posts = await $axios.$get(
-      `/api/admin/batch_bibitan?q=${search}&page=${page}`
+      `/api/admin/batch_bibitan?q=${search}&page=${page}&q_department_id=${q_department_id}`
     )
 
     return {
