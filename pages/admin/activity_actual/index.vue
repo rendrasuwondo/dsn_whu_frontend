@@ -290,6 +290,11 @@ export default {
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
+          label: 'Estate',
+          key: 'department_code',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
           label: 'Afd',
           key: 'afdeling_code',
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',

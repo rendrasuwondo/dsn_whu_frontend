@@ -48,6 +48,22 @@
               </div>
             </div>
 
+            <!-- <div class="form-group">
+              <label>Mandor</label>
+              <multiselect
+                v-model="field.foreman_employee_id"
+                :options="foreman"
+                label="employee_description_position"
+                track-by="id"
+                :searchable="true"
+              ></multiselect>
+              <!-- <div v-if="validation.activity_id" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.activity_id[0]
+                }}</b-alert> 
+              </div>-->
+            <!-- </div> -->
+
             <div class="form-group">
               <label>Tanggal</label>
               <b-form-datepicker
@@ -256,6 +272,7 @@ export default {
         updated_at: '',
         created_by: '',
         updated_by: '',
+        foreman_employee_id: '',
       },
 
       test: '',
@@ -263,6 +280,7 @@ export default {
       //state categories
       activity: [],
       afdeling: [],
+      foreman: [],
 
       //state categories
       categories: [],
@@ -312,6 +330,18 @@ export default {
         // })
       })
 
+    this.company_code = this.$auth.user.employee.company_code
+    this.department_code = this.$auth.user.employee.department_code
+    //foreman
+    this.$axios
+      .get(
+        `/api/admin/lov_employee_activity_group/${this.company_code}/${this.department_code}/mandor`
+      )
+
+      .then((response) => {
+        this.foreman = response.data.data
+      })
+
     // console.log(this.$cookies.get('activity_group_id'))
     //fetching data categories
     this.$axios
@@ -341,13 +371,12 @@ export default {
     //fetching data tags
     let strApi = `/api/admin/lov_afdeling?company_id=${this.$auth.user.employee.company_id}`
 
-    if (this.$auth.user.employee.activity_group_code == "RAWAT") {
+    if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
       strApi = `/api/admin/lov_afdeling?company_id=${this.$auth.user.employee.company_id}&id=${this.$auth.user.employee.afdeling_id}`
     }
 
     this.$axios
-      .get( strApi       
-      )
+      .get(strApi)
 
       .then((response) => {
         //assing response data to state "tags"
