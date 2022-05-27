@@ -39,27 +39,6 @@
                         <b-btn size="sm" @click="activitied_at_start = ''"
                           ><i class="fa fa-trash"></i
                         ></b-btn>
-                        &nbsp; s.d
-                      </template>
-                    </b-input-group>
-                  </b-col>
-                  <b-col>
-                    <b-input-group>
-                      <b-datepicker
-                        v-model="activitied_at_end"
-                        reset-button
-                        size="sm"
-                        :date-format-options="{
-                          year: 'numeric',
-                          month: 'short',
-                          day: '2-digit',
-                          weekday: 'short',
-                        }"
-                      ></b-datepicker>
-                      <template #append>
-                        <b-btn size="sm" @click="activitied_at_end = ''"
-                          ><i class="fa fa-trash"></i
-                        ></b-btn>
                       </template>
                     </b-input-group>
                   </b-col>
@@ -131,6 +110,7 @@
             :items="posts"
             :fields="fields"
             show-empty
+            class="align-items-start"
           >
             <!-- <template v-slot:cell(actions)="row">
               <b-button
@@ -206,11 +186,11 @@ export default {
     return {
       activity: [],
       fields: [
-        // // {
-        // //   label: 'Actions',
-        // //   key: 'actions',
-        // //   tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        // // },
+        // {
+        //   label: 'Actions',
+        //   key: 'actions',
+        //   tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        // },
         // {
         //   label: 'Detail',
         //   key: 'detail',
@@ -218,15 +198,15 @@ export default {
         //   thClass: 'd-none',
         // },
         // {
-        //   label: ['Jenis Pekerjaan'],
-        //   key: 'jenis_pekerjaan',
+        //   label: 'Jenis Pekerjaan',
+        //   key: 'man_days',
         //   tdClass: 'align-middle',
         // },
         // {
-        //   label: 'Afdeling 9',
-        //   key: 'afdeling_9',
+        //   label: 'Afdeling 5',
+        //   key: 'qty',
         //   tdClass: 'align-middle',
-        // // },
+        // },
       ],
       query_activity_id: '',
     }
@@ -292,7 +272,7 @@ export default {
 
     //fetching posts
     const posts = await $axios.$get(
-      `/api/admin/r_activity_plan?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_activity_id=${q_activity_id}`
+      `/api/admin/r_activity_plan?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&q_activity_id=${q_activity_id}`
     )
 
     // console.log(posts.data)
@@ -386,7 +366,7 @@ export default {
       }
 
       console.log(
-        `/api/admin/activity_plan/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_activity_id=${this.query_activity_id}`
+        `/api/admin/activity_plan/export?activitied_at_prepend=${this.activitied_at_start}&q_activity_id=${this.query_activity_id}`
       )
       this.$axios({
         url: `/api/admin/r_activity_plan/export`,
