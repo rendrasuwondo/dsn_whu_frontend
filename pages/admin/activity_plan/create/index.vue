@@ -332,7 +332,7 @@ export default {
 
     //foreman_employee_id
     this.$axios
-      .get('/api/admin/lov_employee')
+      .get('/api/admin/lov_foreman_employee')
 
       .then((response) => {
         this.foreman = response.data.data
