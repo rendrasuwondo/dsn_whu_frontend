@@ -55,6 +55,22 @@
             </div>
 
             <div class="form-group">
+              <label>Mandor</label>
+              <multiselect
+                v-model="field.foreman_employee_id"
+                :options="foreman"
+                :custom-label="customLabel"
+                track-by="id"
+                :searchable="true"
+              ></multiselect>
+              <!-- <div v-if="validation.activity_id" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.activity_id[0]
+                }}</b-alert> 
+              </div>-->
+            </div>
+
+            <div class="form-group">
               <label>Tanggal</label>
               <b-form-datepicker
                 v-model="field.activitied_at"
@@ -258,8 +274,10 @@ export default {
         updated_at: '',
         created_by: '',
         updated_by: '',
+        foreman_employee_id: '',
       },
 
+      foreman: [],
       activity: [],
       //state validation
       validation: [],
@@ -287,6 +305,8 @@ export default {
 
         this.field.activity_id = response.data.data.activity
 
+        this.field.foreman_employee_id = response.data.data.foreman_employee
+
         this.field.activitied_at = response.data.data.activitied_at
 
         if (response.data.data.activity.name.indexOf('RATE') > 0) {
@@ -312,6 +332,14 @@ export default {
         this.field.updated_by = response.data.data.updated_by
       })
 
+    //foreman_employee_id
+    this.$axios
+      .get('/api/admin/lov_employee')
+
+      .then((response) => {
+        this.foreman = response.data.data
+      })
+
     this.$axios
       .get('/api/admin/lov_activity')
 
@@ -326,6 +354,10 @@ export default {
   },
 
   methods: {
+    customLabel(option) {
+      return `${option.nik}` + '-' + `${option.name}`
+    },
+
     back() {
       this.$router.push({
         name: 'admin-activity_plan',

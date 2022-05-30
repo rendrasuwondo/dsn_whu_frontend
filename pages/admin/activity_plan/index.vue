@@ -223,6 +223,11 @@ export default {
           tdClass: 'align-middle',
         },
         {
+          label: 'Mandor',
+          key: 'foreman_employee_name',
+          tdClass: 'align-middle',
+        },
+        {
           label: 'Estate',
           key: 'department_code',
           tdClass: 'align-middle',

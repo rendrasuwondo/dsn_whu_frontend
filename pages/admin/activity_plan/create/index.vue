@@ -48,12 +48,12 @@
               </div>
             </div>
 
-            <!-- <div class="form-group">
+            <div class="form-group">
               <label>Mandor</label>
               <multiselect
                 v-model="field.foreman_employee_id"
                 :options="foreman"
-                label="employee_description_position"
+                label="employee_description"
                 track-by="id"
                 :searchable="true"
               ></multiselect>
@@ -62,7 +62,7 @@
                   validation.activity_id[0]
                 }}</b-alert> 
               </div>-->
-            <!-- </div> -->
+            </div>
 
             <div class="form-group">
               <label>Tanggal</label>
@@ -330,13 +330,9 @@ export default {
         // })
       })
 
-    this.company_code = this.$auth.user.employee.company_code
-    this.department_code = this.$auth.user.employee.department_code
-    //foreman
+    //foreman_employee_id
     this.$axios
-      .get(
-        `/api/admin/lov_employee_activity_group/${this.company_code}/${this.department_code}/mandor`
-      )
+      .get('/api/admin/lov_employee')
 
       .then((response) => {
         this.foreman = response.data.data
@@ -483,11 +479,19 @@ export default {
         'id',
         this.field.activity_id
           ? this.field.activity_id.id
-          : '' + this.field.afdeling_id.id + this.field.activitied_at
+          : '' +
+              this.field.afdeling_id.id +
+              this.field.activitied_at +
+              this.field.foreman_employee_id.id
       )
       formData.append(
         'activity_id',
         this.field.activity_id ? this.field.activity_id.id : ''
+      )
+
+      formData.append(
+        'foreman_employee_id',
+        this.field.foreman_employee_id ? this.field.foreman_employee_id.id : ''
       )
 
       formData.append(
