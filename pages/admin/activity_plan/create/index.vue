@@ -479,10 +479,7 @@ export default {
         'id',
         this.field.activity_id
           ? this.field.activity_id.id
-          : '' +
-              this.field.afdeling_id.id +
-              this.field.activitied_at +
-              this.field.foreman_employee_id.id
+          : '' + this.field.afdeling_id.id + this.field.activitied_at
       )
       formData.append(
         'activity_id',
@@ -491,7 +488,14 @@ export default {
 
       formData.append(
         'foreman_employee_id',
-        this.field.foreman_employee_id ? this.field.foreman_employee_id.id : ''
+        this.field.foreman_employee_id
+          ? this.field.foreman_employee_id.employee_id
+          : ''
+      )
+
+      formData.append(
+        'foreman_nik',
+        this.field.foreman_employee_id ? this.field.foreman_employee_id.nik : ''
       )
 
       formData.append(

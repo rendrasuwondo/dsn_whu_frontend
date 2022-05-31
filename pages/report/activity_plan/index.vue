@@ -342,7 +342,7 @@ export default {
         query: {
           q: this.search,
           activitied_at_prepend: this.activitied_at_start,
-          activitied_at_append: this.activitied_at_end,
+          // activitied_at_append: this.activitied_at_end,
           q_activity_id: this.query_activity_id,
         },
       })
@@ -365,11 +365,12 @@ export default {
         this.query_activity_id = this.activity_id.id ? this.activity_id.id : ''
       }
 
+      console.log('tes')
       console.log(
         `/api/admin/activity_plan/export?activitied_at_prepend=${this.activitied_at_start}&q_activity_id=${this.query_activity_id}`
       )
       this.$axios({
-        url: `/api/admin/r_activity_plan/export`,
+        url: `/api/admin/r_activity_plan/export?activitied_at_prepend=${this.activitied_at_start}&q_activity_id=${this.query_activity_id}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
