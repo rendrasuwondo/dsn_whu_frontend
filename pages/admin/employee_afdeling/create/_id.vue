@@ -37,6 +37,15 @@
             </div>
 
             <div class="form-group">
+              <label>Default?</label>
+              <b-form-select
+                v-model="field.is_default"
+                :options="options_default"
+              >
+              </b-form-select>
+            </div>
+
+            <div class="form-group">
               <label>Keterangan</label>
 
               <textarea
@@ -151,6 +160,11 @@ export default {
         { value: 'N', text: 'Tidak' },
       ],
 
+      options_default: [
+        { value: 'Y', text: 'Ya' },
+        { value: 'N', text: 'Tidak' },
+      ],
+
       state: 'disabled',
       value: undefined,
 
@@ -167,6 +181,7 @@ export default {
       field: {
         afdeling_id: '',
         is_active: 'Y',
+        is_default: 'N',
         description: '',
         create_at: '',
         update_at: '',
@@ -245,7 +260,7 @@ export default {
         'afdeling_id',
         this.field.afdeling_id ? this.field.afdeling_id.id : ''
       )
-
+      formData.append('is_default', this.field.is_default)
       formData.append('employee_id', this.$route.params.id)
       formData.append('is_active', this.field.is_active)
       formData.append('description', this.field.description)

@@ -37,6 +37,15 @@
             </div>
 
             <div class="form-group">
+              <label>Default?</label>
+              <b-form-select
+                v-model="field.is_default"
+                :options="options_default"
+              >
+              </b-form-select>
+            </div>
+
+            <div class="form-group">
               <label>Keterangan</label>
 
               <textarea
@@ -151,6 +160,11 @@ export default {
         { value: 'N', text: 'Tidak' },
       ],
 
+      options_default: [
+        { value: 'Y', text: 'Ya' },
+        { value: 'N', text: 'Tidak' },
+      ],
+
       state: 'disabled',
       value: undefined,
 
@@ -158,6 +172,7 @@ export default {
         afdeling_id: '',
         employee_id: '',
         is_active: '',
+        is_default: '',
         description: '',
         create_at: '',
         update_at: '',
@@ -211,6 +226,7 @@ export default {
         this.field.employee_id = response.data.data.employee_id
         this.field.afdeling_id = response.data.data.afdeling
         this.field.is_active = response.data.data.is_active
+        this.field.is_default = response.data.data.is_default
         this.field.description = response.data.data.description
         this.field.created_at = response.data.data.created_at
         this.field.created_by = response.data.data.created_by
@@ -249,6 +265,7 @@ export default {
           employee_id: this.field.employee_id,
           afdeling_id: this.field.afdeling_id ? this.field.afdeling_id.id : '',
           is_active: this.field.is_active,
+          is_default: this.field.is_default,
           description: this.field.description,
         })
         .then(() => {

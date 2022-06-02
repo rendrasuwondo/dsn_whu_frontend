@@ -170,6 +170,10 @@ export default {
           label: 'Aktif',
           key: 'is_active_code',
         },
+        {
+          label: 'Default',
+          key: 'is_default_code',
+        },
       ],
 
       header: [],
