@@ -289,7 +289,7 @@ export default {
       ],
 
       field: {
-        // foreman_employee_id: '',
+        foreman_employee_id: '',
         activity_plan_detail_id: '',
         man_days: '',
         block: '',

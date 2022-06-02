@@ -23,11 +23,11 @@
                 class="form-control"
                 readonly
               />
-              <div v-if="validation.afdeling" class="mt-2">
+              <!-- <div v-if="validation.afdeling" class="mt-2">
                 <b-alert show variant="danger">{{
                   validation.afdeling[0]
                 }}</b-alert>
-              </div>
+              </div> -->
             </div>
 
             <div class="form-group">
@@ -39,7 +39,7 @@
                 class="form-control"
                 readonly
               />
-              <multiselect
+              <!-- <multiselect
                 v-show="false"
                 v-model="field.activity_id"
                 :options="activity"
@@ -51,18 +51,18 @@
                 <b-alert show variant="danger">{{
                   validation.activity_id[0]
                 }}</b-alert>
-              </div>
+              </div> -->
             </div>
 
             <div class="form-group">
               <label>Mandor</label>
-              <multiselect
+              <input
+                type="text"
                 v-model="field.foreman_employee_id"
-                :options="foreman"
-                :custom-label="customLabel"
-                track-by="id"
-                :searchable="true"
-              ></multiselect>
+                placeholder=""
+                class="form-control"
+                readonly
+              />
               <!-- <div v-if="validation.activity_id" class="mt-2">
                 <b-alert show variant="danger">{{
                   validation.activity_id[0]
@@ -82,11 +82,11 @@
                 }"
                 disabled
               ></b-form-datepicker>
-              <div v-if="validation.activitied_at" class="mt-2">
+              <!-- <div v-if="validation.activitied_at" class="mt-2">
                 <b-alert show variant="danger">{{
                   validation.activitied_at[0]
                 }}</b-alert>
-              </div>
+              </div> -->
             </div>
 
             <div class="form-group" v-show="show_hk">
@@ -305,7 +305,10 @@ export default {
 
         this.field.activity_id = response.data.data.activity
 
-        this.field.foreman_employee_id = response.data.data.foreman_employee
+        this.field.foreman_employee_id =
+          response.data.data.foreman_employee.nik.concat(
+            ' - ' + response.data.data.foreman_employee.name
+          )
 
         this.field.activitied_at = response.data.data.activitied_at
 
