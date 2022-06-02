@@ -486,6 +486,8 @@ export default {
           '_' +
           this.field.activitied_at +
           '_' +
+          this.field.foreman_employee_id.nik +
+          '_' +
           this.field.foreman_employee_id.employee_id +
           '_' +
           this.field.ha_statement_id.id +
