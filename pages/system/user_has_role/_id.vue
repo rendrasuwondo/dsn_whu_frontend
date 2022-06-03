@@ -174,6 +174,10 @@ export default {
           key: 'name_user',
         },
         {
+          label: 'Estate',
+          key: 'department_code',
+        },
+        {
           label: 'Email',
           key: 'email_user',
         },
