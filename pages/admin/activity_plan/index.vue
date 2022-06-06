@@ -145,13 +145,13 @@
                 <i class="fa fa-pencil-alt"></i>
               </b-button>
 
-              <b-button
+              <!-- <b-button
                 variant="link"
                 size="sm"
                 @click="deletePost(row.item.id)"
                 title="Hapus"
                 ><i class="fa fa-trash"></i
-              ></b-button>
+              ></b-button> -->
             </template>
             <template v-slot:cell(detail)="row">
               <b-button

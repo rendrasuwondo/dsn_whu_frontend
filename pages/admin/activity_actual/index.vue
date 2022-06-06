@@ -81,7 +81,7 @@
                   ></b-col>
                 </b-row>
               </b-container>
-              <b-container class="bv-example-row">
+              <!-- <b-container class="bv-example-row">
                 <b-row>
                   <b-col cols="1">Afdeling</b-col>
                   <b-col cols="7">
@@ -95,7 +95,7 @@
                       ></multiselect></div
                   ></b-col>
                 </b-row>
-              </b-container>
+              </b-container> -->
             </b-card-text>
           </b-card>
 
