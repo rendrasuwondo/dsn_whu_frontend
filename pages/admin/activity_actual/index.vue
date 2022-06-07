@@ -81,7 +81,7 @@
                   ></b-col>
                 </b-row>
               </b-container>
-              <!-- <b-container class="bv-example-row">
+              <b-container class="bv-example-row">
                 <b-row>
                   <b-col cols="1">Afdeling</b-col>
                   <b-col cols="7">
@@ -95,7 +95,7 @@
                       ></multiselect></div
                   ></b-col>
                 </b-row>
-              </b-container> -->
+              </b-container>
             </b-card-text>
           </b-card>
 
@@ -505,9 +505,44 @@ export default {
     }
   },
 
-  mounted() {},
+  mounted() {
+    // this.afdeling_id = this.$auth.user.employee.afdeling_id
+    // this.afdeling_code = this.$auth.user.employee.afdeling_code
+    // console.log('TES')
+    // console.log(this.afdeling_id)
+    // console.log(this.afdeling_code)
+    // //Dropdown Afdeling
+    // let strApi = `/api/admin/lov_afdeling?company_id=${this.$auth.user.employee.company_id}`
+    // if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
+    //   strApi = `/api/admin/lov_afdeling?company_id=${this.$auth.user.employee.company_id}&id=${this.$auth.user.employee.afdeling_id}`
+    // }
+    // this.$axios
+    //   .get(strApi)
+    //   .then((response) => {
+    //     //assing response data to state "tags"
+    //     this.afdeling = response.data.data
+    //   })
+  },
 
   methods: {
+    // onChangeAfdeling() {
+    //   if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
+    //     this.$axios
+    //       .get(`/api/admin/lov_employee_activity_group`)
+    //       .then((response) => {
+    //         this.afdeling_id = response.data.data
+    //       })
+    //   } else {
+    //     this.field.ha_statement_id = ''
+    //     this.$axios
+    //       .get(`/api/admin/lov_first_afdeling`)
+
+    //       .then((response) => {
+    //         this.afdeling_id = response.data.data
+    //       })
+    //   }
+    // },
+
     //     pad(n, width, z) {
     //   z = z || '0'
     //   n = n + ''
