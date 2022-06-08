@@ -393,6 +393,7 @@ export default {
 
     let department_code = $auth.user.employee.department_code
     let company_code = $auth.user.employee.company_code
+    // let i_afdeling_id = $auth.user.employee.afdeling_id
 
     const foreman_list = await $axios.$get(
       `/api/admin/lov_employee_activity_group/${company_code}/${department_code}/mandor`
@@ -402,11 +403,15 @@ export default {
     let foreman_id = query.foreman_id ? query.foreman_id : ''
     let foreman_employee_id = []
 
+    let q_afdeling_id = query.q_afdeling_id
+      ? query.q_afdeling_id
+      : $auth.user.employee.afdeling_id
+    let afdeling_id = []
+
     // afdeling_id
     const afdeling_list = await $axios.$get(`/api/admin/lov_employee_afdeling`)
 
-    let q_afdeling_id = query.q_afdeling_id ? query.q_afdeling_id : ''
-    let afdeling_id = []
+    let afdeling_code = []
 
     if (query.q_afdeling_id) {
       // console.log('rendra')
@@ -418,7 +423,7 @@ export default {
     } else {
       afdeling_id = []
 
-      q_afdeling_id = afdeling_id.afdeling_id
+      q_afdeling_id = $auth.user.employee.afdeling_id
     }
 
     if (q_afdeling_id == undefined) {
@@ -489,8 +494,10 @@ export default {
     // )
     // foreman_employee_id = 490
     // console.log('rdr')
-    // console.log(`/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_id}`)
-    // console.log(posts.data)
+    // console.log(
+    //   `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_id}&q_afdeling_id=${q_afdeling_id}`
+    // )
+    // console.log(afdeling_list.data)
     return {
       posts: posts.data,
       pagination: posts.data,
@@ -506,22 +513,12 @@ export default {
   },
 
   mounted() {
-    // this.afdeling_id = this.$auth.user.employee.afdeling_id
-    // this.afdeling_code = this.$auth.user.employee.afdeling_code
-    // console.log('TES')
-    // console.log(this.afdeling_id)
-    // console.log(this.afdeling_code)
-    // //Dropdown Afdeling
-    // let strApi = `/api/admin/lov_afdeling?company_id=${this.$auth.user.employee.company_id}`
-    // if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
-    //   strApi = `/api/admin/lov_afdeling?company_id=${this.$auth.user.employee.company_id}&id=${this.$auth.user.employee.afdeling_id}`
-    // }
-    // this.$axios
-    //   .get(strApi)
-    //   .then((response) => {
-    //     //assing response data to state "tags"
-    //     this.afdeling = response.data.data
-    //   })
+    this.afdeling_id = [
+      {
+        afdeling_id: this.$auth.user.employee.afdeling_id,
+        afdeling_code: this.$auth.user.employee.afdeling_code,
+      },
+    ]
   },
 
   methods: {
