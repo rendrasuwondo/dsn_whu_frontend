@@ -53,7 +53,7 @@
               <multiselect
                 v-model="field.foreman_employee_id"
                 :options="foreman"
-                label="employee_description"
+                :custom-label="customLabel"
                 track-by="id"
                 :searchable="true"
               ></multiselect>
@@ -332,7 +332,8 @@ export default {
 
     //foreman_employee_id
     this.$axios
-      .get('/api/admin/lov_foreman_employee')
+      // .get('/api/admin/lov_foreman_employee')
+      .get('/api/admin/lov_foreman_maintanance_rawat_hpt')
 
       .then((response) => {
         this.foreman = response.data.data
@@ -432,6 +433,15 @@ export default {
 
     customLabel(afdeling) {
       return `${afdeling.id}` + '-' + `${afdeling.code}`
+    },
+
+    customLabel(foreman) {
+      return (
+        `${foreman.employee_description}` +
+        ' [' +
+        `${foreman.position_code}` +
+        ']'
+      )
     },
 
     handleFileChange(e) {
