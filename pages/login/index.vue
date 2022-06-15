@@ -27,6 +27,7 @@
             class="form-control form-content"
             placeholder="Masukkan User Name"
             autofocus
+            ref="user_name"
           />
           <div class="form-border"></div>
         </div>
@@ -83,6 +84,10 @@ export default {
       //validation
       validation: [],
     }
+  },
+
+  mounted() {
+    this.$refs.user_name.focus()
   },
 
   methods: {
