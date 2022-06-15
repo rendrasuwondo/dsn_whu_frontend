@@ -9,7 +9,6 @@
       <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
       <div v-html="menu"></div>
-     
 
       <!-- <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
@@ -81,7 +80,7 @@ export default {
     return {
       mountains: [],
       menu: '',
-      loading: false
+      loading: false,
     }
   },
   // async fetch() {
@@ -96,14 +95,25 @@ export default {
       .then((response) => {
         //console.log(JSON.stringify(response.data.data))
         // console.log('rdr')
-        // console.log(response.data.data)
+        // console.log(
+        //   `/api/admin/menu_user/${this.$route.path.replaceAll('/', '*')}`
+        // )
         this.menu = response.data.data
         // this.detail(response.data)
         // console.log(this.detail)
       })
-  },
 
- 
+    //check akses Menu oleh User
+    this.$axios
+      .get(
+        `/api/admin/check_user_menu/${this.$route.path.replaceAll('/', '*')}`
+      )
+      .then((response) => {
+        if (response.data.data == 'Tidak') {
+          this.$router.push('/admin/dashboard')
+        }
+      })
+  },
 }
 </script>
 <style scoped>
