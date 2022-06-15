@@ -1,7 +1,7 @@
 <template>
   <div class="hold-transition login-page">
     <div>
-      <b-img class="img-logo" src="/static/img/dsn_icon.png" alt="logo"></b-img>
+      <b-img class="img-logo" src="\img/dsn_logo.png" alt="logo"></b-img>
     </div>
     <div class="login-box">
       <!-- /.login-logo -->
