@@ -5,7 +5,7 @@
       <Header />
 
       <!-- /.Hader -->
-  
+
       <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <a to="/admin/dashboard" class="brand-link text-center mt-2">
           <span class="brand-text font-weight-bold">ERP - WHU</span>
@@ -49,10 +49,19 @@ export default {
 <style>
 .wrapper,
 .content-wrapper {
-  background-color: #ccdcec !important;
+  background-color: #fbfdff !important;
 }
 
 .WidthAction {
   max-width: 90px;
+}
+
+.brand-link {
+  padding-top: 14px;
+}
+.sidebar-mini.sidebar-collapse .main-sidebar,
+.sidebar-mini.sidebar-collapse .main-sidebar::before {
+  margin-left: 0;
+  width: 4.6rem;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="hold-transition login-page">
     <div>
-      <b-img class="img-logo" src="\img/dsn_logo.png" alt="logo"></b-img>
+      <b-img class="img-logoo" src="\img/dsn_logo.png" alt="logo"></b-img>
     </div>
     <div class="login-box">
       <!-- /.login-logo -->
@@ -71,8 +71,10 @@ body {
   box-shadow: none;
 }
 
-.img-logo {
+.img-logoo {
   margin-bottom: 20px;
+  height: 80px;
+  object-fit: cover;
 }
 
 .download-apk {
