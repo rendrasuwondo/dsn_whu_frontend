@@ -662,6 +662,18 @@ export default {
       //  console.log('rdr')
       //  console.log(this.activitied_at_start)
 
+      if (this.foreman_id === null) {
+        this.foreman_employee_id = ''
+      } else if (this.foreman_id.id === undefined) {
+        if (this.$route.query.foreman_id === undefined) {
+          this.foreman_employee_id = ''
+        } else {
+          this.foreman_employee_id = this.$route.query.foreman_id
+        }
+      } else {
+        this.foreman_employee_id = this.foreman_id.id ? this.foreman_id.id : ''
+      }
+
       if (this.afdeling_id === null) {
         this.query_afdeling_id = ''
       } else if (this.afdeling_id.id === undefined) {
