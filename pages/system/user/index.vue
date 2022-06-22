@@ -176,7 +176,7 @@ export default {
         },
         {
           label: 'Afdeling',
-          key: 'afdeling_id',
+          key: 'afdeling_description',
         },
         {
           label: 'Email',
