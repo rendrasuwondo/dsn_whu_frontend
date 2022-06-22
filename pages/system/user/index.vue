@@ -175,12 +175,12 @@ export default {
           key: 'department_code',
         },
         {
-          label: 'Email',
-          key: 'email',
-        },
-        {
           label: 'Afdeling',
           key: 'afdeling_id',
+        },
+        {
+          label: 'Email',
+          key: 'email',
         },
       ],
       sweet_alert: {
