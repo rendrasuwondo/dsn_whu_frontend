@@ -598,7 +598,7 @@ export default {
 
       try {
         if (this.afdeling_id.afdeling_id === null) {
-          this.query_afdeling_id = this.$route.query.q_afdeling_id
+          this.query_afdeling_id = ''
         } else if (this.afdeling_id.afdeling_id === undefined) {
           this.query_afdeling_id = this.$route.query.q_afdeling_id
         } else {
