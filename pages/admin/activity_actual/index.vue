@@ -520,14 +520,15 @@ export default {
   },
 
   mounted() {
-    this.afdeling_id = [
-      {
-        afdeling_id: this.$auth.user.employee.afdeling_id,
-        afdeling_code: this.$auth.user.employee.afdeling_code,
-      },
-    ]
-    console.log('tes123')
-    console.log(this.afdeling_id)
+    if (this.$route.query.q_afdeling_id == null) {
+      this.afdeling_id = [
+        {
+          afdeling_id: this.$auth.user.employee.afdeling_id,
+          afdeling_code: this.$auth.user.employee.afdeling_code,
+        },
+      ]
+    } else {
+    }
   },
 
   methods: {
