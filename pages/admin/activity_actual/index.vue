@@ -615,7 +615,9 @@ export default {
           activitied_at_prepend: this.activitied_at_start,
           activitied_at_append: this.activitied_at_end,
           foreman_id: this.query_foreman_id,
-          q_afdeling_id: this.query_afdeling_id,
+          q_afdeling_id: this.query_afdeling_id
+            ? this.query_afdeling_id
+            : this.$auth.user.employee.afdeling_id,
         },
       })
     },
