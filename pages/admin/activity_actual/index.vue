@@ -420,6 +420,8 @@ export default {
         .get(`/api/admin/lov_employee_afdeling?afdeling_id=${q_afdeling_id}`)
         .then((response) => {
           afdeling_id = response.data.data
+          console.log('cekkkk')
+          console.log(response.data.data)
         })
     } else {
       afdeling_id = []
