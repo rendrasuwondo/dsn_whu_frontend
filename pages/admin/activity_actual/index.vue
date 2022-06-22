@@ -90,6 +90,7 @@
                         v-model="afdeling_id"
                         :options="afdeling"
                         :custom-label="customLabel"
+                        x
                         track-by="afdeling_id"
                         :searchable="true"
                       ></multiselect></div
@@ -426,8 +427,8 @@ export default {
       q_afdeling_id = $auth.user.employee.afdeling_id
     }
 
-    if (q_afdeling_id == undefined) {
-      q_afdeling_id = ''
+    if (q_afdeling_id == undefined || q_afdeling_id == '') {
+      q_afdeling_id = $auth.user.employee.afdeling_id
     }
 
     // try {
@@ -490,6 +491,10 @@ export default {
       `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_id}&q_afdeling_id=${q_afdeling_id}`
     )
 
+    console.log('rdr')
+    console.log(
+      `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_id}&q_afdeling_id=${q_afdeling_id}`
+    )
     // const profile = await $axios.$get(
     // )
     // foreman_employee_id = 490
@@ -519,6 +524,8 @@ export default {
         afdeling_code: this.$auth.user.employee.afdeling_code,
       },
     ]
+    console.log('tes123')
+    console.log(this.afdeling_id)
   },
 
   methods: {
@@ -580,6 +587,8 @@ export default {
       try {
         if (this.foreman_employee_id.employee_id === null) {
           this.query_foreman_id = ''
+        } else if (this.foreman_employee_id.employee_id === undefined) {
+          this.query_foreman_id = this.$route.query.foreman_id
         } else {
           this.query_foreman_id = this.foreman_employee_id.employee_id
             ? this.foreman_employee_id.employee_id
@@ -662,16 +671,14 @@ export default {
       //  console.log('rdr')
       //  console.log(this.activitied_at_start)
 
-      if (this.foreman_id === null) {
-        this.foreman_employee_id = ''
-      } else if (this.foreman_id.id === undefined) {
-        if (this.$route.query.foreman_id === undefined) {
-          this.foreman_employee_id = ''
-        } else {
-          this.foreman_employee_id = this.$route.query.foreman_id
-        }
+      if (this.foreman_employee_id.employee_id === null) {
+        this.query_foreman_id = ''
+      } else if (this.foreman_employee_id.employee_id === undefined) {
+        this.query_foreman_id = this.$route.query.foreman_id
       } else {
-        this.foreman_employee_id = this.foreman_id.id ? this.foreman_id.id : ''
+        this.query_foreman_id = this.foreman_employee_id.employee_id
+          ? this.foreman_employee_id.employee_id
+          : ''
       }
 
       if (this.afdeling_id === null) {
@@ -687,7 +694,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/activity_actual/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&foreman_id=${this.foreman_employee_id}&afdeling_id=${this.query_afdeling_id}`,
+        url: `/api/admin/activity_actual/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&foreman_id=${this.foreman_id}&afdeling_id=${this.query_afdeling_id}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important

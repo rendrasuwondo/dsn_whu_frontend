@@ -19,7 +19,7 @@
               <multiselect
                 v-model="field.afdeling_id"
                 :options="afdeling"
-                label="id"
+                label="afdeling_id"
                 track-by="id"
                 :searchable="true"
                 @input="onChangeAfdeling"
@@ -366,14 +366,14 @@ export default {
       })
 
     //fetching data tags
-    let strApi = `/api/admin/lov_afdeling?company_id=${this.$auth.user.employee.company_id}`
+    let strApi = `/api/admin/lov_employee_afdeling`
 
     if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
-      strApi = `/api/admin/lov_afdeling?company_id=${this.$auth.user.employee.company_id}&id=${this.$auth.user.employee.afdeling_id}`
+      strApi = `/api/admin/lov_employee_afdeling`
     }
 
     this.$axios
-      .get(strApi)
+      .get(`/api/admin/lov_employee_afdeling`)
 
       .then((response) => {
         //assing response data to state "tags"
@@ -382,10 +382,12 @@ export default {
     // console.log(this.$auth.user.employee.afdeling_id)
 
     this.$axios
-      .get(`/api/admin/lov_afdeling?id=${this.$auth.user.employee.afdeling_id}`)
+      .get(
+        `/api/admin/lov_employee_afdeling?afdeling_id=${this.$auth.user.employee.afdeling_id}`
+      )
       .then((response) => {
-        console.log('rdr')
-        console.log(response.data.data)
+        // console.log('rdr')
+        // console.log(response.data.data)
         this.field.afdeling_id = response.data.data
       })
   },
@@ -402,19 +404,19 @@ export default {
         this.field.flexrate = ''
       }
     },
-    onChangeAfdeling() {
-      // alert(this.$cookies.get('activity_group_code'))
+    // onChangeAfdeling() {
+    //   // alert(this.$cookies.get('activity_group_code'))
 
-      if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
-        this.$axios
-          .get(
-            `/api/admin/lov_afdeling?id=${this.$auth.user.employee.afdeling_id}`
-          )
-          .then((response) => {
-            this.field.afdeling_id = response.data.data
-          })
-      }
-    },
+    //   if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
+    //     this.$axios
+    //       .get(
+    //         `/api/admin/lov_afdeling?id=${this.$auth.user.employee.afdeling_id}`
+    //       )
+    //       .then((response) => {
+    //         this.field.afdeling_id = response.data.data
+    //       })
+    //   }
+    // },
     back() {
       this.$router.push({
         name: 'admin-activity_plan',
@@ -479,9 +481,7 @@ export default {
       } else {
         formData.append(
           'afdeling_id',
-          this.field.afdeling_id
-            ? this.field.afdeling_id.id
-            : this.$auth.user.employee.afdeling_id
+          this.field.afdeling_id ? this.field.afdeling_id.afdeling_id : ''
         )
       }
 
