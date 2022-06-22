@@ -178,6 +178,10 @@ export default {
           label: 'Email',
           key: 'email',
         },
+        {
+          label: 'Afdeling',
+          key: 'afdeling_id',
+        },
       ],
       sweet_alert: {
         title: '',
