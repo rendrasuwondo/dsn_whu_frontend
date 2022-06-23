@@ -68,21 +68,6 @@
               </b-container>
               <b-container class="bv-example-row">
                 <b-row>
-                  <b-col cols="1">Mandor</b-col>
-                  <b-col cols="7">
-                    <div class="form-group">
-                      <multiselect
-                        v-model="foreman_employee_id"
-                        :options="foreman"
-                        label="employee_description"
-                        track-by="id"
-                        :searchable="true"
-                      ></multiselect></div
-                  ></b-col>
-                </b-row>
-              </b-container>
-              <b-container class="bv-example-row">
-                <b-row>
                   <b-col cols="1">Afdeling</b-col>
                   <b-col cols="7">
                     <div class="form-group">
@@ -94,6 +79,21 @@
                         track-by="afdeling_id"
                         :searchable="true"
                         @input="onChangeAfdeling"
+                      ></multiselect></div
+                  ></b-col>
+                </b-row>
+              </b-container>
+              <b-container class="bv-example-row">
+                <b-row>
+                  <b-col cols="1">Mandor</b-col>
+                  <b-col cols="7">
+                    <div class="form-group">
+                      <multiselect
+                        v-model="foreman_employee_id"
+                        :options="foreman"
+                        label="employee_description"
+                        track-by="id"
+                        :searchable="true"
                       ></multiselect></div
                   ></b-col>
                 </b-row>
