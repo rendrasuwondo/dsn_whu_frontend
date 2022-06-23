@@ -53,7 +53,7 @@
               <multiselect
                 v-model="field.foreman_employee_id"
                 :options="foreman"
-                :custom-label="customLabel"
+                label="employee_description"
                 track-by="id"
                 :searchable="true"
               ></multiselect>

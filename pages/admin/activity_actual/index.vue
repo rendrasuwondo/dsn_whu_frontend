@@ -74,7 +74,7 @@
                       <multiselect
                         v-model="foreman_employee_id"
                         :options="foreman"
-                        label="employee_description_position"
+                        label="employee_description"
                         track-by="id"
                         :searchable="true"
                       ></multiselect></div
@@ -93,6 +93,7 @@
                         x
                         track-by="afdeling_id"
                         :searchable="true"
+                        @input="onChangeAfdeling"
                       ></multiselect></div
                   ></b-col>
                 </b-row>
@@ -392,18 +393,6 @@ export default {
       ? query.activitied_at_append
       : currentDate()
 
-    let department_code = $auth.user.employee.department_code
-    let company_code = $auth.user.employee.company_code
-    // let i_afdeling_id = $auth.user.employee.afdeling_id
-
-    const foreman_list = await $axios.$get(
-      `/api/admin/lov_employee_activity_group/${company_code}/${department_code}/mandor`
-    )
-
-    //foreman_id
-    let foreman_id = query.foreman_id ? query.foreman_id : ''
-    let foreman_employee_id = []
-
     let q_afdeling_id = query.q_afdeling_id
       ? query.q_afdeling_id
       : $auth.user.employee.afdeling_id
@@ -420,8 +409,6 @@ export default {
         .get(`/api/admin/lov_employee_afdeling?afdeling_id=${q_afdeling_id}`)
         .then((response) => {
           afdeling_id = response.data.data
-          console.log('cekkkk')
-          console.log(response.data.data)
         })
     } else {
       afdeling_id = []
@@ -433,12 +420,24 @@ export default {
       q_afdeling_id = $auth.user.employee.afdeling_id
     }
 
+    let department_code = $auth.user.employee.department_code
+    let company_code = $auth.user.employee.company_code
+    // let i_afdeling_id = $auth.user.employee.afdeling_id
+
+    const foreman_list = await $axios.$get(
+      `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${q_afdeling_id}`
+    )
+
+    //foreman_id
+    let foreman_id = query.foreman_id ? query.foreman_id : ''
+    let foreman_employee_id = []
+
     // try {
     if (query.foreman_id) {
       //Mandor
       $axios
         .get(
-          `/api/admin/lov_employee_activity_group/${company_code}/${department_code}/mandor?id=${foreman_id}`
+          `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${q_afdeling_id}`
         )
         .then((response) => {
           foreman_employee_id = response.data.data
@@ -493,10 +492,10 @@ export default {
       `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_id}&q_afdeling_id=${q_afdeling_id}`
     )
 
-    console.log('rdr')
-    console.log(
-      `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_id}&q_afdeling_id=${q_afdeling_id}`
-    )
+    // console.log('rdr')
+    // console.log(
+    //   `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_id}&q_afdeling_id=${q_afdeling_id}`
+    // )
     // const profile = await $axios.$get(
     // )
     // foreman_employee_id = 490
@@ -532,23 +531,17 @@ export default {
   },
 
   methods: {
-    // onChangeAfdeling() {
-    //   if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
-    //     this.$axios
-    //       .get(`/api/admin/lov_employee_activity_group`)
-    //       .then((response) => {
-    //         this.afdeling_id = response.data.data
-    //       })
-    //   } else {
-    //     this.field.ha_statement_id = ''
-    //     this.$axios
-    //       .get(`/api/admin/lov_first_afdeling`)
-
-    //       .then((response) => {
-    //         this.afdeling_id = response.data.data
-    //       })
-    //   }
-    // },
+    onChangeAfdeling() {
+      if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
+        this.$axios
+          .get(
+            `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.afdeling_id.afdeling_id}`
+          )
+          .then((response) => {
+            this.foreman = response.data.data
+          })
+      }
+    },
 
     //     pad(n, width, z) {
     //   z = z || '0'
