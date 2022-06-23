@@ -62,7 +62,7 @@
                 :to="{
                   name: 'admin-employee-edit-id',
                   params: { id: row.item.id },
-                  query: { q: param_q },
+                  query: { q: param_q, afdeling_id: row.item.afdeling_id },
                 }"
                 variant="link"
                 size="sm"
@@ -82,7 +82,9 @@
               <b-button
                 :to="{
                   name: 'admin-employee_afdeling-id',
-                  params: { id: row.item.id },
+                  params: {
+                    id: row.item.id,
+                  },
                 }"
                 variant="link"
                 size=""
@@ -95,7 +97,9 @@
               <b-button
                 :to="{
                   name: 'admin-employee_activity_group-id',
-                  params: { id: row.item.id },
+                  params: {
+                    id: row.item.id,
+                  },
                 }"
                 variant="link"
                 size=""

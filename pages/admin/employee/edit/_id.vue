@@ -288,6 +288,8 @@ export default {
         updated_at: '',
         updated_by: '',
         activity_group_id: '',
+        employee_id: '',
+        q_afdeling_id: '',
       },
 
       company: [],
@@ -432,6 +434,8 @@ export default {
           updated_by: this.field.updated_by,
           description: this.field.description,
           employee_status: this.field.employee_status,
+          employee_id: this.$route.params.id,
+          q_afdeling_id: this.$route.query.afdeling_id,
         })
         .then(() => {
           //sweet alert
