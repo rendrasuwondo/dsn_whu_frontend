@@ -333,7 +333,9 @@ export default {
     //foreman_employee_id
     this.$axios
       // .get('/api/admin/lov_foreman_employee')
-      .get('/api/admin/lov_foreman_maintanance_rawat_hpt')
+      .get(
+        `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.field.afdeling_id.afdeling_id}`
+      )
 
       .then((response) => {
         this.foreman = response.data.data
@@ -404,19 +406,24 @@ export default {
         this.field.flexrate = ''
       }
     },
-    // onChangeAfdeling() {
-    //   // alert(this.$cookies.get('activity_group_code'))
 
-    //   if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
-    //     this.$axios
-    //       .get(
-    //         `/api/admin/lov_afdeling?id=${this.$auth.user.employee.afdeling_id}`
-    //       )
-    //       .then((response) => {
-    //         this.field.afdeling_id = response.data.data
-    //       })
-    //   }
-    // },
+    onChangeAfdeling() {
+      console.log('cek data')
+      console.log(this.field.afdeling_id.afdeling_id)
+      console.log(
+        `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.field.afdeling_id.afdeling_id}`
+      )
+      if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
+        this.$axios
+          .get(
+            `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.field.afdeling_id.afdeling_id}`
+          )
+          .then((response) => {
+            this.foreman = response.data.data
+          })
+      }
+    },
+
     back() {
       this.$router.push({
         name: 'admin-activity_plan',

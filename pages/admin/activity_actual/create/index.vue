@@ -33,6 +33,23 @@
             </div>
 
             <div class="form-group">
+              <label>Afdeling</label>
+              <multiselect
+                v-model="field.afdeling_id"
+                :options="afdeling"
+                label="afdeling_id"
+                track-by="id"
+                :searchable="true"
+                @input="onChangeAfdeling"
+              ></multiselect>
+              <div v-if="validation.afdeling" class="mt-2">
+                <b-alert show variant="danger">{{
+                  validation.afdeling[0]
+                }}</b-alert>
+              </div>
+            </div>
+
+            <div class="form-group">
               <label>Mandor</label>
               <multiselect
                 v-model="field.foreman_employee_id"
@@ -79,23 +96,6 @@
               <div v-if="validation.labour_id" class="mt-2">
                 <b-alert show variant="danger">{{
                   validation.labour_id[0]
-                }}</b-alert>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Afdeling</label>
-              <multiselect
-                v-model="field.afdeling_id"
-                :options="afdeling"
-                label="afdeling_id"
-                track-by="id"
-                :searchable="true"
-                @input="onChangeAfdeling"
-              ></multiselect>
-              <div v-if="validation.afdeling" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.afdeling[0]
                 }}</b-alert>
               </div>
             </div>
@@ -341,7 +341,9 @@ export default {
     //Dropdown Mandor
     this.$axios
       // .get('/api/admin/lov_foreman_employee')
-      .get('/api/admin/lov_foreman_maintanance_rawat_hpt')
+      .get(
+        `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.field.afdeling_id.afdeling_id}`
+      )
 
       .then((response) => {
         this.foreman = response.data.data
@@ -396,27 +398,22 @@ export default {
   },
 
   methods: {
-    // onChangeAfdeling() {
-    //   if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
-    //     this.$axios
-    //       .get(
-    //         `/api/admin/lov_afdeling?id=${this.$auth.user.employee.afdeling_id}`
-    //       )
-    //       .then((response) => {
-    //         this.field.afdeling_id = response.data.data
-    //       })
-    //   } else {
-    //     this.field.ha_statement_id = ''
-    //     this.$axios
-    //       .get(
-    //         `/api/admin/lov_ha_statement_afdeling/${this.field.afdeling_id.id}`
-    //       )
-
-    //       .then((response) => {
-    //         this.ha_statement = response.data.data
-    //       })
-    //   }
-    // },
+    onChangeAfdeling() {
+      console.log('cek data')
+      console.log(this.field.afdeling_id.afdeling_id)
+      console.log(
+        `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.field.afdeling_id.afdeling_id}`
+      )
+      if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
+        this.$axios
+          .get(
+            `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.field.afdeling_id.afdeling_id}`
+          )
+          .then((response) => {
+            this.foreman = response.data.data
+          })
+      }
+    },
 
     customLabel(afdeling) {
       return `${afdeling.id}` + '-' + `${afdeling.code}`
