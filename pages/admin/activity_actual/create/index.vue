@@ -399,19 +399,16 @@ export default {
 
   methods: {
     onChangeAfdeling() {
-      console.log('cek data')
-      console.log(this.field.afdeling_id.afdeling_id)
-      console.log(
-        `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.field.afdeling_id.afdeling_id}`
-      )
-      if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
-        this.$axios
-          .get(
-            `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.field.afdeling_id.afdeling_id}`
-          )
-          .then((response) => {
-            this.foreman = response.data.data
-          })
+      if (this.field.afdeling_id != null) {
+        if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
+          this.$axios
+            .get(
+              `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.field.afdeling_id.afdeling_id}`
+            )
+            .then((response) => {
+              this.foreman = response.data.data
+            })
+        }
       }
     },
 

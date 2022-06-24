@@ -442,33 +442,6 @@ export default {
         .then((response) => {
           foreman_employee_id = response.data.data
         })
-
-      // foreman_employee_id = {
-      //   id: 14,
-      //   employee_id: 1364,
-      //   nik: '0009357',
-      //   name: 'IDA HARYADI',
-      //   employee_description: '0009357-IDA HARYADI',
-      //   employee_description_position: '0009357-IDA HARYADI (MANDOR HPT)',
-      //   company_id: 3,
-      //   company_code: 'DIN',
-      //   department_id: 31,
-      //   department_code: 'LK2',
-      //   position_id: 240,
-      //   position_code: 'MANDOR HPT',
-      //   activity_group_id: 3,
-      //   activity_group_code: 'HPT',
-      //   is_active: 'Y',
-      //   is_active_code: 'Ya',
-      //   afdeling_id: 'DI22D',
-      //   afdeling_code: '8',
-      //   afdeling_code_sap: 'D',
-      //   description: null,
-      //   created_at: '2022-03-23 17:00:00',
-      //   created_by: 'SYSTEM',
-      //   updated_at: '2022-03-23 17:00:00',
-      //   updated_by: 'SYSTEM',
-      // }
     } else {
       foreman_employee_id = []
 
@@ -535,7 +508,7 @@ export default {
       if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
         this.$axios
           .get(
-            `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.afdeling_id.afdeling_id}`
+            `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.query_afdeling_id}`
           )
           .then((response) => {
             this.foreman = response.data.data
@@ -611,7 +584,9 @@ export default {
           activitied_at_prepend: this.activitied_at_start,
           activitied_at_append: this.activitied_at_end,
           foreman_id: this.query_foreman_id,
-          q_afdeling_id: this.query_afdeling_id,
+          q_afdeling_id: this.query_afdeling_id
+            ? this.query_afdeling_id
+            : this.$auth.user.employee.afdeling_id,
         },
       })
     },

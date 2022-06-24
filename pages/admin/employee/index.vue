@@ -209,7 +209,7 @@ export default {
         },
         {
           label: 'Afd',
-          key: 'employee_afdeling',
+          key: 'afdeling_description',
           tdClass: 'align-middle text-center ',
         },
         // {
