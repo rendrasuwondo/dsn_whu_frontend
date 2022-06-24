@@ -508,7 +508,7 @@ export default {
       if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
         this.$axios
           .get(
-            `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.query_afdeling_id}`
+            `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.afdeling_id.afdeling_id}`
           )
           .then((response) => {
             this.foreman = response.data.data
