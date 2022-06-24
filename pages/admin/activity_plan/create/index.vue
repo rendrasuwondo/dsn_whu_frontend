@@ -331,15 +331,27 @@ export default {
       })
 
     //foreman_employee_id
-    this.$axios
-      // .get('/api/admin/lov_foreman_employee')
-      .get(
-        `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.field.afdeling_id.afdeling_id}`
-      )
+    if (this.field.afdeling_id.afdeling_id == undefined) {
+      this.$axios
+        // .get('/api/admin/lov_foreman_employee')
+        .get(
+          `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.$auth.user.employee.afdeling_id}`
+        )
 
-      .then((response) => {
-        this.foreman = response.data.data
-      })
+        .then((response) => {
+          this.foreman = response.data.data
+        })
+    } else {
+      this.$axios
+        // .get('/api/admin/lov_foreman_employee')
+        .get(
+          `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.field.afdeling_id.afdeling_id}`
+        )
+
+        .then((response) => {
+          this.foreman = response.data.data
+        })
+    }
 
     // console.log(this.$cookies.get('activity_group_id'))
     //fetching data categories
