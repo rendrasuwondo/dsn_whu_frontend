@@ -341,9 +341,9 @@ export default {
       department_code: '',
       param_activitied_at_prepend: this.$route.query.activitied_at_prepend,
       param_activitied_at_append: this.$route.query.activitied_at_append,
-      foreman_id: this.$route.query.foreman_id,
+      foreman_employee_id: this.$route.query.q_foreman_employee_id,
       afdeling_id: this.$route.query.afdeling_id,
-      query_foreman_id: '',
+      query_foreman_employee_id: '',
       query_afdeling_id: '',
     }
   },
@@ -352,7 +352,7 @@ export default {
     'page',
     'activitied_at_prepend',
     'activitied_at_append',
-    'foreman_id',
+    'q_foreman_employee_id',
     'q_afdeling_id',
   ],
 
@@ -425,19 +425,21 @@ export default {
     // let i_afdeling_id = $auth.user.employee.afdeling_id
 
     const foreman_list = await $axios.$get(
-      `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${q_afdeling_id}`
+      `/api/admin/lov_foreman_maintanance_rawat_hpt`
     )
 
     //foreman_id
-    let foreman_id = query.foreman_id ? query.foreman_id : ''
+    let q_foreman_employee_id = query.q_foreman_employee_id
+      ? query.q_foreman_employee_id
+      : ''
     let foreman_employee_id = []
 
     // try {
-    if (query.foreman_id) {
+    if (query.q_foreman_employee_id) {
       //Mandor
       $axios
         .get(
-          `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${q_afdeling_id}`
+          `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${q_afdeling_id}&foreman_id=${q_foreman_employee_id}`
         )
         .then((response) => {
           foreman_employee_id = response.data.data
@@ -445,7 +447,7 @@ export default {
     } else {
       foreman_employee_id = []
 
-      foreman_id = foreman_employee_id.employee_id
+      q_foreman_employee_id = foreman_employee_id.employee_id
     } //if (query.foreman_id) {
 
     //  console.log('isa')
@@ -456,13 +458,13 @@ export default {
     //fetching posts
     // console.log('rendra')
 
-    if (foreman_id == undefined) {
-      foreman_id = ''
+    if (q_foreman_employee_id == undefined || q_foreman_employee_id == '') {
+      q_foreman_employee_id = ''
     }
     // console.log(foreman_id)
 
     const posts = await $axios.$get(
-      `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_id}&q_afdeling_id=${q_afdeling_id}`
+      `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_foreman_employee_id=${q_foreman_employee_id}&q_afdeling_id=${q_afdeling_id}`
     )
 
     // console.log('rdr')
@@ -505,14 +507,16 @@ export default {
 
   methods: {
     onChangeAfdeling() {
-      if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
-        this.$axios
-          .get(
-            `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.afdeling_id.afdeling_id}`
-          )
-          .then((response) => {
-            this.foreman = response.data.data
-          })
+      if (this.afdeling_id != null) {
+        if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
+          this.$axios
+            .get(
+              `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.afdeling_id.afdeling_id}`
+            )
+            .then((response) => {
+              this.foreman = response.data.data
+            })
+        }
       }
     },
 
@@ -540,9 +544,9 @@ export default {
           activitied_at_append: this.$route.query.activitied_at_append
             ? this.$route.query.activitied_at_append
             : this.activitied_at_end,
-          foreman_id: this.$route.query.foreman_id
-            ? this.$route.query.foreman_id
-            : this.foreman_employee_id,
+          foreman_employee_id: this.$route.query.q_foreman_employee_id
+            ? this.$route.query.q_foreman_employee_id
+            : this.id_foreman_employee,
           afdeling_id: this.$route.query.afdeling_id
             ? this.$route.query.afdeling_id
             : this.id_afdeling,
@@ -555,11 +559,12 @@ export default {
 
       try {
         if (this.foreman_employee_id.employee_id === null) {
-          this.query_foreman_id = ''
+          this.query_foreman_employee_id = ''
         } else if (this.foreman_employee_id.employee_id === undefined) {
-          this.query_foreman_id = this.$route.query.foreman_id
+          this.query_foreman_employee_id =
+            this.$route.query.q_foreman_employee_id
         } else {
-          this.query_foreman_id = this.foreman_employee_id.employee_id
+          this.query_foreman_employee_id = this.foreman_employee_id.employee_id
             ? this.foreman_employee_id.employee_id
             : ''
         }
@@ -583,7 +588,9 @@ export default {
           q: this.search,
           activitied_at_prepend: this.activitied_at_start,
           activitied_at_append: this.activitied_at_end,
-          foreman_id: this.query_foreman_id,
+          q_foreman_employee_id: this.query_foreman_employee_id
+            ? this.query_foreman_employee_id
+            : '',
           q_afdeling_id: this.query_afdeling_id
             ? this.query_afdeling_id
             : this.$auth.user.employee.afdeling_id,
@@ -643,11 +650,11 @@ export default {
       //  console.log(this.activitied_at_start)
 
       if (this.foreman_employee_id.employee_id === null) {
-        this.query_foreman_id = ''
+        this.query_foreman_employee_id = ''
       } else if (this.foreman_employee_id.employee_id === undefined) {
-        this.query_foreman_id = this.$route.query.foreman_id
+        this.query_foreman_employee_id = this.$route.query.q_foreman_employee_id
       } else {
-        this.query_foreman_id = this.foreman_employee_id.employee_id
+        this.query_foreman_employee_id = this.foreman_employee_id.employee_id
           ? this.foreman_employee_id.employee_id
           : ''
       }
