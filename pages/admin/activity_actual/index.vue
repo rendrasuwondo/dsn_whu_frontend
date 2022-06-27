@@ -112,7 +112,7 @@
                         this.$route.query.activitied_at_prepend,
                       activitied_at_append:
                         this.$route.query.activitied_at_append,
-                      foreman_id: this.$route.query.foreman_id,
+                      foreman_id: this.$route.query.q_foreman_employee_id,
                     },
                   }"
                   class="btn btn-info btn-sm"
@@ -178,7 +178,7 @@
                   query: {
                     activitied_at_prepend: param_activitied_at_prepend,
                     activitied_at_append: param_activitied_at_append,
-                    foreman_id: foreman_id,
+                    foreman_id: foreman_employee_id,
                   },
                 }"
                 variant="link"
@@ -434,9 +434,9 @@ export default {
       ? query.q_foreman_employee_id
       : ''
     let foreman_employee_id = []
-    console.log('aida')
-    console.log(foreman_list)
-    console.log(q_foreman_employee_id)
+    // console.log('aida')
+    // console.log(foreman_list)
+    // console.log(q_foreman_employee_id)
     // try {
     if (query.q_foreman_employee_id) {
       //Mandor
@@ -472,10 +472,10 @@ export default {
       `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_foreman_employee_id=${q_foreman_employee_id}&q_afdeling_id=${q_afdeling_id}`
     )
 
-    // console.log('rdr')
-    // console.log(
-    //   `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_id}&q_afdeling_id=${q_afdeling_id}`
-    // )
+    console.log('rdr')
+    console.log(
+      `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_foreman_employee_id=${q_foreman_employee_id}&q_afdeling_id=${q_afdeling_id}`
+    )
     // const profile = await $axios.$get(
     // )
     // foreman_employee_id = 490
