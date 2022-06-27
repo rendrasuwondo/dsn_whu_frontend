@@ -655,7 +655,7 @@ export default {
       if (this.foreman_employee_id.employee_id === null) {
         this.query_foreman_employee_id = ''
       } else if (this.foreman_employee_id.employee_id === undefined) {
-        this.query_foreman_employee_id = this.$route.query.q_foreman_employee_id
+        this.query_foreman_employee_id = ''
       } else {
         this.query_foreman_employee_id = this.foreman_employee_id.employee_id
           ? this.foreman_employee_id.employee_id
