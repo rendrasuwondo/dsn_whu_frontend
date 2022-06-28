@@ -90,7 +90,7 @@
                 size=""
                 title="Employee Afdeling"
               >
-                {{ row.item.afdeling_code }}
+                {{ row.item.afdeling_description }}
               </b-button>
             </template>
             <template v-slot:cell(employee_activity_group)="row">
@@ -209,8 +209,8 @@ export default {
         },
         {
           label: 'Afd',
-          key: 'afdeling_description',
-          tdClass: 'align-middle text-center ',
+          key: 'employee_afdeling',
+          tdClass: 'align-middle text-center text-nowrap',
         },
         // {
         //   label: 'Afd',
