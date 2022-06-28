@@ -93,6 +93,21 @@
                 {{ row.item.afdeling_description }}
               </b-button>
             </template>
+            <template v-slot:cell(employee_department)="row">
+              <b-button
+                :to="{
+                  name: 'admin-employee_department-id',
+                  params: {
+                    id: row.item.id,
+                  },
+                }"
+                variant="link"
+                size=""
+                title="Employee Department"
+              >
+                {{ row.item.department_code }}
+              </b-button>
+            </template>
             <template v-slot:cell(employee_activity_group)="row">
               <b-button
                 :to="{
@@ -196,11 +211,8 @@ export default {
         },
         {
           label: 'Dept.',
-          key: 'department_code',
+          key: 'employee_department',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          thAttr: {
-            id: 'myDepartment',
-          },
         },
         {
           label: 'Lokasi',
@@ -210,16 +222,8 @@ export default {
         {
           label: 'Afd',
           key: 'employee_afdeling',
-          tdClass: 'align-middle text-center text-nowrap',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
-        // {
-        //   label: 'Afd',
-        //   key: 'afdeling_code',
-        //   tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        //   thAttr: {
-        //     id: 'myAfdeling',
-        //   },
-        // },
         {
           label: 'Jabatan',
           key: 'position_code',

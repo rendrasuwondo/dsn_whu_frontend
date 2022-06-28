@@ -16,7 +16,7 @@
                     Employee
                   </nuxt-link>
                 </td>
-                <td>/ Afdeling</td>
+                <td>/ Department Tambahan</td>
               </tr>
             </table>
           </h3>
@@ -38,7 +38,7 @@
               <div class="input-group-prepend">
                 <nuxt-link
                   :to="{
-                    name: 'admin-employee_afdeling-create-id',
+                    name: 'admin-employee_department-create-id',
                     params: { id: employee_id, r: 1 },
                   }"
                   class="btn btn-info btn-sm"
@@ -88,7 +88,7 @@
             <template v-slot:cell(actions)="row">
               <b-button
                 :to="{
-                  name: 'admin-employee_afdeling-edit-id',
+                  name: 'admin-employee_department-edit-id',
                   params: { id: row.item.id, r: 1 },
                 }"
                 variant="link"
@@ -143,14 +143,13 @@ export default {
   //meta
   head() {
     return {
-      title: 'Afdeling',
+      title: 'Department Tambahan',
     }
   },
 
   //data function
   data() {
     return {
-      //table header
       fields: [
         {
           label: 'Actions',
@@ -159,20 +158,22 @@ export default {
         },
         {
           label: 'Kode',
-          key: 'afdeling_id',
+          key: 'department_code',
           tdClass: '',
         },
         {
           label: 'Kode SAP',
-          key: 'afdeling_code_sap',
+          key: 'department_code_sap',
+          tdClass: '',
+        },
+        {
+          label: 'Name',
+          key: 'department_name',
+          tdClass: '',
         },
         {
           label: 'Aktif',
           key: 'is_active_code',
-        },
-        {
-          label: 'Default',
-          key: 'is_default_code',
         },
       ],
 
@@ -225,7 +226,7 @@ export default {
     const { id } = route.params
 
     const posts = await $axios.$get(
-      `/api/admin/detail/employee_afdeling/${id}?q=${search}&page=${page}`
+      `/api/admin/detail/employee_department/${id}?q=${search}&page=${page}`
     )
 
     return {
@@ -274,7 +275,7 @@ export default {
             //delete tag from server
 
             this.$axios
-              .delete(`/api/admin/employee_afdeling/${id}`)
+              .delete(`/api/admin/employee_department/${id}`)
               .then((response) => {
                 //feresh data
                 this.$nuxt.refresh()
@@ -305,7 +306,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/employee_afdeling/export`,
+        url: `/api/admin/employee_department/export`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
@@ -314,7 +315,7 @@ export default {
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
-        var fileName = 'Employee-Afdeling.xlsx'
+        var fileName = 'Employee - Department_Tambahan.xlsx'
         link.setAttribute('download', fileName) //or any other extension
         document.body.appendChild(link)
         link.click()
