@@ -16,7 +16,7 @@
         <b-alert show variant="danger">{{ validation.message }}</b-alert>
       </div>
       <form @submit.prevent="login">
-        <div c ass="form-group">
+        <div class="form-group">
           <label class="font-weight-bold text-uppercase text-size"
             ><i class="fas fa-user-alt"></i> User</label
           >
