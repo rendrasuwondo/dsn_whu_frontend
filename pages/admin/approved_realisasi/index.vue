@@ -66,7 +66,7 @@
                   <b-col></b-col>
                 </b-row>
               </b-container>
-              <b-container class="bv-example-row">
+              <!-- <b-container class="bv-example-row">
                 <b-row>
                   <b-col cols="1">Afdeling</b-col>
                   <b-col cols="7">
@@ -97,7 +97,7 @@
                       ></multiselect></div
                   ></b-col>
                 </b-row>
-              </b-container>
+              </b-container> -->
             </b-card-text>
           </b-card>
 
@@ -707,7 +707,7 @@ export default {
       this.$swal
         .fire({
           title: 'APAKAH ANDA YAKIN ?',
-          text: 'Melakukan verifikasi !',
+          text: 'Melakukan Approved !',
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#d33',
