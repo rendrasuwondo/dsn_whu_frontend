@@ -196,7 +196,7 @@
                     variant="outline-primary"
                     @click="Submit"
                     v-if="rowcount > 0"
-                    >Verifikasi</b-button
+                    >Approved</b-button
                   ></b-td
                 >
                 <b-td colspan="6">Total</b-td>
@@ -468,14 +468,14 @@ export default {
     }
     // console.log(foreman_id)
     let foreman_id = ''
-    q_afdeling_id =''
+    q_afdeling_id = ''
     const posts = await $axios.$get(
       `/api/admin/report/approval_realisasi?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_id}&q_afdeling_id=${q_afdeling_id}`
     )
 
     console.log('rdr')
     console.log(
-     `/api/admin/report/approval_realisasi?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_id}&q_afdeling_id=${q_afdeling_id}`
+      `/api/admin/report/approval_realisasi?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_id}&q_afdeling_id=${q_afdeling_id}`
     )
     // const profile = await $axios.$get(
     // )
