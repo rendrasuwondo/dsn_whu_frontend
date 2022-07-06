@@ -68,6 +68,21 @@
               </b-container>
               <b-container class="bv-example-row">
                 <b-row>
+                  <b-col cols="1">Mandor</b-col>
+                  <b-col cols="7">
+                    <div class="form-group">
+                      <multiselect
+                        v-model="foreman_employee_id"
+                        :options="foreman"
+                        label="employee_description_position"
+                        track-by="id"
+                        :searchable="true"
+                      ></multiselect></div
+                  ></b-col>
+                </b-row>
+              </b-container>
+              <b-container class="bv-example-row">
+                <b-row>
                   <b-col cols="1">Afdeling</b-col>
                   <b-col cols="7">
                     <div class="form-group">
@@ -75,24 +90,7 @@
                         v-model="afdeling_id"
                         :options="afdeling"
                         :custom-label="customLabel"
-                        x
                         track-by="afdeling_id"
-                        :searchable="true"
-                        @input="onChangeAfdeling"
-                      ></multiselect></div
-                  ></b-col>
-                </b-row>
-              </b-container>
-              <b-container class="bv-example-row">
-                <b-row>
-                  <b-col cols="1">Mandor</b-col>
-                  <b-col cols="7">
-                    <div class="form-group">
-                      <multiselect
-                        v-model="foreman_employee_id"
-                        :options="foreman"
-                        label="employee_description"
-                        track-by="employee_id"
                         :searchable="true"
                       ></multiselect></div
                   ></b-col>
@@ -104,7 +102,7 @@
           <div class="form-group">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
-                <nuxt-link
+                <!-- <nuxt-link
                   :to="{
                     name: 'admin-activity_actual-create',
                     query: {
@@ -112,14 +110,14 @@
                         this.$route.query.activitied_at_prepend,
                       activitied_at_append:
                         this.$route.query.activitied_at_append,
-                      foreman_id: this.$route.query.q_foreman_employee_id,
+                      foreman_id: this.$route.query.foreman_id,
                     },
                   }"
                   class="btn btn-info btn-sm"
                   style="padding-top: 8px"
                   title="Tambah"
                   ><i class="fa fa-plus-circle"></i>
-                </nuxt-link>
+                </nuxt-link> -->
                 <button
                   title="Export To Excel"
                   class="btn btn-info"
@@ -159,8 +157,8 @@
               <span
                 ><b-form-checkbox
                   @click.native.stop
-                  @change="select"
-                  v-model="allSelected"
+                  @change="select_eh"
+                  v-model="allSelectedEh"
                 >
                 </b-form-checkbox
               ></span>
@@ -178,7 +176,7 @@
                   query: {
                     activitied_at_prepend: param_activitied_at_prepend,
                     activitied_at_append: param_activitied_at_append,
-                    foreman_id: foreman_employee_id,
+                    foreman_id: foreman_id,
                   },
                 }"
                 variant="link"
@@ -196,7 +194,7 @@
                     variant="outline-primary"
                     @click="Submit"
                     v-if="rowcount > 0"
-                    >Verifikasi</b-button
+                    >Approved</b-button
                   ></b-td
                 >
                 <b-td colspan="6">Total</b-td>
@@ -248,7 +246,7 @@ export default {
   data() {
     return {
       loading: false,
-      allSelected: false,
+      allSelectedEh: false,
       visibleRows: [],
       show_page: false,
       show_submit: true,
@@ -266,8 +264,13 @@ export default {
           key: 'actions',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass ',
         },
+        // {
+        //   label: 'Status',
+        //   key: 'verification_status_code',
+        //   tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        // },
         {
-          label: 'Status',
+          label: 'Verification Status EH',
           key: 'verification_status_eh_code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
@@ -341,9 +344,9 @@ export default {
       department_code: '',
       param_activitied_at_prepend: this.$route.query.activitied_at_prepend,
       param_activitied_at_append: this.$route.query.activitied_at_append,
-      foreman_employee_id: this.$route.query.q_foreman_employee_id,
+      foreman_id: this.$route.query.foreman_id,
       afdeling_id: this.$route.query.afdeling_id,
-      query_foreman_employee_id: '',
+      query_foreman_id: '',
       query_afdeling_id: '',
     }
   },
@@ -352,11 +355,11 @@ export default {
     'page',
     'activitied_at_prepend',
     'activitied_at_append',
-    'q_foreman_employee_id',
+    'foreman_id',
     'q_afdeling_id',
   ],
 
-  async asyncData({ $axios, query, $auth }) {
+  async asyncData({ $axios, query, $cookies, $route, $auth }) {
     // function pad(n, width, z) {
     //   z = z || '0'
     //   n = n + ''
@@ -393,15 +396,22 @@ export default {
       ? query.activitied_at_append
       : currentDate()
 
-    let q_afdeling_id = query.q_afdeling_id
-      ? query.q_afdeling_id
-      : $auth.user.employee.afdeling_id
-    let afdeling_id = []
+    let department_code = $auth.user.employee.department_code
+    let company_code = $auth.user.employee.company_code
+
+    const foreman_list = await $axios.$get(
+      `/api/admin/lov_employee_activity_group/${company_code}/${department_code}/mandor`
+    )
+
+    //foreman_id
+    let foreman_id = query.foreman_id ? query.foreman_id : ''
+    let foreman_employee_id = []
 
     // afdeling_id
     const afdeling_list = await $axios.$get(`/api/admin/lov_employee_afdeling`)
 
-    let afdeling_code = []
+    let q_afdeling_id = query.q_afdeling_id ? query.q_afdeling_id : ''
+    let afdeling_id = []
 
     if (query.q_afdeling_id) {
       // console.log('rendra')
@@ -413,78 +423,79 @@ export default {
     } else {
       afdeling_id = []
 
-      q_afdeling_id = $auth.user.employee.afdeling_id
+      q_afdeling_id = afdeling_id.afdeling_id
     }
 
-    if (q_afdeling_id == undefined || q_afdeling_id == '') {
-      q_afdeling_id = $auth.user.employee.afdeling_id
+    if (q_afdeling_id == undefined) {
+      q_afdeling_id = ''
     }
 
-    let department_code = $auth.user.employee.department_code
-    let company_code = $auth.user.employee.company_code
-    // let i_afdeling_id = $auth.user.employee.afdeling_id
-
-    const foreman_list = await $axios.$get(
-      `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${q_afdeling_id}`
-    )
-
-    //foreman_id
-
-    let q_foreman_employee_id = query.q_foreman_employee_id
-      ? query.q_foreman_employee_id
-      : ''
-    let foreman_employee_id = []
-    // console.log('aida')
-    // console.log(foreman_list)
-    // console.log(q_foreman_employee_id)
     // try {
-    if (query.q_foreman_employee_id) {
+    if (query.foreman_id) {
       //Mandor
       $axios
         .get(
-          `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${q_afdeling_id}&foreman_id=${q_foreman_employee_id}`
+          `/api/admin/lov_employee_activity_group/${company_code}/${department_code}/mandor?id=${foreman_id}`
         )
         .then((response) => {
           foreman_employee_id = response.data.data
-          console.log('cekkkkk')
-          console.log(foreman_employee_id.employee_id)
         })
+
+      // foreman_employee_id = {
+      //   id: 14,
+      //   employee_id: 1364,
+      //   nik: '0009357',
+      //   name: 'IDA HARYADI',
+      //   employee_description: '0009357-IDA HARYADI',
+      //   employee_description_position: '0009357-IDA HARYADI (MANDOR HPT)',
+      //   company_id: 3,
+      //   company_code: 'DIN',
+      //   department_id: 31,
+      //   department_code: 'LK2',
+      //   position_id: 240,
+      //   position_code: 'MANDOR HPT',
+      //   activity_group_id: 3,
+      //   activity_group_code: 'HPT',
+      //   is_active: 'Y',
+      //   is_active_code: 'Ya',
+      //   afdeling_id: 'DI22D',
+      //   afdeling_code: '8',
+      //   afdeling_code_sap: 'D',
+      //   description: null,
+      //   created_at: '2022-03-23 17:00:00',
+      //   created_by: 'SYSTEM',
+      //   updated_at: '2022-03-23 17:00:00',
+      //   updated_by: 'SYSTEM',
+      // }
     } else {
       foreman_employee_id = []
 
-      q_foreman_employee_id = foreman_employee_id.employee_id
+      foreman_id = foreman_employee_id.employee_id
     } //if (query.foreman_id) {
 
-    // console.log('isa')
-    // console.log(q_foreman_employee_id)
+    //  console.log('isa')
+    //  console.log($cookies.get('department_code'))
     // } catch (err) {
     //   foreman_id = ''
     // }
     //fetching posts
     // console.log('rendra')
 
-    if (q_foreman_employee_id == undefined) {
-      q_foreman_employee_id = ''
+    if (foreman_id == undefined) {
+      foreman_id = ''
     }
     // console.log(foreman_id)
-    let foreman_id = ''
-    q_afdeling_id =''
+
     const posts = await $axios.$get(
       `/api/admin/report/approval_realisasi?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_id}&q_afdeling_id=${q_afdeling_id}`
     )
 
-    console.log('rdr')
-    console.log(
-     `/api/admin/report/approval_realisasi?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_id}&q_afdeling_id=${q_afdeling_id}`
-    )
     // const profile = await $axios.$get(
     // )
     // foreman_employee_id = 490
     // console.log('rdr')
-    // console.log(
-    //   `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_id}&q_afdeling_id=${q_afdeling_id}`
-    // )
-    // console.log(afdeling_list.data)
+    // console.log(`/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_id}`)
+    // console.log(posts.data)
     return {
       posts: posts.data,
       pagination: posts.data,
@@ -499,33 +510,9 @@ export default {
     }
   },
 
-  mounted() {
-    if (this.$route.query.q_afdeling_id == null) {
-      this.afdeling_id = [
-        {
-          afdeling_id: this.$auth.user.employee.afdeling_id,
-          afdeling_code: this.$auth.user.employee.afdeling_code,
-        },
-      ]
-    } else {
-    }
-  },
+  mounted() {},
 
   methods: {
-    onChangeAfdeling() {
-      if (this.afdeling_id != null) {
-        if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
-          this.$axios
-            .get(
-              `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.afdeling_id.afdeling_id}`
-            )
-            .then((response) => {
-              this.foreman = response.data.data
-            })
-        }
-      }
-    },
-
     //     pad(n, width, z) {
     //   z = z || '0'
     //   n = n + ''
@@ -550,9 +537,9 @@ export default {
           activitied_at_append: this.$route.query.activitied_at_append
             ? this.$route.query.activitied_at_append
             : this.activitied_at_end,
-          foreman_employee_id: this.$route.query.foreman_employee_id
-            ? this.$route.query.foreman_employee_id
-            : this.id_foreman_employee,
+          foreman_id: this.$route.query.foreman_id
+            ? this.$route.query.foreman_id
+            : this.foreman_employee_id,
           afdeling_id: this.$route.query.afdeling_id
             ? this.$route.query.afdeling_id
             : this.id_afdeling,
@@ -565,12 +552,9 @@ export default {
 
       try {
         if (this.foreman_employee_id.employee_id === null) {
-          this.query_foreman_employee_id = ''
-        } else if (this.foreman_employee_id.employee_id === undefined) {
-          this.query_foreman_employee_id =
-            this.$route.query.q_foreman_employee_id
+          this.query_foreman_id = ''
         } else {
-          this.query_foreman_employee_id = this.foreman_employee_id.employee_id
+          this.query_foreman_id = this.foreman_employee_id.employee_id
             ? this.foreman_employee_id.employee_id
             : ''
         }
@@ -578,7 +562,7 @@ export default {
 
       try {
         if (this.afdeling_id.afdeling_id === null) {
-          this.query_afdeling_id = ''
+          this.query_afdeling_id = this.$route.query.q_afdeling_id
         } else if (this.afdeling_id.afdeling_id === undefined) {
           this.query_afdeling_id = this.$route.query.q_afdeling_id
         } else {
@@ -594,10 +578,8 @@ export default {
           q: this.search,
           activitied_at_prepend: this.activitied_at_start,
           activitied_at_append: this.activitied_at_end,
-          q_foreman_employee_id: this.query_foreman_employee_id,
-          q_afdeling_id: this.query_afdeling_id
-            ? this.query_afdeling_id
-            : this.$auth.user.employee.afdeling_id,
+          foreman_id: this.query_foreman_id,
+          q_afdeling_id: this.query_afdeling_id,
         },
       })
     },
@@ -653,21 +635,6 @@ export default {
       //  console.log('rdr')
       //  console.log(this.activitied_at_start)
 
-      if (this.foreman_employee_id.employee_id === null) {
-        this.query_foreman_employee_id = ''
-      } else if (this.foreman_employee_id.employee_id === undefined) {
-        if (this.$route.query.q_foreman_employee_id === undefined) {
-          this.query_foreman_employee_id = ''
-        } else {
-          this.query_foreman_employee_id =
-            this.$route.query.q_foreman_employee_id
-        }
-      } else {
-        this.query_foreman_employee_id = this.foreman_employee_id.employee_id
-          ? this.foreman_employee_id.employee_id
-          : ''
-      }
-
       if (this.afdeling_id === null) {
         this.query_afdeling_id = ''
       } else if (this.afdeling_id.id === undefined) {
@@ -681,7 +648,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/activity_actual/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&foreman_id=${this.query_foreman_employee_id}&afdeling_id=${this.query_afdeling_id}`,
+        url: `/api/admin/activity_actual/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&foreman_id=${this.foreman_employee_id}&afdeling_id=${this.query_afdeling_id}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
@@ -696,11 +663,11 @@ export default {
         link.click()
       })
     },
-    select() {
+    select_eh() {
       // alert('sa')
       // this.allSelected = !this.allSelected;
       this.posts.forEach((el) => {
-        el.selected_eh = this.allSelected
+        el.selected_eh = this.allSelectedEh
       })
     },
     Submit() {
@@ -717,23 +684,24 @@ export default {
         })
         .then((result) => {
           if (result.isConfirmed) {
-            this.selectedData = []
+            this.selectedEhData = []
             this.posts.forEach((el) => {
               // if (el.selected == true) {
               //   this.selectedData.push(el)
               // }
-              this.selectedData.push(el)
+              this.selectedEhData.push(el)
             })
-            console.log(this.selectedData)
+            console.log('test')
+            console.log(this.selectedEhData.id)
 
             var i = 0
-            let n = this.selectedData.length
-
+            let n = this.selectedEhData.length
             this.$axios
               .post(
                 `/api/admin/update_activity_actual_status_eh`,
-                this.selectedData
+                this.selectedEhData
               )
+
               .then(() => {
                 this.$swal.fire({
                   title: 'BERHASIL!',
