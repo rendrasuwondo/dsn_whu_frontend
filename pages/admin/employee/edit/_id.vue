@@ -329,7 +329,7 @@ export default {
         this.field.updated_at = response.data.data.updated_at
         this.field.updated_by = response.data.data.updated_by
         this.field.description = response.data.data.description
-        this.field.nik = response.data.data.nik
+        // this.field.nik = response.data.data.nik
         this.field.nik = response.data.data.nik
         this.field.name = response.data.data.name
         this.field.email = response.data.data.email

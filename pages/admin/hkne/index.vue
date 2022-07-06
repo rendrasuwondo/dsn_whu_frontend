@@ -293,6 +293,11 @@ export default {
         'Content-Type': 'application/json',
       }
 
+      console.log('tes data')
+      console.log(
+        `/api/admin/template_hkne/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}`
+      )
+
       this.$axios({
         url: `/api/admin/template_hkne/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}`,
         method: 'GET',
