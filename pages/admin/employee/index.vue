@@ -108,6 +108,21 @@
                 {{ row.item.department_code }}
               </b-button>
             </template>
+            <template v-slot:cell(employee_position)="row">
+              <b-button
+                :to="{
+                  name: 'admin-employee_position-id',
+                  params: {
+                    id: row.item.id,
+                  },
+                }"
+                variant="link"
+                size=""
+                title="Employee Position"
+              >
+                {{ row.item.position_code }}
+              </b-button>
+            </template>
             <template v-slot:cell(employee_activity_group)="row">
               <b-button
                 :to="{
@@ -226,7 +241,7 @@ export default {
         },
         {
           label: 'Jabatan',
-          key: 'position_code',
+          key: 'employee_position',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {

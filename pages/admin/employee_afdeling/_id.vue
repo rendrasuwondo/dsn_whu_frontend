@@ -305,7 +305,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/employee_afdeling/export`,
+        url: `/api/admin/employee_afdeling/export?employee_id=${this.employee_id}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important

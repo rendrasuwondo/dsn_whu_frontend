@@ -16,7 +16,7 @@
                     Employee
                   </nuxt-link>
                 </td>
-                <td>/ Department Tambahan</td>
+                <td>/ Jabatan</td>
               </tr>
             </table>
           </h3>
@@ -38,7 +38,7 @@
               <div class="input-group-prepend">
                 <nuxt-link
                   :to="{
-                    name: 'admin-employee_department-create-id',
+                    name: 'admin-employee_position-create-id',
                     params: { id: employee_id, r: 1 },
                   }"
                   class="btn btn-info btn-sm"
@@ -88,7 +88,7 @@
             <template v-slot:cell(actions)="row">
               <b-button
                 :to="{
-                  name: 'admin-employee_department-edit-id',
+                  name: 'admin-employee_position-edit-id',
                   params: { id: row.item.id, r: 1 },
                 }"
                 variant="link"
@@ -109,7 +109,7 @@
             <template v-slot:cell(detail)="row">
               <b-button
                 :to="{
-                  name: 'admin-employee_afdeling',
+                  name: 'admin-employee_position',
                   params: { id: row.item.id },
                 }"
                 variant=""
@@ -143,7 +143,7 @@ export default {
   //meta
   head() {
     return {
-      title: 'Department Tambahan',
+      title: 'Karyawan-Jabatan',
     }
   },
 
@@ -158,17 +158,12 @@ export default {
         },
         {
           label: 'Kode',
-          key: 'department_code',
-          tdClass: '',
-        },
-        {
-          label: 'Kode SAP',
-          key: 'department_code_sap',
+          key: 'position_code',
           tdClass: '',
         },
         {
           label: 'Name',
-          key: 'department_name',
+          key: 'position_name',
           tdClass: '',
         },
         {
@@ -226,7 +221,7 @@ export default {
     const { id } = route.params
 
     const posts = await $axios.$get(
-      `/api/admin/detail/employee_department/${id}?q=${search}&page=${page}`
+      `/api/admin/detail/employee_position/${id}?q=${search}&page=${page}`
     )
 
     return {
@@ -275,7 +270,7 @@ export default {
             //delete tag from server
 
             this.$axios
-              .delete(`/api/admin/employee_department/${id}`)
+              .delete(`/api/admin/employee_position/${id}`)
               .then((response) => {
                 //feresh data
                 this.$nuxt.refresh()
@@ -306,7 +301,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/employee_department/export?employee_id=${this.employee_id}`,
+        url: `/api/admin/employee_position/export?employee_id=${this.employee_id}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
