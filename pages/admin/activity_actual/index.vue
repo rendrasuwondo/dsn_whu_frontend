@@ -513,7 +513,10 @@ export default {
   methods: {
     onChangeAfdeling() {
       if (this.afdeling_id != null) {
-        if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
+        if (
+          this.$auth.user.employee.activity_group_code == 'RAWAT' ||
+          this.$auth.user.employee.activity_group_code == 'BIBITAN'
+        ) {
           this.$axios
             .get(
               `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.afdeling_id.afdeling_id}`
