@@ -347,7 +347,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/attendance/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}`,
+        url: `/api/admin/attendance/export?q=${this.search}&activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
