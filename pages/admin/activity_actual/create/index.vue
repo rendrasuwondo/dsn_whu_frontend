@@ -477,6 +477,27 @@ export default {
               this.ha_statement = response.data.data
             })
         }
+
+        if (this.$auth.user.employee.activity_group_code == 'LA') {
+          //Dropdown Block
+          this.$axios
+            .get(
+              `/api/admin/lov_ha_statement_afdeling/${this.field.afdeling_id.afdeling_id}`
+            )
+
+            .then((response) => {
+              this.ha_statement = response.data.data
+            })
+
+          //Dropdown SKU
+          this.$axios
+            .get(
+              `/api/admin/lov_labour/${this.company_code}/${this.department_code}?afdeling_id=${this.field.afdeling_id.afdeling_id}`
+            )
+            .then((response) => {
+              this.labour = response.data.data
+            })
+        }
       }
     },
 
