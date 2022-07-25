@@ -348,6 +348,33 @@ export default {
         .then((response) => {
           this.foreman = response.data.data
         })
+
+      //Dropdown Block
+      this.$axios
+        .get(
+          `/api/admin/lov_ha_statement_afdeling/${this.$auth.user.employee.afdeling_id}`
+        )
+
+        .then((response) => {
+          this.ha_statement = response.data.data
+        })
+
+      //Dropdown SKU
+      this.$axios
+        .get(
+          `/api/admin/lov_labour/${this.company_code}/${this.department_code}?afdeling_id=${this.$auth.user.employee.afdeling_id}`
+        )
+        .then((response) => {
+          this.labour = response.data.data
+        })
+
+      this.$axios
+        .get(
+          `/api/admin/lov_employee_afdeling?afdeling_id=${this.$auth.user.employee.afdeling_id}`
+        )
+        .then((response) => {
+          this.field.afdeling_id = response.data.data
+        })
     } else {
       this.$axios
         // .get('/api/admin/lov_foreman_employee')
@@ -357,6 +384,33 @@ export default {
 
         .then((response) => {
           this.foreman = response.data.data
+        })
+
+      //Dropdown Block
+      this.$axios
+        .get(
+          `/api/admin/lov_ha_statement_afdeling/${this.field.afdeling_id.afdeling_id}`
+        )
+
+        .then((response) => {
+          this.ha_statement = response.data.data
+        })
+
+      //Dropdown SKU
+      this.$axios
+        .get(
+          `/api/admin/lov_labour/${this.company_code}/${this.department_code}?afdeling_id=${this.field.afdeling_id.afdeling_id}`
+        )
+        .then((response) => {
+          this.labour = response.data.data
+        })
+
+      this.$axios
+        .get(
+          `/api/admin/lov_employee_afdeling?afdeling_id=${this.field.afdeling_id.afdeling_id}`
+        )
+        .then((response) => {
+          this.field.afdeling_id = response.data.data
         })
     }
     //Dropdown Mandor
@@ -374,13 +428,6 @@ export default {
         // })
       })
 
-    //Dropdown SKU
-    this.$axios
-      .get(`/api/admin/lov_labour/${this.company_code}/${this.department_code}`)
-      .then((response) => {
-        this.labour = response.data.data
-      })
-
     //dropdown afdeling
     this.$axios
       .get(`/api/admin/lov_employee_afdeling`)
@@ -390,23 +437,13 @@ export default {
         this.afdeling = response.data.data
       })
 
-    this.$axios
-      .get(
-        `/api/admin/lov_employee_afdeling?afdeling_id=${this.$auth.user.employee.afdeling_id}`
-      )
-      .then((response) => {
-        this.field.afdeling_id = response.data.data
-      })
-
-    //Dropdown Block
-    this.$axios
-      .get(
-        `/api/admin/lov_ha_statement_afdeling/${this.$auth.user.employee.afdeling_id}`
-      )
-
-      .then((response) => {
-        this.ha_statement = response.data.data
-      })
+    // this.$axios
+    //   .get(
+    //     `/api/admin/lov_employee_afdeling?afdeling_id=${this.$auth.user.employee.afdeling_id}`
+    //   )
+    //   .then((response) => {
+    //     this.field.afdeling_id = response.data.data
+    //   })
   },
 
   methods: {
@@ -419,6 +456,25 @@ export default {
             )
             .then((response) => {
               this.foreman = response.data.data
+            })
+
+          //Dropdown SKU
+          this.$axios
+            .get(
+              `/api/admin/lov_labour/${this.company_code}/${this.department_code}?afdeling_id=${this.field.afdeling_id.afdeling_id}`
+            )
+            .then((response) => {
+              this.labour = response.data.data
+            })
+
+          //Dropdown Block
+          this.$axios
+            .get(
+              `/api/admin/lov_ha_statement_afdeling/${this.field.afdeling_id.afdeling_id}`
+            )
+
+            .then((response) => {
+              this.ha_statement = response.data.data
             })
         }
       }
@@ -466,22 +522,30 @@ export default {
       //define formData
       let formData = new FormData()
 
-      let vafdeling_id
+      // let vafdeling_id
 
-      if (this.field.afdeling_id.id == undefined) {
-        formData.append('afdeling_id', this.$auth.user.employee.afdeling_id)
-      } else {
-        formData.append(
-          'afdeling_id',
-          this.field.afdeling_id ? this.field.afdeling_id.afdeling_id : ''
-        )
-      }
+      // if (this.field.afdeling_id.id == undefined) {
+      //   formData.append('afdeling_id', this.$auth.user.employee.afdeling_id)
+      // } else {
+      //   formData.append(
+      //     'afdeling_id',
+      //     this.field.afdeling_id ? this.field.afdeling_id.afdeling_id : ''
+      //   )
+      // }
+      console.log('cek')
+      // console.log(this.$auth.user.employee.afdeling_id)
+      console.log(this.field.afdeling_id.afdeling_id)
+      // console.log(vafdeling_id)
 
+      formData.append(
+        'afdeling_id',
+        this.field.afdeling_id ? this.field.afdeling_id.afdeling_id : ''
+      )
       formData.append(
         'id',
         this.field.activity_id.id +
           '_' +
-          vafdeling_id +
+          this.field.afdeling_id.afdeling_id +
           '_' +
           this.field.activitied_at +
           '_' +
@@ -498,7 +562,7 @@ export default {
         'activity_plan_id',
         this.field.activity_id.id +
           '_' +
-          vafdeling_id +
+          this.field.afdeling_id.afdeling_id +
           '_' +
           this.field.activitied_at +
           '_' +
@@ -519,19 +583,19 @@ export default {
 
       formData.append(
         'labour_id',
-        this.field.labour ? this.field.labour.id : ''
+        this.field.labour ? this.field.labour.employee_id : ''
       )
 
-      if (this.field.afdeling_id.id == undefined) {
-        formData.append('afdeling_id', this.$auth.user.employee.afdeling_id)
-      } else {
-        formData.append(
-          'afdeling_id',
-          this.field.afdeling_id
-            ? this.field.afdeling_id.id
-            : this.$auth.user.employee.afdeling_id
-        )
-      }
+      // if (this.field.afdeling_id.id == undefined) {
+      //   formData.append('afdeling_id', this.$auth.user.employee.afdeling_id)
+      // } else {
+      //   formData.append(
+      //     'afdeling_id',
+      //     this.field.afdeling_id
+      //       ? this.field.afdeling_id.afdeling_id
+      //       : this.$auth.user.employee.afdeling_id
+      //   )
+      // }
 
       //selected
       if (this.field.verification_status == 'V') {
