@@ -543,30 +543,27 @@ export default {
       //define formData
       let formData = new FormData()
 
-      // let vafdeling_id
+      let vafdeling_id
 
-      // if (this.field.afdeling_id.id == undefined) {
-      //   formData.append('afdeling_id', this.$auth.user.employee.afdeling_id)
-      // } else {
-      //   formData.append(
-      //     'afdeling_id',
-      //     this.field.afdeling_id ? this.field.afdeling_id.afdeling_id : ''
-      //   )
-      // }
+      if (this.field.afdeling_id.id == undefined) {
+        vafdeling_id = this.$auth.user.employee.afdeling_id
+      } else {
+        vafdeling_id = this.field.afdeling_id.afdeling_id
+      }
       console.log('cek')
       // console.log(this.$auth.user.employee.afdeling_id)
       console.log(this.field.afdeling_id.afdeling_id)
       // console.log(vafdeling_id)
 
-      formData.append(
-        'afdeling_id',
-        this.field.afdeling_id ? this.field.afdeling_id.afdeling_id : ''
-      )
+      // formData.append(
+      //   'afdeling_id',
+      //   this.field.afdeling_id ? this.field.afdeling_id.afdeling_id : ''
+      // )
       formData.append(
         'id',
         this.field.activity_id.id +
           '_' +
-          this.field.afdeling_id.afdeling_id +
+          vafdeling_id +
           '_' +
           this.field.activitied_at +
           '_' +
@@ -583,7 +580,7 @@ export default {
         'activity_plan_id',
         this.field.activity_id.id +
           '_' +
-          this.field.afdeling_id.afdeling_id +
+          vafdeling_id +
           '_' +
           this.field.activitied_at +
           '_' +
@@ -607,16 +604,16 @@ export default {
         this.field.labour ? this.field.labour.employee_id : ''
       )
 
-      // if (this.field.afdeling_id.id == undefined) {
-      //   formData.append('afdeling_id', this.$auth.user.employee.afdeling_id)
-      // } else {
-      //   formData.append(
-      //     'afdeling_id',
-      //     this.field.afdeling_id
-      //       ? this.field.afdeling_id.afdeling_id
-      //       : this.$auth.user.employee.afdeling_id
-      //   )
-      // }
+      if (this.field.afdeling_id.id == undefined) {
+        formData.append('afdeling_id', this.$auth.user.employee.afdeling_id)
+      } else {
+        formData.append(
+          'afdeling_id',
+          this.field.afdeling_id
+            ? this.field.afdeling_id.afdeling_id
+            : this.$auth.user.employee.afdeling_id
+        )
+      }
 
       //selected
       if (this.field.verification_status == 'V') {
@@ -639,6 +636,8 @@ export default {
         'activity_group_id',
         this.$auth.user.employee.activity_group_id
       )
+      formData.append('created_by', this.field.created_by)
+      formData.append('updated_by', this.field.updated_by)
 
       //sending data to server
       await this.$axios
