@@ -359,14 +359,14 @@ export default {
           this.ha_statement = response.data.data
         })
 
-      //Dropdown SKU
-      this.$axios
-        .get(
-          `/api/admin/lov_labour/${this.company_code}/${this.department_code}?afdeling_id=${this.$auth.user.employee.afdeling_id}`
-        )
-        .then((response) => {
-          this.labour = response.data.data
-        })
+      // //Dropdown SKU
+      // this.$axios
+      //   .get(
+      //     `/api/admin/lov_labour/${this.company_code}/${this.department_code}?afdeling_id=${this.$auth.user.employee.afdeling_id}`
+      //   )
+      //   .then((response) => {
+      //     this.labour = response.data.data
+      //   })
 
       this.$axios
         .get(
@@ -397,13 +397,13 @@ export default {
         })
 
       //Dropdown SKU
-      this.$axios
-        .get(
-          `/api/admin/lov_labour/${this.company_code}/${this.department_code}?afdeling_id=${this.field.afdeling_id.afdeling_id}`
-        )
-        .then((response) => {
-          this.labour = response.data.data
-        })
+      // this.$axios
+      //   .get(
+      //     `/api/admin/lov_labour/${this.company_code}/${this.department_code}?afdeling_id=${this.field.afdeling_id.afdeling_id}`
+      //   )
+      //   .then((response) => {
+      //     this.labour = response.data.data
+      //   })
 
       this.$axios
         .get(
@@ -426,6 +426,13 @@ export default {
         //     this.activity.push(dt)
         //   }
         // })
+      })
+
+    //Dropdown SKU
+    this.$axios
+      .get(`/api/admin/lov_labour/${this.company_code}/${this.department_code}`)
+      .then((response) => {
+        this.labour = response.data.data
       })
 
     //dropdown afdeling
@@ -489,14 +496,14 @@ export default {
               this.ha_statement = response.data.data
             })
 
-          //Dropdown SKU
-          this.$axios
-            .get(
-              `/api/admin/lov_labour/${this.company_code}/${this.department_code}?afdeling_id=${this.field.afdeling_id.afdeling_id}`
-            )
-            .then((response) => {
-              this.labour = response.data.data
-            })
+          // //Dropdown SKU
+          // this.$axios
+          //   .get(
+          //     `/api/admin/lov_labour/${this.company_code}/${this.department_code}?afdeling_id=${this.field.afdeling_id.afdeling_id}`
+          //   )
+          //   .then((response) => {
+          //     this.labour = response.data.data
+          //   })
         }
       }
     },
