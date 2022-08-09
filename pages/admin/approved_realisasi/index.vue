@@ -199,9 +199,10 @@
                     >Approved</b-button
                   ></b-td
                 >
-                <b-td colspan="6">Total</b-td>
+                <b-td colspan="7">Total</b-td>
                 <b-td align="right"> {{ TOTAL_HK }}</b-td>
                 <b-td align="right"> {{ TOTAL_VOLUME }}</b-td>
+                <b-td></b-td>
               </b-tr>
             </template>
           </b-table>
