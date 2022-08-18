@@ -268,9 +268,11 @@ export default {
       const headers = {
         'Content-Type': 'application/json',
       }
+      console.log('tes')
+      console.log(this.search)
 
       this.$axios({
-        url: `/api/admin/download_attendance/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}`,
+        url: `/api/admin/download_attendance/export?q=${this.search}&activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
@@ -292,7 +294,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/template_sap/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}`,
+        url: `/api/admin/template_sap/export?q=${this.search}&activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
