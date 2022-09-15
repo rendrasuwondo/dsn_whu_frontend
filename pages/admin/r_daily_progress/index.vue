@@ -96,6 +96,7 @@
             striped
             bordered
             hover
+            class="table-1"
             :items="posts"
             :fields="fields"
             show-empty
@@ -104,11 +105,53 @@
             <template v-slot:cell(detail_hap)="row">
               <div>{{ row.item.wide }}</div>
             </template>
+            <template v-slot:custom-foot="data">
+              <b-tr>
+                <b-td colspan="3" align="left"></b-td>
+                <b-td colspan="2" align="left"><b>Total</b></b-td>
+                <b-td align="right"> {{ t_daily_progress.total }} </b-td>
+                <b-td></b-td>
+                <b-td></b-td>
+                <b-td></b-td>
+                <b-td></b-td>
+                <b-td></b-td>
+              </b-tr>
+              <b-tr>
+                <b-td colspan="3" align="left"></b-td>
+                <b-td colspan="2" align="left">S/H1/H2</b-td>
+                <b-td align="right"> {{ t_daily_progress.type_1 }} </b-td>
+                <b-td></b-td>
+                <b-td></b-td>
+                <b-td></b-td>
+                <b-td></b-td>
+                <b-td></b-td>
+              </b-tr>
+              <b-tr>
+                <b-td colspan="3" align="left"></b-td>
+                <b-td colspan="2" align="left">C/P1/P1</b-td>
+                <b-td align="right"> {{ t_daily_progress.type_2 }} </b-td>
+                <b-td></b-td>
+                <b-td></b-td>
+                <b-td></b-td>
+                <b-td></b-td>
+                <b-td></b-td>
+              </b-tr>
+              <b-tr>
+                <b-td colspan="3" align="left"></b-td>
+                <b-td colspan="2" align="left">M</b-td>
+                <b-td align="right"> {{ t_daily_progress.type_3 }} </b-td>
+                <b-td></b-td>
+                <b-td></b-td>
+                <b-td></b-td>
+                <b-td></b-td>
+                <b-td></b-td>
+              </b-tr>
+            </template>
           </b-table>
 
           <!-- pagination -->
           <b-row>
-            <b-col>
+            <!-- <b-col>
               <b-pagination
                 v-model="pagination.current_page"
                 :total-rows="pagination.total"
@@ -118,7 +161,7 @@
                 class="mt-1"
               >
               </b-pagination>
-            </b-col>
+            </b-col> -->
             <b-col class="text-right" align-self="center">
               {{ rowcount }} data
             </b-col>
@@ -305,19 +348,22 @@ export default {
       `/api/admin/report/daily_porgress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&afdeling_id=${q_afdeling_id}`
     )
 
+    const t_daily_progress = await $axios.$get(
+      `/api/admin/master/attendance_daily_progress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&afdeling_id=${q_afdeling_id}`
+    )
+
     console.log('da')
-    console.log(activitied_at_start)
-    console.log(q_afdeling_id)
-    console.log(posts.data.data)
+    console.log(t_daily_progress.data)
 
     return {
-      posts: posts.data.data,
+      posts: posts.data,
       pagination: posts.data,
       search: search,
-      rowcount: posts.data.total,
+      rowcount: posts.data.length,
       activitied_at_start: activitied_at_start,
       afdeling: afdeling_list.data,
       afdeling_id: afdeling_id,
+      t_daily_progress: t_daily_progress.data,
     }
   },
 
@@ -465,5 +511,8 @@ export default {
   padding-top: 200px;
   font-size: 30px;
   font-family: sans-serif;
+}
+.table-1 {
+  font-size: 14px;
 }
 </style>
