@@ -54,7 +54,7 @@
                         :options="afdeling"
                         :custom-label="customLabel"
                         x
-                        track-by="afdeling_id"
+                        track-by="id"
                         :searchable="true"
                       ></multiselect></div
                   ></b-col>
@@ -324,24 +324,32 @@ export default {
     let afdeling_id = []
 
     // afdeling_id
-    const afdeling_list = await $axios.$get(`/api/admin/lov_employee_afdeling`)
+    const afdeling_list = await $axios.$get(
+      `/api/admin/lov_afdeling_daily_progress`
+    )
+
+    const afdeling_default = await $axios.$get(
+      `/api/admin/lov_afdeling_default`
+    )
 
     let afdeling_code = []
 
     if (query.q_afdeling_id) {
       $axios
-        .get(`/api/admin/lov_employee_afdeling?afdeling_id=${q_afdeling_id}`)
+        .get(
+          `/api/admin/lov_afdeling_daily_progress?afdeling_id=${q_afdeling_id}`
+        )
         .then((response) => {
           afdeling_id = response.data.data
         })
     } else {
       afdeling_id = []
 
-      q_afdeling_id = $auth.user.employee.afdeling_id
+      q_afdeling_id = afdeling_default.data.id
     }
 
     if (q_afdeling_id == undefined || q_afdeling_id == '') {
-      q_afdeling_id = $auth.user.employee.afdeling_id
+      q_afdeling_id = afdeling_default.data.id
     }
 
     const posts = await $axios.$get(
@@ -351,9 +359,6 @@ export default {
     const t_daily_progress = await $axios.$get(
       `/api/admin/master/attendance_daily_progress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&afdeling_id=${q_afdeling_id}`
     )
-
-    console.log('da')
-    console.log(t_daily_progress.data)
 
     return {
       posts: posts.data,
@@ -369,13 +374,16 @@ export default {
 
   mounted() {
     if (this.$route.query.q_afdeling_id == null) {
-      this.afdeling_id = [
-        {
-          afdeling_id: this.$auth.user.employee.afdeling_id,
-          afdeling_code: this.$auth.user.employee.afdeling_code,
-        },
-      ]
-    } else {
+      this.$axios.get(`/api/admin/lov_afdeling_default`).then((response) => {
+        console.log('daaa')
+        console.log(response.data.data.code)
+        this.afdeling_id = [
+          {
+            id: response.data.data.id,
+            code: response.data.data.code,
+          },
+        ]
+      })
     }
   },
 
@@ -398,9 +406,7 @@ export default {
     // },
 
     customLabel(afdeling) {
-      return (
-        `${afdeling.afdeling_code}` + ' (' + `${afdeling.afdeling_id}` + ')'
-      )
+      return `${afdeling.code}` + ' (' + `${afdeling.id}` + ')'
     },
 
     changePage(page) {
@@ -422,13 +428,13 @@ export default {
     searchData() {
       // console.log('search')
       try {
-        if (this.afdeling_id.afdeling_id === null) {
+        if (this.afdeling_id.id === null) {
           this.query_afdeling_id = ''
-        } else if (this.afdeling_id.afdeling_id === undefined) {
+        } else if (this.afdeling_id.id === undefined) {
           this.query_afdeling_id = this.$route.query.q_afdeling_id
         } else {
-          this.query_afdeling_id = this.afdeling_id.afdeling_id
-            ? this.afdeling_id.afdeling_id
+          this.query_afdeling_id = this.afdeling_id.id
+            ? this.afdeling_id.id
             : ''
         }
       } catch (err) {}
