@@ -300,9 +300,9 @@ export default {
     function currentDate() {
       const current = new Date()
       current.setDate(current.getDate())
-      const date = `${current.getFullYear()}-${
-        current.getMonth() + 1
-      }-${current.getDate()}`
+      const date = `${current.getFullYear()}-${current.getMonth() + 1}-${
+        current.getDate() - 1
+      }`
 
       return date
     }
@@ -375,8 +375,6 @@ export default {
   mounted() {
     if (this.$route.query.q_afdeling_id == null) {
       this.$axios.get(`/api/admin/lov_afdeling_default`).then((response) => {
-        console.log('daaa')
-        console.log(response.data.data.code)
         this.afdeling_id = [
           {
             id: response.data.data.id,
@@ -427,6 +425,7 @@ export default {
     //searchData
     searchData() {
       // console.log('search')
+
       try {
         if (this.afdeling_id.id === null) {
           this.query_afdeling_id = ''
