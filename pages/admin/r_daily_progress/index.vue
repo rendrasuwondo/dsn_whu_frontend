@@ -318,11 +318,6 @@ export default {
       ? query.activitied_at_prepend
       : currentDate()
 
-    let q_afdeling_id = query.q_afdeling_id
-      ? query.q_afdeling_id
-      : $auth.user.employee.afdeling_id
-    let afdeling_id = []
-
     // afdeling_id
     const afdeling_list = await $axios.$get(
       `/api/admin/lov_afdeling_daily_progress`
@@ -332,15 +327,23 @@ export default {
       `/api/admin/lov_afdeling_default`
     )
 
+    let q_afdeling_id = query.q_afdeling_id
+      ? query.q_afdeling_id
+      : afdeling_default.data.id
+
+    let afdeling_id = []
+
     let afdeling_code = []
 
     if (query.q_afdeling_id) {
       $axios
         .get(
-          `/api/admin/lov_afdeling_daily_progress?afdeling_id=${q_afdeling_id}`
+          `/api/admin/lov_afdeling_daily_progress?q_afdeling_id=${q_afdeling_id}`
         )
         .then((response) => {
-          afdeling_id = response.data.data
+          console.log('daaa')
+          console.log(response.data.data)
+          afdeling_id = response.data.data[0]
         })
     } else {
       afdeling_id = []
@@ -353,11 +356,11 @@ export default {
     }
 
     const posts = await $axios.$get(
-      `/api/admin/report/daily_porgress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&afdeling_id=${q_afdeling_id}`
+      `/api/admin/report/daily_porgress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&q_afdeling_id=${q_afdeling_id}`
     )
 
     const t_daily_progress = await $axios.$get(
-      `/api/admin/master/attendance_daily_progress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&afdeling_id=${q_afdeling_id}`
+      `/api/admin/master/attendance_daily_progress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&q_afdeling_id=${q_afdeling_id}`
     )
 
     return {
@@ -416,19 +419,17 @@ export default {
           activitied_at_prepend: this.$route.query.activitied_at_prepend
             ? this.$route.query.activitied_at_prepend
             : this.activitied_at_start,
-          afdeling_id: this.$route.query.afdeling_id
-            ? this.$route.query.afdeling_id
+          afdeling_id: this.$route.query.q_afdeling_id
+            ? this.$route.query.q_afdeling_id
             : this.id_afdeling,
         },
       })
     },
     //searchData
     searchData() {
-      // console.log('search')
-
       try {
         if (this.afdeling_id.id === null) {
-          this.query_afdeling_id = ''
+          this.query_afdeling_id = this.$route.query.q_afdeling_id
         } else if (this.afdeling_id.id === undefined) {
           this.query_afdeling_id = this.$route.query.q_afdeling_id
         } else {
@@ -438,6 +439,9 @@ export default {
         }
       } catch (err) {}
 
+      // console.log('search')
+      // console.log(this.afdeling_id[0].id)
+
       this.$router.push({
         path: this.$route.path,
         query: {
@@ -445,7 +449,7 @@ export default {
           activitied_at_prepend: this.activitied_at_start,
           q_afdeling_id: this.query_afdeling_id
             ? this.query_afdeling_id
-            : this.$auth.user.employee.afdeling_id,
+            : this.afdeling_id[0].id,
         },
       })
     },
@@ -477,7 +481,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/daily_porgress/export?activitied_at_prepend=${this.activitied_at_start}&afdeling_id=${this.query_afdeling_id}`,
+        url: `/api/admin/daily_porgress/export?activitied_at_prepend=${this.activitied_at_start}&q_afdeling_id=${this.query_afdeling_id}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
