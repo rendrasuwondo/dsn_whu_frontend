@@ -672,14 +672,16 @@ export default {
 
       if (this.afdeling_id === null) {
         this.query_afdeling_id = ''
-      } else if (this.afdeling_id.id === undefined) {
+      } else if (this.afdeling_id.afdeling_id === undefined) {
         if (this.$route.query.q_afdeling_id === undefined) {
           this.query_afdeling_id = ''
         } else {
           this.query_afdeling_id = this.$route.query.q_afdeling_id
         }
       } else {
-        this.query_afdeling_id = this.afdeling_id.id ? this.afdeling_id.id : ''
+        this.query_afdeling_id = this.afdeling_id.afdeling_id
+          ? this.afdeling_id.afdeling_id
+          : ''
       }
 
       this.$axios({
