@@ -76,7 +76,7 @@
                         :options="afdeling"
                         :custom-label="customLabel"
                         x
-                        track-by="afdeling_id"
+                        track-by="id"
                         :searchable="true"
                         @input="onChangeAfdeling"
                       ></multiselect></div
@@ -446,8 +446,8 @@ export default {
         )
         .then((response) => {
           foreman_employee_id = response.data.data
-          console.log('cekkkkk')
-          console.log(foreman_employee_id.employee_id)
+          // console.log('cekkkkk')
+          // console.log(foreman_employee_id.employee_id)
         })
     } else {
       foreman_employee_id = []
@@ -502,8 +502,8 @@ export default {
     if (this.$route.query.q_afdeling_id == null) {
       this.afdeling_id = [
         {
-          afdeling_id: this.$auth.user.employee.afdeling_id,
-          afdeling_code: this.$auth.user.employee.afdeling_code,
+          id: this.$auth.user.employee.afdeling_id,
+          code: this.$auth.user.employee.afdeling_code,
         },
       ]
     } else {
@@ -519,7 +519,7 @@ export default {
         ) {
           this.$axios
             .get(
-              `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.afdeling_id.afdeling_id}`
+              `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.afdeling_id.id}`
             )
             .then((response) => {
               this.foreman = response.data.data
@@ -535,9 +535,7 @@ export default {
     // },
 
     customLabel(afdeling) {
-      return (
-        `${afdeling.afdeling_code}` + ' (' + `${afdeling.afdeling_id}` + ')'
-      )
+      return `${afdeling.code}` + ' (' + `${afdeling.id}` + ')'
     },
 
     changePage(page) {

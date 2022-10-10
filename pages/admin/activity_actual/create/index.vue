@@ -37,7 +37,7 @@
               <multiselect
                 v-model="field.afdeling_id"
                 :options="afdeling"
-                label="afdeling_id"
+                label="id"
                 track-by="id"
                 :searchable="true"
                 @input="onChangeAfdeling"
@@ -338,7 +338,7 @@ export default {
     this.company_code = this.user.employee.company_code
     this.department_code = this.user.employee.department_code
 
-    if (this.field.afdeling_id.afdeling_id == undefined) {
+    if (this.field.afdeling_id.id == undefined) {
       this.$axios
         // .get('/api/admin/lov_foreman_employee')
         .get(
@@ -379,7 +379,7 @@ export default {
       this.$axios
         // .get('/api/admin/lov_foreman_employee')
         .get(
-          `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.field.afdeling_id.afdeling_id}`
+          `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.field.afdeling_id.id}`
         )
 
         .then((response) => {
@@ -389,7 +389,7 @@ export default {
       //Dropdown Block
       this.$axios
         .get(
-          `/api/admin/lov_ha_statement_afdeling/${this.field.afdeling_id.afdeling_id}`
+          `/api/admin/lov_ha_statement_afdeling/${this.field.afdeling_id.id}`
         )
 
         .then((response) => {
@@ -407,7 +407,7 @@ export default {
 
       this.$axios
         .get(
-          `/api/admin/lov_employee_afdeling?afdeling_id=${this.field.afdeling_id.afdeling_id}`
+          `/api/admin/lov_employee_afdeling?afdeling_id=${this.field.afdeling_id.id}`
         )
         .then((response) => {
           this.field.afdeling_id = response.data.data
@@ -454,12 +454,16 @@ export default {
   },
 
   methods: {
+    customLabel(afdeling) {
+      return `${afdeling.code}` + ' (' + `${afdeling.id}` + ')'
+    },
+
     onChangeAfdeling() {
       if (this.field.afdeling_id != null) {
         if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
           this.$axios
             .get(
-              `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.field.afdeling_id.afdeling_id}`
+              `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.field.afdeling_id.id}`
             )
             .then((response) => {
               this.foreman = response.data.data
@@ -468,7 +472,7 @@ export default {
           //Dropdown SKU
           this.$axios
             .get(
-              `/api/admin/lov_labour/${this.company_code}/${this.department_code}?afdeling_id=${this.field.afdeling_id.afdeling_id}`
+              `/api/admin/lov_labour/${this.company_code}/${this.department_code}?afdeling_id=${this.field.afdeling_id.id}`
             )
             .then((response) => {
               this.labour = response.data.data
@@ -477,7 +481,7 @@ export default {
           //Dropdown Block
           this.$axios
             .get(
-              `/api/admin/lov_ha_statement_afdeling/${this.field.afdeling_id.afdeling_id}`
+              `/api/admin/lov_ha_statement_afdeling/${this.field.afdeling_id.id}`
             )
 
             .then((response) => {
@@ -489,7 +493,7 @@ export default {
           //Dropdown Block
           this.$axios
             .get(
-              `/api/admin/lov_ha_statement_afdeling/${this.field.afdeling_id.afdeling_id}`
+              `/api/admin/lov_ha_statement_afdeling/${this.field.afdeling_id.id}`
             )
 
             .then((response) => {
@@ -555,12 +559,8 @@ export default {
       if (this.field.afdeling_id.id == undefined) {
         vafdeling_id = this.$auth.user.employee.afdeling_id
       } else {
-        vafdeling_id = this.field.afdeling_id.afdeling_id
+        vafdeling_id = this.field.afdeling_id.id
       }
-      console.log('cek')
-      // console.log(this.$auth.user.employee.afdeling_id)
-      console.log(this.field.afdeling_id.afdeling_id)
-      // console.log(vafdeling_id)
 
       // formData.append(
       //   'afdeling_id',
@@ -617,7 +617,7 @@ export default {
         formData.append(
           'afdeling_id',
           this.field.afdeling_id
-            ? this.field.afdeling_id.afdeling_id
+            ? this.field.afdeling_id.id
             : this.$auth.user.employee.afdeling_id
         )
       }

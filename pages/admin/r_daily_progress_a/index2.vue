@@ -1,4 +1,4 @@
-<<template>
+<template>
   <div class="content-wrapper mb-5">
     <section class="content-header">
       <div class="container-fluid"></div>
@@ -54,7 +54,7 @@
                         :options="afdeling"
                         :custom-label="customLabel"
                         x
-                        track-by="id"
+                        track-by="afdeling_id"
                         :searchable="true"
                       ></multiselect></div
                   ></b-col>
@@ -370,8 +370,8 @@ export default {
     if (this.$route.query.q_afdeling_id == null) {
       this.afdeling_id = [
         {
-          id: this.$auth.user.employee.afdeling_id,
-          code: this.$auth.user.employee.afdeling_code,
+          afdeling_id: this.$auth.user.employee.afdeling_id,
+          afdeling_code: this.$auth.user.employee.afdeling_code,
         },
       ]
     }
@@ -396,7 +396,9 @@ export default {
     // },
 
     customLabel(afdeling) {
-      return `${afdeling.code}` + ' (' + `${afdeling.id}` + ')'
+      return (
+        `${afdeling.afdeling_code}` + ' (' + `${afdeling.afdeling_id}` + ')'
+      )
     },
 
     changePage(page) {
@@ -417,13 +419,13 @@ export default {
     //searchData
     searchData() {
       try {
-        if (this.afdeling_id.id === null) {
+        if (this.afdeling_id.afdeling_id === null) {
           this.query_afdeling_id = ''
-        } else if (this.afdeling_id.id === undefined) {
+        } else if (this.afdeling_id.afdeling_id === undefined) {
           this.query_afdeling_id = this.$route.query.q_afdeling_id
         } else {
-          this.query_afdeling_id = this.afdeling_id.id
-            ? this.afdeling_id.id
+          this.query_afdeling_id = this.afdeling_id.afdeling_id
+            ? this.afdeling_id.afdeling_id
             : ''
         }
       } catch (err) {}
@@ -459,14 +461,16 @@ export default {
 
       if (this.afdeling_id === null) {
         this.query_afdeling_id = ''
-      } else if (this.afdeling_id.id === undefined) {
+      } else if (this.afdeling_id.afdeling_id === undefined) {
         if (this.$route.query.q_afdeling_id === undefined) {
           this.query_afdeling_id = ''
         } else {
           this.query_afdeling_id = this.$route.query.q_afdeling_id
         }
       } else {
-        this.query_afdeling_id = this.afdeling_id.id ? this.afdeling_id.id : ''
+        this.query_afdeling_id = this.afdeling_id.afdeling_id
+          ? this.afdeling_id.afdeling_id
+          : ''
       }
 
       this.$axios({
