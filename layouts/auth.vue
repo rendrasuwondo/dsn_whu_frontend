@@ -24,8 +24,17 @@
         href="https://drive.google.com/drive/u/0/folders/1nZ1ncA1DbqyArap7paiiID-V4iajCM-p"
         target="_blank"
       >
-        <b-img class="img-download" src="img/pdf_logo.png" alt="logo"></b-img>
+        <b-img class="img-download" src="img/pdf.png" alt="logo"></b-img>
         Tutorial Penggunaan Aplikasi
+      </b-button>
+
+      <b-button
+        class="download-doc"
+        href="https://drive.google.com/drive/u/0/folders/1DCLEMN3Ozy2xeI8d57qPH1j0Mmysicm3"
+        target="_blank"
+      >
+        <b-img class="img-download" src="img/folder.png" alt="logo"></b-img>
+        Dokumen Teknis
       </b-button>
     </div>
   </div>
@@ -118,5 +127,24 @@ body {
   width: 25px;
   height: 25px;
   margin-right: 3px;
+}
+
+.download-doc {
+  margin-top: 20px;
+  margin-left: 20px;
+  /* width: 210px; */
+  padding: 10px 20px 10px 20px;
+  background: #0c0d0e;
+  font-size: 13px;
+  box-shadow: 3px 2px #f5f6faf5;
+}
+.download-doc:hover {
+  background: linear-gradient(
+    to right,
+    #dcdde1,
+    #2f3542,
+    #1e272e,
+    black
+  ) !important;
 }
 </style>
