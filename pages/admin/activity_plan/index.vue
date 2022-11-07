@@ -166,6 +166,10 @@
                 <i class="fa fa-file-alt"></i>
               </b-button>
             </template>
+            <template v-slot:cell(t_flexrate)="row">
+              Rp
+              {{ new Intl.NumberFormat('es-US').format(row.item.flexrate) }}
+            </template>
           </b-table>
 
           <b-row>
@@ -244,17 +248,26 @@ export default {
         },
         {
           label: 'HK',
-          key: 'man_daysFormat',
+          key: 'man_days',
+          formatter: (value, key, item) => {
+            let formatter = new Intl.NumberFormat('es-US')
+            return formatter.format(value)
+          },
           tdClass: 'align-middle text-right',
         },
         {
           label: 'Volume',
-          key: 'qtyFormat',
+          key: 'qty',
+          formatter: (value, key, item) => {
+            let formatter = new Intl.NumberFormat('es-US')
+            return formatter.format(value)
+          },
           tdClass: 'align-middle text-right',
         },
         {
           label: 'Rate',
-          key: 'flexrateFormat',
+          key: 't_flexrate',
+
           tdClass: 'align-middle text-left text-nowrap',
         },
         {

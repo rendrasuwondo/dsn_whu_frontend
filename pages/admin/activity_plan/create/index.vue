@@ -19,7 +19,7 @@
               <multiselect
                 v-model="field.afdeling_id"
                 :options="afdeling"
-                label="afdeling_id"
+                label="id"
                 track-by="id"
                 :searchable="true"
                 @input="onChangeAfdeling"
@@ -84,55 +84,43 @@
 
             <div class="form-group" v-show="show_hk">
               <label>HK</label>
-              <!-- <input
-                type="text"
-                v-model="field.man_days"
-                placeholder="Masukkan Jumlah HK"
+              <input
+                v-model.number="field.man_days"
                 class="form-control"
-              /> -->
-
-              <number
-                class="form-control"
-                placeholder="Masukkan Jumlah HK"
-                v-model="field.man_days"
-                prefix=""
-              ></number>
+                v-on:keypress="NumbersOnly"
+                placeholder="Masukkan Nilai HK"
+              />
             </div>
 
             <div class="form-group">
               <label>Volume</label>
-              <!-- <input
-                type="text"
-                v-model="field.qty"
-                placeholder="Masukkan Jumlah Volume"
+              <input
+                v-model.number="field.qty"
                 class="form-control"
-              /> -->
-
-              <number
-                class="form-control"
-                placeholder="Masukkan Jumlah Volume"
-                v-model="field.qty"
-                prefix=""
-              ></number>
+                v-on:keypress="NumbersOnly"
+                placeholder="Masukkan Nilai Volume"
+              />
+              <div v-if="validation.qty" class="mt-2">
+                <b-alert show variant="danger">{{ validation.qty[0] }}</b-alert>
+              </div>
             </div>
 
             <div class="form-group" v-show="show_rate">
               <label>Rate</label>
-
-              <!--   <input
-                type="text"
-                v-model="price"
-                placeholder="Masukkan Satuan Rate"
-                class="form-control"
-              /> -->
-              <number
+              <!-- <number
                 class="form-control"
                 placeholder="Masukkan Upah / Unit"
                 v-model="field.flexrate"
                 prefix="Rp "
-                precision="2"
                 masked="true"
-              ></number>
+              ></number> -->
+              <money
+                v-model="field.flexrate"
+                v-bind="money"
+                prefix="Rp "
+                placeholder="Masukkan Upah / Unit"
+                class="form-control"
+              ></money>
             </div>
 
             <div class="form-group">
@@ -393,7 +381,9 @@ export default {
         //assing response data to state "tags"
         this.afdeling = response.data.data
       })
-    // console.log(this.$auth.user.employee.afdeling_id)
+
+    console.log('daaa')
+    console.log(this.$auth.user.employee.afdeling_id)
 
     this.$axios
       .get(
@@ -578,6 +568,19 @@ export default {
 
           this.validation = error.response.data
         })
+    },
+    NumbersOnly(evt) {
+      evt = evt ? evt : window.event
+      var charCode = evt.which ? evt.which : evt.keyCode
+      if (
+        charCode > 31 &&
+        (charCode < 48 || charCode > 57) &&
+        charCode !== 46
+      ) {
+        evt.preventDefault()
+      } else {
+        return true
+      }
     },
   },
   computed: {

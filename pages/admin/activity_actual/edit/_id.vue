@@ -146,23 +146,25 @@
 
             <div class="form-group">
               <label>HK</label>
-              <money
-                v-model="field.man_days"
-                v-bind="money"
-                precision="2"
+              <input
+                v-model.number="field.man_days"
                 class="form-control"
-              ></money>
+                v-on:keypress="NumbersOnly"
+                placeholder="Masukkan Nilai HK"
+              />
             </div>
 
             <div class="form-group">
               <label>Volume</label>
-
-              <money
-                v-model="field.qty"
-                v-bind="money"
-                precision="2"
+              <input
+                v-model.number="field.qty"
                 class="form-control"
-              ></money>
+                v-on:keypress="NumbersOnly"
+                placeholder="Masukkan Nilai Volume"
+              />
+              <div v-if="validation.qty" class="mt-2">
+                <b-alert show variant="danger">{{ validation.qty[0] }}</b-alert>
+              </div>
             </div>
 
             <div class="form-group">
@@ -170,7 +172,6 @@
               <money
                 v-model="field.flexrate"
                 v-bind="money"
-                precision="2"
                 prefix="Rp "
                 class="form-control"
               ></money>
@@ -312,6 +313,7 @@ export default {
         foreman_employee: '',
         is_revision: 'Y',
         selected: '',
+        activity_description: '',
       },
 
       company_code: '',
@@ -344,8 +346,6 @@ export default {
         console.log(response.data.data.man_days)
         this.field.activity_plan_detail_id =
           response.data.data.activity_plan_detail_id
-        this.field.activity_description =
-          response.data.data.activity_description
         this.field.activitied_at = response.data.data.activitied_at
         this.field.foreman_employee = response.data.data.foreman_employee
         this.field.block = response.data.data.block
@@ -397,6 +397,7 @@ export default {
           //data yang dikirim
           activity_plan_detail_id: this.field.activity_plan_detail_id,
           //   activity_plan_detail_id: this.field.activity_plan_detail_id,
+
           man_days: this.field.man_days,
           qty: this.field.qty,
           flexrate: this.field.flexrate,
@@ -411,6 +412,7 @@ export default {
           created_by: this.field.created_by,
           updated_by: this.field.updated_by,
           is_revision: this.field.is_revision,
+          activity_description: this.field.activity_description,
           selected: this.field.verification_status === 'V' ? 1 : 0,
         })
         .then(() => {
@@ -429,6 +431,20 @@ export default {
           //assign error validasi
           this.validation = error.response.data
         })
+    },
+
+    NumbersOnly(evt) {
+      evt = evt ? evt : window.event
+      var charCode = evt.which ? evt.which : evt.keyCode
+      if (
+        charCode > 31 &&
+        (charCode < 48 || charCode > 57) &&
+        charCode !== 46
+      ) {
+        evt.preventDefault()
+      } else {
+        return true
+      }
     },
   },
   computed: {

@@ -74,6 +74,7 @@
                 label="name"
                 track-by="id"
                 :searchable="true"
+                @input="onChange"
               ></multiselect>
               <div v-if="validation.activity_id" class="mt-2">
                 <b-alert show variant="danger">{{
@@ -116,34 +117,37 @@
               </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" v-show="show_hk">
               <label>HK</label>
-              <number
+              <input
+                v-model.number="field.man_days"
                 class="form-control"
-                placeholder="Masukkan Jumlah HK"
-                v-model="field.man_days"
-                prefix=""
-              ></number>
+                v-on:keypress="NumbersOnly"
+                placeholder="Masukkan Nilai HK"
+              />
             </div>
 
             <div class="form-group">
               <label>Volume</label>
-
-              <number
+              <input
+                v-model.number="field.qty"
                 class="form-control"
-                placeholder="Masukkan Jumlah Volume"
-                v-model="field.qty"
-                prefix=""
-              ></number>
+                v-on:keypress="NumbersOnly"
+                placeholder="Masukkan Nilai Volume"
+              />
+              <div v-if="validation.qty" class="mt-2">
+                <b-alert show variant="danger">{{ validation.qty[0] }}</b-alert>
+              </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" v-show="show_rate">
               <label>Rate</label>
-              <input
+              <money
+                v-model="field.flexrate"
+                v-bind="money"
+                prefix="Rp "
                 class="form-control"
-                v-model.lazy="field.flexrate"
-                v-money="{ prefix: 'Rp ', precision: 2 }"
-              />
+              ></money>
             </div>
 
             <div class="form-group">
@@ -280,6 +284,9 @@ export default {
   data() {
     return {
       state: 'disabled',
+
+      show_hk: true,
+      show_rate: false,
 
       company_code: '',
       department_code: '',
@@ -454,6 +461,18 @@ export default {
   },
 
   methods: {
+    onChange() {
+      if (this.field.activity_id.activity_name.indexOf('RATE') > 0) {
+        this.show_hk = false
+        this.show_rate = true
+        this.field.man_days = ''
+      } else {
+        this.show_hk = true
+        this.show_rate = false
+        this.field.flexrate = ''
+      }
+    },
+
     customLabel(afdeling) {
       return `${afdeling.code}` + ' (' + `${afdeling.id}` + ')'
     },
@@ -666,6 +685,19 @@ export default {
           //assign error to state "validation"
           this.validation = error.response.data
         })
+    },
+    NumbersOnly(evt) {
+      evt = evt ? evt : window.event
+      var charCode = evt.which ? evt.which : evt.keyCode
+      if (
+        charCode > 31 &&
+        (charCode < 48 || charCode > 57) &&
+        charCode !== 46
+      ) {
+        evt.preventDefault()
+      } else {
+        return true
+      }
     },
   },
 

@@ -58,7 +58,7 @@
               <label>Mandor</label>
               <input
                 type="text"
-                v-model="field.foreman_employee_id"
+                v-model="field.foreman_employee_description"
                 placeholder=""
                 class="form-control"
                 readonly
@@ -91,63 +91,43 @@
 
             <div class="form-group" v-show="show_hk">
               <label>HK</label>
-              <money
-                v-model="field.man_days"
-                v-bind="money"
-                precision="2"
+              <input
+                v-model.number="field.man_days"
                 class="form-control"
-              ></money>
-              <!-- <number
-                class="form-control"
-                placeholder="Masukkan Jumlah HK"
-                v-model="field.man_days"
-                prefix=""
-              ></number> -->
+                v-on:keypress="NumbersOnly"
+                placeholder="Masukkan Nilai HK"
+              />
             </div>
 
             <div class="form-group">
               <label>Volume</label>
-              <!-- <input
-                type="text"
-                v-model="field.man_days"
-                placeholder="Masukkan Jumlah Volume"
+              <input
+                v-model.number="field.qty"
                 class="form-control"
-              /> -->
-
-              <money
-                v-model="field.qty"
-                v-bind="money"
-                precision="2"
-                class="form-control"
-              ></money>
-
-              <!-- {{ price }} -->
-              <!-- <number
-                class="form-control"
-                v-model="field.man_days"
-                placeholder="Masukkan Jumlah Volume"
-                prefix=""
-                v-bind="number"
-              ></number> -->
+                v-on:keypress="NumbersOnly"
+                placeholder="Masukkan Nilai Volume"
+              />
+              <div v-if="validation.qty" class="mt-2">
+                <b-alert show variant="danger">{{ validation.qty[0] }}</b-alert>
+              </div>
             </div>
 
             <div class="form-group" v-show="show_rate">
               <label>Rate</label>
-
-              <money
-                v-model="field.flexrate"
-                v-bind="money"
-                precision="2"
-                prefix="Rp "
-                class="form-control"
-              ></money>
-
               <!-- <number
                 class="form-control"
                 placeholder="Masukkan Upah / Unit"
                 v-model="field.flexrate"
-                v-bind="number"
+                prefix="Rp "
+                masked="true"
               ></number> -->
+              <money
+                v-model="field.flexrate"
+                v-bind="money"
+                prefix="Rp "
+                placeholder="Masukkan Upah / Unit"
+                class="form-control"
+              ></money>
             </div>
 
             <div class="form-group">
@@ -275,6 +255,7 @@ export default {
         created_by: '',
         updated_by: '',
         foreman_employee_id: '',
+        foreman_employee_description: '',
       },
 
       foreman: [],
@@ -299,20 +280,19 @@ export default {
         console.log(response.data.data)
 
         //assing response data to state "raw data"
-        this.field.afdeling_id = response.data.data.afdeling.code.concat(
+        this.field.afdeling_id = response.data.data.afdeling_code.concat(
           ' (' + response.data.data.afdeling_id + ')'
         )
 
-        this.field.activity_id = response.data.data.activity
+        this.field.activity_description =
+          response.data.data.activity_description
 
-        this.field.foreman_employee_id =
-          response.data.data.foreman_employee.nik.concat(
-            ' - ' + response.data.data.foreman_employee.name
-          )
+        this.field.foreman_employee_description =
+          response.data.data.foreman_employee_description
 
         this.field.activitied_at = response.data.data.activitied_at
 
-        if (response.data.data.activity.name.indexOf('RATE') > 0) {
+        if (response.data.data.activity_description.indexOf('RATE') > 0) {
           this.field.flexrate = response.data.data.flexrate ?? 0
           this.show_hk = false
           this.show_rate = true
@@ -404,7 +384,10 @@ export default {
       formData.append('man_days', this.field.man_days)
       formData.append('qty', this.field.qty)
       formData.append('flexrate', this.field.flexrate)
-      formData.append('description', this.field.description)
+      formData.append(
+        'description',
+        this.field.description ? this.field.description : ''
+      )
       formData.append(
         'updated_by',
         this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
@@ -414,6 +397,7 @@ export default {
       formData.append('created_by', this.field.created_by)
       formData.append('update_at', this.field.update_at)
       formData.append('udpate_by', this.field.udpate_by)
+      formData.append('activity_description', this.field.activity_description)
 
       //sending data to server
       await this.$axios
@@ -437,6 +421,20 @@ export default {
           //assign error to state "validation"
           this.validation = error.response.data
         })
+    },
+
+    NumbersOnly(evt) {
+      evt = evt ? evt : window.event
+      var charCode = evt.which ? evt.which : evt.keyCode
+      if (
+        charCode > 31 &&
+        (charCode < 48 || charCode > 57) &&
+        charCode !== 46
+      ) {
+        evt.preventDefault()
+      } else {
+        return true
+      }
     },
   },
   computed: {

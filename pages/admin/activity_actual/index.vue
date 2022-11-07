@@ -153,6 +153,7 @@
             :items="posts"
             :fields="fields"
             show-empty
+            outlined
             v-model="visibleRows"
           >
             <template v-slot:head(selected)="data">
@@ -199,9 +200,15 @@
                     >Verifikasi</b-button
                   ></b-td
                 >
-                <b-td colspan="6">Total</b-td>
-                <b-td align="right"> {{ TOTAL_HK }}</b-td>
-                <b-td align="right"> {{ TOTAL_VOLUME }}</b-td>
+                <b-td colspan="7">Total</b-td>
+                <b-td align="right">
+                  {{ new Intl.NumberFormat('es-US').format(TOTAL_HK) }}</b-td
+                >
+                <b-td align="right">
+                  {{
+                    new Intl.NumberFormat('es-US').format(TOTAL_VOLUME)
+                  }}</b-td
+                >
               </b-tr>
             </template>
           </b-table>
@@ -310,21 +317,19 @@ export default {
           label: 'HK',
           key: 'man_days',
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-          formatter: (value, key, item) =>
-            value.toLocaleString(undefined, {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            }),
+          formatter: (value, key, item) => {
+            let formatter = new Intl.NumberFormat('es-US')
+            return formatter.format(value)
+          },
         },
         {
           label: 'Volume',
           key: 'qty',
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-          formatter: (value, key, item) =>
-            value.toLocaleString(undefined, {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            }),
+          formatter: (value, key, item) => {
+            let formatter = new Intl.NumberFormat('es-US')
+            return formatter.format(value)
+          },
         },
         {
           label: 'Rate',
