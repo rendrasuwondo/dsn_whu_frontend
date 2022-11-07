@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-upload"></i> Upload File
+            <i class="nav-icon fas fa-upload"></i> <b>LATIHAN UPLOAD FILE</b>
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -17,46 +17,115 @@
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <!-- <nuxt-link
-                  :to="{ name: 'admin-site-create' }"
+                  :to="{ name: 'erp_ho-master-employee-create' }"
                   class="btn btn-info btn-sm"
                   style="padding-top: 8px"
                   title="Tambah"
                   ><i class="fa fa-plus-circle"></i>
                 </nuxt-link> -->
-                <b-button v-b-modal.modal-upload class="btn btn-info" title="">
-                  <i class="fa fa-file-upload"></i>
-                </b-button>
-                <b-modal
-                  id="modal-upload"
-                  title="IMPORT DATA"
-                  hide-footer
-                  ref="my-modal"
+                <!-- <button
+                  title="Export To Excel"
+                  class="btn btn-info"
+                  @click="exportData"
                 >
-                  <form ref="form" @submit.stop.prevent="submit_file">
-                    <label>PILIH FILE</label>
-                    <b-form-file
-                      ref="file"
-                      placeholder="Choose a file or drop it here..."
-                      drop-placeholder="Drop file here..."
-                      @change="upload"
-                    ></b-form-file>
+                  <i class="fa fa-file-excel"></i>
+                </button> -->
 
-                    <button
-                      class="btn btn-info mr-1 btn-submit mt-2"
-                      type="submit"
-                    >
-                      <i class="fa fa-upload"></i> UPLOAD
-                    </button>
+                <button
+                  title="Upload File"
+                  class="btn btn-info"
+                  @click="showModal"
+                >
+                  <i class="fa fa-file-upload"></i>
+                </button>
 
-                    <button
-                      class="btn btn-warning btn-reset mt-2"
-                      block
-                      @click="hideModal"
-                      type="reset"
-                    >
-                      <i class="fa fa-redo"></i> BATAL
-                    </button>
-                  </form>
+                <b-modal ref="my-modal" hide-footer title="Form Upload File">
+                  <div class="form-group">
+                    <b-container fluid>
+                      <b-row class="my-1">
+                        <b-col sm="2">
+                          <label for="input-small">Tahun :</label>
+                        </b-col>
+                        <b-col sm="10">
+                          <multiselect
+                            v-model="year_id"
+                            :options="years"
+                            label="year_at"
+                            track-by="id"
+                            :searchable="true"
+                          ></multiselect>
+                        </b-col>
+                      </b-row>
+                    </b-container>
+                  </div>
+                  <div class="form-group">
+                    <b-container fluid>
+                      <b-row class="my-1">
+                        <b-col sm="2">
+                          <label for="input-small">Bulan :</label>
+                        </b-col>
+                        <b-col sm="10">
+                          <multiselect
+                            v-model="month_id"
+                            :options="months"
+                            label="name"
+                            track-by="id"
+                            :searchable="true"
+                          ></multiselect>
+                        </b-col>
+                      </b-row>
+                    </b-container>
+                  </div>
+                  <div class="form-group">
+                    <b-container class="bv-example-row">
+                      <b-row>
+                        <b-col>
+                          <p class="selected float-left">
+                            <label class="mr-1">Pilih File :</label>
+                            <!-- <br /> -->
+                            <input
+                              type="file"
+                              name="file"
+                              @change="upload"
+                              id="actual-btn"
+                              hidden
+                            />
+
+                            <!-- our custom upload button -->
+                            <label for="actual-btn" class="f_upload">
+                              Choose File
+                            </label>
+                            {{ files ? files.name : 'No File Chosen' }}
+                          </p>
+                        </b-col>
+                      </b-row>
+                    </b-container>
+                  </div>
+                  <div class="form-group">
+                    <b-container class="bv-example-row">
+                      <b-row>
+                        <b-col>
+                          <b-button
+                            :disabled="files == null"
+                            class="btn btn-info mr-1 btn-modal"
+                            block
+                            @click="submitFileUpload"
+                          >
+                            <i class="fa fa-upload"></i> UPLOAD
+                          </b-button>
+                        </b-col>
+                        <b-col>
+                          <b-button
+                            class="btn btn-warning btn-modal"
+                            block
+                            @click="hideModal"
+                          >
+                            <i class="fa fa-redo"></i> BATAL
+                          </b-button>
+                        </b-col>
+                      </b-row>
+                    </b-container>
+                  </div>
                 </b-modal>
               </div>
               <input
@@ -88,7 +157,7 @@
             <template v-slot:cell(actions)="row">
               <b-button
                 :to="{
-                  name: 'admin-site-edit-id',
+                  name: 'erp_ho-master-employee-edit-id',
                   params: { id: row.item.id },
                 }"
                 variant="link"
@@ -105,20 +174,21 @@
                 ><i class="fa fa-trash"></i
               ></b-button>
             </template>
-            <template v-slot:cell(detail)="row">
-              <b-button
-                :to="{
-                  name: 'admin-location-id',
-                  params: { id: row.item.id },
-                }"
-                variant="link"
-                size=""
-                title="Detail"
-              >
-                <i class="fa fa-file-alt"></i>
-              </b-button>
-            </template>
           </b-table>
+          <b-tooltip
+            target="myAfdeling"
+            triggers="hover"
+            container="myAfdeling"
+          >
+            Afdeling
+          </b-tooltip>
+          <b-tooltip
+            target="myDepartment"
+            triggers="hover"
+            container="myDepartment"
+          >
+            Departemen
+          </b-tooltip>
           <!-- pagination -->
           <b-row>
             <b-col
@@ -147,22 +217,28 @@ export default {
 
   head() {
     return {
-      title: 'Upload',
+      title: 'Upload File',
     }
   },
+
   data() {
     return {
-      file: null,
+      files: null,
+      year_id: '',
+      month_id: '',
+      years: [],
+      months: [],
+
       fields: [
         {
           label: 'Actions',
           key: 'actions',
-          tdClass: 'align-middle text-center text-nowrap nameOfTheClass',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          label: 'Kode',
+          label: 'Code',
           key: 'code',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          tdClass: 'align-middle text-center text-nowrap nameOfTheClass',
         },
         {
           label: 'Nama',
@@ -170,8 +246,23 @@ export default {
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
+          label: 'Hari',
+          key: 'day',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          label: 'Bulan',
+          key: 'month',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          label: 'Tahun',
+          key: 'year',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
           label: 'Aktif',
-          key: 'is_active_code',
+          key: 'is_active',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
       ],
@@ -184,6 +275,28 @@ export default {
   watchQuery: ['q', 'page'],
 
   async asyncData({ $axios, query }) {
+    const current = new Date()
+
+    //GET YEAR
+    let year_id = []
+
+    let year_at = current.getFullYear()
+
+    $axios.get(`/api/admin/lov_years?q_year_id=${year_at}`).then((response) => {
+      year_id = response.data.data
+    })
+
+    // GET MONTH
+    let month_id = []
+
+    let month_at = current.getMonth() + 1
+
+    $axios
+      .get(`/api/admin/lov_months?q_month_id=${month_at}`)
+      .then((response) => {
+        month_id = response.data.data
+      })
+
     //page
     let page = query.page ? parseInt(query.page) : ''
 
@@ -192,7 +305,7 @@ export default {
 
     //fetching posts
     const posts = await $axios.$get(
-      `/api/admin/upload?q=${search}&page=${page}`
+      `/api/admin/latihan_upload?q=${search}&page=${page}`
     )
 
     return {
@@ -200,10 +313,28 @@ export default {
       pagination: posts.data,
       search: search,
       rowcount: posts.data.total,
+      year_id: year_id,
+      month_id: month_id,
     }
   },
-
   methods: {
+    showModal() {
+      this.$refs['my-modal'].show()
+    },
+
+    hideModal() {
+      this.$refs['my-modal'].hide()
+    },
+
+    currentDate() {
+      const current = new Date()
+      current.setDate(current.getDate())
+      const date = `${current.getFullYear()}-${
+        current.getMonth() + 1
+      }-${current.getDate()}`
+      return date
+    },
+
     changePage(page) {
       this.$router.push({
         path: this.$route.path,
@@ -223,8 +354,26 @@ export default {
       })
     },
 
-    hideModal() {
-      this.$refs['my-modal'].hide()
+    exportData() {
+      const headers = {
+        'Content-Type': 'application/json',
+      }
+
+      this.$axios({
+        url: `/api/admin/employee/export?q=${this.search}`,
+        method: 'GET',
+        responseType: 'blob',
+        headers: headers, // important
+      }).then((response) => {
+        this.isLoading = false
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        var fileName = 'Employee.xlsx'
+        link.setAttribute('download', fileName) //or any other extension
+        document.body.appendChild(link)
+        link.click()
+      })
     },
 
     //deletePost method
@@ -244,7 +393,7 @@ export default {
           if (result.isConfirmed) {
             //delete tag from server
 
-            this.$axios.delete(`/api/admin/site/${id}`).then((response) => {
+            this.$axios.delete(`/api/admin/employee/${id}`).then((response) => {
               //feresh data
               this.$nuxt.refresh()
 
@@ -273,40 +422,124 @@ export default {
       // uploaded file
       let files = e.target.files[0]
 
-      this.file = files
+      this.files = files
     },
 
-    async submit_file() {
-      //   console.log('daaa')
-      //   console.log(this.file)
-      /*
-                Initialize the form data
-            */
+    back() {
+      this.$router.push({
+        name: 'admin-upload_file',
+      })
+    },
+
+    async submitFileUpload() {
+      const current = new Date()
+
+      // Year
+      let year_1 = current.getFullYear()
+
+      let year_2 = this.year_id.year_at ? this.year_id.year_at : ''
+
+      let year_at = this.year_id.year_at === undefined ? year_1 : year_2
+
+      // Month
+      let month_1 = current.getMonth()
+
+      let month_2 = this.month_id.id ? this.month_id.id : ''
+
+      let month_at = this.month_id.id === undefined ? month_1 : month_2
+
+      console.log(year_at)
       let formData = new FormData()
+      formData.append('upload_file', this.files)
 
-      /*
-                Add the form data we need to submit
-            */
-      formData.append('file', this.file)
-
-      /*
-          Make the request to the POST /single-file URL
-        */
       await this.$axios
-        .post('/api/admin/upload_file/import', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
+        .post(
+          `/api/admin/latihan_upload?month_at=${month_at}&year_at=${year_at}`,
+          formData
+        )
+        .then(() => {
+          //sweet alert
+
+          this.$swal.fire({
+            title: 'BERHASIL!',
+            text: 'Data Berhasil Disimpan!',
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 2000,
+          })
+
+          this.$nuxt.refresh()
+          this.hideModal()
+          this.back()
+          this.files = null
         })
-        .then(function () {
-          console.log('SUCCESS!!')
-        })
-        .catch(function () {
-          console.log('FAILURE!!')
+        .catch((error) => {
+          //assign error to state "validation"
+          this.validation = error.response.data
         })
     },
+  },
+
+  mounted() {
+    // Dropdown Year
+    this.$axios
+      .get('/api/admin/lov_years')
+
+      .then((response) => {
+        this.years = response.data.data
+      })
+
+    // Dropdown Months
+    this.$axios
+      .get('/api/admin/lov_months')
+
+      .then((response) => {
+        this.months = response.data.data
+      })
   },
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.card-info.card-outline {
+  border-top: 5px solid #504d8d;
+}
+.card-title {
+  color: #504d8d;
+}
+.title-filter {
+  font-size: 14px;
+  margin-left: 8px;
+}
+.btn-modal {
+  font-size: 16px;
+  font-weight: bold;
+}
+.f_upload {
+  background-color: rgba(82, 68, 190, 0.911);
+  font-size: 14px;
+  width: 150px;
+  padding: 5px 0px 5px 0px;
+  border-radius: 3px;
+  color: white;
+  box-shadow: 2px 3px #f7ebfd;
+  border-style: solid;
+  border-width: 0px 2px 2px 0px;
+  border-color: rgb(57, 50, 106);
+  text-align: center;
+  margin-right: 2px;
+  font-weight: bold;
+}
+
+.f_upload:hover {
+  background-color: rgb(64, 51, 161);
+  border-style: solid;
+  border-width: 0px 2px 2px 0px;
+  border-color: rgb(69, 61, 129);
+}
+
+#file-chosen {
+  margin-left: 0.3rem;
+  font-family: sans-serif;
+}
+</style>

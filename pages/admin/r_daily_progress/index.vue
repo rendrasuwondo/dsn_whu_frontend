@@ -22,7 +22,7 @@
             <b-card-text>
               <b-container class="bv-example-row mb-3">
                 <b-row>
-                  <b-col cols="1">Tanggal</b-col>
+                  <b-col cols="2">Tanggal:</b-col>
                   <b-col cols="4">
                     <b-input-group>
                       <b-form-datepicker
@@ -42,11 +42,30 @@
                       </template>
                     </b-input-group>
                   </b-col>
+                  <b-col cols="4">
+                    <b-input-group>
+                      <b-form-datepicker
+                        v-model="activitied_at_end"
+                        :date-format-options="{
+                          year: 'numeric',
+                          month: 'short',
+                          day: '2-digit',
+                          weekday: 'short',
+                        }"
+                        size="sm"
+                      ></b-form-datepicker>
+                      <template #append>
+                        <b-btn size="sm" @click="activitied_at_end = ''"
+                          ><i class="fa fa-trash"></i
+                        ></b-btn>
+                      </template>
+                    </b-input-group>
+                  </b-col>
                 </b-row>
               </b-container>
               <b-container class="bv-example-row">
                 <b-row>
-                  <b-col cols="1">Afdeling</b-col>
+                  <b-col cols="2">Afdeling:</b-col>
                   <b-col cols="4">
                     <div class="form-group">
                       <multiselect
@@ -290,19 +309,27 @@ export default {
       company_code: '',
       department_code: '',
       param_activitied_at_prepend: this.$route.query.activitied_at_prepend,
+      param_activitied_at_append: this.$route.query.activitied_at_append,
       afdeling_id: this.$route.query.afdeling_id,
       query_afdeling_id: '',
     }
   },
-  watchQuery: ['q', 'page', 'activitied_at_prepend', 'q_afdeling_id'],
+  watchQuery: [
+    'q',
+    'page',
+    'activitied_at_prepend',
+    'activitied_at_append',
+    'q_afdeling_id',
+  ],
 
   async asyncData({ $axios, query, $auth }) {
     function currentDate() {
       const current = new Date()
       current.setDate(current.getDate())
-      const date = `${current.getFullYear()}-${current.getMonth() + 1}-${
-        current.getDate() - 1
-      }`
+      const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current
+        .getDate()
+        .toString()
+        .padStart(2, '0')}`
 
       return date
     }
@@ -316,6 +343,11 @@ export default {
     //activitied_at_prepend
     let activitied_at_start = query.activitied_at_prepend
       ? query.activitied_at_prepend
+      : currentDate()
+
+    //activitied_at_append
+    let activitied_at_end = query.activitied_at_append
+      ? query.activitied_at_append
       : currentDate()
 
     // afdeling_id
@@ -356,11 +388,11 @@ export default {
     }
 
     const posts = await $axios.$get(
-      `/api/admin/report/daily_porgress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&q_afdeling_id=${q_afdeling_id}`
+      `/api/admin/report/daily_porgress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_prepend=${activitied_at_start}&q_afdeling_id=${q_afdeling_id}`
     )
 
     const t_daily_progress = await $axios.$get(
-      `/api/admin/master/attendance_daily_progress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&q_afdeling_id=${q_afdeling_id}`
+      `/api/admin/master/attendance_daily_progress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_prepend=${activitied_at_start}&q_afdeling_id=${q_afdeling_id}`
     )
 
     return {
@@ -369,6 +401,7 @@ export default {
       search: search,
       rowcount: posts.data.length,
       activitied_at_start: activitied_at_start,
+      activitied_at_end: activitied_at_end,
       afdeling: afdeling_list.data,
       afdeling_id: afdeling_id,
       t_daily_progress: t_daily_progress.data,
@@ -419,6 +452,9 @@ export default {
           activitied_at_prepend: this.$route.query.activitied_at_prepend
             ? this.$route.query.activitied_at_prepend
             : this.activitied_at_start,
+          activitied_at_append: this.$route.query.activitied_at_append
+            ? this.$route.query.activitied_at_append
+            : this.activitied_at_end,
           afdeling_id: this.$route.query.q_afdeling_id
             ? this.$route.query.q_afdeling_id
             : this.id_afdeling,
@@ -447,6 +483,7 @@ export default {
         query: {
           q: this.search,
           activitied_at_prepend: this.activitied_at_start,
+          activitied_at_append: this.activitied_at_end,
           q_afdeling_id: this.query_afdeling_id
             ? this.query_afdeling_id
             : this.afdeling_id[0].id,
@@ -457,9 +494,10 @@ export default {
     currentDate() {
       const current = new Date()
       current.setDate(current.getDate())
-      const date = `${current.getFullYear()}-${
-        current.getMonth() + 1
-      }-${current.getDate()}`
+      const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current
+        .getDate()
+        .toString()
+        .padStart(2, '0')}`
       return date
     },
 
@@ -481,7 +519,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/daily_porgress/export?activitied_at_prepend=${this.activitied_at_start}&q_afdeling_id=${this.query_afdeling_id}`,
+        url: `/api/admin/daily_porgress/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_afdeling_id=${this.query_afdeling_id}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important

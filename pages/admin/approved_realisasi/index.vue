@@ -22,8 +22,8 @@
             <b-card-text>
               <b-container class="bv-example-row mb-3">
                 <b-row>
-                  <b-col cols="1">Tanggal</b-col>
-                  <b-col>
+                  <b-col cols="2">Tanggal:</b-col>
+                  <b-col cols="4">
                     <b-input-group>
                       <b-form-datepicker
                         v-model="activitied_at_start"
@@ -39,23 +39,21 @@
                         <b-btn size="sm" @click="activitied_at_start = ''"
                           ><i class="fa fa-trash"></i
                         ></b-btn>
-                        &nbsp; s.d
                       </template>
                     </b-input-group>
                   </b-col>
-                  <b-col>
+                  <b-col cols="4">
                     <b-input-group>
-                      <b-datepicker
+                      <b-form-datepicker
                         v-model="activitied_at_end"
-                        reset-button
-                        size="sm"
                         :date-format-options="{
                           year: 'numeric',
                           month: 'short',
                           day: '2-digit',
                           weekday: 'short',
                         }"
-                      ></b-datepicker>
+                        size="sm"
+                      ></b-form-datepicker>
                       <template #append>
                         <b-btn size="sm" @click="activitied_at_end = ''"
                           ><i class="fa fa-trash"></i
@@ -63,63 +61,30 @@
                       </template>
                     </b-input-group>
                   </b-col>
-                  <b-col></b-col>
                 </b-row>
               </b-container>
-              <!-- <b-container class="bv-example-row">
+              <b-container class="bv-example-row">
                 <b-row>
-                  <b-col cols="1">Afdeling</b-col>
-                  <b-col cols="7">
+                  <b-col cols="2">Afdeling:</b-col>
+                  <b-col cols="4">
                     <div class="form-group">
                       <multiselect
                         v-model="afdeling_id"
                         :options="afdeling"
                         :custom-label="customLabel"
                         x
-                        track-by="afdeling_id"
+                        track-by="id"
                         :searchable="true"
-                        @input="onChangeAfdeling"
                       ></multiselect></div
                   ></b-col>
                 </b-row>
               </b-container>
-              <b-container class="bv-example-row">
-                <b-row>
-                  <b-col cols="1">Mandor</b-col>
-                  <b-col cols="7">
-                    <div class="form-group">
-                      <multiselect
-                        v-model="foreman_employee_id"
-                        :options="foreman"
-                        label="employee_description"
-                        track-by="employee_id"
-                        :searchable="true"
-                      ></multiselect></div
-                  ></b-col>
-                </b-row>
-              </b-container> -->
             </b-card-text>
           </b-card>
 
           <div class="form-group">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
-                <!-- <nuxt-link
-                  :to="{
-                    name: 'admin-activity_actual-create',
-                    query: {
-                      activitied_at_prepend:
-                        this.$route.query.activitied_at_prepend,
-                      activitied_at_append:
-                        this.$route.query.activitied_at_append,
-                      foreman_id: this.$route.query.q_foreman_employee_id,
-                    },
-                  }"
-                  class="btn btn-info btn-sm"
-                  style="padding-top: 8px"
-                  title="Tambah"
-                  ><i class="fa fa-plus-circle"></i>
-                </nuxt-link> -->
                 <button
                   title="Export To Excel"
                   class="btn btn-info"
@@ -243,7 +208,7 @@ export default {
   layout: 'admin',
   head() {
     return {
-      title: 'Realisasi',
+      title: 'Approved Realisasi',
     }
   },
   data() {
@@ -342,9 +307,7 @@ export default {
       department_code: '',
       param_activitied_at_prepend: this.$route.query.activitied_at_prepend,
       param_activitied_at_append: this.$route.query.activitied_at_append,
-      foreman_employee_id: this.$route.query.q_foreman_employee_id,
       afdeling_id: this.$route.query.afdeling_id,
-      query_foreman_employee_id: '',
       query_afdeling_id: '',
     }
   },
@@ -353,7 +316,6 @@ export default {
     'page',
     'activitied_at_prepend',
     'activitied_at_append',
-    'q_foreman_employee_id',
     'q_afdeling_id',
   ],
 
@@ -361,9 +323,11 @@ export default {
     function currentDate() {
       const current = new Date()
       current.setDate(current.getDate())
-      const date = `${current.getFullYear()}-${
-        current.getMonth() + 1
-      }-${current.getDate()}`
+      const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current
+        .getDate()
+        .toString()
+        .padStart(2, '0')}`
+
       return date
     }
 
@@ -383,84 +347,43 @@ export default {
       ? query.activitied_at_append
       : currentDate()
 
+    // afdeling_id
+    const afdeling_list = await $axios.$get(
+      `/api/admin/lov_afdeling_daily_progress`
+    )
+
+    const afdeling_default = await $axios.$get(
+      `/api/admin/lov_afdeling_default`
+    )
+
     let q_afdeling_id = query.q_afdeling_id
       ? query.q_afdeling_id
-      : $auth.user.employee.afdeling_id
-    let afdeling_id = []
+      : afdeling_default.data.id
 
-    // afdeling_id
-    const afdeling_list = await $axios.$get(`/api/admin/lov_employee_afdeling`)
+    let afdeling_id = []
 
     let afdeling_code = []
 
     if (query.q_afdeling_id) {
-      // console.log('rendra')
       $axios
-        .get(`/api/admin/lov_employee_afdeling?afdeling_id=${q_afdeling_id}`)
+        .get(
+          `/api/admin/lov_afdeling_daily_progress?q_afdeling_id=${q_afdeling_id}`
+        )
         .then((response) => {
-          afdeling_id = response.data.data
+          afdeling_id = response.data.data[0]
         })
     } else {
       afdeling_id = []
 
-      q_afdeling_id = $auth.user.employee.afdeling_id
+      q_afdeling_id = afdeling_default.data.id
     }
 
     if (q_afdeling_id == undefined || q_afdeling_id == '') {
-      q_afdeling_id = $auth.user.employee.afdeling_id
+      q_afdeling_id = afdeling_default.data.id
     }
 
-    let department_code = $auth.user.employee.department_code
-    let company_code = $auth.user.employee.company_code
-    // let i_afdeling_id = $auth.user.employee.afdeling_id
-
-    const foreman_list = await $axios.$get(
-      `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${q_afdeling_id}`
-    )
-
-    //foreman_id
-
-    let q_foreman_employee_id = query.q_foreman_employee_id
-      ? query.q_foreman_employee_id
-      : ''
-    let foreman_employee_id = []
-    // console.log('aida')
-    // console.log(foreman_list)
-    // console.log(q_foreman_employee_id)
-    // try {
-    if (query.q_foreman_employee_id) {
-      //Mandor
-      $axios
-        .get(
-          `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${q_afdeling_id}&foreman_id=${q_foreman_employee_id}`
-        )
-        .then((response) => {
-          foreman_employee_id = response.data.data
-          console.log('cekkkkk')
-          console.log(foreman_employee_id.employee_id)
-        })
-    } else {
-      foreman_employee_id = []
-
-      q_foreman_employee_id = foreman_employee_id.employee_id
-    } //if (query.foreman_id) {
-
-    // console.log('isa')
-    // console.log(q_foreman_employee_id)
-    // } catch (err) {
-    //   foreman_id = ''
-    // }
-    //fetching posts
-    // console.log('rendra')
-
-    if (q_foreman_employee_id == undefined) {
-      q_foreman_employee_id = ''
-    }
-    // console.log(foreman_id)
-    let foreman_id = ''
-    q_afdeling_id = ''
     const posts = await $axios.$get(
-      `/api/admin/report/approval_realisasi?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_id}&q_afdeling_id=${q_afdeling_id}`
+      `/api/admin/report/approval_realisasi?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_prepend=${activitied_at_start}&q_afdeling_id=${q_afdeling_id}`
     )
 
     // console.log('rdr')
@@ -482,8 +405,6 @@ export default {
       rowcount: posts.data.length,
       activitied_at_start: activitied_at_start,
       activitied_at_end: activitied_at_end,
-      foreman: foreman_list.data,
-      foreman_employee_id: foreman_employee_id,
       afdeling: afdeling_list.data,
       afdeling_id: afdeling_id,
     }
@@ -491,41 +412,20 @@ export default {
 
   mounted() {
     if (this.$route.query.q_afdeling_id == null) {
-      this.afdeling_id = [
-        {
-          afdeling_id: this.$auth.user.employee.afdeling_id,
-          afdeling_code: this.$auth.user.employee.afdeling_code,
-        },
-      ]
-    } else {
+      this.$axios.get(`/api/admin/lov_afdeling_default`).then((response) => {
+        this.afdeling_id = [
+          {
+            id: response.data.data.id,
+            code: response.data.data.code,
+          },
+        ]
+      })
     }
   },
 
   methods: {
-    onChangeAfdeling() {
-      if (this.afdeling_id != null) {
-        if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
-          this.$axios
-            .get(
-              `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.afdeling_id.afdeling_id}`
-            )
-            .then((response) => {
-              this.foreman = response.data.data
-            })
-        }
-      }
-    },
-
-    //     pad(n, width, z) {
-    //   z = z || '0'
-    //   n = n + ''
-    //   return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n
-    // },
-
     customLabel(afdeling) {
-      return (
-        `${afdeling.afdeling_code}` + ' (' + `${afdeling.afdeling_id}` + ')'
-      )
+      return `${afdeling.code}` + ' (' + `${afdeling.id}` + ')'
     },
 
     changePage(page) {
@@ -540,40 +440,22 @@ export default {
           activitied_at_append: this.$route.query.activitied_at_append
             ? this.$route.query.activitied_at_append
             : this.activitied_at_end,
-          foreman_employee_id: this.$route.query.foreman_employee_id
-            ? this.$route.query.foreman_employee_id
-            : this.id_foreman_employee,
-          afdeling_id: this.$route.query.afdeling_id
-            ? this.$route.query.afdeling_id
+          afdeling_id: this.$route.query.q_afdeling_id
+            ? this.$route.query.q_afdeling_id
             : this.id_afdeling,
         },
       })
     },
     //searchData
     searchData() {
-      // console.log('search')
-
       try {
-        if (this.foreman_employee_id.employee_id === null) {
-          this.query_foreman_employee_id = ''
-        } else if (this.foreman_employee_id.employee_id === undefined) {
-          this.query_foreman_employee_id =
-            this.$route.query.q_foreman_employee_id
-        } else {
-          this.query_foreman_employee_id = this.foreman_employee_id.employee_id
-            ? this.foreman_employee_id.employee_id
-            : ''
-        }
-      } catch (err) {}
-
-      try {
-        if (this.afdeling_id.afdeling_id === null) {
-          this.query_afdeling_id = ''
-        } else if (this.afdeling_id.afdeling_id === undefined) {
+        if (this.afdeling_id.id === null) {
+          this.query_afdeling_id = this.$route.query.q_afdeling_id
+        } else if (this.afdeling_id.id === undefined) {
           this.query_afdeling_id = this.$route.query.q_afdeling_id
         } else {
-          this.query_afdeling_id = this.afdeling_id.afdeling_id
-            ? this.afdeling_id.afdeling_id
+          this.query_afdeling_id = this.afdeling_id.id
+            ? this.afdeling_id.id
             : ''
         }
       } catch (err) {}
@@ -584,22 +466,22 @@ export default {
           q: this.search,
           activitied_at_prepend: this.activitied_at_start,
           activitied_at_append: this.activitied_at_end,
-          q_foreman_employee_id: this.query_foreman_employee_id,
           q_afdeling_id: this.query_afdeling_id
             ? this.query_afdeling_id
-            : this.$auth.user.employee.afdeling_id,
+            : this.afdeling_id[0].id,
         },
       })
     },
 
-    // currentDate() {
-    //   const current = new Date()
-    //   current.setDate(current.getDate())
-    //   const date = `${current.getFullYear()}-${
-    //     current.getMonth() + 1
-    //   }-${current.getDate()}`
-    //   return date
-    // },
+    currentDate() {
+      const current = new Date()
+      current.setDate(current.getDate())
+      const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current
+        .getDate()
+        .toString()
+        .padStart(2, '0')}`
+      return date
+    },
 
     //deletePost method
     deletePost(id) {
@@ -640,24 +522,6 @@ export default {
         'Content-Type': 'application/json',
       }
 
-      //  console.log('rdr')
-      //  console.log(this.activitied_at_start)
-
-      if (this.foreman_employee_id.employee_id === null) {
-        this.query_foreman_employee_id = ''
-      } else if (this.foreman_employee_id.employee_id === undefined) {
-        if (this.$route.query.q_foreman_employee_id === undefined) {
-          this.query_foreman_employee_id = ''
-        } else {
-          this.query_foreman_employee_id =
-            this.$route.query.q_foreman_employee_id
-        }
-      } else {
-        this.query_foreman_employee_id = this.foreman_employee_id.employee_id
-          ? this.foreman_employee_id.employee_id
-          : ''
-      }
-
       if (this.afdeling_id === null) {
         this.query_afdeling_id = ''
       } else if (this.afdeling_id.id === undefined) {
@@ -671,7 +535,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/activity_actual/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&foreman_id=${this.query_foreman_employee_id}&afdeling_id=${this.query_afdeling_id}`,
+        url: `/api/admin/activity_actual/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_afdeling_id=${this.query_afdeling_id}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
