@@ -213,12 +213,12 @@ export default {
       foreman: [],
       afdeling: [],
       fields: [
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Status',
-          key: 'activitied_at',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
+        // {
+        //   thClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        //   label: 'Status',
+        //   key: 'activitied_at',
+        //   tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        // },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Tanggal',
@@ -326,10 +326,9 @@ export default {
     function currentDate() {
       const current = new Date()
       current.setDate(current.getDate())
-      const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current
-        .getDate()
-        .toString()
-        .padStart(2, '0')}`
+      const date = `${current.getFullYear()}-${
+        current.getMonth() + 1
+      }-${current.getDate()}`
 
       return date
     }
@@ -388,11 +387,11 @@ export default {
     }
 
     const posts = await $axios.$get(
-      `/api/admin/report/daily_porgress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_prepend=${activitied_at_start}&q_afdeling_id=${q_afdeling_id}`
+      `/api/admin/report/daily_porgress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}`
     )
 
     const t_daily_progress = await $axios.$get(
-      `/api/admin/master/attendance_daily_progress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_prepend=${activitied_at_start}&q_afdeling_id=${q_afdeling_id}`
+      `/api/admin/master/attendance_daily_progress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}`
     )
 
     return {
