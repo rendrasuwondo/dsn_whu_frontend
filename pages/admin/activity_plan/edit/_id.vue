@@ -277,7 +277,7 @@ export default {
 
       .then((response) => {
         console.log('rdr')
-        console.log(response.data.data)
+        console.log(response.data.data.created_at)
 
         //assing response data to state "raw data"
         this.field.afdeling_id = response.data.data.afdeling_code.concat(
@@ -304,11 +304,6 @@ export default {
 
         this.field.qty = response.data.data.qty ?? 0
         this.field.description = response.data.data.description
-        this.field.activity_description =
-          response.data.data.activity_id +
-          ' ' +
-          response.data.data.activity.name
-
         this.field.created_at = response.data.data.created_at
         this.field.created_by = response.data.data.created_by
         this.field.updated_at = response.data.data.updated_at
@@ -346,6 +341,15 @@ export default {
         name: 'admin-activity_plan',
         params: { id: this.$route.params.id, r: 1 },
       })
+    },
+
+    currentDate() {
+      const current = new Date()
+      const date = `${current.getFullYear()}-${
+        current.getMonth() + 1
+      }-${current.getDate()}`
+
+      return date
     },
 
     handleFileChange(e) {
