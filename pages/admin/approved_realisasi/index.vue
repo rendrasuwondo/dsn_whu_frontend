@@ -383,7 +383,7 @@ export default {
     }
 
     const posts = await $axios.$get(
-      `/api/admin/report/approval_realisasi?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_start}&q_afdeling_id=${q_afdeling_id}`
+      `/api/admin/report/approval_realisasi?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}`
     )
 
     // console.log('rdr')
