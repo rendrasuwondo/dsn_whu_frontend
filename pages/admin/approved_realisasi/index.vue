@@ -348,17 +348,13 @@ export default {
       : currentDate()
 
     // afdeling_id
-    const afdeling_list = await $axios.$get(
-      `/api/admin/lov_afdeling_daily_progress`
-    )
+    const afdeling_list = await $axios.$get(`/api/admin/lov_afdeling_eh`)
 
     const afdeling_default = await $axios.$get(
       `/api/admin/lov_afdeling_default`
     )
 
-    let q_afdeling_id = query.q_afdeling_id
-      ? query.q_afdeling_id
-      : afdeling_default.data.id
+    let q_afdeling_id = query.q_afdeling_id ? query.q_afdeling_id : ''
 
     let afdeling_id = []
 
@@ -366,25 +362,25 @@ export default {
 
     if (query.q_afdeling_id) {
       $axios
-        .get(
-          `/api/admin/lov_afdeling_daily_progress?q_afdeling_id=${q_afdeling_id}`
-        )
+        .get(`/api/admin/lov_afdeling_eh?q_afdeling_id=${q_afdeling_id}`)
         .then((response) => {
-          afdeling_id = response.data.data[0]
+          console.log('daaa')
+          console.log(response.data.data)
+          afdeling_id = response.data.data
         })
     } else {
       afdeling_id = []
 
-      q_afdeling_id = afdeling_default.data.id
-    }
-
-    if (q_afdeling_id == undefined || q_afdeling_id == '') {
-      q_afdeling_id = afdeling_default.data.id
-    }
-
-    if (q_afdeling_id == null) {
       q_afdeling_id = ''
     }
+
+    // if (q_afdeling_id == undefined ) {
+    //   q_afdeling_id = afdeling_default.data.id
+    // }
+
+    // if (q_afdeling_id == null) {
+    //   q_afdeling_id = ''
+    // }
 
     const posts = await $axios.$get(
       `/api/admin/report/approval_realisasi?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}`
@@ -415,16 +411,16 @@ export default {
   },
 
   mounted() {
-    if (this.$route.query.q_afdeling_id == null) {
-      this.$axios.get(`/api/admin/lov_afdeling_default`).then((response) => {
-        this.afdeling_id = [
-          {
-            id: response.data.data.id,
-            code: response.data.data.code,
-          },
-        ]
-      })
-    }
+    // if (this.$route.query.q_afdeling_id == null) {
+    //   this.$axios.get(`/api/admin/lov_afdeling_default`).then((response) => {
+    //     this.afdeling_id = [
+    //       {
+    //         id: response.data.data.id,
+    //         code: response.data.data.code,
+    //       },
+    //     ]
+    //   })
+    // }
   },
 
   methods: {
@@ -454,7 +450,7 @@ export default {
     searchData() {
       try {
         if (this.afdeling_id.id === null) {
-          this.query_afdeling_id = this.$route.query.q_afdeling_id
+          this.query_afdeling_id = ''
         } else if (this.afdeling_id.id === undefined) {
           this.query_afdeling_id = this.$route.query.q_afdeling_id
         } else {
@@ -470,9 +466,7 @@ export default {
           q: this.search,
           activitied_at_prepend: this.activitied_at_start,
           activitied_at_append: this.activitied_at_end,
-          q_afdeling_id: this.query_afdeling_id
-            ? this.query_afdeling_id
-            : this.afdeling_id[0].id,
+          q_afdeling_id: this.query_afdeling_id ? this.query_afdeling_id : '',
         },
       })
     },

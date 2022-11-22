@@ -398,9 +398,8 @@ export default {
       ? query.activitied_at_append
       : currentDate()
 
-    let q_afdeling_id = query.q_afdeling_id
-      ? query.q_afdeling_id
-      : $auth.user.employee.afdeling_id
+    let q_afdeling_id = query.q_afdeling_id ? query.q_afdeling_id : ''
+
     let afdeling_id = []
 
     // afdeling_id
@@ -409,7 +408,6 @@ export default {
     let afdeling_code = []
 
     if (query.q_afdeling_id) {
-      // console.log('rendra')
       $axios
         .get(`/api/admin/lov_employee_afdeling?afdeling_id=${q_afdeling_id}`)
         .then((response) => {
@@ -421,8 +419,8 @@ export default {
       q_afdeling_id = $auth.user.employee.afdeling_id
     }
 
-    if (q_afdeling_id == undefined || q_afdeling_id == '') {
-      q_afdeling_id = $auth.user.employee.afdeling_id
+    if (q_afdeling_id == undefined) {
+      q_afdeling_id = ''
     }
 
     let department_code = $auth.user.employee.department_code
@@ -477,10 +475,10 @@ export default {
       `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_foreman_employee_id=${q_foreman_employee_id}&q_afdeling_id=${q_afdeling_id}`
     )
 
-    console.log('rdr')
-    console.log(
-      `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_foreman_employee_id=${q_foreman_employee_id}&q_afdeling_id=${q_afdeling_id}`
-    )
+    // console.log('rdr')
+    // console.log(
+    //   `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_foreman_employee_id=${q_foreman_employee_id}&q_afdeling_id=${q_afdeling_id}`
+    // )
     // const profile = await $axios.$get(
     // )
     // foreman_employee_id = 490
@@ -566,7 +564,8 @@ export default {
     },
     //searchData
     searchData() {
-      // console.log('search')
+      console.log('search')
+      console.log(this.afdeling_id)
 
       try {
         if (this.foreman_employee_id.employee_id === null) {
@@ -582,13 +581,13 @@ export default {
       } catch (err) {}
 
       try {
-        if (this.afdeling_id.afdeling_id === null) {
+        if (this.afdeling_id.id === null) {
           this.query_afdeling_id = ''
-        } else if (this.afdeling_id.afdeling_id === undefined) {
+        } else if (this.afdeling_id.id === undefined) {
           this.query_afdeling_id = this.$route.query.q_afdeling_id
         } else {
-          this.query_afdeling_id = this.afdeling_id.afdeling_id
-            ? this.afdeling_id.afdeling_id
+          this.query_afdeling_id = this.afdeling_id.id
+            ? this.afdeling_id.id
             : ''
         }
       } catch (err) {}
@@ -600,9 +599,7 @@ export default {
           activitied_at_prepend: this.activitied_at_start,
           activitied_at_append: this.activitied_at_end,
           q_foreman_employee_id: this.query_foreman_employee_id,
-          q_afdeling_id: this.query_afdeling_id
-            ? this.query_afdeling_id
-            : this.$auth.user.employee.afdeling_id,
+          q_afdeling_id: this.query_afdeling_id ? this.query_afdeling_id : '',
         },
       })
     },
@@ -675,16 +672,14 @@ export default {
 
       if (this.afdeling_id === null) {
         this.query_afdeling_id = ''
-      } else if (this.afdeling_id.afdeling_id === undefined) {
+      } else if (this.afdeling_id.id === undefined) {
         if (this.$route.query.q_afdeling_id === undefined) {
           this.query_afdeling_id = ''
         } else {
           this.query_afdeling_id = this.$route.query.q_afdeling_id
         }
       } else {
-        this.query_afdeling_id = this.afdeling_id.afdeling_id
-          ? this.afdeling_id.afdeling_id
-          : ''
+        this.query_afdeling_id = this.afdeling_id.id ? this.afdeling_id.id : ''
       }
 
       this.$axios({
