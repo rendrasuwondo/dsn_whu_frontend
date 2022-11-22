@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-hard-hat"></i> Realisasi
+            <i class="nav-icon fas fa-clipboard-check"></i> APPROVED REALISASI
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -65,7 +65,7 @@
               </b-container>
               <b-container class="bv-example-row">
                 <b-row>
-                  <b-col cols="2">Afdeling:</b-col>
+                  <b-col cols="2">Afdeling SKU:</b-col>
                   <b-col cols="4">
                     <div class="form-group">
                       <multiselect
@@ -119,6 +119,7 @@
             :fields="fields"
             show-empty
             v-model="visibleRows"
+            class="s_table"
           >
             <template v-slot:head(selected_eh)="data">
               <span
@@ -164,7 +165,7 @@
                     >Approved</b-button
                   ></b-td
                 >
-                <b-td colspan="7">Total</b-td>
+                <b-td colspan="9">Total</b-td>
                 <b-td align="right"> {{ TOTAL_HK }}</b-td>
                 <b-td align="right"> {{ TOTAL_VOLUME }}</b-td>
                 <b-td></b-td>
@@ -255,6 +256,18 @@ export default {
         {
           label: 'SKU',
           key: 'labour_employee',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          label: 'Estate SKU',
+          key: 'labour_department_code',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          label: 'Afd SKU',
+          key: 'labour_afdeling_code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
@@ -542,7 +555,7 @@ export default {
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
-        var fileName = 'Actual.xlsx'
+        var fileName = 'Approved Realisasi.xlsx'
         link.setAttribute('download', fileName) //or any other extension
         document.body.appendChild(link)
         link.click()
@@ -638,5 +651,8 @@ export default {
   padding-top: 200px;
   font-size: 30px;
   font-family: sans-serif;
+}
+.s_table {
+  font-size: 14px;
 }
 </style>
