@@ -267,7 +267,7 @@ export default {
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Afd SKU',
-          key: 'labour_afdeling_code',
+          key: 'labour_afdeling_id',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
