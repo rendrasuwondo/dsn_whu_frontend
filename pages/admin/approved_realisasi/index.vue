@@ -399,18 +399,6 @@ export default {
       `/api/admin/report/approval_realisasi?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}`
     )
 
-    // console.log('rdr')
-    // console.log(
-    //   `/api/admin/report/approval_realisasi?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_id}&q_afdeling_id=${q_afdeling_id}`
-    // )
-    // const profile = await $axios.$get(
-    // )
-    // foreman_employee_id = 490
-    // console.log('rdr')
-    // console.log(
-    //   `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&foreman_id=${foreman_id}&q_afdeling_id=${q_afdeling_id}`
-    // )
-    // console.log(afdeling_list.data)
     return {
       posts: posts.data,
       pagination: posts.data,

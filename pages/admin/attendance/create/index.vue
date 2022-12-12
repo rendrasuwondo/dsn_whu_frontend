@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-calendar-check"></i> TAMBAH ABSENSI
+            <i class="nav-icon fas fa-calendar-check"></i> TAMBAH PRESENSI
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -26,7 +26,7 @@
             </div>
 
             <div class="form-group">
-              <label>Kode Absensi</label>
+              <label>Kode Presensi</label>
               <multiselect
                 v-model="field.attendance_type_id"
                 :options="attendance_type"
@@ -148,7 +148,7 @@ export default {
   //meta
   head() {
     return {
-      title: 'Tambah Absensi',
+      title: 'Tambah Presensi',
     }
   },
 

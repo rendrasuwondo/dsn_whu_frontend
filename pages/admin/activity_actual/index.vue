@@ -437,8 +437,7 @@ export default {
       ? query.q_foreman_employee_id
       : ''
     let foreman_employee_id = []
-    // console.log('aida')
-    // console.log(foreman_list)
+
     // console.log(q_foreman_employee_id)
     // try {
     if (query.q_foreman_employee_id) {
@@ -458,18 +457,26 @@ export default {
       q_foreman_employee_id = foreman_employee_id.employee_id
     } //if (query.foreman_id) {
 
-    // console.log('isa')
     // console.log(q_foreman_employee_id)
     // } catch (err) {
     //   foreman_id = ''
     // }
     //fetching posts
     // console.log('rendra')
+    // console.log(
+    //   `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${q_afdeling_id}&foreman_id=${q_foreman_employee_id}`
+    // )
 
     if (q_foreman_employee_id == undefined) {
       q_foreman_employee_id = ''
     }
     // console.log(foreman_id)
+
+    // console.log('isa')
+    // console.log(q_afdeling_id)
+    // console.log(
+    //   `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_foreman_employee_id=${q_foreman_employee_id}&q_afdeling_id=${q_afdeling_id}`
+    // )
 
     const posts = await $axios.$get(
       `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_foreman_employee_id=${q_foreman_employee_id}&q_afdeling_id=${q_afdeling_id}`

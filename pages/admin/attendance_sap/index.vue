@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-file-alt"></i> ABSENSI
+            <i class="nav-icon fas fa-file-alt"></i> PRESENSI
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -73,7 +73,7 @@
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <button
-                  title="Download Absensi"
+                  title="Download Presensi"
                   class="btn btn-info"
                   @click="exportData"
                 >
@@ -82,7 +82,7 @@
               </div>
               <div class="input-group-prepend">
                 <button
-                  title="Download Template Absensi"
+                  title="Download Template Presensi"
                   class="btn btn-info"
                   @click="exportData2"
                 >
@@ -142,7 +142,7 @@ export default {
 
   head() {
     return {
-      title: 'Absensi',
+      title: 'PRESENSI',
     }
   },
   data() {
@@ -165,7 +165,7 @@ export default {
         },
 
         {
-          label: 'Kode Absensi',
+          label: 'Kode Presensi',
           key: 'attendance_type_name',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
@@ -281,7 +281,7 @@ export default {
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
-        var fileName = 'Absensi.xlsx'
+        var fileName = 'Presensi.xlsx'
         link.setAttribute('download', fileName) //or any other extension
         document.body.appendChild(link)
         link.click()
@@ -303,7 +303,7 @@ export default {
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
-        var fileName = 'Template Absensi SAP.xlsx'
+        var fileName = 'Template Perensi SAP.xlsx'
         link.setAttribute('download', fileName) //or any other extension
         document.body.appendChild(link)
         link.click()

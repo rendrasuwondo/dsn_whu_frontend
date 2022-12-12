@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-calendar-check"></i> ABSENSI
+            <i class="nav-icon fas fa-calendar-check"></i> PRESENSI
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -162,7 +162,7 @@ export default {
 
   head() {
     return {
-      title: 'Absensi',
+      title: 'PRESENSI',
     }
   },
   data() {
@@ -190,7 +190,7 @@ export default {
         },
 
         {
-          label: 'Kode Absensi',
+          label: 'Kode Presensi',
           key: 'attendance_type_name',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
@@ -356,7 +356,7 @@ export default {
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
-        var fileName = 'Absensi.xlsx'
+        var fileName = 'Presensi.xlsx'
         link.setAttribute('download', fileName) //or any other extension
         document.body.appendChild(link)
         link.click()
