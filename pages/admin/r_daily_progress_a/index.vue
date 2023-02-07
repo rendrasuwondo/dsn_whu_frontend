@@ -298,6 +298,14 @@ export default {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Unit',
           key: 'unit',
+          formatter: (value, key, item) => {
+        let formatter = new Intl.NumberFormat("es-US", {
+          style: "decimal",
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2
+        });
+        return formatter.format(value);
+      },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
       ],
