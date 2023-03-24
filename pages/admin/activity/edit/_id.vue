@@ -77,7 +77,15 @@
                 :searchable="true"
               ></multiselect>
             </div>
-
+            <div class="form-group">
+              <label>Batas</label>
+              <input
+                type="text"
+                v-model="field.max_limit"
+                placeholder="Masukkan Batas"
+                class="form-control"
+              />
+            </div>
             <div class="form-group">
               <label>hkont_1</label>
               <input
@@ -220,6 +228,7 @@ export default {
       field: {
         code: '',
         name: '',
+        max_limit: '',
         hkont_1: '',
         hkont_2: '',
         anln2_5: '',
@@ -253,6 +262,7 @@ export default {
         //data yang diambil
         this.field.code = response.data.data.code
         this.field.name = response.data.data.name
+        this.field.max_limit = response.data.data.max_limit
         this.field.hkont_1 = response.data.data.hkont_1
         this.field.hkont_2 = response.data.data.hkont_2
         this.field.anln2_5 = response.data.data.anln2_5
@@ -312,6 +322,7 @@ export default {
           //data yang dikirim
           code: this.field.code,
           name: this.field.name,
+          max_limit: this.field.max_limit,
           hkont_1: this.field.hkont_1,
           hkont_2: this.field.hkont_2,
           anln2_5: this.field.anln2_5,

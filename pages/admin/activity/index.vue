@@ -119,6 +119,16 @@ export default {
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
+          label: 'Satuan',
+          key: 'activity_unit_name',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          label: 'Maksimal',
+          key: 'max_limit',
+          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+        },
+        {
           label: 'Grup ',
           key: 'activity_group_code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
