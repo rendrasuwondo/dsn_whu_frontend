@@ -124,7 +124,7 @@ export default {
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          label: 'Maksimal',
+          label: 'Batas',
           key: 'max_limit',
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
@@ -259,7 +259,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/activity/export`,
+        url: `/api/admin/activity/export?q=${this.search}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
