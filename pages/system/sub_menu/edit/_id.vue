@@ -295,6 +295,7 @@ export default {
           updated_at: this.field.updated_at,
           created_by: this.field.created_by,
           updated_by: this.field.updated_by,
+          id: this.$route.params.id
         })
         .then(() => {
           //sweet alert
