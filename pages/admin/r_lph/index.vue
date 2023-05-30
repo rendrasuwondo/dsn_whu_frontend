@@ -45,7 +45,7 @@
                   <b-col cols="4">
                     <b-input-group>
                       <b-form-datepicker
-                        v-show="false"
+                        v-show="true"
                         v-model="activitied_at_end"
                         :date-format-options="{
                           year: 'numeric',
@@ -59,12 +59,27 @@
                         <b-btn
                           size="sm"
                           @click="activitied_at_end = ''"
-                          v-show="false"
+                          v-show="true"
                           ><i class="fa fa-trash"></i
                         ></b-btn>
                       </template>
                     </b-input-group>
                   </b-col>
+                </b-row>
+              </b-container>
+              <b-container class="bv-example-row">
+                <b-row>
+                  <b-col cols="2">Estate:</b-col>
+                  <b-col cols="4">
+                    <div class="form-group">
+                      <multiselect
+                        v-model="department_id"
+                        :options="department"
+                        label="department_code"
+                        track-by="department_id"
+                        :searchable="true"
+                      ></multiselect></div
+                  ></b-col>
                 </b-row>
               </b-container>
               <b-container class="bv-example-row">
@@ -76,7 +91,6 @@
                         v-model="afdeling_id"
                         :options="afdeling"
                         :custom-label="customLabel"
-                        x
                         track-by="id"
                         :searchable="true"
                       ></multiselect></div
@@ -130,7 +144,7 @@
                 <b-th variant="primary" colspan="4"></b-th>
                 <b-th variant="danger" colspan="3" class="text-center">HK</b-th>
                 <b-th variant="danger" colspan="3" class="text-center"
-                  >Produksi</b-th
+                  >Volume</b-th
                 >
                 <b-th variant="danger" colspan="4"></b-th>
               </b-tr>
@@ -235,6 +249,7 @@ export default {
       show_submit: true,
       foreman: [],
       afdeling: [],
+      department: [],
       fields: [
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
@@ -384,6 +399,7 @@ export default {
       afdeling_id: this.$route.query.q_afdeling_id,
       query_afdeling_id: '',
       afdeling_default: '',
+      department_id: this.$route.query.q_department_id,
     }
   },
   watchQuery: [
@@ -392,9 +408,10 @@ export default {
     'activitied_at_prepend',
     'activitied_at_append',
     'q_afdeling_id',
+    'q_department_id',
   ],
 
-  async asyncData({ $axios, query, $auth }) {
+  async asyncData({ $axios, query, auth }) {
     function currentDate() {
       const current = new Date()
       current.setDate(current.getDate())
@@ -421,6 +438,9 @@ export default {
       ? query.activitied_at_append
       : currentDate()
 
+    // user
+    const user = await $axios.$get(`/api/admin/user`)
+
     // afdeling_id
     const afdeling_list = await $axios.$get(
       `/api/admin/lov_afdeling_daily_progress`
@@ -444,22 +464,61 @@ export default {
           `/api/admin/lov_afdeling_daily_progress?q_afdeling_id=${q_afdeling_id}`
         )
         .then((response) => {
-          console.log('daaa')
-          console.log(response.data.data)
+          // console.log('daaa')
+          // console.log(response.data.data)
           afdeling_id = response.data.data
         })
     } else {
       afdeling_id = []
 
       q_afdeling_id = afdeling_default.data.id
+
+      if (user.employee.position_code != 'ASISTEN AFDELING') {
+        q_afdeling_id = ''
+      }
     }
 
     if (q_afdeling_id == undefined || q_afdeling_id == '') {
       q_afdeling_id = afdeling_default.data.id
+
+      if (user.employee.position_code != 'ASISTEN AFDELING') {
+        q_afdeling_id = ''
+      }
     }
 
+    //department
+    let department_id_asyncData = []
+
+    const department_list = await $axios.$get(
+      `/api/admin/lov_employee_department`
+    )
+
+    const department_default = await $axios.$get(
+      `/api/admin/lov_department_default`
+    )
+
+    let q_department_id = query.q_department_id
+      ? query.q_department_id
+      : department_default.data.department_id
+
+    if (query.q_department_id) {
+      $axios
+        .get(
+          `/api/admin/lov_employee_department?q_department_id=${q_department_id}`
+        )
+        .then((response) => {
+          // console.log('rdr')
+          // console.log(response.data.data)
+          department_id_asyncData = response.data.data
+        })
+    }
+
+    // console.log('rdr')
+    // console.log(this.auth.user)
+    //department end
+
     const posts = await $axios.$get(
-      `/api/admin/report/lph?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}`
+      `/api/admin/report/lph?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}&q_department_id=${q_department_id}`
     )
 
     const t_daily_progress = await $axios.$get(
@@ -476,19 +535,33 @@ export default {
       afdeling: afdeling_list.data,
       afdeling_id: afdeling_id,
       t_daily_progress: t_daily_progress.data,
+      department: department_list.data,
+      department_id: department_id_asyncData,
     }
   },
 
   mounted() {
-    if (this.$route.query.q_afdeling_id == null) {
-      this.$axios.get(`/api/admin/lov_afdeling_default`).then((response) => {
-        this.afdeling_id = [
-          {
-            id: response.data.data.id,
-            code: response.data.data.code,
-          },
-        ]
-      })
+    if (this.user.employee.position_code == 'ASISTEN AFDELING') {
+      if (this.$route.query.q_afdeling_id == null) {
+        this.$axios.get(`/api/admin/lov_afdeling_default`).then((response) => {
+          this.afdeling_id = [
+            {
+              id: response.data.data.id,
+              code: response.data.data.code,
+            },
+          ]
+        })
+      }
+    }
+    // console.log(this.user.employee.position_code)
+
+    if (this.$route.query.q_department_id == null) {
+      this.department_id = [
+        {
+          department_id: this.user.employee.department_id,
+          department_code: this.user.employee.department_code,
+        },
+      ]
     }
   },
 
@@ -534,20 +607,32 @@ export default {
     },
     //searchData
     searchData() {
-      try {
-        if (this.afdeling_id.id === null) {
-          this.query_afdeling_id = this.$route.query.q_afdeling_id
-        } else if (this.afdeling_id.id === undefined) {
-          this.query_afdeling_id = this.$route.query.q_afdeling_id
-        } else {
-          this.query_afdeling_id = this.afdeling_id.id
-            ? this.afdeling_id.id
-            : ''
-        }
-      } catch (err) {}
+      console.log('rdr')
+      console.log(this.afdeling_id)
 
-      // console.log(this.activitied_at_start.getFullYear())
-      // console.log(this.afdeling_id[0].id)
+      if (this.afdeling_id == null) {
+        this.vafdeling = ''
+      } else {
+        if (this.afdeling_id[0] == undefined) {
+          this.vafdeling = this.afdeling_id.id
+        } else {
+          this.vafdeling = this.afdeling_id[0].id
+        }
+      }
+
+      if (this.department_id == null || this.department_id == undefined) {
+        this.vdepartment = ''
+      } else {
+        if (this.department_id.length == 0) {
+          this.vdepartment = ''
+        } else {
+          if (this.department_id[0] == undefined) {
+            this.vdepartment = this.department_id.department_id
+          } else {
+            this.vdepartment = this.department_id[0].department_id
+          }
+        }
+      }
 
       this.$router.push({
         path: this.$route.path,
@@ -555,9 +640,10 @@ export default {
           q: this.search,
           activitied_at_prepend: this.activitied_at_start,
           activitied_at_append: this.activitied_at_end,
-          q_afdeling_id: this.query_afdeling_id
-            ? this.query_afdeling_id
-            : this.afdeling_id[0].id,
+          q_afdeling_id: this.vafdeling,
+          q_department_id: this.query_department_id
+            ? this.query_department_id
+            : this.vdepartment,
         },
       })
     },
@@ -631,44 +717,48 @@ export default {
   computed: {
     TotalManDaysBasic() {
       return this.visibleRows.reduce((accum, item) => {
-        console.log(accum + item.man_days_basic)
+        // console.log(accum + item.man_days_basic)
         return accum + item.man_days_basic
       }, 0.0)
     },
 
     TotalManDaysPremi() {
       return this.visibleRows.reduce((accum, item) => {
-        console.log(accum + item.man_days_premi)
+        // console.log(accum + item.man_days_premi)
         return accum + item.man_days_premi
       }, 0.0)
     },
 
     TotalManDaysTotal() {
       return this.visibleRows.reduce((accum, item) => {
-        console.log(accum + item.man_days_total)
+        // console.log(accum + item.man_days_total)
         return accum + item.man_days_total
       }, 0.0)
     },
 
     TotalQtyBasic() {
       return this.visibleRows.reduce((accum, item) => {
-        console.log(accum + item.qty_basic)
+        // console.log(accum + item.qty_basic)
         return accum + item.qty_basic
       }, 0.0)
     },
 
     TotalQtyPremi() {
       return this.visibleRows.reduce((accum, item) => {
-        console.log(accum + item.qty_premi)
+        // console.log(accum + item.qty_premi)
         return accum + item.qty_premi
       }, 0.0)
     },
 
     TotalQtyTotal() {
       return this.visibleRows.reduce((accum, item) => {
-        console.log(accum + item.qty_total)
+        // console.log(accum + item.qty_total)
         return accum + item.qty_total
       }, 0.0)
+    },
+
+    user() {
+      return this.$auth.user
     },
   },
 }

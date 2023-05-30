@@ -5,10 +5,23 @@
     </section>
 
     <section class="content">
-      <div class="card card-outline card-info">
+      <div class="card card-outline card-info" v-if="main">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-clipboard"></i> LAPORAN HARIAN MANDOR
+            <table>
+              <tr>
+                <td @click="InProcess()">
+                  <nuxt-link
+                    :to="{ name: 'admin-in_process' }"
+                    class="nav-link"
+                  >
+                    <i class="nav-icon fas fa-id-badge"></i>
+                    In Process
+                  </nuxt-link>
+                </td>
+                <td>/ Detail</td>
+              </tr>
+            </table>
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -210,20 +223,72 @@
           <!-- pagination -->
           <b-row>
             <!-- <b-col>
-                <b-pagination
-                  v-model="pagination.current_page"
-                  :total-rows="pagination.total"
-                  :per-page="pagination.per_page"
-                  @change="changePage"
-                  align="left"
-                  class="mt-1"
-                >
-                </b-pagination>
-              </b-col> -->
+                  <b-pagination
+                    v-model="pagination.current_page"
+                    :total-rows="pagination.total"
+                    :per-page="pagination.per_page"
+                    @change="changePage"
+                    align="left"
+                    class="mt-1"
+                  >
+                  </b-pagination>
+                </b-col> -->
             <b-col class="text-right" align-self="center">
               {{ rowcount }} data
             </b-col>
           </b-row>
+        </div>
+      </div>
+
+      <div class="card card-outline card-info">
+        <div class="card-body">
+          <b-card-group deck>
+            <b-card title="" header-tag="header" header-bg-variant="secondary">
+              <template #header>
+                <h6 class="mb-0">Message</h6>
+              </template>
+
+              <div class="direct-chat-messages">
+                <div v-for="item in t_elhm_message">
+                  <div class="direct-chat-msg">
+                    <div class="direct-chat-infos clearfix">
+                      <span class="direct-chat-name float-left">{{
+                        item.prev_name_submit
+                      }}</span>
+                      <span class="direct-chat-timestamp float-right"
+                        >{{ item.send_date }}</span
+                      >
+                    </div>
+                    <!-- /.direct-chat-infos -->
+                    <img
+                      class="direct-chat-img"
+                      src="dist/img/user1-128x128.jpg"
+                      alt="message user image"
+                    />
+                    <!-- /.direct-chat-img -->
+                    <div class="direct-chat-text">
+                     {{ item.message }}
+                    </div>
+                    <!-- /.direct-chat-text -->
+                  </div>
+                  <!-- /.direct-chat-msg -->
+                </div>
+              </div>
+            </b-card>
+            <b-card
+              title=""
+              header-tag="header"
+              header-bg-variant="secondary"
+            >
+              <template #header>
+                <h6 class="mb-0">Approval</h6>
+              </template>
+              <!-- <b-card-text>Header and footers using slots.</b-card-text> -->
+              <b-button href="#" variant="primary" @click="Submit()"
+                >Submit</b-button
+              >
+            </b-card>
+          </b-card-group>
         </div>
       </div>
 
@@ -245,6 +310,7 @@ export default {
   data() {
     return {
       loading: false,
+      main: true,
       allSelected: false,
       visibleRows: [],
       show_page: false,
@@ -413,7 +479,7 @@ export default {
     'q_foreman_employee_id',
   ],
 
-  async asyncData({ $axios, query, $auth }) {
+  async asyncData({ $axios, query, $auth, route }) {
     function currentDate() {
       const current = new Date()
       current.setDate(current.getDate())
@@ -498,7 +564,7 @@ export default {
           // console.log('cekkkkk')
           // console.log(response.data.data)
         })
-    } else {
+    } else { 
       await $axios
         .get(
           `/api/admin/lov_foreman_maintenance?afdeling_id=${q_afdeling_id}&foreman_id=${q_foreman_employee_id}`
@@ -516,19 +582,29 @@ export default {
       q_foreman_employee_id = ''
     }
 
+    //  console.log('rdr')
+    //  console.log($auth)
+
     const posts = await $axios.$get(
-      `/api/admin/report/lhm?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}&q_foreman_employee_id=${foreman_employee_id.employee_id}`
+      `/api/admin/workflow/in_process_detail?id=${route.params.id}`
     )
 
-    // const posts = await $axios.$get(
-    //   `/api/admin/report/lhm?q=&page=&activitied_at_prepend=2023-03-25&activitied_at_append=2022-06-24&q_foreman_employee_id=${foreman_employee_id.employee_id}&q_afdeling_id=${q_afdeling_id}`
-    // )
+    const t_elhm_ctl = await $axios.$get(
+      `/api/admin/workflow/t_elhm_ctl?id=${route.params.id}`
+    )
+
+    const t_elhm_message = await $axios.$get(
+      `/api/admin/workflow/t_elhm_message?t_elhm_id=${t_elhm_ctl.data[0].t_elhm_id}`
+    )
+
+    console.log('t_elhm_message')
+    console.log(t_elhm_message.data[0])
 
     const t_daily_progress = await $axios.$get(
       `/api/admin/master/attendance_daily_progress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}`
     )
 
-    console.log('Berhasil')
+    // console.log('Berhasil')
     return {
       posts: posts.data,
       pagination: posts.data,
@@ -541,6 +617,8 @@ export default {
       t_daily_progress: t_daily_progress.data,
       foreman: foreman_list.data,
       foreman_employee_id: foreman_employee_id,
+      t_elhm_ctl: t_elhm_ctl.data[0],
+      t_elhm_message: t_elhm_message.data
     }
   },
 
@@ -726,6 +804,238 @@ export default {
     },
     finish() {
       this.loading = false
+    },
+
+    InProcess() {
+      this.loading = true
+      this.main = false
+    },
+
+    Submit() {
+      this.$swal
+        .fire({
+          title: 'Approval',
+          input: 'textarea',
+          html:
+            '<select id="approval" name="approval" class="form-control">' +
+            '<option value="Y">Approve</option>' +
+            '<option value="N">Reject</option>' +
+            '</select>',
+          icon: 'warning',
+          inputPlaceholder: 'Message',
+          showCancelButton: true,
+
+          reverseButtons: true,
+          confirmButtonText: 'Submit',
+
+          denyButtonColor: '#3085d6',
+          allowOutsideClick: true,
+          customClass: {
+            validationMessage: 'my-validation-message',
+          },
+          preConfirm: (value) => {
+            if (!value && document.getElementById('approval').value == 'N') {
+              // console.log('preConfirm')
+              // console.log(document.getElementById('approval').value)
+              this.$swal.showValidationMessage(
+                '<i class="fa fa-info-circle"></i> Message harus diisi!'
+              )
+            }
+          },
+        })
+        .then((result) => {
+          // console.log('result')
+          // console.log(document.getElementById('approval').value)
+          // console.log(result)
+          let msg
+          msg = result.value
+          if (result.isConfirmed) {
+            if ($('#approval').val() == 'Y') {
+              // console.log('approve')
+              // console.log(this.t_elhm_ctl.activitied_at)
+              this.$swal
+                .fire({
+                  title: 'Komfirmasi',
+                  html:
+                    '<div>Anda yakin akan melakukan Approve?</div>' +
+                    '<div><b-container>' +
+                    '<b-row>' +
+                    '<b-col>Tanggal</b-col>' +
+                    '<b-col>&nbsp;:&nbsp;</b-col>' +
+                    '<b-col>' +
+                    this.t_elhm_ctl.activitied_at +
+                    '</b-col>' +
+                    '</b-row>' +
+                    '</b-container>' +
+                    '</div>' +
+                    '<div><b-container>' +
+                    '<b-row>' +
+                    '<b-col>Estate</b-col>' +
+                    '<b-col>&nbsp;:&nbsp;</b-col>' +
+                    '<b-col>' +
+                    this.t_elhm_ctl.department_code +
+                    '</b-col>' +
+                    '</b-row>' +
+                    '</b-container>' +
+                    '</div>' +
+                    '<div><b-container>' +
+                    '<b-row>' +
+                    '<b-col>Afdeling</b-col>' +
+                    '<b-col>&nbsp;:&nbsp;</b-col>' +
+                    '<b-col>' +
+                    this.t_elhm_ctl.afdeling_code +
+                    '</b-col>' +
+                    '</b-row>' +
+                    '</b-container>' +
+                    '</div>' +
+                    '<div><b-container>' +
+                    '<b-row>' +
+                    '<b-col>Mandor</b-col>' +
+                    '<b-col>&nbsp;:&nbsp;</b-col>' +
+                    '<b-col>' +
+                    this.t_elhm_ctl.name +
+                    '</b-col>' +
+                    '</b-row>' +
+                    '</b-container>' +
+                    '</div>',
+                  icon: 'question',
+                  showConfirmButton: true,
+                  showCancelButton: true,
+                  reverseButtons: true,
+                  confirmButtonText: 'Ya',
+                  cancelButtonText: 'Tidak',
+                })
+                .then((result) => {
+                  if (result.isConfirmed) {
+                    let formData = new FormData()
+
+                    formData.append('t_elhm_id', this.t_elhm_ctl.t_elhm_id)
+                    formData.append(
+                      'p_wf_doc_type_id',
+                      this.t_elhm_ctl.p_wf_doc_type_id
+                    )
+                    formData.append(
+                      'p_wf_proc_id',
+                      this.t_elhm_ctl.p_wf_proc_id
+                    )
+                    formData.append('elhm_status', this.t_elhm_ctl.doc_status)
+                    formData.append('approve', 'Y')
+                    formData.append('msg', msg)
+
+                    console.log(formData)
+
+                    this.$axios
+                      .post('/api/admin/workflow/submit_flow', formData)
+                      .then(() => {
+                        this.$swal.fire({
+                          title: 'BERHASIL!',
+                          text: 'Data Berhasil Disubmit!',
+                          icon: 'success',
+                          showConfirmButton: false,
+                          timer: 2000,
+                        })
+
+                        this.$router.push({
+                          name: 'admin-in_process',
+                          params: { id: this.$route.params.id, r: 1 },
+                        })
+                      })
+                  }
+                })
+            } else {
+              this.$swal
+                .fire({
+                  title: 'Komfirmasi',
+                  html:
+                    '<div>Anda yakin akan melakukan Reject?</div>' +
+                    '<div><b-container>' +
+                    '<b-row>' +
+                    '<b-col>Tanggal</b-col>' +
+                    '<b-col>&nbsp;:&nbsp;</b-col>' +
+                    '<b-col>' +
+                    this.t_elhm_ctl.activitied_at +
+                    '</b-col>' +
+                    '</b-row>' +
+                    '</b-container>' +
+                    '</div>' +
+                    '<div><b-container>' +
+                    '<b-row>' +
+                    '<b-col>Estate</b-col>' +
+                    '<b-col>&nbsp;:&nbsp;</b-col>' +
+                    '<b-col>' +
+                    this.t_elhm_ctl.department_code +
+                    '</b-col>' +
+                    '</b-row>' +
+                    '</b-container>' +
+                    '</div>' +
+                    '<div><b-container>' +
+                    '<b-row>' +
+                    '<b-col>Afdeling</b-col>' +
+                    '<b-col>&nbsp;:&nbsp;</b-col>' +
+                    '<b-col>' +
+                    this.t_elhm_ctl.afdeling_code +
+                    '</b-col>' +
+                    '</b-row>' +
+                    '</b-container>' +
+                    '</div>' +
+                    '<div><b-container>' +
+                    '<b-row>' +
+                    '<b-col>Mandor</b-col>' +
+                    '<b-col>&nbsp;:&nbsp;</b-col>' +
+                    '<b-col>' +
+                    this.t_elhm_ctl.name +
+                    '</b-col>' +
+                    '</b-row>' +
+                    '</b-container>' +
+                    '</div>',
+                  icon: 'question',
+                  showConfirmButton: true,
+                  showCancelButton: true,
+                  reverseButtons: true,
+                  confirmButtonText: 'Ya',
+                  cancelButtonText: 'Tidak',
+                })
+                .then((result) => {
+                  if (result.isConfirmed) {
+                    let formData = new FormData()
+
+                    formData.append('t_elhm_id', this.t_elhm_ctl.t_elhm_id)
+                    formData.append(
+                      'p_wf_doc_type_id',
+                      this.t_elhm_ctl.p_wf_doc_type_id
+                    )
+                    formData.append(
+                      'p_wf_proc_id',
+                      this.t_elhm_ctl.p_wf_proc_id
+                    )
+                    formData.append('elhm_status', this.t_elhm_ctl.doc_status)
+                    formData.append('approve', 'N')
+                    formData.append('msg', msg)
+                    
+                    console.log(formData)
+
+                    this.$axios
+                      .post('/api/admin/workflow/submit_flow', formData)
+                      .then(() => {
+                        this.$swal.fire({
+                          title: 'BERHASIL!',
+                          text: 'Data Berhasil Direject!',
+                          icon: 'success',
+                          showConfirmButton: false,
+                          timer: 2000,
+                        })
+
+                        this.$router.push({
+                          name: 'admin-in_process',
+                          params: { id: this.$route.params.id, r: 1 },
+                        })
+                      })
+                  }
+                })
+            }
+          }
+          
+        })
     },
   },
   computed: {

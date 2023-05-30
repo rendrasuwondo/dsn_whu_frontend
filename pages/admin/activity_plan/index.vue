@@ -218,8 +218,8 @@ export default {
         {
           label: 'Detail',
           key: 'detail',
-          tdClass: 'align-middle text-center d-none',
-          thClass: 'd-none',
+          // tdClass: 'align-middle text-center d-none',
+          // thClass: 'd-none',
         },
         {
           label: 'Tanggal',

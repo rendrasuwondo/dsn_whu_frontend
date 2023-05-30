@@ -5,10 +5,10 @@
     </section>
 
     <section class="content">
-      <div class="card card-outline card-info">
+      <div class="card card-outline card-info" v-if="main">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-clipboard"></i> LAPORAN HARIAN MANDOR
+            <i class="nav-icon fas fa-clipboard"></i> IN PROCESS
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -45,7 +45,6 @@
                   <b-col cols="4">
                     <b-input-group>
                       <b-form-datepicker
-                        v-show="false"
                         v-model="activitied_at_end"
                         :date-format-options="{
                           year: 'numeric',
@@ -56,10 +55,7 @@
                         size="sm"
                       ></b-form-datepicker>
                       <template #append>
-                        <b-btn
-                          size="sm"
-                          @click="activitied_at_end = ''"
-                          v-show="false"
+                        <b-btn size="sm" @click="activitied_at_end = ''"
                           ><i class="fa fa-trash"></i
                         ></b-btn>
                       </template>
@@ -79,21 +75,20 @@
                         x
                         track-by="id"
                         :searchable="true"
-                        @input="onChangeAfdeling"
                       ></multiselect></div
                   ></b-col>
                 </b-row>
               </b-container>
-              <b-container class="bv-example-row">
+              <b-container class="bv-example-row" v-show="false">
                 <b-row>
-                  <b-col cols="2">Mandor</b-col>
-                  <b-col cols="5">
+                  <b-col cols="2">Jenis Pekerjaan</b-col>
+                  <b-col cols="7">
                     <div class="form-group">
                       <multiselect
-                        v-model="foreman_employee_id"
-                        :options="foreman"
-                        label="employee_description"
-                        track-by="employee_id"
+                        v-model="activity_id"
+                        :options="activity"
+                        label="name"
+                        track-by="id"
                         :searchable="true"
                       ></multiselect></div
                   ></b-col>
@@ -141,85 +136,119 @@
             v-model="visibleRows"
             head-variant="light"
           >
-            <template v-slot:thead-top="data">
+            <!-- <template v-slot:thead-top="data">
               <b-tr>
-                <b-th variant="primary" colspan="6"></b-th>
-                <b-th variant="danger" colspan="3" class="text-center">HK</b-th>
-                <b-th variant="danger" colspan="3" class="text-center"
-                  >Volume</b-th
+                <b-th variant="primary" colspan="3"></b-th>
+                <b-th variant="danger" colspan="30" class="text-center"
+                  >Tanggal</b-th
                 >
-                <b-th variant="danger" colspan="4"></b-th>
               </b-tr>
+            </template> -->
+            <template v-slot:cell(actions)="row">
+              <b-button
+                v-show="btn_asisten"
+                :to="{
+                  name: 'admin-in_process_detail_asisten-id',
+                  params: { id: row.item.id },
+                }"
+                variant="link"
+                size="sm"
+                title="Edit"
+                @click="ProcessDetail()"
+              >
+                <i class="fa fa-envelope"></i>
+              </b-button>
+              <b-button
+                v-show="btn_non_asisten"
+                :to="{
+                  name: 'admin-in_process_detail-id',
+                  params: { id: row.item.id },
+                }"
+                variant="link"
+                size="sm"
+                title="Edit"
+                @click="ProcessDetail()"
+              >
+                <i class="fa fa-envelope"></i>
+              </b-button>
+
+              <!-- <b-button
+                variant="link"
+                size="sm"
+                @click="deletePost(row.item.id)"
+                title="Hapus"
+                ><i class="fa fa-trash"></i
+              ></b-button> -->
             </template>
             <template v-slot:cell(detail_hap)="row">
               <div>{{ row.item.wide }}</div>
             </template>
-            <template v-slot:custom-foot="data">
-              <b-tr>
-                <b-td colspan="2" align="left" variant="secondary"></b-td>
-                <b-td colspan="2" align="left" variant="secondary"
-                  ><b>Total</b></b-td
-                >
-                <b-td align="right" variant="secondary">
-                  <b> {{ TotalManDaysBasic.toFixed(2) }}</b>
-                </b-td>
-                <b-td align="right" variant="secondary">
-                  <b> {{ TotalManDaysPremi.toFixed(2) }}</b>
-                </b-td>
-                <b-td align="right" variant="secondary">
-                  <b> {{ TotalManDaysTotal.toFixed(2) }}</b>
-                </b-td>
-                <b-td align="right" variant="secondary">
-                  <b> {{ addCommas(TotalQtyBasic.toFixed(2)) }}</b>
-                </b-td>
-                <b-td align="right" variant="secondary">
-                  <b>{{ addCommas(TotalQtyPremi.toFixed(2)) }}</b>
-                </b-td>
-                <b-td align="right" variant="secondary">
-                  <b> {{ addCommas(TotalQtyTotal.toFixed(2)) }}</b>
-                </b-td>
-                <b-td align="right" variant="secondary" colspan="4"></b-td>
-              </b-tr>
-              <b-tr>
-                <b-td colspan="2" align="left"></b-td>
-                <b-td colspan="2" align="left">S/H1/H2</b-td>
-                <b-td align="right">
-                  {{ t_daily_progress.type_1.toFixed(2) }}
-                </b-td>
-                <b-td colspan="9"></b-td>
-              </b-tr>
-              <b-tr>
-                <b-td colspan="2" align="left"></b-td>
-                <b-td colspan="2" align="left">C/P1/P1</b-td>
-                <b-td align="right">
-                  {{ t_daily_progress.type_2.toFixed(2) }}
-                </b-td>
-                <b-td colspan="9"></b-td>
-              </b-tr>
-              <b-tr>
-                <b-td colspan="2" align="left"></b-td>
-                <b-td colspan="2" align="left">M</b-td>
-                <b-td align="right">
-                  {{ t_daily_progress.type_3.toFixed(2) }}
-                </b-td>
-                <b-td colspan="9"></b-td>
-              </b-tr>
-            </template>
+            <!-- <template v-slot:custom-foot="data">
+                  <b-tr>
+                    <b-td colspan="2" align="left" variant="secondary"></b-td>
+                    <b-td colspan="2" align="left" variant="secondary"
+                      ><b>Total</b></b-td
+                    >
+                    <b-td align="right" variant="secondary">
+                      <b> {{ TotalManDaysBasic.toFixed(2) }}</b>
+                    </b-td>
+                    <b-td align="right" variant="secondary">
+                      <b> {{ TotalManDaysPremi.toFixed(2) }}</b>
+                    </b-td>
+                    <b-td align="right" variant="secondary">
+                      <b> {{ TotalManDaysTotal.toFixed(2) }}</b>
+                    </b-td>
+                    <b-td align="right" variant="secondary">
+                      <b> {{ addCommas(TotalQtyBasic.toFixed(2)) }}</b>
+                    </b-td>
+                    <b-td align="right" variant="secondary">
+                      <b>{{ addCommas(TotalQtyPremi.toFixed(2)) }}</b>
+                    </b-td>
+                    <b-td align="right" variant="secondary">
+                      <b> {{ addCommas(TotalQtyTotal.toFixed(2)) }}</b>
+                    </b-td>
+                    <b-td align="right" variant="secondary" colspan="4"></b-td>
+                  </b-tr>
+                  <b-tr>
+                    <b-td colspan="2" align="left"></b-td>
+                    <b-td colspan="2" align="left">S/H1/H2</b-td>
+                    <b-td align="right">
+                      {{ t_daily_progress.type_1.toFixed(2) }}
+                    </b-td>
+                    <b-td colspan="9"></b-td>
+                  </b-tr>
+                  <b-tr>
+                    <b-td colspan="2" align="left"></b-td>
+                    <b-td colspan="2" align="left">C/P1/P1</b-td>
+                    <b-td align="right">
+                      {{ t_daily_progress.type_2.toFixed(2) }}
+                    </b-td>
+                    <b-td colspan="9"></b-td>
+                  </b-tr>
+                  <b-tr>
+                    <b-td colspan="2" align="left"></b-td>
+                    <b-td colspan="2" align="left">M</b-td>
+                    <b-td align="right">
+                      {{ t_daily_progress.type_3.toFixed(2) }}
+                    </b-td>
+                    <b-td colspan="9"></b-td>
+                  </b-tr>
+                </template> -->
           </b-table>
 
           <!-- pagination -->
           <b-row>
             <!-- <b-col>
-                <b-pagination
-                  v-model="pagination.current_page"
-                  :total-rows="pagination.total"
-                  :per-page="pagination.per_page"
-                  @change="changePage"
-                  align="left"
-                  class="mt-1"
-                >
-                </b-pagination>
-              </b-col> -->
+                  <b-pagination
+                    v-model="pagination.current_page"
+                    :total-rows="pagination.total"
+                    :per-page="pagination.per_page"
+                    @change="changePage"
+                    align="left"
+                    class="mt-1"
+                  >
+                  </b-pagination>
+                </b-col> -->
             <b-col class="text-right" align-self="center">
               {{ rowcount }} data
             </b-col>
@@ -239,85 +268,69 @@ export default {
   layout: 'admin',
   head() {
     return {
-      title: 'Laporan Harian Mandor',
+      title: 'IN Process',
     }
   },
   data() {
     return {
       loading: false,
+      main: true,
       allSelected: false,
       visibleRows: [],
       show_page: false,
       show_submit: true,
       foreman: [],
       afdeling: [],
+      activity: [],
       fields: [
         {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'NPK',
-          key: 'labour_nik',
+          thClass: 'align-middle text-center text-nowrap nameOfTheClass',
+          label: '',
+          key: 'actions',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Nama Pekerja',
-          key: 'labour_name',
+          label: 'TGL',
+          key: 'activitied_at',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Blok',
-          key: 'block',
+          label: 'Dept.',
+          key: 'department_code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Luas',
-          key: 'wide',
+          label: 'Afdeling',
+          key: 'afdeling_code',
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
+
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Jenis Pekerjaan',
-          key: 'activity_description',
+          label: 'Mandor',
+          key: 'name',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Satuan',
-          key: 'activity_unit_code',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Basic',
-          key: 'man_days_basic',
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Premi',
-          key: 'man_days_premi',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Total',
+          label: 'Total HK',
           key: 'man_days_total',
+          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+          formatter: (value, key, item) => {
+            let formatter = new Intl.NumberFormat('es-US', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
+            return formatter.format(value)
+          },
+        },
+        {
+          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          label: 'Max HK',
+          key: 'man_days_max',
           formatter: (value, key, item) => {
             let formatter = new Intl.NumberFormat('es-US', {
               minimumFractionDigits: 2,
@@ -329,8 +342,8 @@ export default {
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Basic',
-          key: 'qty_basic',
+          label: 'Avg HK',
+          key: 'man_days_average',
           formatter: (value, key, item) => {
             let formatter = new Intl.NumberFormat('es-US', {
               minimumFractionDigits: 2,
@@ -342,8 +355,8 @@ export default {
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Premi',
-          key: 'qty_premi',
+          label: 'Min HK',
+          key: 'man_days_min',
           formatter: (value, key, item) => {
             let formatter = new Intl.NumberFormat('es-US', {
               minimumFractionDigits: 2,
@@ -355,34 +368,8 @@ export default {
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Total',
-          key: 'qty_total',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Unit',
-          key: 'unit',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Norm',
-          key: 'norm',
+          label: 'Rate Total',
+          key: 'rate_total',
           formatter: (value, key, item) => {
             let formatter = new Intl.NumberFormat('es-US', {
               minimumFractionDigits: 2,
@@ -398,19 +385,28 @@ export default {
       param_activitied_at_prepend: this.$route.query.activitied_at_prepend,
       param_activitied_at_append: this.$route.query.activitied_at_append,
       afdeling_id: this.$route.query.q_afdeling_id,
-      foreman_employee_id: this.$route.query.q_foreman_employee_id,
       query_afdeling_id: '',
-      query_foreman_employee_id: '',
       afdeling_default: '',
+      activity_id: this.$route.query.q_activity_id,
+      query_activity_id: '',
+      // btn_asisten: false,
+      // btn_non_asisten: false,
     }
+  },
+  created() {
+    console.log('created')
+    this.loading = true
+    this.main = false
   },
   watchQuery: [
     'q',
     'page',
     'activitied_at_prepend',
     'activitied_at_append',
+    'q_activitied_at_start',
+    'q_activitied_at_end',
     'q_afdeling_id',
-    'q_foreman_employee_id',
+    'q_activity_id',
   ],
 
   async asyncData({ $axios, query, $auth }) {
@@ -431,15 +427,16 @@ export default {
     let search = query.q ? query.q : ''
 
     //activitied_at_prepend
-    let activitied_at_start = query.activitied_at_prepend
-      ? query.activitied_at_prepend
-      : currentDate()
+    let activitied_at_start = query.q_activitied_at_start
+      ? query.q_activitied_at_start
+      : ''
 
     //activitied_at_append
-    let activitied_at_end = query.activitied_at_append
-      ? query.activitied_at_append
-      : currentDate()
-
+    let activitied_at_end = query.q_activitied_at_end
+      ? query.q_activitied_at_end
+      : ''
+    console.log('activitied_at_end')
+    console.log(query.q_activitied_at_append)
     // afdeling_id
     const afdeling_list = await $axios.$get(
       `/api/admin/lov_afdeling_daily_progress`
@@ -449,16 +446,14 @@ export default {
       `/api/admin/lov_afdeling_default`
     )
 
-    let q_afdeling_id = query.q_afdeling_id
-      ? query.q_afdeling_id
-      : afdeling_default.data.id
+    let q_afdeling_id = query.q_afdeling_id ? query.q_afdeling_id : ''
 
     let afdeling_id = []
 
     let afdeling_code = []
 
     if (query.q_afdeling_id) {
-      await $axios
+      $axios
         .get(
           `/api/admin/lov_afdeling_daily_progress?q_afdeling_id=${q_afdeling_id}`
         )
@@ -470,65 +465,61 @@ export default {
     } else {
       afdeling_id = []
 
-      q_afdeling_id = afdeling_default.data.id
+      // q_afdeling_id = afdeling_default.data.id
     }
 
     if (q_afdeling_id == undefined || q_afdeling_id == '') {
-      q_afdeling_id = afdeling_default.data.id
+      // q_afdeling_id = afdeling_default.data.id
     }
 
-    const foreman_list = await $axios.$get(
-      `/api/admin/lov_foreman_maintenance?afdeling_id=${q_afdeling_id}`
-    )
-    // console.log('rdr')
-    // console.log(`/api/admin/lov_foreman_maintenance?afdeling_id=${q_afdeling_id}`)
-    let q_foreman_employee_id = query.q_foreman_employee_id
-      ? query.q_foreman_employee_id
-      : ''
-    let foreman_employee_id = []
+    // activity_id
+    const activity_list = await $axios.$get(`/api/admin/lov_activity`)
 
-    if (query.q_foreman_employee_id) {
-      //Mandor
-      await $axios
-        .get(
-          `/api/admin/lov_foreman_maintenance?afdeling_id=${q_afdeling_id}&foreman_id=${q_foreman_employee_id}`
-        )
+    const activity_default = []
+    let q_activity_id = query.q_activity_id
+    // let q_activity_id = query.q_activity_id
+    //   ? query.q_activity_id
+    //   : activity_default
+
+    let activity_id = []
+
+    // let activity_code = []
+
+    if (query.q_activity_id) {
+      $axios
+        .get(`/api/admin/lov_activity?q_activity_id=${q_activity_id}`)
         .then((response) => {
-          foreman_employee_id = response.data.data[0]
-          // console.log('cekkkkk')
+          // console.log('daaa')
           // console.log(response.data.data)
+          activity_id = response.data.data
         })
     } else {
-      await $axios
-        .get(
-          `/api/admin/lov_foreman_maintenance?afdeling_id=${q_afdeling_id}&foreman_id=${q_foreman_employee_id}`
-        )
-        .then((response) => {
-          foreman_employee_id = response.data.data[0]
-          // console.log('cekkkkk')
-          // console.log(response.data.data)
-        })
+      activity_id = []
 
-      q_foreman_employee_id = foreman_employee_id.employee_id
-    } //if (query.foreman_id) {
-
-    if (q_foreman_employee_id == undefined) {
-      q_foreman_employee_id = ''
+      // q_activity_id = activity_default.data.id
     }
 
+    if (q_activity_id == undefined || q_activity_id == '') {
+      q_activity_id = ''
+    }
+
+    // console.log('q')
+    // console.log($auth.user.employee.position_id)
+
     const posts = await $axios.$get(
-      `/api/admin/report/lhm?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}&q_foreman_employee_id=${foreman_employee_id.employee_id}`
+      `api/admin/workflow/in_process?q=${search}&q_afdeling_id=${q_afdeling_id}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}`
     )
 
-    // const posts = await $axios.$get(
-    //   `/api/admin/report/lhm?q=&page=&activitied_at_prepend=2023-03-25&activitied_at_append=2022-06-24&q_foreman_employee_id=${foreman_employee_id.employee_id}&q_afdeling_id=${q_afdeling_id}`
-    // )
+    let btn_asisten, btn_non_asisten
 
-    const t_daily_progress = await $axios.$get(
-      `/api/admin/master/attendance_daily_progress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}`
-    )
+    if ($auth.user.employee.position_id == 30) {
+      btn_asisten = true
+      btn_non_asisten = false
+    } else {
+      btn_asisten = false
+      btn_non_asisten = true
+    }
 
-    console.log('Berhasil')
     return {
       posts: posts.data,
       pagination: posts.data,
@@ -538,51 +529,62 @@ export default {
       activitied_at_end: activitied_at_end,
       afdeling: afdeling_list.data,
       afdeling_id: afdeling_id,
-      t_daily_progress: t_daily_progress.data,
-      foreman: foreman_list.data,
-      foreman_employee_id: foreman_employee_id,
+      activity: activity_list.data,
+      activity_id: activity_id,
+      btn_asisten: btn_asisten,
+      btn_non_asisten: btn_non_asisten,
     }
   },
 
   mounted() {
-    if (this.$route.query.q_afdeling_id == null) {
-      this.$axios.get(`/api/admin/lov_afdeling_default`).then((response) => {
-        this.afdeling_id = [
-          {
-            id: response.data.data.id,
-            code: response.data.data.code,
-          },
-        ]
-      })
+    // if (this.$route.query.q_afdeling_id == null) {
+    //   this.$axios.get(`/api/admin/lov_afdeling_default`).then((response) => {
+    //     this.afdeling_id = [
+    //       {
+    //         id: response.data.data.id,
+    //         code: response.data.data.code,
+    //       },
+    //     ]
+    //   })
+    // }
+    console.log('this.$auth')
+    // console.log(this.$auth.user.employee)
+    document.onreadystatechange = () => {
+      if (document.readyState == 'complete') {
+        console.log('Page completed with image and files!')
+        // fetch to next page or some code
+        this.loading = false
+        this.main = true
+      }
     }
 
-    this.$nextTick(() => {
-      this.$nuxt.$loading.start()
-      setTimeout(() => this.$nuxt.$loading.finish(), 500)
-    })
+    if (document.readyState == 'complete') {
+      console.log('Page completed with image and files!')
+      // fetch to next page or some code
+      this.loading = false
+      this.main = true
+    }
+
+    
   },
 
   methods: {
-    onChangeAfdeling() {
-      // console.log (this.afdeling_id.id)
-      if (this.afdeling_id.id != null) {
-        this.$axios
-          .get(
-            `/api/admin/lov_foreman_maintenance?afdeling_id=${this.afdeling_id.id}`
-          )
-          .then((response) => {
-            this.foreman = response.data.data
-
-            this.$axios
-              .get(
-                `/api/admin/lov_foreman_maintenance?afdeling_id=${this.afdeling_id.id}`
-              )
-              .then((response) => {
-                this.foreman_employee_id = response.data.data[0]
-              })
-          })
-      }
-    },
+    // onChangeAfdeling() {
+    //   if (this.afdeling_id != null) {
+    //     if (
+    //       this.$auth.user.employee.activity_group_code == 'RAWAT' ||
+    //       this.$auth.user.employee.activity_group_code == 'BIBITAN'
+    //     ) {
+    //       this.$axios
+    //         .get(
+    //           `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.afdeling_id.afdeling_id}`
+    //         )
+    //         .then((response) => {
+    //           this.foreman = response.data.data
+    //         })
+    //     }
+    //   }
+    // },
 
     customLabel(afdeling) {
       return `${afdeling.code}` + ' (' + `${afdeling.id}` + ')'
@@ -608,51 +610,157 @@ export default {
     },
     //searchData
     searchData() {
-      // this.loading = true
+      this.go = 0
+
+      if (this.$route.query.q != this.search) {
+        this.go = 1
+      }
+
+      let vafdeling_id
 
       try {
-        if (this.afdeling_id.id === null) {
-          this.query_afdeling_id = this.$route.query.q_afdeling_id
-        } else if (this.afdeling_id.id === undefined) {
-          this.query_afdeling_id = this.$route.query.q_afdeling_id
-        } else {
-          this.query_afdeling_id = this.afdeling_id.id
-            ? this.afdeling_id.id
-            : ''
-        }
-      } catch (err) {}
+        vafdeling_id = this.afdeling_id.id
+      } catch (error) {
+        vafdeling_id = ''
+      }
 
-      try {
-        if (this.foreman_employee_id.id === null) {
-          this.query_foreman_employee_id =
-            this.$route.query.q_foreman_employee_id
-        } else if (this.foreman_employee_id.id === undefined) {
-          this.query_foreman_employee_id =
-            this.$route.query.q_foreman_employee_id
-        } else {
-          this.query_foreman_employee_id = this.foreman_employee_id.id
-            ? this.foreman_employee_id.employee_id
-            : ''
-        }
-      } catch (err) {}
+      if (this.$route.query.q_afdeling_id != vafdeling_id) {
+        this.go = 1
+      }
 
-      // console.log(this.activitied_at_start.getFullYear())
-      // console.log(this.afdeling_id[0].id)
-      console.log('cari')
-      this.$router.push({
-        path: this.$route.path,
-        query: {
-          q: this.search,
-          activitied_at_prepend: this.activitied_at_start,
-          activitied_at_append: this.activitied_at_end,
-          q_afdeling_id: this.query_afdeling_id
-            ? this.query_afdeling_id
-            : this.afdeling_id[0].id,
-          q_foreman_employee_id: this.query_foreman_employee_id
-            ? this.query_foreman_employee_id
-            : this.foreman_employee_id[0].id,
-        },
-      })
+      if (this.$route.query.q_activitied_at_start != this.activitied_at_start) {
+        this.go = 1
+      }
+
+      if (this.$route.query.q_activitied_at_end != this.activitied_at_end) {
+        this.go = 1
+      }
+
+      // console.log('activitied_at_start')
+      // console.log(this.activitied_at_start)
+
+      if (this.go == 1) {
+        this.loading = true
+        this.main = false
+
+        // console.log('this.afdeling_id')
+        // console.log(this.afdeling_id.id)
+
+        this.$router.push({
+          path: this.$route.path,
+          query: {
+            q: this.search,
+            q_afdeling_id: vafdeling_id,
+            q_activitied_at_start: this.activitied_at_start,
+            q_activitied_at_end: this.activitied_at_end,
+          },
+        })
+
+        if (this.$auth.user.employee.position_id == 30) {
+          this.btn_asisten = true
+          this.btn_non_asisten = false
+        } else {
+          this.btn_asisten = false
+          this.btn_non_asisten = true
+        }
+      }
+
+      // this.message = ''
+
+      // if (this.activitied_at_start == '') {
+      //   this.message += 'Tanggal Tidak Boleh Kosong!<br>'
+      // }
+
+      // if (this.afdeling_id == null) {
+      //   this.message += 'Afdeling Tidak Boleh Kosong!<br>'
+      // }
+
+      // if (this.activity_id == null) {
+      //   this.message += 'Jenis Pekerjaan Tidak Boleh Kosong!<br>'
+      // }
+
+      // try {
+      //   if (this.activity_id.length == 0) {
+      //     this.message += 'Jenis Pekerjaan Tidak Boleh Kosong!<br>'
+      //   }
+      // } catch (err) {}
+
+      // console.log('rdr')
+      // console.log(parseFloat(this.activitied_at_start.split('-')[1]))
+
+      // if (this.message != '') {
+      //   this.$swal.fire({
+      //     title: 'WARNING!',
+      //     html: this.message,
+      //     icon: 'warning',
+      //     showConfirmButton: true,
+      //   })
+      // } else {
+      //   try {
+      //     if (this.afdeling_id == null) {
+      //       this.vafdeling = ''
+      //     } else {
+      //       if (this.afdeling_id[0] == undefined) {
+      //         this.vafdeling = this.afdeling_id.id
+      //       } else {
+      //         this.vafdeling = this.afdeling_id[0].id
+      //       }
+      //     }
+      //   } catch (err) {}
+
+      //   try {
+      //     if (this.activity_id.id === null) {
+      //       this.vactivity = this.$route.query.q_activity_id
+      //     } else if (this.activity_id.id === undefined) {
+      //       this.vactivity = this.$route.query.q_activity_id
+      //     } else {
+      //       this.vactivity = this.activity_id.id ? this.activity_id.id : ''
+      //     }
+      //   } catch (err) {}
+
+      //   //cek watchQuery
+      //   // console.log('search')
+      //   // console.log(this.$route.query.activitied_at_prepend)
+      //   // console.log(this.activitied_at_start)
+      //   // console.log(this.$route.query.q_afdeling_id)
+      //   // console.log(this.vafdeling)
+      //   // console.log(this.$route.query.q_activity_id)
+      //   // console.log(this.vactivity)
+
+      //   this.go = 0
+
+      //   if (
+      //     this.$route.query.activitied_at_prepend != this.activitied_at_start
+      //   ) {
+      //     this.go = 1
+      //   }
+
+      //   if (this.$route.query.q_afdeling_id != this.vafdeling) {
+      //     this.go = 1
+      //   }
+
+      //   if (this.$route.query.q_activity_id != this.vactivity) {
+      //     this.go = 1
+      //   }
+      //   //cek watchQuery end
+
+      //   if (this.go == 1) {
+      //     this.loading = true
+      //     this.main = false
+      //     this.$router.push({
+      //       path: this.$route.path,
+      //       query: {
+      //         q: this.search,
+      //         activitied_at_prepend: this.activitied_at_start,
+      //         activitied_at_append: this.activitied_at_end,
+      //         q_afdeling_id: this.vafdeling,
+      //         q_activity_id: this.vactivity,
+      //       },
+      //     })
+      //   } else {
+      //     console.log('No Go')
+      //   }
+      // }
     },
 
     currentDate() {
@@ -721,52 +829,50 @@ export default {
       return x1 + x2
     },
 
-    start() {
+    ProcessDetail() {
       this.loading = true
-    },
-    finish() {
-      this.loading = false
+      this.main = false
     },
   },
   computed: {
     TotalManDaysBasic() {
       return this.visibleRows.reduce((accum, item) => {
-        // console.log(accum + item.man_days_basic)
+        console.log(accum + item.man_days_basic)
         return accum + item.man_days_basic
       }, 0.0)
     },
 
     TotalManDaysPremi() {
       return this.visibleRows.reduce((accum, item) => {
-        // console.log(accum + item.man_days_premi)
+        console.log(accum + item.man_days_premi)
         return accum + item.man_days_premi
       }, 0.0)
     },
 
     TotalManDaysTotal() {
       return this.visibleRows.reduce((accum, item) => {
-        // console.log(accum + item.man_days_total)
+        console.log(accum + item.man_days_total)
         return accum + item.man_days_total
       }, 0.0)
     },
 
     TotalQtyBasic() {
       return this.visibleRows.reduce((accum, item) => {
-        // console.log(accum + item.qty_basic)
+        console.log(accum + item.qty_basic)
         return accum + item.qty_basic
       }, 0.0)
     },
 
     TotalQtyPremi() {
       return this.visibleRows.reduce((accum, item) => {
-        // console.log(accum + item.qty_premi)
+        console.log(accum + item.qty_premi)
         return accum + item.qty_premi
       }, 0.0)
     },
 
     TotalQtyTotal() {
       return this.visibleRows.reduce((accum, item) => {
-        // console.log(accum + item.qty_total)
+        console.log(accum + item.qty_total)
         return accum + item.qty_total
       }, 0.0)
     },

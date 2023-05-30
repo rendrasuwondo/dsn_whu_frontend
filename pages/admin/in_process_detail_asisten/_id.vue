@@ -5,10 +5,23 @@
     </section>
 
     <section class="content">
-      <div class="card card-outline card-info">
+      <div class="card card-outline card-info" v-if="main">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-clipboard"></i> LAPORAN HARIAN MANDOR
+            <table>
+              <tr>
+                <td @click="InProcess()">
+                  <nuxt-link
+                    :to="{ name: 'admin-in_process' }"
+                    class="nav-link"
+                  >
+                    <i class="nav-icon fas fa-id-badge"></i>
+                    In Process
+                  </nuxt-link>
+                </td>
+                <td>/ Detail</td>
+              </tr>
+            </table>
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -132,98 +145,122 @@
           <b-table
             small
             responsive
+            striped
             bordered
             hover
-            class="table-1"
             :items="posts"
             :fields="fields"
             show-empty
+            outlined
             v-model="visibleRows"
-            head-variant="light"
           >
-            <template v-slot:thead-top="data">
-              <b-tr>
-                <b-th variant="primary" colspan="6"></b-th>
-                <b-th variant="danger" colspan="3" class="text-center">HK</b-th>
-                <b-th variant="danger" colspan="3" class="text-center"
-                  >Volume</b-th
+            <template v-slot:head(selected)="data">
+              <span
+                ><b-form-checkbox
+                  @click.native.stop
+                  @change="select"
+                  v-model="allSelected"
                 >
-                <b-th variant="danger" colspan="4"></b-th>
-              </b-tr>
+                </b-form-checkbox
+              ></span>
             </template>
-            <template v-slot:cell(detail_hap)="row">
-              <div>{{ row.item.wide }}</div>
+            <template v-slot:cell(selected)="row">
+              <b-form-group>
+                <input type="checkbox" v-model="row.item.selected" />
+              </b-form-group>
+            </template>
+            <template v-slot:cell(actions)="row">
+              <b-button
+                :to="{
+                  name: 'admin-in_process_detail_asisten-edit-id',
+                  params: { id: row.item.id },
+                  query: {
+                    id: $route.params.id,
+                  },
+                }"
+                variant="link"
+                size="sm"
+                title="Edit"
+              >
+                <i class="fa fa-pencil-alt"></i>
+              </b-button>
             </template>
             <template v-slot:custom-foot="data">
               <b-tr>
-                <b-td colspan="2" align="left" variant="secondary"></b-td>
-                <b-td colspan="2" align="left" variant="secondary"
-                  ><b>Total</b></b-td
+                <b-td colspan="3"
+                  ><b-button
+                    size="sm"
+                    variant="outline-primary"
+                    @click="Verification"
+                    v-if="rowcount > 0"
+                    >Verifikasi</b-button
+                  ></b-td
                 >
-                <b-td align="right" variant="secondary">
-                  <b> {{ TotalManDaysBasic.toFixed(2) }}</b>
-                </b-td>
-                <b-td align="right" variant="secondary">
-                  <b> {{ TotalManDaysPremi.toFixed(2) }}</b>
-                </b-td>
-                <b-td align="right" variant="secondary">
-                  <b> {{ TotalManDaysTotal.toFixed(2) }}</b>
-                </b-td>
-                <b-td align="right" variant="secondary">
-                  <b> {{ addCommas(TotalQtyBasic.toFixed(2)) }}</b>
-                </b-td>
-                <b-td align="right" variant="secondary">
-                  <b>{{ addCommas(TotalQtyPremi.toFixed(2)) }}</b>
-                </b-td>
-                <b-td align="right" variant="secondary">
-                  <b> {{ addCommas(TotalQtyTotal.toFixed(2)) }}</b>
-                </b-td>
-                <b-td align="right" variant="secondary" colspan="4"></b-td>
-              </b-tr>
-              <b-tr>
-                <b-td colspan="2" align="left"></b-td>
-                <b-td colspan="2" align="left">S/H1/H2</b-td>
+                <!-- <b-td colspan="3">Total</b-td>
                 <b-td align="right">
-                  {{ t_daily_progress.type_1.toFixed(2) }}
-                </b-td>
-                <b-td colspan="9"></b-td>
-              </b-tr>
-              <b-tr>
-                <b-td colspan="2" align="left"></b-td>
-                <b-td colspan="2" align="left">C/P1/P1</b-td>
+                  {{ new Intl.NumberFormat('es-US').format(TOTAL_HK) }}</b-td
+                >
                 <b-td align="right">
-                  {{ t_daily_progress.type_2.toFixed(2) }}
-                </b-td>
-                <b-td colspan="9"></b-td>
-              </b-tr>
-              <b-tr>
-                <b-td colspan="2" align="left"></b-td>
-                <b-td colspan="2" align="left">M</b-td>
-                <b-td align="right">
-                  {{ t_daily_progress.type_3.toFixed(2) }}
-                </b-td>
-                <b-td colspan="9"></b-td>
+                  {{
+                    new Intl.NumberFormat('es-US').format(TOTAL_VOLUME)
+                  }}</b-td
+                > -->
               </b-tr>
             </template>
           </b-table>
-
-          <!-- pagination -->
           <b-row>
-            <!-- <b-col>
-                <b-pagination
-                  v-model="pagination.current_page"
-                  :total-rows="pagination.total"
-                  :per-page="pagination.per_page"
-                  @change="changePage"
-                  align="left"
-                  class="mt-1"
-                >
-                </b-pagination>
-              </b-col> -->
-            <b-col class="text-right" align-self="center">
-              {{ rowcount }} data
-            </b-col>
+            <b-col class="text-right" align-self="center"
+              >{{ rowcount }} data</b-col
+            >
           </b-row>
+        </div>
+      </div>
+
+      <div class="card card-outline card-info">
+        <div class="card-body">
+          <b-card-group deck>
+            <b-card title="" header-tag="header" header-bg-variant="secondary">
+              <template #header>
+                <h6 class="mb-0">Message</h6>
+              </template>
+
+              <div class="direct-chat-messages">
+                <div v-for="item in t_elhm_message">
+                  <div class="direct-chat-msg">
+                    <div class="direct-chat-infos clearfix">
+                      <span class="direct-chat-name float-left">{{
+                        item.prev_name_submit
+                      }}</span>
+                      <span class="direct-chat-timestamp float-right">{{
+                        item.send_date
+                      }}</span>
+                    </div>
+                    <!-- /.direct-chat-infos -->
+                    <img
+                      class="direct-chat-img"
+                      src="dist/img/user1-128x128.jpg"
+                      alt="message user image"
+                    />
+                    <!-- /.direct-chat-img -->
+                    <div class="direct-chat-text">
+                      {{ item.message }}
+                    </div>
+                    <!-- /.direct-chat-text -->
+                  </div>
+                  <!-- /.direct-chat-msg -->
+                </div>
+              </div>
+            </b-card>
+            <b-card title="" header-tag="header" header-bg-variant="secondary">
+              <template #header>
+                <h6 class="mb-0">Approval</h6>
+              </template>
+              <!-- <b-card-text>Header and footers using slots.</b-card-text> -->
+              <b-button href="#" variant="primary" @click="Submit()"
+                >Submit</b-button
+              >
+            </b-card>
+          </b-card-group>
         </div>
       </div>
 
@@ -239,12 +276,13 @@ export default {
   layout: 'admin',
   head() {
     return {
-      title: 'Laporan Harian Mandor',
+      title: 'IN Process Detail',
     }
   },
   data() {
     return {
       loading: false,
+      main: true,
       allSelected: false,
       visibleRows: [],
       show_page: false,
@@ -253,144 +291,89 @@ export default {
       afdeling: [],
       fields: [
         {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'NPK',
-          key: 'labour_nik',
+          label: 'Approve',
+          key: 'selected',
+          tdClass: 'align-middle text-center text-nowrap nameOfTheClass ',
+          sortable: false,
+        },
+        {
+          label: '#',
+          key: 'actions',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass ',
+        },
+        {
+          label: 'Status',
+          key: 'verification_status_code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Nama Pekerja',
-          key: 'labour_name',
+          label: 'Tanggal',
+          key: 'activitied_at',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          label: 'SKU',
+          key: 'labour_employee',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+
+        {
+          label: 'Jenis Pekerjaan',
+          key: 'activity_description',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+
+        {
+          label: 'HK',
+          key: 'man_days',
+          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+          formatter: (value, key, item) => {
+            let formatter = new Intl.NumberFormat('es-US')
+            return formatter.format(value)
+          },
+        },
+        {
+          label: 'Volume',
+          key: 'qty',
+          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+          formatter: (value, key, item) => {
+            let formatter = new Intl.NumberFormat('es-US')
+            return formatter.format(value)
+          },
+        },
+        {
+          label: 'Rate',
+          key: 'flexrate',
+          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+          // formatter: (value, key, item) =>
+          //   value.toLocaleString(undefined, {
+          //     minimumFractionDigits: 2,
+          //     maximumFractionDigits: 2,
+          //   }),
+        },
+        {
           label: 'Blok',
           key: 'block',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Luas',
-          key: 'wide',
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+          label: 'Afd',
+          key: 'afdeling_code',
+          thClass: 'd-none',
+          tdClass: 'align-middle text-right text-nowrap d-none',
         },
         {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Jenis Pekerjaan',
-          key: 'activity_description',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          label: 'Estate',
+          key: 'department_code',
+          thClass: 'd-none',
+          tdClass: 'align-middle text-left text-nowrap d-none',
         },
+
         {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Satuan',
-          key: 'activity_unit_code',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Basic',
-          key: 'man_days_basic',
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Premi',
-          key: 'man_days_premi',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Total',
-          key: 'man_days_total',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Basic',
-          key: 'qty_basic',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Premi',
-          key: 'qty_premi',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Total',
-          key: 'qty_total',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Unit',
-          key: 'unit',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Norm',
-          key: 'norm',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+          label: 'Mandor',
+          key: 'foreman_employee',
+          thClass: 'd-none',
+          tdClass: 'align-middle text-left text-nowrap d-none',
         },
       ],
       company_code: '',
@@ -404,6 +387,11 @@ export default {
       afdeling_default: '',
     }
   },
+  created() {
+    // console.log('created')
+    // this.loading = true
+    // this.main = false
+  },
   watchQuery: [
     'q',
     'page',
@@ -413,7 +401,7 @@ export default {
     'q_foreman_employee_id',
   ],
 
-  async asyncData({ $axios, query, $auth }) {
+  async asyncData({ $axios, query, $auth, route }) {
     function currentDate() {
       const current = new Date()
       current.setDate(current.getDate())
@@ -516,19 +504,31 @@ export default {
       q_foreman_employee_id = ''
     }
 
-    const posts = await $axios.$get(
-      `/api/admin/report/lhm?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}&q_foreman_employee_id=${foreman_employee_id.employee_id}`
-    )
+    //  console.log('rdr')
+    //  console.log($auth)
 
     // const posts = await $axios.$get(
-    //   `/api/admin/report/lhm?q=&page=&activitied_at_prepend=2023-03-25&activitied_at_append=2022-06-24&q_foreman_employee_id=${foreman_employee_id.employee_id}&q_afdeling_id=${q_afdeling_id}`
+    //   `/api/admin/workflow/in_process_detail?id=${route.params.id}`
     // )
 
-    const t_daily_progress = await $axios.$get(
-      `/api/admin/master/attendance_daily_progress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}`
+    const posts = await $axios.$get(
+      `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=2023-03-23&activitied_at_append=2023-03-23&q_foreman_employee_id=12027&q_afdeling_id=DW22A`
     )
 
-    console.log('Berhasil')
+    const t_elhm_ctl = await $axios.$get(
+      `/api/admin/workflow/t_elhm_ctl?id=${route.params.id}`
+    )
+
+    const t_elhm_message = await $axios.$get(
+      `/api/admin/workflow/t_elhm_message?t_elhm_id=${t_elhm_ctl.data[0].t_elhm_id}`
+    )
+
+    console.log('t_elhm_message')
+    console.log(t_elhm_message.data[0])
+
+    
+
+    // console.log('Berhasil')
     return {
       posts: posts.data,
       pagination: posts.data,
@@ -538,9 +538,10 @@ export default {
       activitied_at_end: activitied_at_end,
       afdeling: afdeling_list.data,
       afdeling_id: afdeling_id,
-      t_daily_progress: t_daily_progress.data,
       foreman: foreman_list.data,
       foreman_employee_id: foreman_employee_id,
+      t_elhm_ctl: t_elhm_ctl.data[0],
+      t_elhm_message: t_elhm_message.data,
     }
   },
 
@@ -556,10 +557,21 @@ export default {
       })
     }
 
-    this.$nextTick(() => {
-      this.$nuxt.$loading.start()
-      setTimeout(() => this.$nuxt.$loading.finish(), 500)
-    })
+    // this.$nextTick(() => {
+    //   this.$nuxt.$loading.start()
+    //   setTimeout(() => this.$nuxt.$loading.finish(), 500)
+    // })
+
+    document.onreadystatechange = () => {
+      if (document.readyState == 'complete') {
+        console.log('Page completed with image and files!')
+        // fetch to next page or some code
+        this.loading = false
+        this.main = true
+      }
+    }
+
+  
   },
 
   methods: {
@@ -722,10 +734,293 @@ export default {
     },
 
     start() {
-      this.loading = true
+      // this.loading = true
     },
     finish() {
-      this.loading = false
+      // this.loading = false
+    },
+
+    InProcess() {
+      this.loading = true
+      this.main = false
+    },
+    Verification() {
+      this.$swal
+        .fire({
+          title: 'APAKAH ANDA YAKIN ?',
+          text: 'Melakukan verifikasi !',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#3085d6',
+          confirmButtonText: 'YA',
+          cancelButtonText: 'TIDAK',
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.loading = true
+            this.main = false
+
+            this.selectedData = []
+            this.posts.forEach((el) => {
+              // if (el.selected == true) {
+              //   this.selectedData.push(el)
+              // }
+              this.selectedData.push(el)
+            })
+            console.log(this.selectedData)
+
+            var i = 0
+            let n = this.selectedData.length
+
+            this.$axios
+              .post(
+                `/api/admin/update_activity_actual_status`,
+                this.selectedData
+              )
+              .then(() => {
+                this.$swal.fire({
+                  title: 'BERHASIL!',
+                  text: 'Data Berhasil Diupdate!',
+                  icon: 'success',
+                  showConfirmButton: false,
+                  timer: 2000,
+                })
+
+                this.$nuxt.refresh().then(() => {
+                  this.loading = false
+                  this.main = true
+                })
+
+                
+              })
+          }
+        })
+    },
+    Submit() {
+      this.$swal
+        .fire({
+          title: 'Approval',
+          input: 'textarea',
+          html:
+            '<select id="approval" name="approval" class="form-control">' +
+            '<option value="Y">Approve</option>' +
+            '<option value="N">Reject</option>' +
+            '</select>',
+          icon: 'warning',
+          inputPlaceholder: 'Message',
+          showCancelButton: true,
+
+          reverseButtons: true,
+          confirmButtonText: 'Submit',
+
+          denyButtonColor: '#3085d6',
+          allowOutsideClick: true,
+          customClass: {
+            validationMessage: 'my-validation-message',
+          },
+          preConfirm: (value) => {
+            if (!value && document.getElementById('approval').value == 'N') {
+              // console.log('preConfirm')
+              // console.log(document.getElementById('approval').value)
+              this.$swal.showValidationMessage(
+                '<i class="fa fa-info-circle"></i> Message harus diisi!'
+              )
+            }
+          },
+        })
+        .then((result) => {
+          // console.log('result')
+          // console.log(document.getElementById('approval').value)
+          // console.log(result)
+          let msg
+          msg = result.value
+          if (result.isConfirmed) {
+            if ($('#approval').val() == 'Y') {
+              // console.log('approve')
+              // console.log(this.t_elhm_ctl.activitied_at)
+              this.$swal
+                .fire({
+                  title: 'Komfirmasi',
+                  html:
+                    '<div>Anda yakin akan melakukan Approve?</div>' +
+                    '<div><b-container>' +
+                    '<b-row>' +
+                    '<b-col>Tanggal</b-col>' +
+                    '<b-col>&nbsp;:&nbsp;</b-col>' +
+                    '<b-col>' +
+                    this.t_elhm_ctl.activitied_at +
+                    '</b-col>' +
+                    '</b-row>' +
+                    '</b-container>' +
+                    '</div>' +
+                    '<div><b-container>' +
+                    '<b-row>' +
+                    '<b-col>Estate</b-col>' +
+                    '<b-col>&nbsp;:&nbsp;</b-col>' +
+                    '<b-col>' +
+                    this.t_elhm_ctl.department_code +
+                    '</b-col>' +
+                    '</b-row>' +
+                    '</b-container>' +
+                    '</div>' +
+                    '<div><b-container>' +
+                    '<b-row>' +
+                    '<b-col>Afdeling</b-col>' +
+                    '<b-col>&nbsp;:&nbsp;</b-col>' +
+                    '<b-col>' +
+                    this.t_elhm_ctl.afdeling_code +
+                    '</b-col>' +
+                    '</b-row>' +
+                    '</b-container>' +
+                    '</div>' +
+                    '<div><b-container>' +
+                    '<b-row>' +
+                    '<b-col>Mandor</b-col>' +
+                    '<b-col>&nbsp;:&nbsp;</b-col>' +
+                    '<b-col>' +
+                    this.t_elhm_ctl.name +
+                    '</b-col>' +
+                    '</b-row>' +
+                    '</b-container>' +
+                    '</div>',
+                  icon: 'question',
+                  showConfirmButton: true,
+                  showCancelButton: true,
+                  reverseButtons: true,
+                  confirmButtonText: 'Ya',
+                  cancelButtonText: 'Tidak',
+                })
+                .then((result) => {
+                  if (result.isConfirmed) {
+                    let formData = new FormData()
+
+                    formData.append('t_elhm_id', this.t_elhm_ctl.t_elhm_id)
+                    formData.append(
+                      'p_wf_doc_type_id',
+                      this.t_elhm_ctl.p_wf_doc_type_id
+                    )
+                    formData.append(
+                      'p_wf_proc_id',
+                      this.t_elhm_ctl.p_wf_proc_id
+                    )
+                    formData.append('elhm_status', this.t_elhm_ctl.doc_status)
+                    formData.append('approve', 'Y')
+                    formData.append('msg', msg)
+
+                    console.log(formData)
+
+                    this.$axios
+                      .post('/api/admin/workflow/submit_flow', formData)
+                      .then(() => {
+                        this.$swal.fire({
+                          title: 'BERHASIL!',
+                          text: 'Data Berhasil Disubmit!',
+                          icon: 'success',
+                          showConfirmButton: false,
+                          timer: 2000,
+                        })
+
+                        this.$router.push({
+                          name: 'admin-in_process',
+                          params: { id: this.$route.params.id, r: 1 },
+                        })
+                      })
+                  }
+                })
+            } else {
+              this.$swal
+                .fire({
+                  title: 'Komfirmasi',
+                  html:
+                    '<div>Anda yakin akan melakukan Reject?</div>' +
+                    '<div><b-container>' +
+                    '<b-row>' +
+                    '<b-col>Tanggal</b-col>' +
+                    '<b-col>&nbsp;:&nbsp;</b-col>' +
+                    '<b-col>' +
+                    this.t_elhm_ctl.activitied_at +
+                    '</b-col>' +
+                    '</b-row>' +
+                    '</b-container>' +
+                    '</div>' +
+                    '<div><b-container>' +
+                    '<b-row>' +
+                    '<b-col>Estate</b-col>' +
+                    '<b-col>&nbsp;:&nbsp;</b-col>' +
+                    '<b-col>' +
+                    this.t_elhm_ctl.department_code +
+                    '</b-col>' +
+                    '</b-row>' +
+                    '</b-container>' +
+                    '</div>' +
+                    '<div><b-container>' +
+                    '<b-row>' +
+                    '<b-col>Afdeling</b-col>' +
+                    '<b-col>&nbsp;:&nbsp;</b-col>' +
+                    '<b-col>' +
+                    this.t_elhm_ctl.afdeling_code +
+                    '</b-col>' +
+                    '</b-row>' +
+                    '</b-container>' +
+                    '</div>' +
+                    '<div><b-container>' +
+                    '<b-row>' +
+                    '<b-col>Mandor</b-col>' +
+                    '<b-col>&nbsp;:&nbsp;</b-col>' +
+                    '<b-col>' +
+                    this.t_elhm_ctl.name +
+                    '</b-col>' +
+                    '</b-row>' +
+                    '</b-container>' +
+                    '</div>',
+                  icon: 'question',
+                  showConfirmButton: true,
+                  showCancelButton: true,
+                  reverseButtons: true,
+                  confirmButtonText: 'Ya',
+                  cancelButtonText: 'Tidak',
+                })
+                .then((result) => {
+                  if (result.isConfirmed) {
+                    let formData = new FormData()
+
+                    formData.append('t_elhm_id', this.t_elhm_ctl.t_elhm_id)
+                    formData.append(
+                      'p_wf_doc_type_id',
+                      this.t_elhm_ctl.p_wf_doc_type_id
+                    )
+                    formData.append(
+                      'p_wf_proc_id',
+                      this.t_elhm_ctl.p_wf_proc_id
+                    )
+                    formData.append('elhm_status', this.t_elhm_ctl.doc_status)
+                    formData.append('approve', 'N')
+                    formData.append('msg', msg)
+
+                    console.log(formData)
+
+                    this.$axios
+                      .post('/api/admin/workflow/submit_flow', formData)
+                      .then(() => {
+                        this.$swal.fire({
+                          title: 'BERHASIL!',
+                          text: 'Data Berhasil Direject!',
+                          icon: 'success',
+                          showConfirmButton: false,
+                          timer: 2000,
+                        })
+
+                        this.$router.push({
+                          name: 'admin-in_process',
+                          params: { id: this.$route.params.id, r: 1 },
+                        })
+                      })
+                  }
+                })
+            }
+          }
+        })
     },
   },
   computed: {

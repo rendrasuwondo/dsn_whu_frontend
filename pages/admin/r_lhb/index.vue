@@ -5,7 +5,7 @@
     </section>
 
     <section class="content">
-      <div class="card card-outline card-info">
+      <div class="card card-outline card-info" v-if="main">
         <div class="card-header">
           <h3 class="card-title">
             <i class="nav-icon fas fa-clipboard"></i> LAPORAN HARIAN BLOCK
@@ -77,6 +77,21 @@
                         :options="afdeling"
                         :custom-label="customLabel"
                         x
+                        track-by="id"
+                        :searchable="true"
+                      ></multiselect></div
+                  ></b-col>
+                </b-row>
+              </b-container>
+              <b-container class="bv-example-row">
+                <b-row>
+                  <b-col cols="2">Jenis Pekerjaan</b-col>
+                  <b-col cols="7">
+                    <div class="form-group">
+                      <multiselect
+                        v-model="activity_id"
+                        :options="activity"
+                        label="name"
                         track-by="id"
                         :searchable="true"
                       ></multiselect></div
@@ -221,18 +236,20 @@ export default {
   layout: 'admin',
   head() {
     return {
-      title: 'Progress Harian',
+      title: 'Laporan Harian Blok',
     }
   },
   data() {
     return {
       loading: false,
+      main: true,
       allSelected: false,
       visibleRows: [],
       show_page: false,
       show_submit: true,
       foreman: [],
       afdeling: [],
+      activity: [],
       fields: [
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
@@ -275,91 +292,91 @@ export default {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: '3',
           key: 'qty_3',
-        //   formatter: (value, key, item) => {
-        //     let formatter = new Intl.NumberFormat('es-US', {
-        //       minimumFractionDigits: 2,
-        //       maximumFractionDigits: 2,
-        //     })
-        //     return formatter.format(value)
-        //   },
+          //   formatter: (value, key, item) => {
+          //     let formatter = new Intl.NumberFormat('es-US', {
+          //       minimumFractionDigits: 2,
+          //       maximumFractionDigits: 2,
+          //     })
+          //     return formatter.format(value)
+          //   },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: '4',
           key: 'qty_4',
-        //   formatter: (value, key, item) => {
-        //     let formatter = new Intl.NumberFormat('es-US', {
-        //       minimumFractionDigits: 2,
-        //       maximumFractionDigits: 2,
-        //     })
-        //     return formatter.format(value)
-        //   },
+          //   formatter: (value, key, item) => {
+          //     let formatter = new Intl.NumberFormat('es-US', {
+          //       minimumFractionDigits: 2,
+          //       maximumFractionDigits: 2,
+          //     })
+          //     return formatter.format(value)
+          //   },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: '5',
           key: 'qty_5',
-        //   formatter: (value, key, item) => {
-        //     let formatter = new Intl.NumberFormat('es-US', {
-        //       minimumFractionDigits: 2,
-        //       maximumFractionDigits: 2,
-        //     })
-        //     return formatter.format(value)
-        //   },
+          //   formatter: (value, key, item) => {
+          //     let formatter = new Intl.NumberFormat('es-US', {
+          //       minimumFractionDigits: 2,
+          //       maximumFractionDigits: 2,
+          //     })
+          //     return formatter.format(value)
+          //   },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: '6',
           key: 'qty_6',
-        //   formatter: (value, key, item) => {
-        //     let formatter = new Intl.NumberFormat('es-US', {
-        //       minimumFractionDigits: 2,
-        //       maximumFractionDigits: 2,
-        //     })
-        //     return formatter.format(value)
-        //   },
+          //   formatter: (value, key, item) => {
+          //     let formatter = new Intl.NumberFormat('es-US', {
+          //       minimumFractionDigits: 2,
+          //       maximumFractionDigits: 2,
+          //     })
+          //     return formatter.format(value)
+          //   },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: '7',
           key: 'qty_7',
-        //   formatter: (value, key, item) => {
-        //     let formatter = new Intl.NumberFormat('es-US', {
-        //       minimumFractionDigits: 2,
-        //       maximumFractionDigits: 2,
-        //     })
-        //     return formatter.format(value)
-        //   },
+          //   formatter: (value, key, item) => {
+          //     let formatter = new Intl.NumberFormat('es-US', {
+          //       minimumFractionDigits: 2,
+          //       maximumFractionDigits: 2,
+          //     })
+          //     return formatter.format(value)
+          //   },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: '8',
           key: 'qty_8',
-        //   formatter: (value, key, item) => {
-        //     let formatter = new Intl.NumberFormat('es-US', {
-        //       minimumFractionDigits: 2,
-        //       maximumFractionDigits: 2,
-        //     })
-        //     return formatter.format(value)
-        //   },
+          //   formatter: (value, key, item) => {
+          //     let formatter = new Intl.NumberFormat('es-US', {
+          //       minimumFractionDigits: 2,
+          //       maximumFractionDigits: 2,
+          //     })
+          //     return formatter.format(value)
+          //   },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: '9',
           key: 'qty_9',
-        //   formatter: (value, key, item) => {
-        //     let formatter = new Intl.NumberFormat('es-US', {
-        //       minimumFractionDigits: 2,
-        //       maximumFractionDigits: 2,
-        //     })
-        //     return formatter.format(value)
-        //   },
+          //   formatter: (value, key, item) => {
+          //     let formatter = new Intl.NumberFormat('es-US', {
+          //       minimumFractionDigits: 2,
+          //       maximumFractionDigits: 2,
+          //     })
+          //     return formatter.format(value)
+          //   },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
@@ -378,247 +395,247 @@ export default {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: '12',
           key: 'qty_12',
-        //   formatter: (value, key, item) => {
-        //     let formatter = new Intl.NumberFormat('es-US', {
-        //       minimumFractionDigits: 2,
-        //       maximumFractionDigits: 2,
-        //     })
-        //     return formatter.format(value)
-        //   },
+          //   formatter: (value, key, item) => {
+          //     let formatter = new Intl.NumberFormat('es-US', {
+          //       minimumFractionDigits: 2,
+          //       maximumFractionDigits: 2,
+          //     })
+          //     return formatter.format(value)
+          //   },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: '13',
           key: 'qty_13',
-        //   formatter: (value, key, item) => {
-        //     let formatter = new Intl.NumberFormat('es-US', {
-        //       minimumFractionDigits: 2,
-        //       maximumFractionDigits: 2,
-        //     })
-        //     return formatter.format(value)
-        //   },
+          //   formatter: (value, key, item) => {
+          //     let formatter = new Intl.NumberFormat('es-US', {
+          //       minimumFractionDigits: 2,
+          //       maximumFractionDigits: 2,
+          //     })
+          //     return formatter.format(value)
+          //   },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: '14',
           key: 'qty_14',
-        //   formatter: (value, key, item) => {
-        //     let formatter = new Intl.NumberFormat('es-US', {
-        //       minimumFractionDigits: 2,
-        //       maximumFractionDigits: 2,
-        //     })
-        //     return formatter.format(value)
-        //   },
+          //   formatter: (value, key, item) => {
+          //     let formatter = new Intl.NumberFormat('es-US', {
+          //       minimumFractionDigits: 2,
+          //       maximumFractionDigits: 2,
+          //     })
+          //     return formatter.format(value)
+          //   },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: '15',
           key: 'qty_15',
-        //   formatter: (value, key, item) => {
-        //     let formatter = new Intl.NumberFormat('es-US', {
-        //       minimumFractionDigits: 2,
-        //       maximumFractionDigits: 2,
-        //     })
-        //     return formatter.format(value)
-        //   },
+          //   formatter: (value, key, item) => {
+          //     let formatter = new Intl.NumberFormat('es-US', {
+          //       minimumFractionDigits: 2,
+          //       maximumFractionDigits: 2,
+          //     })
+          //     return formatter.format(value)
+          //   },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: '16',
           key: 'qty_16',
-        //   formatter: (value, key, item) => {
-        //     let formatter = new Intl.NumberFormat('es-US', {
-        //       minimumFractionDigits: 2,
-        //       maximumFractionDigits: 2,
-        //     })
-        //     return formatter.format(value)
-        //   },
+          //   formatter: (value, key, item) => {
+          //     let formatter = new Intl.NumberFormat('es-US', {
+          //       minimumFractionDigits: 2,
+          //       maximumFractionDigits: 2,
+          //     })
+          //     return formatter.format(value)
+          //   },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: '17',
           key: 'qty_17',
-        //   formatter: (value, key, item) => {
-        //     let formatter = new Intl.NumberFormat('es-US', {
-        //       minimumFractionDigits: 2,
-        //       maximumFractionDigits: 2,
-        //     })
-        //     return formatter.format(value)
-        //   },
+          //   formatter: (value, key, item) => {
+          //     let formatter = new Intl.NumberFormat('es-US', {
+          //       minimumFractionDigits: 2,
+          //       maximumFractionDigits: 2,
+          //     })
+          //     return formatter.format(value)
+          //   },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: '18',
           key: 'qty_18',
-        //   formatter: (value, key, item) => {
-        //     let formatter = new Intl.NumberFormat('es-US', {
-        //       minimumFractionDigits: 2,
-        //       maximumFractionDigits: 2,
-        //     })
-        //     return formatter.format(value)
-        //   },
+          //   formatter: (value, key, item) => {
+          //     let formatter = new Intl.NumberFormat('es-US', {
+          //       minimumFractionDigits: 2,
+          //       maximumFractionDigits: 2,
+          //     })
+          //     return formatter.format(value)
+          //   },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: '20',
           key: 'qty_20',
-        //   formatter: (value, key, item) => {
-        //     let formatter = new Intl.NumberFormat('es-US', {
-        //       minimumFractionDigits: 2,
-        //       maximumFractionDigits: 2,
-        //     })
-        //     return formatter.format(value)
-        //   },
+          //   formatter: (value, key, item) => {
+          //     let formatter = new Intl.NumberFormat('es-US', {
+          //       minimumFractionDigits: 2,
+          //       maximumFractionDigits: 2,
+          //     })
+          //     return formatter.format(value)
+          //   },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: '21',
           key: 'qty_21',
-        //   formatter: (value, key, item) => {
-        //     let formatter = new Intl.NumberFormat('es-US', {
-        //       minimumFractionDigits: 2,
-        //       maximumFractionDigits: 2,
-        //     })
-        //     return formatter.format(value)
-        //   },
+          //   formatter: (value, key, item) => {
+          //     let formatter = new Intl.NumberFormat('es-US', {
+          //       minimumFractionDigits: 2,
+          //       maximumFractionDigits: 2,
+          //     })
+          //     return formatter.format(value)
+          //   },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: '22',
           key: 'qty_22',
-        //   formatter: (value, key, item) => {
-        //     let formatter = new Intl.NumberFormat('es-US', {
-        //       minimumFractionDigits: 2,
-        //       maximumFractionDigits: 2,
-        //     })
-        //     return formatter.format(value)
-        //   },
+          //   formatter: (value, key, item) => {
+          //     let formatter = new Intl.NumberFormat('es-US', {
+          //       minimumFractionDigits: 2,
+          //       maximumFractionDigits: 2,
+          //     })
+          //     return formatter.format(value)
+          //   },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: '23',
           key: 'qty_23',
-        //   formatter: (value, key, item) => {
-        //     let formatter = new Intl.NumberFormat('es-US', {
-        //       minimumFractionDigits: 2,
-        //       maximumFractionDigits: 2,
-        //     })
-        //     return formatter.format(value)
-        //   },
+          //   formatter: (value, key, item) => {
+          //     let formatter = new Intl.NumberFormat('es-US', {
+          //       minimumFractionDigits: 2,
+          //       maximumFractionDigits: 2,
+          //     })
+          //     return formatter.format(value)
+          //   },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: '24',
           key: 'qty_24',
-        //   formatter: (value, key, item) => {
-        //     let formatter = new Intl.NumberFormat('es-US', {
-        //       minimumFractionDigits: 2,
-        //       maximumFractionDigits: 2,
-        //     })
-        //     return formatter.format(value)
-        //   },
+          //   formatter: (value, key, item) => {
+          //     let formatter = new Intl.NumberFormat('es-US', {
+          //       minimumFractionDigits: 2,
+          //       maximumFractionDigits: 2,
+          //     })
+          //     return formatter.format(value)
+          //   },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: '25',
           key: 'qty_25',
-        //   formatter: (value, key, item) => {
-        //     let formatter = new Intl.NumberFormat('es-US', {
-        //       minimumFractionDigits: 2,
-        //       maximumFractionDigits: 2,
-        //     })
-        //     return formatter.format(value)
-        //   },
+          //   formatter: (value, key, item) => {
+          //     let formatter = new Intl.NumberFormat('es-US', {
+          //       minimumFractionDigits: 2,
+          //       maximumFractionDigits: 2,
+          //     })
+          //     return formatter.format(value)
+          //   },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: '26',
           key: 'qty_26',
-        //   formatter: (value, key, item) => {
-        //     let formatter = new Intl.NumberFormat('es-US', {
-        //       minimumFractionDigits: 2,
-        //       maximumFractionDigits: 2,
-        //     })
-        //     return formatter.format(value)
-        //   },
+          //   formatter: (value, key, item) => {
+          //     let formatter = new Intl.NumberFormat('es-US', {
+          //       minimumFractionDigits: 2,
+          //       maximumFractionDigits: 2,
+          //     })
+          //     return formatter.format(value)
+          //   },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: '27',
           key: 'qty_27',
-        //   formatter: (value, key, item) => {
-        //     let formatter = new Intl.NumberFormat('es-US', {
-        //       minimumFractionDigits: 2,
-        //       maximumFractionDigits: 2,
-        //     })
-        //     return formatter.format(value)
-        //   },
+          //   formatter: (value, key, item) => {
+          //     let formatter = new Intl.NumberFormat('es-US', {
+          //       minimumFractionDigits: 2,
+          //       maximumFractionDigits: 2,
+          //     })
+          //     return formatter.format(value)
+          //   },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: '28',
           key: 'qty_28',
-        //   formatter: (value, key, item) => {
-        //     let formatter = new Intl.NumberFormat('es-US', {
-        //       minimumFractionDigits: 2,
-        //       maximumFractionDigits: 2,
-        //     })
-        //     return formatter.format(value)
-        //   },
+          //   formatter: (value, key, item) => {
+          //     let formatter = new Intl.NumberFormat('es-US', {
+          //       minimumFractionDigits: 2,
+          //       maximumFractionDigits: 2,
+          //     })
+          //     return formatter.format(value)
+          //   },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: '29',
           key: 'qty_29',
-        //   formatter: (value, key, item) => {
-        //     let formatter = new Intl.NumberFormat('es-US', {
-        //       minimumFractionDigits: 2,
-        //       maximumFractionDigits: 2,
-        //     })
-        //     return formatter.format(value)
-        //   },
+          //   formatter: (value, key, item) => {
+          //     let formatter = new Intl.NumberFormat('es-US', {
+          //       minimumFractionDigits: 2,
+          //       maximumFractionDigits: 2,
+          //     })
+          //     return formatter.format(value)
+          //   },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: '30',
           key: 'qty_30',
-        //   formatter: (value, key, item) => {
-        //     let formatter = new Intl.NumberFormat('es-US', {
-        //       minimumFractionDigits: 2,
-        //       maximumFractionDigits: 2,
-        //     })
-        //     return formatter.format(value)
-        //   },
+          //   formatter: (value, key, item) => {
+          //     let formatter = new Intl.NumberFormat('es-US', {
+          //       minimumFractionDigits: 2,
+          //       maximumFractionDigits: 2,
+          //     })
+          //     return formatter.format(value)
+          //   },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: '31',
           key: 'qty_31',
-        //   formatter: (value, key, item) => {
-        //     let formatter = new Intl.NumberFormat('es-US', {
-        //       minimumFractionDigits: 2,
-        //       maximumFractionDigits: 2,
-        //     })
-        //     return formatter.format(value)
-        //   },
+          //   formatter: (value, key, item) => {
+          //     let formatter = new Intl.NumberFormat('es-US', {
+          //       minimumFractionDigits: 2,
+          //       maximumFractionDigits: 2,
+          //     })
+          //     return formatter.format(value)
+          //   },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
       ],
@@ -629,7 +646,14 @@ export default {
       afdeling_id: this.$route.query.q_afdeling_id,
       query_afdeling_id: '',
       afdeling_default: '',
+      activity_id: this.$route.query.q_activity_id,
+      query_activity_id: '',
     }
+  },
+  created() {
+    console.log('created')
+    this.loading = true
+    this.main = false
   },
   watchQuery: [
     'q',
@@ -637,6 +661,7 @@ export default {
     'activitied_at_prepend',
     'activitied_at_append',
     'q_afdeling_id',
+    'q_activity_id',
   ],
 
   async asyncData({ $axios, query, $auth }) {
@@ -689,8 +714,8 @@ export default {
           `/api/admin/lov_afdeling_daily_progress?q_afdeling_id=${q_afdeling_id}`
         )
         .then((response) => {
-          console.log('daaa')
-          console.log(response.data.data)
+          // console.log('daaa')
+          // console.log(response.data.data)
           afdeling_id = response.data.data
         })
     } else {
@@ -703,15 +728,47 @@ export default {
       q_afdeling_id = afdeling_default.data.id
     }
 
-    const posts = await $axios.$get(
-      // `/api/admin/report/lhb?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}`
-      `/api/admin/report/lhb?q=${search}&page=${page}&q_period_year=2023&q_period_month=3&q_afdeling_id=dw22a&q_activity_id=4110`
-    )
+    // activity_id
+    const activity_list = await $axios.$get(`/api/admin/lov_activity`)
 
-    const t_daily_progress = await $axios
-      .$get
-      // `/api/admin/master/attendance_daily_progress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}`
-      ()
+    const activity_default = []
+    let q_activity_id = query.q_activity_id
+    // let q_activity_id = query.q_activity_id
+    //   ? query.q_activity_id
+    //   : activity_default
+
+    let activity_id = []
+
+    // let activity_code = []
+
+    if (query.q_activity_id) {
+      $axios
+        .get(`/api/admin/lov_activity?q_activity_id=${q_activity_id}`)
+        .then((response) => {
+          // console.log('daaa')
+          // console.log(response.data.data)
+          activity_id = response.data.data
+        })
+    } else {
+      activity_id = []
+
+      // q_activity_id = activity_default.data.id
+    }
+
+    if (q_activity_id == undefined || q_activity_id == '') {
+      q_activity_id = ''
+    }
+    console.log('rdr')
+    // console.log (activitied_at_start.getFullYear())
+
+    const posts = await $axios.$get(
+      // `/api/admin/report/lhb?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}&q_activity_id=4110`
+      `/api/admin/report/lhb?q=${search}&page=${page}&q_period_year=${parseFloat(
+        activitied_at_start.split('-')[0]
+      )}&q_period_month=${parseFloat(
+        activitied_at_start.split('-')[1]
+      )}&q_afdeling_id=${q_afdeling_id}&q_activity_id=${q_activity_id}`
+    )
 
     return {
       posts: posts.data,
@@ -722,7 +779,8 @@ export default {
       activitied_at_end: activitied_at_end,
       afdeling: afdeling_list.data,
       afdeling_id: afdeling_id,
-      t_daily_progress: t_daily_progress.data,
+      activity: activity_list.data,
+      activity_id: activity_id,
     }
   },
 
@@ -737,6 +795,22 @@ export default {
         ]
       })
     }
+
+    document.onreadystatechange = () => {
+      if (document.readyState == 'complete') {
+        console.log('Page completed with image and files!')
+        // fetch to next page or some code
+        this.loading = false
+        this.main = true
+      }
+    }
+
+    if (document.readyState == 'complete') {
+        console.log('Page completed with image and files!')
+        // fetch to next page or some code
+        this.loading = false
+        this.main = true
+      }
   },
 
   methods: {
@@ -781,32 +855,102 @@ export default {
     },
     //searchData
     searchData() {
+      this.message = ''
+
+      if (this.activitied_at_start == '') {
+        this.message += 'Tanggal Tidak Boleh Kosong!<br>'
+      }
+
+      if (this.afdeling_id == null) {
+        this.message += 'Afdeling Tidak Boleh Kosong!<br>'
+      }
+
+      if (this.activity_id == null) {
+        this.message += 'Jenis Pekerjaan Tidak Boleh Kosong!<br>'
+      }
+
       try {
-        if (this.afdeling_id.id === null) {
-          this.query_afdeling_id = this.$route.query.q_afdeling_id
-        } else if (this.afdeling_id.id === undefined) {
-          this.query_afdeling_id = this.$route.query.q_afdeling_id
-        } else {
-          this.query_afdeling_id = this.afdeling_id.id
-            ? this.afdeling_id.id
-            : ''
+        if (this.activity_id.length == 0) {
+          this.message += 'Jenis Pekerjaan Tidak Boleh Kosong!<br>'
         }
       } catch (err) {}
 
-      // console.log(this.activitied_at_start.getFullYear())
-      // console.log(this.afdeling_id[0].id)
+      // console.log('rdr')
+      // console.log(parseFloat(this.activitied_at_start.split('-')[1]))
 
-      this.$router.push({
-        path: this.$route.path,
-        query: {
-          q: this.search,
-          activitied_at_prepend: this.activitied_at_start,
-          activitied_at_append: this.activitied_at_end,
-          q_afdeling_id: this.query_afdeling_id
-            ? this.query_afdeling_id
-            : this.afdeling_id[0].id,
-        },
-      })
+      if (this.message != '') {
+        this.$swal.fire({
+          title: 'WARNING!',
+          html: this.message,
+          icon: 'warning',
+          showConfirmButton: true,
+        })
+      } else {
+        try {
+          if (this.afdeling_id == null) {
+            this.vafdeling = ''
+          } else {
+            if (this.afdeling_id[0] == undefined) {
+              this.vafdeling = this.afdeling_id.id
+            } else {
+              this.vafdeling = this.afdeling_id[0].id
+            }
+          }
+        } catch (err) {}
+
+        try {
+          if (this.activity_id.id === null) {
+            this.vactivity = this.$route.query.q_activity_id
+          } else if (this.activity_id.id === undefined) {
+            this.vactivity = this.$route.query.q_activity_id
+          } else {
+            this.vactivity = this.activity_id.id ? this.activity_id.id : ''
+          }
+        } catch (err) {}
+
+        //cek watchQuery
+        // console.log('search')
+        // console.log(this.$route.query.activitied_at_prepend)
+        // console.log(this.activitied_at_start)
+        // console.log(this.$route.query.q_afdeling_id)
+        // console.log(this.vafdeling)
+        // console.log(this.$route.query.q_activity_id)
+        // console.log(this.vactivity)
+
+        this.go = 0
+
+        if (
+          this.$route.query.activitied_at_prepend != this.activitied_at_start
+        ) {
+          this.go = 1
+        }
+
+        if (this.$route.query.q_afdeling_id != this.vafdeling) {
+          this.go = 1
+        }
+
+        if (this.$route.query.q_activity_id != this.vactivity) {
+          this.go = 1
+        }
+        //cek watchQuery end
+
+        if (this.go == 1) {
+          this.loading = true
+          this.main = false
+          this.$router.push({
+            path: this.$route.path,
+            query: {
+              q: this.search,
+              activitied_at_prepend: this.activitied_at_start,
+              activitied_at_append: this.activitied_at_end,
+              q_afdeling_id: this.vafdeling,
+              q_activity_id: this.vactivity,
+            },
+          })
+        } else {
+          console.log('No Go')
+        }
+      }
     },
 
     currentDate() {
