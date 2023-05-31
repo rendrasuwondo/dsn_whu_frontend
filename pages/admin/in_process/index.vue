@@ -150,6 +150,11 @@
                 :to="{
                   name: 'admin-in_process_detail_asisten-id',
                   params: { id: row.item.id },
+                  query: {
+                    tanggal: row.item.activitied_at,
+                    mandor: `${row.item.afdeling_code} (${row.item.afdeling_id})`,
+                    afdeling: `${row.item.nik} - ${row.item.name}`
+                  },
                 }"
                 variant="link"
                 size="sm"
@@ -163,6 +168,11 @@
                 :to="{
                   name: 'admin-in_process_detail-id',
                   params: { id: row.item.id },
+                  query: {
+                    tanggal: row.item.activitied_at,
+                    mandor: `${row.item.afdeling_code} (${row.item.afdeling_id})`,
+                    afdeling: `${row.item.nik} - ${row.item.name}`
+                  },
                 }"
                 variant="link"
                 size="sm"
@@ -565,7 +575,7 @@ export default {
       this.main = true
     }
 
-    
+
   },
 
   methods: {

@@ -28,7 +28,7 @@
         <div class="card-body">
           <b-card
             border-variant="primary"
-            header="Filter"
+            header="Detail"
             header-bg-variant="info"
             header-text-variant="white"
           >
@@ -38,8 +38,8 @@
                   <b-col cols="2">Tanggal:</b-col>
                   <b-col cols="4">
                     <b-input-group>
-                      <b-form-datepicker
-                        v-model="activitied_at_start"
+                      <b-form-input
+                        :type="date"
                         :date-format-options="{
                           year: 'numeric',
                           month: 'short',
@@ -47,37 +47,20 @@
                           weekday: 'short',
                         }"
                         size="sm"
-                      ></b-form-datepicker>
-                      <template #append>
-                        <b-btn size="sm" @click="activitied_at_start = ''"
-                          ><i class="fa fa-trash"></i
-                        ></b-btn>
-                      </template>
+                        :disabled="true"
+                        v-model="detail.tanggal"
+                      ></b-form-input>
                     </b-input-group>
                   </b-col>
+                  <b-col cols="2">Mandor:</b-col>
                   <b-col cols="4">
-                    <b-input-group>
-                      <b-form-datepicker
-                        v-show="false"
-                        v-model="activitied_at_end"
-                        :date-format-options="{
-                          year: 'numeric',
-                          month: 'short',
-                          day: '2-digit',
-                          weekday: 'short',
-                        }"
+                    <div class="form-group">
+                      <b-form-input
                         size="sm"
-                      ></b-form-datepicker>
-                      <template #append>
-                        <b-btn
-                          size="sm"
-                          @click="activitied_at_end = ''"
-                          v-show="false"
-                          ><i class="fa fa-trash"></i
-                        ></b-btn>
-                      </template>
-                    </b-input-group>
-                  </b-col>
+                        :disabled="true"
+                        v-model="detail.mandor"
+                      ></b-form-input></div
+                  ></b-col>
                 </b-row>
               </b-container>
               <b-container class="bv-example-row">
@@ -85,31 +68,15 @@
                   <b-col cols="2">Afdeling:</b-col>
                   <b-col cols="4">
                     <div class="form-group">
-                      <multiselect
-                        v-model="afdeling_id"
-                        :options="afdeling"
+                      <b-form-input
                         :custom-label="customLabel"
-                        x
-                        track-by="id"
-                        :searchable="true"
-                        @input="onChangeAfdeling"
-                      ></multiselect></div
-                  ></b-col>
-                </b-row>
-              </b-container>
-              <b-container class="bv-example-row">
-                <b-row>
-                  <b-col cols="2">Mandor</b-col>
-                  <b-col cols="5">
-                    <div class="form-group">
-                      <multiselect
-                        v-model="foreman_employee_id"
-                        :options="foreman"
-                        label="employee_description"
-                        track-by="employee_id"
-                        :searchable="true"
-                      ></multiselect></div
-                  ></b-col>
+                        size="sm"
+                        :disabled="true"
+                        v-model="detail.afdeling"
+                        ></b-form-input
+                      >
+                    </div></b-col
+                  >
                 </b-row>
               </b-container>
             </b-card-text>
@@ -255,9 +222,9 @@
                       <span class="direct-chat-name float-left">{{
                         item.prev_name_submit
                       }}</span>
-                      <span class="direct-chat-timestamp float-right"
-                        >{{ item.send_date }}</span
-                      >
+                      <span class="direct-chat-timestamp float-right">{{
+                        item.send_date
+                      }}</span>
                     </div>
                     <!-- /.direct-chat-infos -->
                     <img
@@ -267,7 +234,7 @@
                     />
                     <!-- /.direct-chat-img -->
                     <div class="direct-chat-text">
-                     {{ item.message }}
+                      {{ item.message }}
                     </div>
                     <!-- /.direct-chat-text -->
                   </div>
@@ -275,11 +242,7 @@
                 </div>
               </div>
             </b-card>
-            <b-card
-              title=""
-              header-tag="header"
-              header-bg-variant="secondary"
-            >
+            <b-card title="" header-tag="header" header-bg-variant="secondary">
               <template #header>
                 <h6 class="mb-0">Approval</h6>
               </template>
@@ -307,8 +270,16 @@ export default {
       title: 'Laporan Harian Mandor',
     }
   },
+
+  props: ['date', 'afdeling', 'mandor'],
   data() {
     return {
+      myId: this.$route.params.id,
+      detail: {
+        tanggal: this.$route.query.tanggal,
+        mandor: this.$route.query.mandor,
+        afdeling: this.$route.query.afdeling
+      },
       loading: false,
       main: true,
       allSelected: false,
@@ -564,7 +535,7 @@ export default {
           // console.log('cekkkkk')
           // console.log(response.data.data)
         })
-    } else { 
+    } else {
       await $axios
         .get(
           `/api/admin/lov_foreman_maintenance?afdeling_id=${q_afdeling_id}&foreman_id=${q_foreman_employee_id}`
@@ -604,6 +575,13 @@ export default {
       `/api/admin/master/attendance_daily_progress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}`
     )
 
+    console.log({
+      afdeling: afdeling_list.data,
+      afdeling_id: afdeling_id,
+      t_daily_progress: t_daily_progress.data,
+      foreman: foreman_list.data,
+      foreman_employee_id: foreman_employee_id,
+    })
     // console.log('Berhasil')
     return {
       posts: posts.data,
@@ -618,7 +596,7 @@ export default {
       foreman: foreman_list.data,
       foreman_employee_id: foreman_employee_id,
       t_elhm_ctl: t_elhm_ctl.data[0],
-      t_elhm_message: t_elhm_message.data
+      t_elhm_message: t_elhm_message.data,
     }
   },
 
@@ -1011,7 +989,7 @@ export default {
                     formData.append('elhm_status', this.t_elhm_ctl.doc_status)
                     formData.append('approve', 'N')
                     formData.append('msg', msg)
-                    
+
                     console.log(formData)
 
                     this.$axios
@@ -1034,7 +1012,6 @@ export default {
                 })
             }
           }
-          
         })
     },
   },
