@@ -72,11 +72,9 @@
                         :custom-label="customLabel"
                         size="sm"
                         :disabled="true"
-                        v-model="detail.afdeling"
-                        ></b-form-input
-                      >
-                    </div></b-col
-                  >
+                        v-model="detail.afdelingCode"
+                      ></b-form-input></div
+                  ></b-col>
                 </b-row>
               </b-container>
             </b-card-text>
@@ -274,11 +272,10 @@ export default {
   props: ['date', 'afdeling', 'mandor'],
   data() {
     return {
-      myId: this.$route.params.id,
       detail: {
         tanggal: this.$route.query.tanggal,
         mandor: this.$route.query.mandor,
-        afdeling: this.$route.query.afdeling
+        afdelingCode: this.$route.query.afdeling,
       },
       loading: false,
       main: true,
@@ -560,6 +557,23 @@ export default {
       `/api/admin/workflow/in_process_detail?id=${route.params.id}`
     )
 
+
+
+    const global_param = await $axios.$get(
+      `/api/admin/global_param?q=MAX_HK_RAWAT`
+    )
+
+    let thresholdManDays = 0 // Default Value
+    if (typeof global_param.data.data !== 'undefined' && global_param.data.data.length > 0) {
+      thresholdManDays = global_param.data.data[0].value_1
+    }
+
+    for (var i = 0; i < posts.data.length; i++) {
+      if(posts.data[i].man_days_total > thresholdManDays) {
+        posts.data[i]._rowVariant = 'danger'
+      }
+    }
+
     const t_elhm_ctl = await $axios.$get(
       `/api/admin/workflow/t_elhm_ctl?id=${route.params.id}`
     )
@@ -575,13 +589,6 @@ export default {
       `/api/admin/master/attendance_daily_progress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}`
     )
 
-    console.log({
-      afdeling: afdeling_list.data,
-      afdeling_id: afdeling_id,
-      t_daily_progress: t_daily_progress.data,
-      foreman: foreman_list.data,
-      foreman_employee_id: foreman_employee_id,
-    })
     // console.log('Berhasil')
     return {
       posts: posts.data,
