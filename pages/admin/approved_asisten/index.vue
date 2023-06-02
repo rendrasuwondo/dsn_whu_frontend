@@ -112,7 +112,7 @@
               <div class="input-group-prepend">
                 <nuxt-link
                   :to="{
-                    name: 'admin-activity_actual-create',
+                    name: 'admin-approved_asisten-create',
                     query: {
                       activitied_at_prepend:
                         this.$route.query.activitied_at_prepend,
@@ -182,7 +182,7 @@
             <template v-slot:cell(actions)="row">
               <b-button
                 :to="{
-                  name: 'admin-activity_actual-edit-id',
+                  name: 'admin-approved_asisten-edit-id',
                   params: { id: row.item.id },
                   query: {
                     activitied_at_prepend: param_activitied_at_prepend,
@@ -217,7 +217,7 @@
                     >Submit</b-button
                   >
                 </b-td>
-        
+
                 <b-td colspan="3">Total</b-td>
                 <b-td align="right">
                   {{ new Intl.NumberFormat('es-US').format(TOTAL_HK) }}</b-td
@@ -256,7 +256,7 @@
       </div>
 
       <div v-if="loading" class="loading-page">
-        <p>Loading...</p>
+        <b-spinner variant="primary" label="Loading..."></b-spinner>
       </div>
     </section>
   </div>
@@ -401,9 +401,9 @@ export default {
     function currentDate() {
       const current = new Date()
       current.setDate(current.getDate())
-      const date = `${current.getFullYear()}-${
-        current.getMonth() + 1
-      }-${current.getDate()}`
+      const date = `${current.getFullYear()}-${current.getMonth() + 1}-${
+        current.getDate() - 1
+      }`
 
       return date
     }
@@ -554,6 +554,8 @@ export default {
   },
 
   mounted() {
+    this.loading = false
+    this.main = true
     if (this.$route.query.q_afdeling_id == null) {
       this.afdeling_id = [
         {
