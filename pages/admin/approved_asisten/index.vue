@@ -549,7 +549,17 @@ export default {
   },
 
   mounted() {
-    this.main = true
+    this.$nextTick(() => {
+      this.$nuxt.$loading.start()
+    })
+    document.onreadystatechange = () => {
+      if (document.readyState == 'complete') {
+        this.$nextTick(() => {
+          this.$nuxt.$loading.finish()
+          this.main = true
+        })
+      }
+    }
     if (this.$route.query.q_afdeling_id == null) {
       this.afdeling_id = [
         {
@@ -558,14 +568,6 @@ export default {
         },
       ]
     } else {
-    }
-
-    document.onreadystatechange = () => {
-      if (document.readyState == 'complete') {
-        // console.log('Page completed with image and files!')
-        // fetch to next page or some code
-        this.main = true
-      }
     }
   },
 

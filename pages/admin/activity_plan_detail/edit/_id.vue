@@ -178,7 +178,7 @@ export default {
       show_hk: true,
       show_rate: false,
       value: undefined,
-     
+
 
       field: {
         ha_statement_id: '',
@@ -282,7 +282,6 @@ export default {
     //       this.field.flexrate = ''
     //     }
 
-    //     this.$nuxt.$loading.start()
     //     //Dropdown Block
     //     this.$axios
     //       .get(

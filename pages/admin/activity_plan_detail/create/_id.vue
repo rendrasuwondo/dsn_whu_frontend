@@ -251,7 +251,6 @@ export default {
           this.field.flexrate = ''
         }
 
-        this.$nuxt.$loading.start()
         //Dropdown Block
         this.$axios
           .get(

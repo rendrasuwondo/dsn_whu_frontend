@@ -215,8 +215,6 @@ export default {
 
       .then((response) => {
         this.employee_id = response.data.data.id
-
-        this.$nuxt.$loading.start()
       })
   },
 

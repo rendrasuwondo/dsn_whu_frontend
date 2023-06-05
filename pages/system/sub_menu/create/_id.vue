@@ -234,8 +234,6 @@ export default {
 
       .then((response) => {
         this.parent_id = response.data.data.id
-
-        this.$nuxt.$loading.start()
       })
   },
 

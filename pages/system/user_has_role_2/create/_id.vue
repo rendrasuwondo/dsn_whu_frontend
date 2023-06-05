@@ -181,8 +181,6 @@ export default {
       .then((response) => {
         //  console.log(response.data.data.afdeling_id)
         this.user_id = response.data.data.id
-
-        this.$nuxt.$loading.start()
       })
 
     //Data Users

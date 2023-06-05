@@ -195,8 +195,6 @@ export default {
       .then((response) => {
         //  console.log(response.data.data.afdeling_id)
         this.id_employee = response.data.data.id
-
-        this.$nuxt.$loading.start()
       })
 
     this.$axios
@@ -211,8 +209,6 @@ export default {
         this.field.created_by = response.data.data.created_by
         this.field.updated_at = response.data.data.updated_at
         this.field.updated_by = response.data.data.updated_by
-
-        this.$nuxt.$loading.start()
       })
   },
 

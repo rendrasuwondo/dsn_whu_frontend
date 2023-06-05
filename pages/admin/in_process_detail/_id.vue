@@ -557,8 +557,6 @@ export default {
       `/api/admin/workflow/in_process_detail?id=${route.params.id}`
     )
 
-
-
     const global_param = await $axios.$get(
       `/api/admin/global_param?q=MAX_HK_RAWAT`
     )
@@ -571,6 +569,8 @@ export default {
     for (var i = 0; i < posts.data.length; i++) {
       if(posts.data[i].man_days_total > thresholdManDays) {
         posts.data[i]._rowVariant = 'danger'
+      } else {
+        posts.data[i]._rowVariant = ''
       }
     }
 

@@ -25,7 +25,7 @@
                 :show-labels="true"
               >
               </multiselect>
-              <!-- v-selected="this.field.activity_group_id.id" 
+              <!-- v-selected="this.field.activity_group_id.id"
                 v-html="placeholder"
                 <div v-if="validation.code" class="mt-2">
                 <b-alert show variant="danger">{{
@@ -202,8 +202,6 @@ export default {
 
       .then((response) => {
         this.id_employee = response.data.data.id
-
-        this.$nuxt.$loading.start()
       })
 
     this.$axios
@@ -218,8 +216,6 @@ export default {
         this.field.created_by = response.data.data.created_by
         this.field.updated_at = response.data.data.updated_at
         this.field.updated_by = response.data.data.updated_by
-
-        this.$nuxt.$loading.start()
       })
   },
 
