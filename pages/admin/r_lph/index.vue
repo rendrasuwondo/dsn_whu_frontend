@@ -516,6 +516,23 @@ export default {
       `/api/admin/report/lph?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}&q_department_id=${q_department_id}`
     )
 
+    const global_param = await $axios.$get(
+      `/api/admin/global_param?q=MAX_HK_RAWAT`
+    )
+
+    let thresholdManDays = 0 // Default Value
+    if (typeof global_param.data.data !== 'undefined' && global_param.data.data.length > 0) {
+      thresholdManDays = global_param.data.data[0].value_1
+    }
+
+    for (var i = 0; i < posts.data.length; i++) {
+      if(posts.data[i].man_days_total > thresholdManDays) {
+        posts.data[i]._rowVariant = 'danger'
+      } else {
+        posts.data[i]._rowVariant = ''
+      }
+    }
+
     const t_daily_progress = await $axios.$get(
       `/api/admin/master/attendance_daily_progress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}`
     )
