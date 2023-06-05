@@ -226,10 +226,6 @@
           </b-row>
         </div>
       </div>
-
-      <div v-if="loading" class="loading-page">
-        <p>Loading...</p>
-      </div>
     </section>
   </div>
 </template>
@@ -244,7 +240,6 @@ export default {
   },
   data() {
     return {
-      loading: false,
       allSelected: false,
       visibleRows: [],
       show_page: false,
@@ -545,6 +540,17 @@ export default {
   },
 
   mounted() {
+    this.$nextTick(() => {
+      this.$nuxt.$loading.start()
+    })
+    document.onreadystatechange = () => {
+      if (document.readyState == 'complete') {
+        this.$nextTick(() => {
+          this.$nuxt.$loading.finish()
+        })
+      }
+    }
+
     if (this.$route.query.q_afdeling_id == null) {
       this.$axios.get(`/api/admin/lov_afdeling_default`).then((response) => {
         this.afdeling_id = [
@@ -555,11 +561,6 @@ export default {
         ]
       })
     }
-
-    this.$nextTick(() => {
-      this.$nuxt.$loading.start()
-      setTimeout(() => this.$nuxt.$loading.finish(), 500)
-    })
   },
 
   methods: {
@@ -608,7 +609,7 @@ export default {
     },
     //searchData
     searchData() {
-      // this.loading = true
+      this.$nuxt.$loading.start()
 
       try {
         if (this.afdeling_id.id === null) {
@@ -722,10 +723,10 @@ export default {
     },
 
     start() {
-      this.loading = true
+      this.$nuxt.$loading.start()
     },
     finish() {
-      this.loading = false
+      this.$nuxt.$loading.finish()
     },
   },
   computed: {
@@ -775,18 +776,6 @@ export default {
 </script>
 
 <style scoped>
-.loading-page {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.8);
-  text-align: center;
-  padding-top: 200px;
-  font-size: 30px;
-  font-family: sans-serif;
-}
 .table-1 {
   font-size: 14px;
 }

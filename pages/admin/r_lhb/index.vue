@@ -223,10 +223,6 @@
           </b-row>
         </div>
       </div>
-
-      <div v-if="loading" class="loading-page">
-        <p>Loading...</p>
-      </div>
     </section>
   </div>
 </template>
@@ -241,7 +237,6 @@ export default {
   },
   data() {
     return {
-      loading: false,
       main: true,
       allSelected: false,
       visibleRows: [],
@@ -652,7 +647,6 @@ export default {
   },
   created() {
     console.log('created')
-    this.loading = true
     this.main = false
   },
   watchQuery: [
@@ -785,6 +779,18 @@ export default {
   },
 
   mounted() {
+    this.$nextTick(() => {
+      this.$nuxt.$loading.start()
+    })
+    document.onreadystatechange = () => {
+      if (document.readyState == 'complete') {
+        this.main = true
+        this.$nextTick(() => {
+          this.$nuxt.$loading.finish()
+        })
+      }
+    }
+
     if (this.$route.query.q_afdeling_id == null) {
       this.$axios.get(`/api/admin/lov_afdeling_default`).then((response) => {
         this.afdeling_id = [
@@ -795,23 +801,9 @@ export default {
         ]
       })
     }
-
-    document.onreadystatechange = () => {
-      if (document.readyState == 'complete') {
-        console.log('Page completed with image and files!')
-        // fetch to next page or some code
-        this.loading = false
-        this.main = true
-      }
-    }
-
-    if (document.readyState == 'complete') {
-        console.log('Page completed with image and files!')
-        // fetch to next page or some code
-        this.loading = false
-        this.main = true
-      }
   },
+
+
 
   methods: {
     // onChangeAfdeling() {
@@ -935,7 +927,7 @@ export default {
         //cek watchQuery end
 
         if (this.go == 1) {
-          this.loading = true
+          this.$nuxt.$loading.start()
           this.main = false
           this.$router.push({
             path: this.$route.path,
@@ -1066,18 +1058,6 @@ export default {
 </script>
 
 <style scoped>
-.loading-page {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.8);
-  text-align: center;
-  padding-top: 200px;
-  font-size: 30px;
-  font-family: sans-serif;
-}
 .table-1 {
   font-size: 14px;
 }
