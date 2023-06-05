@@ -541,6 +541,17 @@ export default {
   },
 
   mounted() {
+    this.$nextTick(() => {
+      this.$nuxt.$loading.start()
+    })
+    document.onreadystatechange = () => {
+      if (document.readyState == 'complete') {
+        this.main = true
+        this.$nextTick(() => {
+          this.$nuxt.$loading.finish()
+        })
+      }
+    }
     // if (this.$route.query.q_afdeling_id == null) {
     //   this.$axios.get(`/api/admin/lov_afdeling_default`).then((response) => {
     //     this.afdeling_id = [
@@ -552,20 +563,6 @@ export default {
     //   })
     // }
     console.log('this.$auth')
-    // console.log(this.$auth.user.employee)
-    document.onreadystatechange = () => {
-      if (document.readyState == 'complete') {
-        console.log('Page completed with image and files!')
-        // fetch to next page or some code
-        this.main = true
-      }
-    }
-
-    if (document.readyState == 'complete') {
-      console.log('Page completed with image and files!')
-      // fetch to next page or some code
-      this.main = true
-    }
 
 
   },

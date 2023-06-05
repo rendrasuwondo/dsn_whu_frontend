@@ -335,6 +335,18 @@ export default {
   },
 
   mounted() {
+    this.$nextTick(() => {
+      this.$nuxt.$loading.start()
+    })
+    document.onreadystatechange = () => {
+      if (document.readyState == 'complete') {
+        this.main = true
+        this.$nextTick(() => {
+          this.$nuxt.$loading.finish()
+        })
+      }
+    }
+
     // console.log(this.user.employee.company_code)
     this.company_code = this.user.employee.company_code
     this.foreman_employee = this.user.employee.foreman_employee

@@ -608,6 +608,18 @@ export default {
   },
 
   mounted() {
+    this.$nextTick(() => {
+      this.$nuxt.$loading.start()
+    })
+    document.onreadystatechange = () => {
+      if (document.readyState == 'complete') {
+        this.main = true
+        this.$nextTick(() => {
+          this.$nuxt.$loading.finish()
+        })
+      }
+    }
+
     if (this.$route.query.q_afdeling_id == null) {
       this.$axios.get(`/api/admin/lov_afdeling_default`).then((response) => {
         this.afdeling_id = [
