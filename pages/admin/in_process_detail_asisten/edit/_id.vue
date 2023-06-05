@@ -74,7 +74,7 @@
               <!-- <div v-if="validation.code" class="mt-2">
                   <b-alert show variant="danger">{{
                     validation.code[0]
-                  }}</b-alert> 
+                  }}</b-alert>
                 </div>-->
             </div>
 
@@ -266,10 +266,6 @@
           </form>
         </div>
       </div>
-
-      <div v-if="loading" class="loading-page">
-        <p>Loading...</p>
-      </div>
     </section>
   </div>
 </template>
@@ -287,7 +283,6 @@ export default {
 
   data() {
     return {
-      loading: false,
       main: true,
       state: 'disabled',
       options_status: [
@@ -378,7 +373,7 @@ export default {
 
   methods: {
     back() {
-      this.loading = true
+      this.$nuxt.$loading.start()
       this.main = false
 
       this.$router.push({
@@ -470,18 +465,7 @@ export default {
 }
 </script>
 <style scoped>
-.loading-page {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.8);
-  text-align: center;
-  padding-top: 200px;
-  font-size: 30px;
-  font-family: sans-serif;
-}
+
 .table-1 {
   font-size: 14px;
 }

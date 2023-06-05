@@ -262,10 +262,6 @@
           </form>
         </div>
       </div>
-
-      <div v-if="loading" class="loading-page">
-        <b-spinner variant="primary" label="Loading..."></b-spinner>
-      </div>
     </section>
   </div>
 </template>
@@ -288,7 +284,6 @@ export default {
   data() {
     return {
       state: 'disabled',
-      loading: false,
 
       show_hk: true,
       show_rate: false,
@@ -683,7 +678,7 @@ export default {
             timer: 2000,
           })
 
-          this.loading = true
+          this.$nuxt.$loading.start()
           this.main = false
 
           //redirect, if success store data
@@ -726,18 +721,5 @@ export default {
 <style>
 .ck-editor__editable {
   min-height: 200px;
-}
-
-.loading-page {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.8);
-  text-align: center;
-  padding-top: 200px;
-  font-size: 30px;
-  font-family: sans-serif;
 }
 </style>

@@ -266,11 +266,6 @@
           </form>
         </div>
       </div>
-
-
-      <div v-if="loading" class="loading-page">
-        <b-spinner variant="primary" label="Loading..."></b-spinner>
-      </div>
     </section>
   </div>
 </template>
@@ -289,7 +284,6 @@ export default {
   data() {
     return {
       state: 'disabled',
-      loading: false,
 
       options_status: [
         { value: 'V', text: 'Verifikasi Asisten' },
@@ -432,7 +426,7 @@ export default {
             timer: 2000,
           })
 
-          this.loading = true
+          this.$nuxt.$loading.start()
           this.main = false
 
           //redirect ke route "post"
@@ -472,16 +466,4 @@ export default {
 }
 </script>
 <style>
-.loading-page {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.8);
-  text-align: center;
-  padding-top: 200px;
-  font-size: 30px;
-  font-family: sans-serif;
-}
 </style>

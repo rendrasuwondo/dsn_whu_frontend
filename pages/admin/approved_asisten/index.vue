@@ -254,10 +254,6 @@
           </b-row>
         </div>
       </div>
-
-      <div v-if="loading" class="loading-page">
-        <b-spinner variant="primary" label="Loading..."></b-spinner>
-      </div>
     </section>
   </div>
 </template>
@@ -272,7 +268,6 @@ export default {
   },
   data() {
     return {
-      loading: false,
       main: true,
       allSelected: false,
       visibleRows: [],
@@ -384,8 +379,8 @@ export default {
     }
   },
   created() {
-    // console.log('created')
-    this.loading = true
+    console.log('created')
+    console.log('success');
     this.main = false
   },
   watchQuery: [
@@ -554,7 +549,6 @@ export default {
   },
 
   mounted() {
-    this.loading = false
     this.main = true
     if (this.$route.query.q_afdeling_id == null) {
       this.afdeling_id = [
@@ -570,7 +564,6 @@ export default {
       if (document.readyState == 'complete') {
         // console.log('Page completed with image and files!')
         // fetch to next page or some code
-        this.loading = false
         this.main = true
       }
     }
@@ -686,7 +679,7 @@ export default {
         //cek watchQuery end
 
         if (this.WatchGo() == 1) {
-          this.loading = true
+          this.$nuxt.$loading.start()
           this.main = false
           this.$router.push({
             path: this.$route.path,
@@ -829,7 +822,7 @@ export default {
             var i = 0
             let n = this.selectedData.length
 
-            this.loading = true
+            this.$nuxt.$loading.start()
             this.main = false
 
             this.$axios
@@ -847,7 +840,7 @@ export default {
                 })
 
                 this.$nuxt.refresh().then(() => {
-                  this.loading = false
+                  this.$nuxt.$loading.finish()
                   this.main = true
                 })
               })
@@ -881,7 +874,7 @@ export default {
               // console.log(this.activitied_at_start)
               // console.log(this.afdeling_id[0].id)
               // console.log(this.foreman_employee_id.employee_id)
-              this.loading = true
+              this.$nuxt.$loading.start()
               this.main = false
 
               let formData = new FormData()
@@ -914,7 +907,7 @@ export default {
                       })
 
                       this.$nuxt.refresh().then(() => {
-                        this.loading = false
+                        this.$nuxt.$loading.finish()
                         this.main = true
                       })
                     })
@@ -996,16 +989,4 @@ export default {
 </script>
 
 <style scoped>
-.loading-page {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.8);
-  text-align: center;
-  padding-top: 200px;
-  font-size: 30px;
-  font-family: sans-serif;
-}
 </style>
