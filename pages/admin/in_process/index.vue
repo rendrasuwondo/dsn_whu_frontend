@@ -153,7 +153,7 @@
                   query: {
                     tanggal: row.item.activitied_at,
                     mandor: `${row.item.afdeling_code} (${row.item.afdeling_id})`,
-                    afdeling: `${row.item.nik} - ${row.item.name}`
+                    afdelingCode: `${row.item.nik} - ${row.item.name}`
                   },
                 }"
                 variant="link"
@@ -171,7 +171,7 @@
                   query: {
                     tanggal: row.item.activitied_at,
                     mandor: `${row.item.afdeling_code} (${row.item.afdeling_id})`,
-                    afdeling: `${row.item.nik} - ${row.item.name}`
+                    afdelingCode: `${row.item.nik} - ${row.item.name}`
                   },
                 }"
                 variant="link"
@@ -398,10 +398,6 @@ export default {
       // btn_non_asisten: false,
     }
   },
-  created() {
-    console.log('created')
-    this.main = false
-  },
   watchQuery: [
     'q',
     'page',
@@ -544,27 +540,17 @@ export default {
     this.$nextTick(() => {
       this.$nuxt.$loading.start()
     })
+
+    setTimeout(() => this.$nuxt.$loading.finish(), 2000)
+
     document.onreadystatechange = () => {
+      console.log(document.readyState);
       if (document.readyState == 'complete') {
-        this.main = true
         this.$nextTick(() => {
           this.$nuxt.$loading.finish()
         })
       }
     }
-    // if (this.$route.query.q_afdeling_id == null) {
-    //   this.$axios.get(`/api/admin/lov_afdeling_default`).then((response) => {
-    //     this.afdeling_id = [
-    //       {
-    //         id: response.data.data.id,
-    //         code: response.data.data.code,
-    //       },
-    //     ]
-    //   })
-    // }
-    console.log('this.$auth')
-
-
   },
 
   methods: {
@@ -639,8 +625,7 @@ export default {
       // console.log(this.activitied_at_start)
 
       if (this.go == 1) {
-        this.$nuxt.$loading.start()
-        this.main = false
+        // this.$nuxt.$loading.start()
 
         // console.log('this.afdeling_id')
         // console.log(this.afdeling_id.id)
@@ -745,7 +730,6 @@ export default {
 
       //   if (this.go == 1) {
       //     this.$nuxt.$loading.start()
-      //     this.main = false
       //     this.$router.push({
       //       path: this.$route.path,
       //       query: {
@@ -829,8 +813,8 @@ export default {
     },
 
     ProcessDetail() {
-      this.$nuxt.$loading.start()
-      this.main = false
+      // this.$nuxt.$loading.start()
+      // this.main = false
     },
   },
   computed: {

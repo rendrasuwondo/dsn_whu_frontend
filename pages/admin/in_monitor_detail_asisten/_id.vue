@@ -719,7 +719,6 @@ export default {
     },
 
     InProcess() {
-      this.$nuxt.$loading.start()
       this.main = false
     },
     Verification() {

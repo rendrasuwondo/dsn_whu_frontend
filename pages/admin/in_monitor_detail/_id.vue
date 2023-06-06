@@ -779,15 +779,7 @@ export default {
       return x1 + x2
     },
 
-    // start() {
-    //   this.$nuxt.$loading.start()
-    // },
-    // finish() {
-    //   this.$nuxt.$loading.finish()
-    // },
-
     InProcess() {
-      // this.$nuxt.$loading.start()
       this.main = false
     },
 

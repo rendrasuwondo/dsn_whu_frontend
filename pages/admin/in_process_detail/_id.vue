@@ -269,7 +269,7 @@ export default {
     }
   },
 
-  props: ['date', 'afdeling', 'mandor'],
+  props: ['date', 'afdelingCode', 'mandor'],
   data() {
     return {
       detail: {
@@ -608,18 +608,6 @@ export default {
   },
 
   mounted() {
-    this.$nextTick(() => {
-      this.$nuxt.$loading.start()
-    })
-    document.onreadystatechange = () => {
-      if (document.readyState == 'complete') {
-        this.main = true
-        this.$nextTick(() => {
-          this.$nuxt.$loading.finish()
-        })
-      }
-    }
-
     if (this.$route.query.q_afdeling_id == null) {
       this.$axios.get(`/api/admin/lov_afdeling_default`).then((response) => {
         this.afdeling_id = [
@@ -630,11 +618,6 @@ export default {
         ]
       })
     }
-
-    this.$nextTick(() => {
-      this.$nuxt.$loading.start()
-      setTimeout(() => this.$nuxt.$loading.finish(), 500)
-    })
   },
 
   methods: {
@@ -796,15 +779,15 @@ export default {
       return x1 + x2
     },
 
-    start() {
-      this.loading = true
-    },
-    finish() {
-      this.loading = false
-    },
+    // start() {
+    //   this.loading = true
+    // },
+    // finish() {
+    //   this.loading = false
+    // },
 
     InProcess() {
-      this.loading = true
+      // this.loading = true
       this.main = false
     },
 
