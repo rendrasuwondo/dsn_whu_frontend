@@ -178,46 +178,11 @@
                 </b-td>
                 <b-td align="right" variant="secondary" colspan="4"></b-td>
               </b-tr>
-              <b-tr>
-                <b-td colspan="2" align="left"></b-td>
-                <b-td colspan="2" align="left">S/H1/H2</b-td>
-                <b-td align="right">
-                  {{ t_daily_progress.type_1.toFixed(2) }}
-                </b-td>
-                <b-td colspan="9"></b-td>
-              </b-tr>
-              <b-tr>
-                <b-td colspan="2" align="left"></b-td>
-                <b-td colspan="2" align="left">C/P1/P1</b-td>
-                <b-td align="right">
-                  {{ t_daily_progress.type_2.toFixed(2) }}
-                </b-td>
-                <b-td colspan="9"></b-td>
-              </b-tr>
-              <b-tr>
-                <b-td colspan="2" align="left"></b-td>
-                <b-td colspan="2" align="left">M</b-td>
-                <b-td align="right">
-                  {{ t_daily_progress.type_3.toFixed(2) }}
-                </b-td>
-                <b-td colspan="9"></b-td>
-              </b-tr>
             </template>
           </b-table>
 
           <!-- pagination -->
           <b-row>
-            <!-- <b-col>
-              <b-pagination
-                v-model="pagination.current_page"
-                :total-rows="pagination.total"
-                :per-page="pagination.per_page"
-                @change="changePage"
-                align="left"
-                class="mt-1"
-              >
-              </b-pagination>
-            </b-col> -->
             <b-col class="text-right" align-self="center">
               {{ rowcount }} data
             </b-col>
@@ -533,10 +498,6 @@ export default {
       }
     }
 
-    const t_daily_progress = await $axios.$get(
-      `/api/admin/master/attendance_daily_progress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}`
-    )
-
     return {
       posts: posts.data,
       pagination: posts.data,
@@ -546,7 +507,6 @@ export default {
       activitied_at_end: activitied_at_end,
       afdeling: afdeling_list.data,
       afdeling_id: afdeling_id,
-      t_daily_progress: t_daily_progress.data,
       department: department_list.data,
       department_id: department_id_asyncData,
     }
@@ -589,22 +549,6 @@ export default {
   },
 
   methods: {
-    // onChangeAfdeling() {
-    //   if (this.afdeling_id != null) {
-    //     if (
-    //       this.$auth.user.employee.activity_group_code == 'RAWAT' ||
-    //       this.$auth.user.employee.activity_group_code == 'BIBITAN'
-    //     ) {
-    //       this.$axios
-    //         .get(
-    //           `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.afdeling_id.afdeling_id}`
-    //         )
-    //         .then((response) => {
-    //           this.foreman = response.data.data
-    //         })
-    //     }
-    //   }
-    // },
 
     customLabel(afdeling) {
       return `${afdeling.code}` + ' (' + `${afdeling.id}` + ')'
