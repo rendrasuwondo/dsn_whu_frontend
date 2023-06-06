@@ -124,6 +124,7 @@
                 class="form-control"
                 v-on:keypress="NumbersOnly"
                 placeholder="Masukkan Nilai HK"
+                @change="onChangeHK"
               />
             </div>
 
@@ -283,6 +284,7 @@ export default {
   data() {
     return {
       state: 'disabled',
+      activity_max_limit: 0,
 
       show_hk: true,
       show_rate: false,
@@ -469,6 +471,19 @@ export default {
         this.show_hk = true
         this.show_rate = false
         this.field.flexrate = ''
+      }
+      this.activity_max_limit = this.field.activity_id.activity_max_limit
+    },
+
+    onChangeHK() {
+      this.activity_max_limit = this.field.activity_id.activity_max_limit
+      if (this.field.man_days > this.activity_max_limit) {
+        this.$swal.fire({
+          title: 'WARNING!',
+          html: `HK Tidak Boleh Lebih Dari Activity Limit (${this.activity_max_limit})!<br>`,
+          icon: 'warning',
+          showConfirmButton: true,
+        })
       }
     },
 
