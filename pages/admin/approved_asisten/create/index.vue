@@ -144,7 +144,6 @@
               <label>Rate</label>
               <money
                 v-model="field.flexrate"
-                v-bind="money"
                 prefix="Rp "
                 class="form-control"
               ></money>

@@ -378,11 +378,11 @@ export default {
       class_status: 'card-tools',
     }
   },
-  created() {
-    console.log('created')
-    console.log('success');
-    this.main = false
-  },
+  // created() {
+  //   console.log('created')
+  //   console.log('success');
+  //   this.main = false
+  // },
   watchQuery: [
     'q',
     'page',
@@ -552,6 +552,7 @@ export default {
     this.$nextTick(() => {
       this.$nuxt.$loading.start()
     })
+    setTimeout(() => this.$nuxt.$loading.finish(), 2000)
     document.onreadystatechange = () => {
       if (document.readyState == 'complete') {
         this.$nextTick(() => {
