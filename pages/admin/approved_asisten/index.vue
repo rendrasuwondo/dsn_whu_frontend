@@ -188,6 +188,7 @@
                     activitied_at_prepend: param_activitied_at_prepend,
                     activitied_at_append: param_activitied_at_append,
                     foreman_id: foreman_employee_id,
+                    elhm_status: elhm_status,
                   },
                 }"
                 variant="link"

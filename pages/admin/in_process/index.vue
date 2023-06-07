@@ -772,7 +772,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/lph/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_afdeling_id=${this.query_afdeling_id}`,
+        url: `/api/admin/workflow/in_process/export?q=${this.search}&q_afdeling_id=${this.query_afdeling_id}&q_activitied_at_start=${this.activitied_at_start}&q_activitied_at_end=${this.activitied_at_end}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important

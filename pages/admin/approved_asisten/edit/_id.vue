@@ -253,7 +253,7 @@
                 </b-col>
               </b-row>
             </div>
-            <button class="btn btn-info mr-1 btn-submit" type="submit">
+            <button class="btn btn-info mr-1 btn-submit" type="submit" v-show="this.approval">
               <i class="fa fa-paper-plane"></i> SIMPAN
             </button>
             <button
@@ -331,6 +331,7 @@ export default {
       validation: [],
       id: [],
       labour: [],
+      approval: false,
     }
   },
 
@@ -369,6 +370,20 @@ export default {
         this.field.is_assistance = response.data.data.is_assistance
         this.field.selected = response.data.data.selected
       })
+
+    switch (this.$route.query.elhm_status) {
+      case 'Approve Asisten':
+      case 'Approve Askep':
+      case 'Approve EH':
+        this.approval = false
+        break
+      default:
+        this.approval = true
+
+        break
+    }
+
+    console.log('this.approval', this.approval);
   },
 
   methods: {
