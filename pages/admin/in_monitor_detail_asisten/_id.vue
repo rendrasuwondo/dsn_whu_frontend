@@ -12,11 +12,11 @@
               <tr>
                 <td @click="InProcess()">
                   <nuxt-link
-                    :to="{ name: 'admin-in_process' }"
+                    :to="{ name: 'admin-in_monitor' }"
                     class="nav-link"
                   >
                     <i class="nav-icon fas fa-id-badge"></i>
-                    In Process
+                    In Monitor
                   </nuxt-link>
                 </td>
                 <td>/ Detail</td>
@@ -28,7 +28,7 @@
         <div class="card-body">
           <b-card
             border-variant="primary"
-            header="Detail"
+            header="Filter"
             header-bg-variant="info"
             header-text-variant="white"
           >
@@ -38,8 +38,8 @@
                   <b-col cols="2">Tanggal:</b-col>
                   <b-col cols="4">
                     <b-input-group>
-                      <b-form-input
-                        :type="date"
+                      <b-form-datepicker
+                        v-model="activitied_at_start"
                         :date-format-options="{
                           year: 'numeric',
                           month: 'short',
@@ -47,20 +47,37 @@
                           weekday: 'short',
                         }"
                         size="sm"
-                        :disabled="true"
-                        v-model="detail.tanggal"
-                      ></b-form-input>
+                      ></b-form-datepicker>
+                      <template #append>
+                        <b-btn size="sm" @click="activitied_at_start = ''"
+                          ><i class="fa fa-trash"></i
+                        ></b-btn>
+                      </template>
                     </b-input-group>
                   </b-col>
-                  <b-col cols="2">Mandor:</b-col>
                   <b-col cols="4">
-                    <div class="form-group">
-                      <b-form-input
+                    <b-input-group>
+                      <b-form-datepicker
+                        v-show="false"
+                        v-model="activitied_at_end"
+                        :date-format-options="{
+                          year: 'numeric',
+                          month: 'short',
+                          day: '2-digit',
+                          weekday: 'short',
+                        }"
                         size="sm"
-                        :disabled="true"
-                        v-model="detail.mandor"
-                      ></b-form-input></div
-                  ></b-col>
+                      ></b-form-datepicker>
+                      <template #append>
+                        <b-btn
+                          size="sm"
+                          @click="activitied_at_end = ''"
+                          v-show="false"
+                          ><i class="fa fa-trash"></i
+                        ></b-btn>
+                      </template>
+                    </b-input-group>
+                  </b-col>
                 </b-row>
               </b-container>
               <b-container class="bv-example-row">
@@ -68,12 +85,30 @@
                   <b-col cols="2">Afdeling:</b-col>
                   <b-col cols="4">
                     <div class="form-group">
-                      <b-form-input
+                      <multiselect
+                        v-model="afdeling_id"
+                        :options="afdeling"
                         :custom-label="customLabel"
-                        size="sm"
-                        :disabled="true"
-                        v-model="detail.afdelingCode"
-                      ></b-form-input></div
+                        x
+                        track-by="id"
+                        :searchable="true"
+                        @input="onChangeAfdeling"
+                      ></multiselect></div
+                  ></b-col>
+                </b-row>
+              </b-container>
+              <b-container class="bv-example-row">
+                <b-row>
+                  <b-col cols="2">Mandor</b-col>
+                  <b-col cols="5">
+                    <div class="form-group">
+                      <multiselect
+                        v-model="foreman_employee_id"
+                        :options="foreman"
+                        label="employee_description"
+                        track-by="employee_id"
+                        :searchable="true"
+                      ></multiselect></div
                   ></b-col>
                 </b-row>
               </b-container>
@@ -110,97 +145,73 @@
           <b-table
             small
             responsive
+            striped
             bordered
             hover
-            class="table-1"
             :items="posts"
             :fields="fields"
             show-empty
+            outlined
             v-model="visibleRows"
-            head-variant="light"
           >
-            <template v-slot:thead-top="data">
-              <b-tr>
-                <b-th variant="primary" colspan="6"></b-th>
-                <b-th variant="danger" colspan="3" class="text-center">HK</b-th>
-                <b-th variant="danger" colspan="3" class="text-center"
-                  >Volume</b-th
+            <template v-slot:head(selected)="data">
+              <span
+                ><b-form-checkbox
+                  @click.native.stop
+                  @change="select"
+                  v-model="allSelected"
                 >
-                <b-th variant="danger" colspan="4"></b-th>
-              </b-tr>
+                </b-form-checkbox
+              ></span>
             </template>
-            <template v-slot:cell(detail_hap)="row">
-              <div>{{ row.item.wide }}</div>
+            <template v-slot:cell(selected)="row">
+              <b-form-group>
+                <input type="checkbox" v-model="row.item.selected" />
+              </b-form-group>
+            </template>
+            <template v-slot:cell(actions)="row">
+              <b-button
+                :to="{
+                  name: 'admin-in_monitor_detail_asisten-edit-id',
+                  params: { id: row.item.id },
+                  query: {
+                    id: $route.params.id,
+                  },
+                }"
+                variant="link"
+                size="sm"
+                title="Edit"
+              >
+                <i class="fa fa-pencil-alt"></i>
+              </b-button>
             </template>
             <template v-slot:custom-foot="data">
               <b-tr>
-                <b-td colspan="2" align="left" variant="secondary"></b-td>
-                <b-td colspan="2" align="left" variant="secondary"
-                  ><b>Total</b></b-td
+                <b-td colspan="3"
+                  ><b-button
+                    size="sm"
+                    variant="outline-primary"
+                    @click="Verification"
+                    v-if="rowcount > 0"
+                    >Verifikasi</b-button
+                  ></b-td
                 >
-                <b-td align="right" variant="secondary">
-                  <b> {{ TotalManDaysBasic.toFixed(2) }}</b>
-                </b-td>
-                <b-td align="right" variant="secondary">
-                  <b> {{ TotalManDaysPremi.toFixed(2) }}</b>
-                </b-td>
-                <b-td align="right" variant="secondary">
-                  <b> {{ TotalManDaysTotal.toFixed(2) }}</b>
-                </b-td>
-                <b-td align="right" variant="secondary">
-                  <b> {{ addCommas(TotalQtyBasic.toFixed(2)) }}</b>
-                </b-td>
-                <b-td align="right" variant="secondary">
-                  <b>{{ addCommas(TotalQtyPremi.toFixed(2)) }}</b>
-                </b-td>
-                <b-td align="right" variant="secondary">
-                  <b> {{ addCommas(TotalQtyTotal.toFixed(2)) }}</b>
-                </b-td>
-                <b-td align="right" variant="secondary" colspan="4"></b-td>
-              </b-tr>
-              <b-tr>
-                <b-td colspan="2" align="left"></b-td>
-                <b-td colspan="2" align="left">S/H1/H2</b-td>
+                <!-- <b-td colspan="3">Total</b-td>
                 <b-td align="right">
-                  {{ t_daily_progress.type_1.toFixed(2) }}
-                </b-td>
-                <b-td colspan="9"></b-td>
-              </b-tr>
-              <b-tr>
-                <b-td colspan="2" align="left"></b-td>
-                <b-td colspan="2" align="left">C/P1/P1</b-td>
+                  {{ new Intl.NumberFormat('es-US').format(TOTAL_HK) }}</b-td
+                >
                 <b-td align="right">
-                  {{ t_daily_progress.type_2.toFixed(2) }}
-                </b-td>
-                <b-td colspan="9"></b-td>
-              </b-tr>
-              <b-tr>
-                <b-td colspan="2" align="left"></b-td>
-                <b-td colspan="2" align="left">M</b-td>
-                <b-td align="right">
-                  {{ t_daily_progress.type_3.toFixed(2) }}
-                </b-td>
-                <b-td colspan="9"></b-td>
+                  {{
+                    new Intl.NumberFormat('es-US').format(TOTAL_VOLUME)
+                  }}</b-td
+                > -->
               </b-tr>
             </template>
           </b-table>
-
-          <!-- pagination -->
           <b-row>
-            <!-- <b-col>
-                  <b-pagination
-                    v-model="pagination.current_page"
-                    :total-rows="pagination.total"
-                    :per-page="pagination.per_page"
-                    @change="changePage"
-                    align="left"
-                    class="mt-1"
-                  >
-                  </b-pagination>
-                </b-col> -->
-            <b-col class="text-right" align-self="center">
-              {{ rowcount }} data
-            </b-col>
+            <b-col class="text-right" align-self="center"
+              >{{ rowcount }} data</b-col
+            >
           </b-row>
         </div>
       </div>
@@ -252,10 +263,6 @@
           </b-card-group>
         </div>
       </div>
-
-      <div v-if="loading" class="loading-page">
-        <p>Loading...</p>
-      </div>
     </section>
   </div>
 </template>
@@ -265,19 +272,11 @@ export default {
   layout: 'admin',
   head() {
     return {
-      title: 'Laporan Harian Mandor',
+      title: 'IN Process Detail',
     }
   },
-
-  props: ['date', 'afdelingCode', 'mandor'],
   data() {
     return {
-      detail: {
-        tanggal: this.$route.query.tanggal,
-        mandor: this.$route.query.mandor,
-        afdelingCode: this.$route.query.afdeling,
-      },
-      loading: false,
       main: true,
       allSelected: false,
       visibleRows: [],
@@ -287,144 +286,89 @@ export default {
       afdeling: [],
       fields: [
         {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'NPK',
-          key: 'labour_nik',
+          label: 'Approve',
+          key: 'selected',
+          tdClass: 'align-middle text-center text-nowrap nameOfTheClass ',
+          sortable: false,
+        },
+        {
+          label: '#',
+          key: 'actions',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass ',
+        },
+        {
+          label: 'Status',
+          key: 'verification_status_code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Nama Pekerja',
-          key: 'labour_name',
+          label: 'Tanggal',
+          key: 'activitied_at',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          label: 'SKU',
+          key: 'labour_employee',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+
+        {
+          label: 'Jenis Pekerjaan',
+          key: 'activity_description',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+
+        {
+          label: 'HK',
+          key: 'man_days',
+          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+          formatter: (value, key, item) => {
+            let formatter = new Intl.NumberFormat('es-US')
+            return formatter.format(value)
+          },
+        },
+        {
+          label: 'Volume',
+          key: 'qty',
+          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+          formatter: (value, key, item) => {
+            let formatter = new Intl.NumberFormat('es-US')
+            return formatter.format(value)
+          },
+        },
+        {
+          label: 'Rate',
+          key: 'flexrate',
+          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+          // formatter: (value, key, item) =>
+          //   value.toLocaleString(undefined, {
+          //     minimumFractionDigits: 2,
+          //     maximumFractionDigits: 2,
+          //   }),
+        },
+        {
           label: 'Blok',
           key: 'block',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Luas',
-          key: 'wide',
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+          label: 'Afd',
+          key: 'afdeling_code',
+          thClass: 'd-none',
+          tdClass: 'align-middle text-right text-nowrap d-none',
         },
         {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Jenis Pekerjaan',
-          key: 'activity_description',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          label: 'Estate',
+          key: 'department_code',
+          thClass: 'd-none',
+          tdClass: 'align-middle text-left text-nowrap d-none',
         },
+
         {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Satuan',
-          key: 'activity_unit_code',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Basic',
-          key: 'man_days_basic',
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Premi',
-          key: 'man_days_premi',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Total',
-          key: 'man_days_total',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Basic',
-          key: 'qty_basic',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Premi',
-          key: 'qty_premi',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Total',
-          key: 'qty_total',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Unit',
-          key: 'unit',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Norm',
-          key: 'norm',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+          label: 'Mandor',
+          key: 'foreman_employee',
+          thClass: 'd-none',
+          tdClass: 'align-middle text-left text-nowrap d-none',
         },
       ],
       company_code: '',
@@ -437,6 +381,10 @@ export default {
       query_foreman_employee_id: '',
       afdeling_default: '',
     }
+  },
+  created() {
+    // console.log('created')
+    // this.main = false
   },
   watchQuery: [
     'q',
@@ -553,26 +501,13 @@ export default {
     //  console.log('rdr')
     //  console.log($auth)
 
+    // const posts = await $axios.$get(
+    //   `/api/admin/workflow/in_process_detail?id=${route.params.id}`
+    // )
+
     const posts = await $axios.$get(
-      `/api/admin/workflow/in_process_detail?id=${route.params.id}`
+      `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=2023-03-23&activitied_at_append=2023-03-23&q_foreman_employee_id=12027&q_afdeling_id=DW22A`
     )
-
-    const global_param = await $axios.$get(
-      `/api/admin/global_param?q=MAX_HK_RAWAT`
-    )
-
-    let thresholdManDays = 0 // Default Value
-    if (typeof global_param.data.data !== 'undefined' && global_param.data.data.length > 0) {
-      thresholdManDays = global_param.data.data[0].value_1
-    }
-
-    for (var i = 0; i < posts.data.length; i++) {
-      if(posts.data[i].man_days_total > thresholdManDays) {
-        posts.data[i]._rowVariant = 'danger'
-      } else {
-        posts.data[i]._rowVariant = ''
-      }
-    }
 
     const t_elhm_ctl = await $axios.$get(
       `/api/admin/workflow/t_elhm_ctl?id=${route.params.id}`
@@ -585,9 +520,7 @@ export default {
     console.log('t_elhm_message')
     console.log(t_elhm_message.data[0])
 
-    const t_daily_progress = await $axios.$get(
-      `/api/admin/master/attendance_daily_progress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}`
-    )
+
 
     // console.log('Berhasil')
     return {
@@ -599,7 +532,6 @@ export default {
       activitied_at_end: activitied_at_end,
       afdeling: afdeling_list.data,
       afdeling_id: afdeling_id,
-      t_daily_progress: t_daily_progress.data,
       foreman: foreman_list.data,
       foreman_employee_id: foreman_employee_id,
       t_elhm_ctl: t_elhm_ctl.data[0],
@@ -779,18 +711,69 @@ export default {
       return x1 + x2
     },
 
-    // start() {
-    //   this.loading = true
-    // },
-    // finish() {
-    //   this.loading = false
-    // },
-
-    InProcess() {
+    start() {
       // this.loading = true
-      this.main = false
+    },
+    finish() {
+      // this.loading = false
     },
 
+    InProcess() {
+      this.main = false
+    },
+    Verification() {
+      this.$swal
+        .fire({
+          title: 'APAKAH ANDA YAKIN ?',
+          text: 'Melakukan verifikasi !',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#3085d6',
+          confirmButtonText: 'YA',
+          cancelButtonText: 'TIDAK',
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.$nuxt.$loading.start()
+            this.main = false
+
+            this.selectedData = []
+            this.posts.forEach((el) => {
+              // if (el.selected == true) {
+              //   this.selectedData.push(el)
+              // }
+              this.selectedData.push(el)
+            })
+            console.log(this.selectedData)
+
+            var i = 0
+            let n = this.selectedData.length
+
+            this.$axios
+              .post(
+                `/api/admin/update_activity_actual_status`,
+                this.selectedData
+              )
+              .then(() => {
+                this.$swal.fire({
+                  title: 'BERHASIL!',
+                  text: 'Data Berhasil Diupdate!',
+                  icon: 'success',
+                  showConfirmButton: false,
+                  timer: 2000,
+                })
+
+                this.$nuxt.refresh().then(() => {
+                  this.$nuxt.$loading.finish()
+                  this.main = true
+                })
+
+
+              })
+          }
+        })
+    },
     Submit() {
       this.$swal
         .fire({
@@ -916,7 +899,7 @@ export default {
                         })
 
                         this.$router.push({
-                          name: 'admin-in_process',
+                          name: 'admin-in_monitor',
                           params: { id: this.$route.params.id, r: 1 },
                         })
                       })
@@ -1006,7 +989,7 @@ export default {
                         })
 
                         this.$router.push({
-                          name: 'admin-in_process',
+                          name: 'admin-in_monitor',
                           params: { id: this.$route.params.id, r: 1 },
                         })
                       })
@@ -1064,18 +1047,6 @@ export default {
 </script>
 
 <style scoped>
-.loading-page {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.8);
-  text-align: center;
-  padding-top: 200px;
-  font-size: 30px;
-  font-family: sans-serif;
-}
 .table-1 {
   font-size: 14px;
 }

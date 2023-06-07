@@ -5,17 +5,30 @@
     </section>
 
     <section class="content">
-      <div class="card card-outline card-info">
+      <div class="card card-outline card-info" v-if="main">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-clipboard"></i> LAPORAN PROGRES HARIAN
+            <table>
+              <tr>
+                <td @click="InProcess()">
+                  <router-link
+                    :to="{ name: 'admin-in_monitor' }"
+                    class="nav-link"
+                  >
+                    <i class="nav-icon fas fa-id-badge"></i>
+                    In Monitor
+                  </router-link>
+                </td>
+                <td>/ Detail</td>
+              </tr>
+            </table>
           </h3>
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
           <b-card
             border-variant="primary"
-            header="Filter"
+            header="Detail"
             header-bg-variant="info"
             header-text-variant="white"
           >
@@ -25,8 +38,8 @@
                   <b-col cols="2">Tanggal:</b-col>
                   <b-col cols="4">
                     <b-input-group>
-                      <b-form-datepicker
-                        v-model="activitied_at_start"
+                      <b-form-input
+                        :type="date"
                         :date-format-options="{
                           year: 'numeric',
                           month: 'short',
@@ -34,51 +47,19 @@
                           weekday: 'short',
                         }"
                         size="sm"
-                      ></b-form-datepicker>
-                      <template #append>
-                        <b-btn size="sm" @click="activitied_at_start = ''"
-                          ><i class="fa fa-trash"></i
-                        ></b-btn>
-                      </template>
+                        :disabled="true"
+                        v-model="detail.tanggal"
+                      ></b-form-input>
                     </b-input-group>
                   </b-col>
-                  <b-col cols="4">
-                    <b-input-group>
-                      <b-form-datepicker
-                        v-show="true"
-                        v-model="activitied_at_end"
-                        :date-format-options="{
-                          year: 'numeric',
-                          month: 'short',
-                          day: '2-digit',
-                          weekday: 'short',
-                        }"
-                        size="sm"
-                      ></b-form-datepicker>
-                      <template #append>
-                        <b-btn
-                          size="sm"
-                          @click="activitied_at_end = ''"
-                          v-show="true"
-                          ><i class="fa fa-trash"></i
-                        ></b-btn>
-                      </template>
-                    </b-input-group>
-                  </b-col>
-                </b-row>
-              </b-container>
-              <b-container class="bv-example-row">
-                <b-row>
-                  <b-col cols="2">Estate:</b-col>
+                  <b-col cols="2">Mandor:</b-col>
                   <b-col cols="4">
                     <div class="form-group">
-                      <multiselect
-                        v-model="department_id"
-                        :options="department"
-                        label="department_code"
-                        track-by="department_id"
-                        :searchable="true"
-                      ></multiselect></div
+                      <b-form-input
+                        size="sm"
+                        :disabled="true"
+                        v-model="detail.mandor"
+                      ></b-form-input></div
                   ></b-col>
                 </b-row>
               </b-container>
@@ -87,13 +68,12 @@
                   <b-col cols="2">Afdeling:</b-col>
                   <b-col cols="4">
                     <div class="form-group">
-                      <multiselect
-                        v-model="afdeling_id"
-                        :options="afdeling"
+                      <b-form-input
                         :custom-label="customLabel"
-                        track-by="id"
-                        :searchable="true"
-                      ></multiselect></div
+                        size="sm"
+                        :disabled="true"
+                        v-model="detail.afdelingCode"
+                      ></b-form-input></div
                   ></b-col>
                 </b-row>
               </b-container>
@@ -141,7 +121,7 @@
           >
             <template v-slot:thead-top="data">
               <b-tr>
-                <b-th variant="primary" colspan="4"></b-th>
+                <b-th variant="primary" colspan="6"></b-th>
                 <b-th variant="danger" colspan="3" class="text-center">HK</b-th>
                 <b-th variant="danger" colspan="3" class="text-center"
                   >Volume</b-th
@@ -208,21 +188,73 @@
           <!-- pagination -->
           <b-row>
             <!-- <b-col>
-              <b-pagination
-                v-model="pagination.current_page"
-                :total-rows="pagination.total"
-                :per-page="pagination.per_page"
-                @change="changePage"
-                align="left"
-                class="mt-1"
-              >
-              </b-pagination>
-            </b-col> -->
+                  <b-pagination
+                    v-model="pagination.current_page"
+                    :total-rows="pagination.total"
+                    :per-page="pagination.per_page"
+                    @change="changePage"
+                    align="left"
+                    class="mt-1"
+                  >
+                  </b-pagination>
+                </b-col> -->
             <b-col class="text-right" align-self="center">
               {{ rowcount }} data
             </b-col>
           </b-row>
         </div>
+      </div>
+
+      <div class="card card-outline card-info">
+        <div class="card-body">
+          <b-card-group deck>
+            <b-card title="" header-tag="header" header-bg-variant="secondary">
+              <template #header>
+                <h6 class="mb-0">Message</h6>
+              </template>
+
+              <div class="direct-chat-messages">
+                <div v-for="item in t_elhm_message">
+                  <div class="direct-chat-msg">
+                    <div class="direct-chat-infos clearfix">
+                      <span class="direct-chat-name float-left">{{
+                        item.prev_name_submit
+                      }}</span>
+                      <span class="direct-chat-timestamp float-right">{{
+                        item.send_date
+                      }}</span>
+                    </div>
+                    <!-- /.direct-chat-infos -->
+                    <img
+                      class="direct-chat-img"
+                      src="dist/img/user1-128x128.jpg"
+                      alt="message user image"
+                    />
+                    <!-- /.direct-chat-img -->
+                    <div class="direct-chat-text">
+                      {{ item.message }}
+                    </div>
+                    <!-- /.direct-chat-text -->
+                  </div>
+                  <!-- /.direct-chat-msg -->
+                </div>
+              </div>
+            </b-card>
+            <b-card title="" header-tag="header" header-bg-variant="secondary">
+              <template #header>
+                <h6 class="mb-0">Approval</h6>
+              </template>
+              <!-- <b-card-text>Header and footers using slots.</b-card-text> -->
+              <b-button href="#" variant="primary" @click="Submit()"
+                >Submit</b-button
+              >
+            </b-card>
+          </b-card-group>
+        </div>
+      </div>
+
+      <div v-if="loading" class="loading-page">
+        <p>Loading...</p>
       </div>
     </section>
   </div>
@@ -233,19 +265,39 @@ export default {
   layout: 'admin',
   head() {
     return {
-      title: 'Progress Harian',
+      title: 'Laporan Harian Mandor',
     }
   },
+
+  props: ['date', 'afdelingCode', 'mandor'],
   data() {
     return {
+      detail: {
+        tanggal: this.$route.query.tanggal,
+        mandor: this.$route.query.mandor,
+        afdelingCode: this.$route.query.afdeling,
+      },
+      loading: false,
+      main: true,
       allSelected: false,
       visibleRows: [],
       show_page: false,
       show_submit: true,
       foreman: [],
       afdeling: [],
-      department: [],
       fields: [
+        {
+          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          label: 'NPK',
+          key: 'labour_nik',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          label: 'Nama Pekerja',
+          key: 'labour_name',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Blok',
@@ -256,7 +308,7 @@ export default {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Luas',
           key: 'wide',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
@@ -374,27 +426,16 @@ export default {
           },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Keterangan',
-          key: 'description',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Status',
-          key: 'status',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
       ],
       company_code: '',
       department_code: '',
       param_activitied_at_prepend: this.$route.query.activitied_at_prepend,
       param_activitied_at_append: this.$route.query.activitied_at_append,
       afdeling_id: this.$route.query.q_afdeling_id,
+      foreman_employee_id: this.$route.query.q_foreman_employee_id,
       query_afdeling_id: '',
+      query_foreman_employee_id: '',
       afdeling_default: '',
-      department_id: this.$route.query.q_department_id,
     }
   },
   watchQuery: [
@@ -403,10 +444,10 @@ export default {
     'activitied_at_prepend',
     'activitied_at_append',
     'q_afdeling_id',
-    'q_department_id',
+    'q_foreman_employee_id',
   ],
 
-  async asyncData({ $axios, query, auth }) {
+  async asyncData({ $axios, query, $auth, route }) {
     function currentDate() {
       const current = new Date()
       current.setDate(current.getDate())
@@ -433,9 +474,6 @@ export default {
       ? query.activitied_at_append
       : currentDate()
 
-    // user
-    const user = await $axios.$get(`/api/admin/user`)
-
     // afdeling_id
     const afdeling_list = await $axios.$get(
       `/api/admin/lov_afdeling_daily_progress`
@@ -454,7 +492,7 @@ export default {
     let afdeling_code = []
 
     if (query.q_afdeling_id) {
-      $axios
+      await $axios
         .get(
           `/api/admin/lov_afdeling_daily_progress?q_afdeling_id=${q_afdeling_id}`
         )
@@ -467,53 +505,56 @@ export default {
       afdeling_id = []
 
       q_afdeling_id = afdeling_default.data.id
-
-      if (user.employee.position_code != 'ASISTEN AFDELING') {
-        q_afdeling_id = ''
-      }
     }
 
     if (q_afdeling_id == undefined || q_afdeling_id == '') {
       q_afdeling_id = afdeling_default.data.id
-
-      if (user.employee.position_code != 'ASISTEN AFDELING') {
-        q_afdeling_id = ''
-      }
     }
 
-    //department
-    let department_id_asyncData = []
-
-    const department_list = await $axios.$get(
-      `/api/admin/lov_employee_department`
+    const foreman_list = await $axios.$get(
+      `/api/admin/lov_foreman_maintenance?afdeling_id=${q_afdeling_id}`
     )
+    // console.log('rdr')
+    // console.log(`/api/admin/lov_foreman_maintenance?afdeling_id=${q_afdeling_id}`)
+    let q_foreman_employee_id = query.q_foreman_employee_id
+      ? query.q_foreman_employee_id
+      : ''
+    let foreman_employee_id = []
 
-    const department_default = await $axios.$get(
-      `/api/admin/lov_department_default`
-    )
-
-    let q_department_id = query.q_department_id
-      ? query.q_department_id
-      : department_default.data.department_id
-
-    if (query.q_department_id) {
-      $axios
+    if (query.q_foreman_employee_id) {
+      //Mandor
+      await $axios
         .get(
-          `/api/admin/lov_employee_department?q_department_id=${q_department_id}`
+          `/api/admin/lov_foreman_maintenance?afdeling_id=${q_afdeling_id}&foreman_id=${q_foreman_employee_id}`
         )
         .then((response) => {
-          // console.log('rdr')
+          foreman_employee_id = response.data.data[0]
+          // console.log('cekkkkk')
           // console.log(response.data.data)
-          department_id_asyncData = response.data.data
         })
+    } else {
+      await $axios
+        .get(
+          `/api/admin/lov_foreman_maintenance?afdeling_id=${q_afdeling_id}&foreman_id=${q_foreman_employee_id}`
+        )
+        .then((response) => {
+          foreman_employee_id = response.data.data[0]
+          // console.log('cekkkkk')
+          // console.log(response.data.data)
+        })
+
+      q_foreman_employee_id = foreman_employee_id.employee_id
+    } //if (query.foreman_id) {
+
+    if (q_foreman_employee_id == undefined) {
+      q_foreman_employee_id = ''
     }
 
-    // console.log('rdr')
-    // console.log(this.auth.user)
-    //department end
+    //  console.log('rdr')
+    //  console.log($auth)
 
     const posts = await $axios.$get(
-      `/api/admin/report/lph?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}&q_department_id=${q_department_id}`
+      `/api/admin/workflow/in_monitor_detail?id=${route.params.id}`
     )
 
     const global_param = await $axios.$get(
@@ -533,10 +574,22 @@ export default {
       }
     }
 
+    const t_elhm_ctl = await $axios.$get(
+      `/api/admin/workflow/t_elhm_ctl?id=${route.params.id}`
+    )
+
+    const t_elhm_message = await $axios.$get(
+      `/api/admin/workflow/t_elhm_message?t_elhm_id=${t_elhm_ctl.data[0].t_elhm_id}`
+    )
+
+    console.log('t_elhm_message')
+    console.log(t_elhm_message.data[0])
+
     const t_daily_progress = await $axios.$get(
       `/api/admin/master/attendance_daily_progress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}`
     )
 
+    // console.log('Berhasil')
     return {
       posts: posts.data,
       pagination: posts.data,
@@ -547,65 +600,47 @@ export default {
       afdeling: afdeling_list.data,
       afdeling_id: afdeling_id,
       t_daily_progress: t_daily_progress.data,
-      department: department_list.data,
-      department_id: department_id_asyncData,
+      foreman: foreman_list.data,
+      foreman_employee_id: foreman_employee_id,
+      t_elhm_ctl: t_elhm_ctl.data[0],
+      t_elhm_message: t_elhm_message.data,
     }
   },
 
   mounted() {
-    this.$nextTick(() => {
-      this.$nuxt.$loading.start()
-    })
-    setTimeout(() => this.$nuxt.$loading.finish(), 2000)
-    document.onreadystatechange = () => {
-      if (document.readyState == 'complete') {
-        this.$nextTick(() => {
-          this.$nuxt.$loading.finish()
-        })
-      }
-    }
-
-    if (this.user.employee.position_code == 'ASISTEN AFDELING') {
-      if (this.$route.query.q_afdeling_id == null) {
-        this.$axios.get(`/api/admin/lov_afdeling_default`).then((response) => {
-          this.afdeling_id = [
-            {
-              id: response.data.data.id,
-              code: response.data.data.code,
-            },
-          ]
-        })
-      }
-    }
-    // console.log(this.user.employee.position_code)
-
-    if (this.$route.query.q_department_id == null) {
-      this.department_id = [
-        {
-          department_id: this.user.employee.department_id,
-          department_code: this.user.employee.department_code,
-        },
-      ]
+    if (this.$route.query.q_afdeling_id == null) {
+      this.$axios.get(`/api/admin/lov_afdeling_default`).then((response) => {
+        this.afdeling_id = [
+          {
+            id: response.data.data.id,
+            code: response.data.data.code,
+          },
+        ]
+      })
     }
   },
 
   methods: {
-    // onChangeAfdeling() {
-    //   if (this.afdeling_id != null) {
-    //     if (
-    //       this.$auth.user.employee.activity_group_code == 'RAWAT' ||
-    //       this.$auth.user.employee.activity_group_code == 'BIBITAN'
-    //     ) {
-    //       this.$axios
-    //         .get(
-    //           `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.afdeling_id.afdeling_id}`
-    //         )
-    //         .then((response) => {
-    //           this.foreman = response.data.data
-    //         })
-    //     }
-    //   }
-    // },
+    onChangeAfdeling() {
+      // console.log (this.afdeling_id.id)
+      if (this.afdeling_id.id != null) {
+        this.$axios
+          .get(
+            `/api/admin/lov_foreman_maintenance?afdeling_id=${this.afdeling_id.id}`
+          )
+          .then((response) => {
+            this.foreman = response.data.data
+
+            this.$axios
+              .get(
+                `/api/admin/lov_foreman_maintenance?afdeling_id=${this.afdeling_id.id}`
+              )
+              .then((response) => {
+                this.foreman_employee_id = response.data.data[0]
+              })
+          })
+      }
+    },
 
     customLabel(afdeling) {
       return `${afdeling.code}` + ' (' + `${afdeling.id}` + ')'
@@ -631,44 +666,49 @@ export default {
     },
     //searchData
     searchData() {
-      this.$nuxt.$loading.start();
-      console.log('rdr')
-      console.log(this.afdeling_id)
+      // this.loading = true
 
-      if (this.afdeling_id == null) {
-        this.vafdeling = ''
-      } else {
-        if (this.afdeling_id[0] == undefined) {
-          this.vafdeling = this.afdeling_id.id
+      try {
+        if (this.afdeling_id.id === null) {
+          this.query_afdeling_id = this.$route.query.q_afdeling_id
+        } else if (this.afdeling_id.id === undefined) {
+          this.query_afdeling_id = this.$route.query.q_afdeling_id
         } else {
-          this.vafdeling = this.afdeling_id[0].id
+          this.query_afdeling_id = this.afdeling_id.id
+            ? this.afdeling_id.id
+            : ''
         }
-      }
+      } catch (err) {}
 
-      if (this.department_id == null || this.department_id == undefined) {
-        this.vdepartment = ''
-      } else {
-        if (this.department_id.length == 0) {
-          this.vdepartment = ''
+      try {
+        if (this.foreman_employee_id.id === null) {
+          this.query_foreman_employee_id =
+            this.$route.query.q_foreman_employee_id
+        } else if (this.foreman_employee_id.id === undefined) {
+          this.query_foreman_employee_id =
+            this.$route.query.q_foreman_employee_id
         } else {
-          if (this.department_id[0] == undefined) {
-            this.vdepartment = this.department_id.department_id
-          } else {
-            this.vdepartment = this.department_id[0].department_id
-          }
+          this.query_foreman_employee_id = this.foreman_employee_id.id
+            ? this.foreman_employee_id.employee_id
+            : ''
         }
-      }
+      } catch (err) {}
 
+      // console.log(this.activitied_at_start.getFullYear())
+      // console.log(this.afdeling_id[0].id)
+      console.log('cari')
       this.$router.push({
         path: this.$route.path,
         query: {
           q: this.search,
           activitied_at_prepend: this.activitied_at_start,
           activitied_at_append: this.activitied_at_end,
-          q_afdeling_id: this.vafdeling,
-          q_department_id: this.query_department_id
-            ? this.query_department_id
-            : this.vdepartment,
+          q_afdeling_id: this.query_afdeling_id
+            ? this.query_afdeling_id
+            : this.afdeling_id[0].id,
+          q_foreman_employee_id: this.query_foreman_employee_id
+            ? this.query_foreman_employee_id
+            : this.foreman_employee_id[0].id,
         },
       })
     },
@@ -738,6 +778,236 @@ export default {
       }
       return x1 + x2
     },
+
+    InProcess() {
+      this.main = false
+    },
+
+    Submit() {
+      this.$swal
+        .fire({
+          title: 'Approval',
+          input: 'textarea',
+          html:
+            '<select id="approval" name="approval" class="form-control">' +
+            '<option value="Y">Approve</option>' +
+            '<option value="N">Reject</option>' +
+            '</select>',
+          icon: 'warning',
+          inputPlaceholder: 'Message',
+          showCancelButton: true,
+
+          reverseButtons: true,
+          confirmButtonText: 'Submit',
+
+          denyButtonColor: '#3085d6',
+          allowOutsideClick: true,
+          customClass: {
+            validationMessage: 'my-validation-message',
+          },
+          preConfirm: (value) => {
+            if (!value && document.getElementById('approval').value == 'N') {
+              // console.log('preConfirm')
+              // console.log(document.getElementById('approval').value)
+              this.$swal.showValidationMessage(
+                '<i class="fa fa-info-circle"></i> Message harus diisi!'
+              )
+            }
+          },
+        })
+        .then((result) => {
+          // console.log('result')
+          // console.log(document.getElementById('approval').value)
+          // console.log(result)
+          let msg
+          msg = result.value
+          if (result.isConfirmed) {
+            if ($('#approval').val() == 'Y') {
+              // console.log('approve')
+              // console.log(this.t_elhm_ctl.activitied_at)
+              this.$swal
+                .fire({
+                  title: 'Komfirmasi',
+                  html:
+                    '<div>Anda yakin akan melakukan Approve?</div>' +
+                    '<div><b-container>' +
+                    '<b-row>' +
+                    '<b-col>Tanggal</b-col>' +
+                    '<b-col>&nbsp;:&nbsp;</b-col>' +
+                    '<b-col>' +
+                    this.t_elhm_ctl.activitied_at +
+                    '</b-col>' +
+                    '</b-row>' +
+                    '</b-container>' +
+                    '</div>' +
+                    '<div><b-container>' +
+                    '<b-row>' +
+                    '<b-col>Estate</b-col>' +
+                    '<b-col>&nbsp;:&nbsp;</b-col>' +
+                    '<b-col>' +
+                    this.t_elhm_ctl.department_code +
+                    '</b-col>' +
+                    '</b-row>' +
+                    '</b-container>' +
+                    '</div>' +
+                    '<div><b-container>' +
+                    '<b-row>' +
+                    '<b-col>Afdeling</b-col>' +
+                    '<b-col>&nbsp;:&nbsp;</b-col>' +
+                    '<b-col>' +
+                    this.t_elhm_ctl.afdeling_code +
+                    '</b-col>' +
+                    '</b-row>' +
+                    '</b-container>' +
+                    '</div>' +
+                    '<div><b-container>' +
+                    '<b-row>' +
+                    '<b-col>Mandor</b-col>' +
+                    '<b-col>&nbsp;:&nbsp;</b-col>' +
+                    '<b-col>' +
+                    this.t_elhm_ctl.name +
+                    '</b-col>' +
+                    '</b-row>' +
+                    '</b-container>' +
+                    '</div>',
+                  icon: 'question',
+                  showConfirmButton: true,
+                  showCancelButton: true,
+                  reverseButtons: true,
+                  confirmButtonText: 'Ya',
+                  cancelButtonText: 'Tidak',
+                })
+                .then((result) => {
+                  if (result.isConfirmed) {
+                    let formData = new FormData()
+
+                    formData.append('t_elhm_id', this.t_elhm_ctl.t_elhm_id)
+                    formData.append(
+                      'p_wf_doc_type_id',
+                      this.t_elhm_ctl.p_wf_doc_type_id
+                    )
+                    formData.append(
+                      'p_wf_proc_id',
+                      this.t_elhm_ctl.p_wf_proc_id
+                    )
+                    formData.append('elhm_status', this.t_elhm_ctl.doc_status)
+                    formData.append('approve', 'Y')
+                    formData.append('msg', msg)
+
+                    console.log(formData)
+
+                    this.$axios
+                      .post('/api/admin/workflow/submit_flow', formData)
+                      .then(() => {
+                        this.$swal.fire({
+                          title: 'BERHASIL!',
+                          text: 'Data Berhasil Disubmit!',
+                          icon: 'success',
+                          showConfirmButton: false,
+                          timer: 2000,
+                        })
+
+                        this.$router.push({
+                          name: 'admin-in_monitor',
+                          params: { id: this.$route.params.id, r: 1 },
+                        })
+                      })
+                  }
+                })
+            } else {
+              this.$swal
+                .fire({
+                  title: 'Komfirmasi',
+                  html:
+                    '<div>Anda yakin akan melakukan Reject?</div>' +
+                    '<div><b-container>' +
+                    '<b-row>' +
+                    '<b-col>Tanggal</b-col>' +
+                    '<b-col>&nbsp;:&nbsp;</b-col>' +
+                    '<b-col>' +
+                    this.t_elhm_ctl.activitied_at +
+                    '</b-col>' +
+                    '</b-row>' +
+                    '</b-container>' +
+                    '</div>' +
+                    '<div><b-container>' +
+                    '<b-row>' +
+                    '<b-col>Estate</b-col>' +
+                    '<b-col>&nbsp;:&nbsp;</b-col>' +
+                    '<b-col>' +
+                    this.t_elhm_ctl.department_code +
+                    '</b-col>' +
+                    '</b-row>' +
+                    '</b-container>' +
+                    '</div>' +
+                    '<div><b-container>' +
+                    '<b-row>' +
+                    '<b-col>Afdeling</b-col>' +
+                    '<b-col>&nbsp;:&nbsp;</b-col>' +
+                    '<b-col>' +
+                    this.t_elhm_ctl.afdeling_code +
+                    '</b-col>' +
+                    '</b-row>' +
+                    '</b-container>' +
+                    '</div>' +
+                    '<div><b-container>' +
+                    '<b-row>' +
+                    '<b-col>Mandor</b-col>' +
+                    '<b-col>&nbsp;:&nbsp;</b-col>' +
+                    '<b-col>' +
+                    this.t_elhm_ctl.name +
+                    '</b-col>' +
+                    '</b-row>' +
+                    '</b-container>' +
+                    '</div>',
+                  icon: 'question',
+                  showConfirmButton: true,
+                  showCancelButton: true,
+                  reverseButtons: true,
+                  confirmButtonText: 'Ya',
+                  cancelButtonText: 'Tidak',
+                })
+                .then((result) => {
+                  if (result.isConfirmed) {
+                    let formData = new FormData()
+
+                    formData.append('t_elhm_id', this.t_elhm_ctl.t_elhm_id)
+                    formData.append(
+                      'p_wf_doc_type_id',
+                      this.t_elhm_ctl.p_wf_doc_type_id
+                    )
+                    formData.append(
+                      'p_wf_proc_id',
+                      this.t_elhm_ctl.p_wf_proc_id
+                    )
+                    formData.append('elhm_status', this.t_elhm_ctl.doc_status)
+                    formData.append('approve', 'N')
+                    formData.append('msg', msg)
+
+                    console.log(formData)
+
+                    this.$axios
+                      .post('/api/admin/workflow/submit_flow', formData)
+                      .then(() => {
+                        this.$swal.fire({
+                          title: 'BERHASIL!',
+                          text: 'Data Berhasil Direject!',
+                          icon: 'success',
+                          showConfirmButton: false,
+                          timer: 2000,
+                        })
+
+                        this.$router.push({
+                          name: 'admin-in_monitor',
+                          params: { id: this.$route.params.id, r: 1 },
+                        })
+                      })
+                  }
+                })
+            }
+          }
+        })
+    },
   },
   computed: {
     TotalManDaysBasic() {
@@ -781,15 +1051,23 @@ export default {
         return accum + item.qty_total
       }, 0.0)
     },
-
-    user() {
-      return this.$auth.user
-    },
   },
 }
 </script>
 
 <style scoped>
+.loading-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  padding-top: 200px;
+  font-size: 30px;
+  font-family: sans-serif;
+}
 .table-1 {
   font-size: 14px;
 }

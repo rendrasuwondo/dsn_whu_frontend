@@ -5,10 +5,10 @@
     </section>
 
     <section class="content">
-      <div class="card card-outline card-info">
+      <div class="card card-outline card-info" v-if="main">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-clipboard"></i> LAPORAN PROGRES HARIAN
+            <i class="nav-icon fas fa-clipboard"></i> IN MONITOR
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -45,7 +45,6 @@
                   <b-col cols="4">
                     <b-input-group>
                       <b-form-datepicker
-                        v-show="true"
                         v-model="activitied_at_end"
                         :date-format-options="{
                           year: 'numeric',
@@ -56,30 +55,12 @@
                         size="sm"
                       ></b-form-datepicker>
                       <template #append>
-                        <b-btn
-                          size="sm"
-                          @click="activitied_at_end = ''"
-                          v-show="true"
+                        <b-btn size="sm" @click="activitied_at_end = ''"
                           ><i class="fa fa-trash"></i
                         ></b-btn>
                       </template>
                     </b-input-group>
                   </b-col>
-                </b-row>
-              </b-container>
-              <b-container class="bv-example-row">
-                <b-row>
-                  <b-col cols="2">Estate:</b-col>
-                  <b-col cols="4">
-                    <div class="form-group">
-                      <multiselect
-                        v-model="department_id"
-                        :options="department"
-                        label="department_code"
-                        track-by="department_id"
-                        :searchable="true"
-                      ></multiselect></div
-                  ></b-col>
                 </b-row>
               </b-container>
               <b-container class="bv-example-row">
@@ -91,6 +72,22 @@
                         v-model="afdeling_id"
                         :options="afdeling"
                         :custom-label="customLabel"
+                        x
+                        track-by="id"
+                        :searchable="true"
+                      ></multiselect></div
+                  ></b-col>
+                </b-row>
+              </b-container>
+              <b-container class="bv-example-row" v-show="false">
+                <b-row>
+                  <b-col cols="2">Jenis Pekerjaan</b-col>
+                  <b-col cols="7">
+                    <div class="form-group">
+                      <multiselect
+                        v-model="activity_id"
+                        :options="activity"
+                        label="name"
                         track-by="id"
                         :searchable="true"
                       ></multiselect></div
@@ -139,85 +136,51 @@
             v-model="visibleRows"
             head-variant="light"
           >
-            <template v-slot:thead-top="data">
-              <b-tr>
-                <b-th variant="primary" colspan="4"></b-th>
-                <b-th variant="danger" colspan="3" class="text-center">HK</b-th>
-                <b-th variant="danger" colspan="3" class="text-center"
-                  >Volume</b-th
-                >
-                <b-th variant="danger" colspan="4"></b-th>
-              </b-tr>
+            <template v-slot:cell(actions)="row">
+              <b-button
+                v-show="btn_asisten"
+                :to="{
+                  name: 'admin-in_monitor_detail_asisten-id',
+                  params: { id: row.item.id },
+                  query: {
+                    tanggal: row.item.activitied_at,
+                    mandor: `${row.item.afdeling_code} (${row.item.afdeling_id})`,
+                    afdelingCode: `${row.item.nik} - ${row.item.name}`,
+                  },
+                }"
+                variant="link"
+                size="sm"
+                title="Edit"
+                @click="ProcessDetail()"
+              >
+                <i class="fa fa-envelope"></i>
+              </b-button>
+              <b-button
+                v-show="btn_non_asisten"
+                :to="{
+                  name: 'admin-in_monitor_detail-id',
+                  params: { id: row.item.id },
+                  query: {
+                    tanggal: row.item.activitied_at,
+                    mandor: `${row.item.afdeling_code} (${row.item.afdeling_id})`,
+                    afdelingCode: `${row.item.nik} - ${row.item.name}`,
+                  },
+                }"
+                variant="link"
+                size="sm"
+                title="Edit"
+                @click="ProcessDetail()"
+              >
+                <i class="fa fa-envelope"></i>
+              </b-button>
             </template>
             <template v-slot:cell(detail_hap)="row">
               <div>{{ row.item.wide }}</div>
-            </template>
-            <template v-slot:custom-foot="data">
-              <b-tr>
-                <b-td colspan="2" align="left" variant="secondary"></b-td>
-                <b-td colspan="2" align="left" variant="secondary"
-                  ><b>Total</b></b-td
-                >
-                <b-td align="right" variant="secondary">
-                  <b> {{ TotalManDaysBasic.toFixed(2) }}</b>
-                </b-td>
-                <b-td align="right" variant="secondary">
-                  <b> {{ TotalManDaysPremi.toFixed(2) }}</b>
-                </b-td>
-                <b-td align="right" variant="secondary">
-                  <b> {{ TotalManDaysTotal.toFixed(2) }}</b>
-                </b-td>
-                <b-td align="right" variant="secondary">
-                  <b> {{ addCommas(TotalQtyBasic.toFixed(2)) }}</b>
-                </b-td>
-                <b-td align="right" variant="secondary">
-                  <b>{{ addCommas(TotalQtyPremi.toFixed(2)) }}</b>
-                </b-td>
-                <b-td align="right" variant="secondary">
-                  <b> {{ addCommas(TotalQtyTotal.toFixed(2)) }}</b>
-                </b-td>
-                <b-td align="right" variant="secondary" colspan="4"></b-td>
-              </b-tr>
-              <b-tr>
-                <b-td colspan="2" align="left"></b-td>
-                <b-td colspan="2" align="left">S/H1/H2</b-td>
-                <b-td align="right">
-                  {{ t_daily_progress.type_1.toFixed(2) }}
-                </b-td>
-                <b-td colspan="9"></b-td>
-              </b-tr>
-              <b-tr>
-                <b-td colspan="2" align="left"></b-td>
-                <b-td colspan="2" align="left">C/P1/P1</b-td>
-                <b-td align="right">
-                  {{ t_daily_progress.type_2.toFixed(2) }}
-                </b-td>
-                <b-td colspan="9"></b-td>
-              </b-tr>
-              <b-tr>
-                <b-td colspan="2" align="left"></b-td>
-                <b-td colspan="2" align="left">M</b-td>
-                <b-td align="right">
-                  {{ t_daily_progress.type_3.toFixed(2) }}
-                </b-td>
-                <b-td colspan="9"></b-td>
-              </b-tr>
             </template>
           </b-table>
 
           <!-- pagination -->
           <b-row>
-            <!-- <b-col>
-              <b-pagination
-                v-model="pagination.current_page"
-                :total-rows="pagination.total"
-                :per-page="pagination.per_page"
-                @change="changePage"
-                align="left"
-                class="mt-1"
-              >
-              </b-pagination>
-            </b-col> -->
             <b-col class="text-right" align-self="center">
               {{ rowcount }} data
             </b-col>
@@ -233,73 +196,68 @@ export default {
   layout: 'admin',
   head() {
     return {
-      title: 'Progress Harian',
+      title: 'IN Process',
     }
   },
   data() {
     return {
+      main: true,
       allSelected: false,
       visibleRows: [],
       show_page: false,
       show_submit: true,
       foreman: [],
       afdeling: [],
-      department: [],
+      activity: [],
       fields: [
         {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Blok',
-          key: 'block',
+          thClass: 'align-middle text-center text-nowrap nameOfTheClass',
+          label: '',
+          key: 'actions',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Luas',
-          key: 'wide',
+          label: 'TGL',
+          key: 'activitied_at',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Jenis Pekerjaan',
-          key: 'activity_description',
+          label: 'Dept.',
+          key: 'department_code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Satuan',
-          key: 'activity_unit_code',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Basic',
-          key: 'man_days_basic',
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Premi',
-          key: 'man_days_premi',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
+          label: 'Afdeling',
+          key: 'afdeling_code',
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
+
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Total',
+          label: 'Mandor',
+          key: 'name',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          label: 'Total HK',
           key: 'man_days_total',
+          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+          formatter: (value, key, item) => {
+            let formatter = new Intl.NumberFormat('es-US', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
+            return formatter.format(value)
+          },
+        },
+        {
+          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          label: 'Max HK',
+          key: 'man_days_max',
           formatter: (value, key, item) => {
             let formatter = new Intl.NumberFormat('es-US', {
               minimumFractionDigits: 2,
@@ -311,8 +269,8 @@ export default {
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Basic',
-          key: 'qty_basic',
+          label: 'Avg HK',
+          key: 'man_days_average',
           formatter: (value, key, item) => {
             let formatter = new Intl.NumberFormat('es-US', {
               minimumFractionDigits: 2,
@@ -324,8 +282,8 @@ export default {
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Premi',
-          key: 'qty_premi',
+          label: 'Min HK',
+          key: 'man_days_min',
           formatter: (value, key, item) => {
             let formatter = new Intl.NumberFormat('es-US', {
               minimumFractionDigits: 2,
@@ -337,8 +295,8 @@ export default {
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Total',
-          key: 'qty_total',
+          label: 'Rate Total',
+          key: 'rate_total',
           formatter: (value, key, item) => {
             let formatter = new Intl.NumberFormat('es-US', {
               minimumFractionDigits: 2,
@@ -347,44 +305,6 @@ export default {
             return formatter.format(value)
           },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Unit',
-          key: 'unit',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Norm',
-          key: 'norm',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Keterangan',
-          key: 'description',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Status',
-          key: 'status',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
       ],
       company_code: '',
@@ -394,7 +314,10 @@ export default {
       afdeling_id: this.$route.query.q_afdeling_id,
       query_afdeling_id: '',
       afdeling_default: '',
-      department_id: this.$route.query.q_department_id,
+      activity_id: this.$route.query.q_activity_id,
+      query_activity_id: '',
+      // btn_asisten: false,
+      // btn_non_asisten: false,
     }
   },
   watchQuery: [
@@ -402,11 +325,13 @@ export default {
     'page',
     'activitied_at_prepend',
     'activitied_at_append',
+    'q_activitied_at_start',
+    'q_activitied_at_end',
     'q_afdeling_id',
-    'q_department_id',
+    'q_activity_id',
   ],
 
-  async asyncData({ $axios, query, auth }) {
+  async asyncData({ $axios, query, $auth }) {
     function currentDate() {
       const current = new Date()
       current.setDate(current.getDate())
@@ -424,18 +349,16 @@ export default {
     let search = query.q ? query.q : ''
 
     //activitied_at_prepend
-    let activitied_at_start = query.activitied_at_prepend
-      ? query.activitied_at_prepend
-      : currentDate()
+    let activitied_at_start = query.q_activitied_at_start
+      ? query.q_activitied_at_start
+      : ''
 
     //activitied_at_append
-    let activitied_at_end = query.activitied_at_append
-      ? query.activitied_at_append
-      : currentDate()
-
-    // user
-    const user = await $axios.$get(`/api/admin/user`)
-
+    let activitied_at_end = query.q_activitied_at_end
+      ? query.q_activitied_at_end
+      : ''
+    console.log('activitied_at_end')
+    console.log(query.q_activitied_at_append)
     // afdeling_id
     const afdeling_list = await $axios.$get(
       `/api/admin/lov_afdeling_daily_progress`
@@ -445,9 +368,7 @@ export default {
       `/api/admin/lov_afdeling_default`
     )
 
-    let q_afdeling_id = query.q_afdeling_id
-      ? query.q_afdeling_id
-      : afdeling_default.data.id
+    let q_afdeling_id = query.q_afdeling_id ? query.q_afdeling_id : ''
 
     let afdeling_id = []
 
@@ -459,84 +380,55 @@ export default {
           `/api/admin/lov_afdeling_daily_progress?q_afdeling_id=${q_afdeling_id}`
         )
         .then((response) => {
-          // console.log('daaa')
-          // console.log(response.data.data)
           afdeling_id = response.data.data
         })
     } else {
       afdeling_id = []
-
-      q_afdeling_id = afdeling_default.data.id
-
-      if (user.employee.position_code != 'ASISTEN AFDELING') {
-        q_afdeling_id = ''
-      }
     }
 
     if (q_afdeling_id == undefined || q_afdeling_id == '') {
-      q_afdeling_id = afdeling_default.data.id
-
-      if (user.employee.position_code != 'ASISTEN AFDELING') {
-        q_afdeling_id = ''
-      }
+      // q_afdeling_id = afdeling_default.data.id
     }
 
-    //department
-    let department_id_asyncData = []
+    // activity_id
+    const activity_list = await $axios.$get(`/api/admin/lov_activity`)
 
-    const department_list = await $axios.$get(
-      `/api/admin/lov_employee_department`
-    )
+    let q_activity_id = query.q_activity_id
 
-    const department_default = await $axios.$get(
-      `/api/admin/lov_department_default`
-    )
+    let activity_id = []
 
-    let q_department_id = query.q_department_id
-      ? query.q_department_id
-      : department_default.data.department_id
-
-    if (query.q_department_id) {
+    if (query.q_activity_id) {
       $axios
-        .get(
-          `/api/admin/lov_employee_department?q_department_id=${q_department_id}`
-        )
+        .get(`/api/admin/lov_activity?q_activity_id=${q_activity_id}`)
         .then((response) => {
-          // console.log('rdr')
-          // console.log(response.data.data)
-          department_id_asyncData = response.data.data
+          activity_id = response.data.data
         })
+    } else {
+      activity_id = []
     }
 
-    // console.log('rdr')
-    // console.log(this.auth.user)
-    //department end
+    if (q_activity_id == undefined || q_activity_id == '') {
+      q_activity_id = ''
+    }
+
+    let btn_asisten, btn_non_asisten
+
+    if ($auth.user.employee.position_id == 30) {
+      btn_asisten = true
+      btn_non_asisten = false
+    } else {
+      btn_asisten = false
+      btn_non_asisten = true
+    }
+
+    let userDepartmentId = $auth.user.employee.department_id
+    let userAfdelingId = $auth.user.employee.afdeling_id ?? ''
 
     const posts = await $axios.$get(
-      `/api/admin/report/lph?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}&q_department_id=${q_department_id}`
+      `api/admin/workflow/in_monitor?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${userAfdelingId}&q_department_id=${userDepartmentId}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}`
     )
-
-    const global_param = await $axios.$get(
-      `/api/admin/global_param?q=MAX_HK_RAWAT`
-    )
-
-    let thresholdManDays = 0 // Default Value
-    if (typeof global_param.data.data !== 'undefined' && global_param.data.data.length > 0) {
-      thresholdManDays = global_param.data.data[0].value_1
-    }
-
-    for (var i = 0; i < posts.data.length; i++) {
-      if(posts.data[i].man_days_total > thresholdManDays) {
-        posts.data[i]._rowVariant = 'danger'
-      } else {
-        posts.data[i]._rowVariant = ''
-      }
-    }
-
-    const t_daily_progress = await $axios.$get(
-      `/api/admin/master/attendance_daily_progress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}`
-    )
-
+    console.log("url post", `api/admin/workflow/in_monitor?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${userAfdelingId}&q_department_id=${userDepartmentId}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}`
+);
     return {
       posts: posts.data,
       pagination: posts.data,
@@ -546,9 +438,10 @@ export default {
       activitied_at_end: activitied_at_end,
       afdeling: afdeling_list.data,
       afdeling_id: afdeling_id,
-      t_daily_progress: t_daily_progress.data,
-      department: department_list.data,
-      department_id: department_id_asyncData,
+      activity: activity_list.data,
+      activity_id: activity_id,
+      btn_asisten: btn_asisten,
+      btn_non_asisten: btn_non_asisten,
     }
   },
 
@@ -556,56 +449,20 @@ export default {
     this.$nextTick(() => {
       this.$nuxt.$loading.start()
     })
+
     setTimeout(() => this.$nuxt.$loading.finish(), 2000)
+
     document.onreadystatechange = () => {
       if (document.readyState == 'complete') {
+        this.main = true
         this.$nextTick(() => {
           this.$nuxt.$loading.finish()
         })
       }
     }
-
-    if (this.user.employee.position_code == 'ASISTEN AFDELING') {
-      if (this.$route.query.q_afdeling_id == null) {
-        this.$axios.get(`/api/admin/lov_afdeling_default`).then((response) => {
-          this.afdeling_id = [
-            {
-              id: response.data.data.id,
-              code: response.data.data.code,
-            },
-          ]
-        })
-      }
-    }
-    // console.log(this.user.employee.position_code)
-
-    if (this.$route.query.q_department_id == null) {
-      this.department_id = [
-        {
-          department_id: this.user.employee.department_id,
-          department_code: this.user.employee.department_code,
-        },
-      ]
-    }
   },
 
   methods: {
-    // onChangeAfdeling() {
-    //   if (this.afdeling_id != null) {
-    //     if (
-    //       this.$auth.user.employee.activity_group_code == 'RAWAT' ||
-    //       this.$auth.user.employee.activity_group_code == 'BIBITAN'
-    //     ) {
-    //       this.$axios
-    //         .get(
-    //           `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.afdeling_id.afdeling_id}`
-    //         )
-    //         .then((response) => {
-    //           this.foreman = response.data.data
-    //         })
-    //     }
-    //   }
-    // },
 
     customLabel(afdeling) {
       return `${afdeling.code}` + ' (' + `${afdeling.id}` + ')'
@@ -631,46 +488,54 @@ export default {
     },
     //searchData
     searchData() {
-      this.$nuxt.$loading.start();
-      console.log('rdr')
-      console.log(this.afdeling_id)
+      this.go = 0
 
-      if (this.afdeling_id == null) {
-        this.vafdeling = ''
-      } else {
-        if (this.afdeling_id[0] == undefined) {
-          this.vafdeling = this.afdeling_id.id
-        } else {
-          this.vafdeling = this.afdeling_id[0].id
-        }
+      if (this.$route.query.q != this.search) {
+        this.go = 1
       }
 
-      if (this.department_id == null || this.department_id == undefined) {
-        this.vdepartment = ''
-      } else {
-        if (this.department_id.length == 0) {
-          this.vdepartment = ''
-        } else {
-          if (this.department_id[0] == undefined) {
-            this.vdepartment = this.department_id.department_id
-          } else {
-            this.vdepartment = this.department_id[0].department_id
-          }
-        }
+      let vafdeling_id
+
+      try {
+        vafdeling_id = this.afdeling_id.id
+      } catch (error) {
+        vafdeling_id = ''
       }
 
-      this.$router.push({
-        path: this.$route.path,
-        query: {
-          q: this.search,
-          activitied_at_prepend: this.activitied_at_start,
-          activitied_at_append: this.activitied_at_end,
-          q_afdeling_id: this.vafdeling,
-          q_department_id: this.query_department_id
-            ? this.query_department_id
-            : this.vdepartment,
-        },
-      })
+      if (this.$route.query.q_afdeling_id != vafdeling_id) {
+        this.go = 1
+      }
+
+      if (this.$route.query.q_activitied_at_start != this.activitied_at_start) {
+        this.go = 1
+      }
+
+      if (this.$route.query.q_activitied_at_end != this.activitied_at_end) {
+        this.go = 1
+      }
+
+      if (this.go == 1) {
+        this.$nuxt.$loading.start()
+        this.main = false
+
+        this.$router.push({
+          path: this.$route.path,
+          query: {
+            q: this.search,
+            q_afdeling_id: vafdeling_id,
+            q_activitied_at_start: this.activitied_at_start,
+            q_activitied_at_end: this.activitied_at_end,
+          },
+        })
+
+        if (this.$auth.user.employee.position_id == 30) {
+          this.btn_asisten = true
+          this.btn_non_asisten = false
+        } else {
+          this.btn_asisten = false
+          this.btn_non_asisten = true
+        }
+      }
     },
 
     currentDate() {
@@ -717,8 +582,6 @@ export default {
       })
     },
     select() {
-      // alert('sa')
-      // this.allSelected = !this.allSelected;
       this.posts.forEach((el) => {
         el.selected = this.allSelected
       })
@@ -738,52 +601,51 @@ export default {
       }
       return x1 + x2
     },
+
+    ProcessDetail() {
+    },
   },
   computed: {
     TotalManDaysBasic() {
       return this.visibleRows.reduce((accum, item) => {
-        // console.log(accum + item.man_days_basic)
+        console.log(accum + item.man_days_basic)
         return accum + item.man_days_basic
       }, 0.0)
     },
 
     TotalManDaysPremi() {
       return this.visibleRows.reduce((accum, item) => {
-        // console.log(accum + item.man_days_premi)
+        console.log(accum + item.man_days_premi)
         return accum + item.man_days_premi
       }, 0.0)
     },
 
     TotalManDaysTotal() {
       return this.visibleRows.reduce((accum, item) => {
-        // console.log(accum + item.man_days_total)
+        console.log(accum + item.man_days_total)
         return accum + item.man_days_total
       }, 0.0)
     },
 
     TotalQtyBasic() {
       return this.visibleRows.reduce((accum, item) => {
-        // console.log(accum + item.qty_basic)
+        console.log(accum + item.qty_basic)
         return accum + item.qty_basic
       }, 0.0)
     },
 
     TotalQtyPremi() {
       return this.visibleRows.reduce((accum, item) => {
-        // console.log(accum + item.qty_premi)
+        console.log(accum + item.qty_premi)
         return accum + item.qty_premi
       }, 0.0)
     },
 
     TotalQtyTotal() {
       return this.visibleRows.reduce((accum, item) => {
-        // console.log(accum + item.qty_total)
+        console.log(accum + item.qty_total)
         return accum + item.qty_total
       }, 0.0)
-    },
-
-    user() {
-      return this.$auth.user
     },
   },
 }

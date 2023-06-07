@@ -377,7 +377,7 @@ export default {
       this.main = false
 
       this.$router.push({
-        name: 'admin-in_process_detail_asisten-id',
+        name: 'admin-in_monitor_detail_asisten-id',
         params: { id: this.$route.query.id },
         query: {
           //   activitied_at_prepend: this.$route.query.activitied_at_prepend,
