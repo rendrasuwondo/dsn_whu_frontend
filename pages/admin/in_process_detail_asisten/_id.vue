@@ -736,7 +736,7 @@ export default {
         })
         .then((result) => {
           if (result.isConfirmed) {
-            this.$nuxt.$loading.start()
+            // this.$nuxt.$loading.start()
             this.main = false
 
             this.selectedData = []
@@ -766,7 +766,7 @@ export default {
                 })
 
                 this.$nuxt.refresh().then(() => {
-                  this.$nuxt.$loading.finish()
+                  // this.$nuxt.$loading.finish()
                   this.main = true
                 })
 
