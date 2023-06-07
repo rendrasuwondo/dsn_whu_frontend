@@ -15,108 +15,36 @@
         <div class="card-body">
           <form @submit.prevent="storePost">
             <div class="form-group">
-              <label>Process Code</label>
-              <input
-                type="text"
-                v-model="field.proc_code"
-                placeholder="Masukkan nama Process"
-                class="form-control"
-                ref="proc_code"
-              />
-              <div v-if="validation.proc_code" class="mt-2">
+              <label>Workflow Process</label>
+
+              <multiselect
+                v-model="selected_workflow_process"
+                :options="workflow_process"
+                placeholder="Pilih Workflow Process"
+                label="proc_name"
+                track-by="id"
+                :searchable="true"
+                @input="onChange($event)"
+              ></multiselect>
+              <div v-if="validation.p_wf_proc_id" class="mt-2">
                 <b-alert show variant="danger">{{
-                  validation.proc_code[0]
+                  validation.p_wf_proc_id[0]
                 }}</b-alert>
               </div>
             </div>
 
             <div class="form-group">
-              <label>Process Name</label>
+              <label>Role Id</label>
               <input
                 type="text"
-                v-model="field.proc_name"
-                placeholder="Masukkan nama Process"
+                v-model="field.role_id"
+                placeholder="Masukkan Nama Process"
                 class="form-control"
-                ref="proc_name"
+                ref="role_id"
               />
-              <div v-if="validation.proc_name" class="mt-2">
+              <div v-if="validation.role_id" class="mt-2">
                 <b-alert show variant="danger">{{
-                  validation.proc_name[0]
-                }}</b-alert>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Display Name</label>
-              <input
-                type="text"
-                v-model="field.display_name"
-                placeholder="Masukkan Display Name"
-                class="form-control"
-              />
-              <div v-if="validation.display_name" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.display_name[0]
-                }}</b-alert>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Taskbox File</label>
-              <input
-                type="text"
-                v-model="field.taskbox_file"
-                placeholder="Masukkan Taskbox File"
-                class="form-control"
-              />
-              <div v-if="validation.taskbox_file" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.taskbox_file[0]
-                }}</b-alert>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Submit Before</label>
-              <input
-                type="text"
-                v-model="field.submit_before"
-                placeholder="Masukkan Submit Before"
-                class="form-control"
-              />
-              <div v-if="validation.submit_before" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.submit_before[0]
-                }}</b-alert>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Submit After</label>
-              <input
-                type="text"
-                v-model="field.submit_after"
-                placeholder="Masukkan Submit After"
-                class="form-control"
-              />
-              <div v-if="validation.submit_after" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.submit_after[0]
-                }}</b-alert>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Application Id</label>
-              <input
-                type="text"
-                v-model="field.application_id"
-                placeholder="Masukkan Application Id"
-                class="form-control"
-              />
-              <div v-if="validation.application_id" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.application_id[0]
+                  validation.role_id[0]
                 }}</b-alert>
               </div>
             </div>
@@ -218,9 +146,6 @@
 </template>
 
 <script>
-/* import { VNumber  } from '@coders-tm/vue-number-format' */
-/* import { number } from '@coders-tm/vue-number-format' */
-
 export default {
   //layout
   layout: 'admin',
@@ -228,13 +153,15 @@ export default {
   //meta
   head() {
     return {
-      title: 'Tambah Role',
+      title: 'Tambah Workflow Role',
     }
   },
 
   data() {
     return {
       is_active: { value: 'Y', text: 'Ya' },
+      workflow_process: [],
+      selected_workflow_process: {},
       options: [
         { value: 'Y', text: 'Ya' },
         { value: 'N', text: 'Tidak' },
@@ -243,13 +170,8 @@ export default {
       state: 'disabled',
 
       field: {
-        proc_name: '',
-        display_name: '',
-        taskbox_file: '',
-        submit_before: '',
-        submit_after: '',
-        application_id: '',
-        proc_code: '',
+        p_wf_proc_id: '',
+        role_id: '',
         is_active: 'Y',
         description: '',
         created_at: '',
@@ -271,15 +193,27 @@ export default {
     this.field.updated_by =
       this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
 
-    this.$refs.proc_code.focus()
+    // Workflow Process
+    this.$axios
+      .get('/api/admin/workflow/process')
+
+      .then((response) => {
+        this.workflow_process = response.data.data.data
+      })
   },
 
   methods: {
     back() {
       this.$router.push({
-        name: 'admin-workflow-process',
+        name: 'admin-workflow-role',
         params: { id: this.$route.params.id, r: 1 },
       })
+    },
+
+    onChange(e) {
+      this.field.p_wf_proc_id = e.id
+
+      console.log(this.field.p_wf_proc_id);
     },
 
     currentDate() {
@@ -297,13 +231,8 @@ export default {
       //define formData
       let formData = new FormData()
 
-      formData.append('proc_name', this.field.proc_name)
-      formData.append('display_name', this.field.display_name)
-      formData.append('taskbox_file', this.field.taskbox_file)
-      formData.append('submit_before', this.field.submit_before)
-      formData.append('submit_after', this.field.submit_after)
-      formData.append('application_id', this.field.application_id)
-      formData.append('proc_code', this.field.proc_code)
+      formData.append('p_wf_proc_id', this.field.p_wf_proc_id)
+      formData.append('role_id', this.field.role_id)
       formData.append('is_active', this.field.is_active)
       formData.append('description', this.field.description)
       formData.append('created_at', this.field.created_at)
@@ -313,7 +242,7 @@ export default {
 
       //sending data to server
       await this.$axios
-        .post('/api/admin/workflow/process', formData)
+        .post('/api/admin/workflow/role', formData)
         .then(() => {
           //sweet alert
           this.$swal.fire({
@@ -326,7 +255,7 @@ export default {
 
           //redirect, if success store data
           this.$router.push({
-            name: 'admin-workflow-process',
+            name: 'admin-workflow-role',
           })
         })
         .catch((error) => {

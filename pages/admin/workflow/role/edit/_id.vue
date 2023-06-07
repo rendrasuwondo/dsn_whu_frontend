@@ -8,115 +8,36 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-folder"></i> EDIT WORKFLOW PROCESS
+            <i class="nav-icon fas fa-folder"></i> EDIT WORKFLOW ROLE
           </h3>
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
           <form @submit.prevent="update">
             <div class="form-group">
-              <label>Process Code</label>
+              <label>Workflow Process</label>
+
               <input
                 type="text"
-                v-model="field.proc_code"
+                v-model="workflow_process_description"
+                placeholder=""
+                class="form-control"
+                readonly
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Role Id</label>
+              <input
+                type="text"
+                v-model="field.role_id"
                 placeholder="Masukkan nama Process"
                 class="form-control"
-                ref="proc_code"
+                ref="role_id"
               />
-              <div v-if="validation.proc_code" class="mt-2">
+              <div v-if="validation.role_id" class="mt-2">
                 <b-alert show variant="danger">{{
-                  validation.proc_code[0]
-                }}</b-alert>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Process Name</label>
-              <input
-                type="text"
-                v-model="field.proc_name"
-                placeholder="Masukkan nama Process"
-                class="form-control"
-                ref="proc_name"
-              />
-              <div v-if="validation.proc_name" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.proc_name[0]
-                }}</b-alert>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Display Name</label>
-              <input
-                type="text"
-                v-model="field.display_name"
-                placeholder="Masukkan Display Name"
-                class="form-control"
-              />
-              <div v-if="validation.display_name" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.display_name[0]
-                }}</b-alert>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Taskbox File</label>
-              <input
-                type="text"
-                v-model="field.taskbox_file"
-                placeholder="Masukkan Taskbox File"
-                class="form-control"
-              />
-              <div v-if="validation.taskbox_file" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.taskbox_file[0]
-                }}</b-alert>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Submit Before</label>
-              <input
-                type="text"
-                v-model="field.submit_before"
-                placeholder="Masukkan Submit Before"
-                class="form-control"
-              />
-              <div v-if="validation.submit_before" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.submit_before[0]
-                }}</b-alert>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Submit After</label>
-              <input
-                type="text"
-                v-model="field.submit_after"
-                placeholder="Masukkan Submit After"
-                class="form-control"
-              />
-              <div v-if="validation.submit_after" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.submit_after[0]
-                }}</b-alert>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Application Id</label>
-              <input
-                type="text"
-                v-model="field.application_id"
-                placeholder="Masukkan Application Id"
-                class="form-control"
-              />
-              <div v-if="validation.application_id" class="mt-2">
-                <b-alert show variant="danger">{{
-                  validation.application_id[0]
+                  validation.role_id[0]
                 }}</b-alert>
               </div>
             </div>
@@ -221,12 +142,14 @@ export default {
   //meta
   head() {
     return {
-      title: 'Edit Workflow Process',
+      title: 'Edit Workflow Role',
     }
   },
 
   data() {
     return {
+      selected_workflow_process: {},
+      workflow_process_description: '',
       options: [
         { value: 'Y', text: 'Ya' },
         { value: 'N', text: 'Tidak' },
@@ -234,15 +157,10 @@ export default {
 
       state: 'disabled',
       field: {
-        proc_name: '',
-        display_name: '',
-        taskbox_file: '',
-        submit_before: '',
-        submit_after: '',
-        application_id: '',
+        p_wf_proc_id: '',
+        role_id: '',
         is_active: '',
         description: '',
-        proc_code: '',
         created_at: '',
         updated_at: '',
         created_by: '',
@@ -258,38 +176,50 @@ export default {
     this.$nextTick(() => {
       this.$nuxt.$loading.start()
     })
+
     //get data field by ID
     this.$axios
-      .get(`/api/admin/workflow/process/${this.$route.params.id}`)
+      .get(`/api/admin/workflow/role/${this.$route.params.id}`)
       .then((response) => {
         //data yang diambil
-        this.field.proc_name = response.data.data.proc_name
-        this.field.display_name = response.data.data.display_name
-        this.field.taskbox_file = response.data.data.taskbox_file
-        this.field.submit_before = response.data.data.submit_before
-        this.field.submit_after = response.data.data.submit_after
-        this.field.application_id = response.data.data.application_id
+        this.field.p_wf_proc_id = response.data.data.p_wf_proc_id
+        this.field.role_id = response.data.data.role_id
         this.field.is_active = response.data.data.is_active
         this.field.description = response.data.data.description
-        this.field.proc_code = response.data.data.proc_code
         this.field.created_at = response.data.data.created_at
         this.field.created_by = response.data.data.created_by
         this.field.updated_at = response.data.data.updated_at
         this.field.updated_by = response.data.data.updated_by
 
+        // Workflow Process
+        this.$axios
+          .get(`/api/admin/workflow/process/${this.field.p_wf_proc_id}`)
+          .then((response) => {
+            console.log('url', `/api/admin/workflow/process/${this.field.p_wf_proc_id}`);
+            this.selected_workflow_process = response.data.data
+            this.workflow_process_description = response.data.data.proc_name
+            console.log(JSON.stringify(this.selected_workflow_process))
+            console.log(response.data.data.proc_name, this.workflow_process_description)
+          })
+
         this.$nextTick(() => {
           this.$nuxt.$loading.finish()
         })
       })
-    this.$refs.proc_code.focus()
   },
 
   methods: {
     back() {
       this.$router.push({
-        name: 'admin-workflow-process',
+        name: 'admin-workflow-role',
         params: { id: this.$route.params.id, r: 1 },
       })
+    },
+
+    onChange(e) {
+      this.field.p_wf_proc_id = e.id
+
+      console.log(this.field.p_wf_proc_id)
     },
 
     // update method
@@ -299,17 +229,12 @@ export default {
 
       //send data ke Rest API untuk update
       await this.$axios
-        .put(`/api/admin/workflow/process/${this.$route.params.id}`, {
+        .put(`/api/admin/workflow/role/${this.$route.params.id}`, {
           //data yang dikirim
-          proc_name: this.field.proc_name,
-          display_name: this.field.display_name,
-          taskbox_file: this.field.taskbox_file,
-          submit_before: this.field.submit_before,
-          submit_after: this.field.submit_after,
-          application_id: this.field.application_id,
+          p_wf_proc_id: this.field.p_wf_proc_id,
+          role_id: this.field.role_id,
           is_active: this.field.is_active,
           description: this.field.description,
-          proc_code: this.field.proc_code,
           created_at: this.field.created_at,
           updated_at: this.field.updated_at,
           created_by: this.field.created_by,
@@ -326,7 +251,7 @@ export default {
           })
           //redirect ke route "post"
           this.$router.push({
-            name: 'admin-workflow-process',
+            name: 'admin-workflow-role',
           })
         })
         .catch((error) => {

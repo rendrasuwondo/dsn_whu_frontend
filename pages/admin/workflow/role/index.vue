@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-book-open"></i> Workflow
+            <i class="nav-icon fas fa-book-open"></i> Workflow Role
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -17,7 +17,7 @@
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <nuxt-link
-                  :to="{ name: 'admin-workflow-process-create' }"
+                  :to="{ name: 'admin-workflow-role-create' }"
                   class="btn btn-info btn-sm"
                   style="padding-top: 8px"
                   title="Tambah"
@@ -60,7 +60,7 @@
             <template v-slot:cell(actions)="row">
               <b-button
                 :to="{
-                  name: 'admin-workflow-process-edit-id',
+                  name: 'admin-workflow-role-edit-id',
                   params: { id: row.item.id },
                 }"
                 variant="link"
@@ -106,7 +106,7 @@ export default {
 
   head() {
     return {
-      title: 'Workflow Process',
+      title: 'Workflow Role',
     }
   },
   data() {
@@ -118,33 +118,13 @@ export default {
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          label: 'Process Name',
+          label: 'Workflow Process',
           key: 'proc_name',
           tdClass: 'align-middle text-center',
         },
         {
-          label: 'Display Name',
-          key: 'display_name',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
-          label: 'Taskbox File',
-          key: 'taskbox_file',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
-          label: 'Submit Before',
-          key: 'submit_before',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
-          label: 'Submit After',
-          key: 'submit_after',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
-          label: 'Application Id',
-          key: 'application_id',
+          label: 'Role Id',
+          key: 'role_id',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
@@ -155,11 +135,6 @@ export default {
         {
           label: 'Description',
           key: 'description',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
-          label: 'Process Code',
-          key: 'proc_code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
       ],
@@ -179,7 +154,7 @@ export default {
     let search = query.q ? query.q : ''
 
     //fetching posts
-    const posts = await $axios.$get(`/api/admin/workflow/process?q=${search}&page=${page}`)
+    const posts = await $axios.$get(`/api/admin/workflow/role?q=${search}&page=${page}`)
 
     return {
       posts: posts.data.data,
@@ -226,7 +201,7 @@ export default {
           if (result.isConfirmed) {
             //delete tag from server
 
-            this.$axios.delete(`/api/admin/workflow/process/${id}`).then((response) => {
+            this.$axios.delete(`/api/admin/workflow/role/${id}`).then((response) => {
               //feresh data
               this.$nuxt.refresh()
               if (response.data.success == true) {
@@ -256,7 +231,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/workflow/process/export`,
+        url: `/api/admin/workflow/role/export`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
@@ -265,7 +240,7 @@ export default {
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
-        var fileName = 'WorkflowProcess.xlsx'
+        var fileName = 'WorkflowRole.xlsx'
         link.setAttribute('download', fileName) //or any other extension
         document.body.appendChild(link)
         link.click()
