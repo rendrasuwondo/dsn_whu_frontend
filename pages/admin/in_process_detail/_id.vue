@@ -39,13 +39,6 @@
                   <b-col cols="4">
                     <b-input-group>
                       <b-form-input
-                        :type="date"
-                        :date-format-options="{
-                          year: 'numeric',
-                          month: 'short',
-                          day: '2-digit',
-                          weekday: 'short',
-                        }"
                         size="sm"
                         :disabled="true"
                         v-model="detail.tanggal"
@@ -227,7 +220,7 @@
                     <!-- /.direct-chat-infos -->
                     <img
                       class="direct-chat-img"
-                      src="dist/img/user1-128x128.jpg"
+                      src="/img/avatar_general.png"
                       alt="message user image"
                     />
                     <!-- /.direct-chat-img -->
@@ -805,7 +798,7 @@ export default {
           inputPlaceholder: 'Message',
           showCancelButton: true,
 
-          reverseButtons: true,
+          reverseButtons: false,
           confirmButtonText: 'Submit',
 
           denyButtonColor: '#3085d6',
@@ -835,7 +828,7 @@ export default {
               // console.log(this.t_elhm_ctl.activitied_at)
               this.$swal
                 .fire({
-                  title: 'Komfirmasi',
+                  title: 'Konfirmasi',
                   html:
                     '<div>Anda yakin akan melakukan Approve?</div>' +
                     '<div><b-container>' +
@@ -881,7 +874,7 @@ export default {
                   icon: 'question',
                   showConfirmButton: true,
                   showCancelButton: true,
-                  reverseButtons: true,
+                  reverseButtons: false,
                   confirmButtonText: 'Ya',
                   cancelButtonText: 'Tidak',
                 })

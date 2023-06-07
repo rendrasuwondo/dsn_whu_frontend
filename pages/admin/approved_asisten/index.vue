@@ -703,8 +703,8 @@ export default {
           text: 'INGIN MENGHAPUS DATA INI !',
           icon: 'warning',
           showCancelButton: true,
-          confirmButtonColor: '#d33',
-          cancelButtonColor: '#3085d6',
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
           confirmButtonText: 'YA, HAPUS!',
           cancelButtonText: 'TIDAK',
         })
@@ -794,8 +794,8 @@ export default {
           text: 'Melakukan verifikasi !',
           icon: 'warning',
           showCancelButton: true,
-          confirmButtonColor: '#d33',
-          cancelButtonColor: '#3085d6',
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
           confirmButtonText: 'YA',
           cancelButtonText: 'TIDAK',
         })
@@ -853,8 +853,8 @@ export default {
             text: 'Melakukan Submit !',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
             confirmButtonText: 'YA',
             cancelButtonText: 'TIDAK',
           })
@@ -879,7 +879,14 @@ export default {
               formData.append('p_wf_proc_id', '1')
               formData.append('p_wf_doc_type_id', '1')
               formData.append('approve', 'Y')
-              formData.append('t_elhm_id', this.activitied_at_start + '_' + this.afdeling_id[0].id + '_' + this.foreman_employee_id.employee_id)
+              formData.append(
+                't_elhm_id',
+                this.activitied_at_start +
+                  '_' +
+                  this.afdeling_id[0].id +
+                  '_' +
+                  this.foreman_employee_id.employee_id
+              )
 
               // console.log(formData)
               this.$axios

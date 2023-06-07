@@ -151,9 +151,9 @@
                   name: 'admin-in_process_detail_asisten-id',
                   params: { id: row.item.id },
                   query: {
-                    tanggal: row.item.activitied_at,
+                    tanggal: formatDate(row.item.activitied_at),
                     mandor: `${row.item.afdeling_code} (${row.item.afdeling_id})`,
-                    afdelingCode: `${row.item.nik} - ${row.item.name}`
+                    afdelingCode: `${row.item.nik} - ${row.item.name}`,
                   },
                 }"
                 variant="link"
@@ -169,9 +169,9 @@
                   name: 'admin-in_process_detail-id',
                   params: { id: row.item.id },
                   query: {
-                    tanggal: row.item.activitied_at,
+                    tanggal: formatDate(row.item.activitied_at),
                     mandor: `${row.item.afdeling_code} (${row.item.afdeling_id})`,
-                    afdelingCode: `${row.item.nik} - ${row.item.name}`
+                    afdelingCode: `${row.item.nik} - ${row.item.name}`,
                   },
                 }"
                 variant="link"
@@ -536,10 +536,22 @@ export default {
     }
   },
 
-  mounted() {
-  },
+  mounted() {},
 
   methods: {
+    formatDate(date) {
+      // date '2023-06-01'
+      const dateParsed = new Date(Date.parse(date))
+      const formattedDate = dateParsed
+        .toLocaleDateString('en-GB', {
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric',
+        })
+        .replace(/ /g, '-')
+
+      return formattedDate
+    },
     // onChangeAfdeling() {
     //   if (this.afdeling_id != null) {
     //     if (
