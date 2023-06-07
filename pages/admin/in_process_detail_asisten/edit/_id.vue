@@ -373,7 +373,7 @@ export default {
 
   methods: {
     back() {
-      this.$nuxt.$loading.start()
+      // this.$nuxt.$loading.start()
       this.main = false
 
       this.$router.push({

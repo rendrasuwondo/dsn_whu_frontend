@@ -537,20 +537,6 @@ export default {
   },
 
   mounted() {
-    this.$nextTick(() => {
-      this.$nuxt.$loading.start()
-    })
-
-    setTimeout(() => this.$nuxt.$loading.finish(), 2000)
-
-    document.onreadystatechange = () => {
-      console.log(document.readyState);
-      if (document.readyState == 'complete') {
-        this.$nextTick(() => {
-          this.$nuxt.$loading.finish()
-        })
-      }
-    }
   },
 
   methods: {
