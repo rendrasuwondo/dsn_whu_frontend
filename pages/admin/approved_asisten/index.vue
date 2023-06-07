@@ -549,18 +549,6 @@ export default {
   },
 
   mounted() {
-    this.$nextTick(() => {
-      this.$nuxt.$loading.start()
-    })
-    setTimeout(() => this.$nuxt.$loading.finish(), 2000)
-    document.onreadystatechange = () => {
-      if (document.readyState == 'complete') {
-        this.$nextTick(() => {
-          this.$nuxt.$loading.finish()
-          this.main = true
-        })
-      }
-    }
     if (this.$route.query.q_afdeling_id == null) {
       this.afdeling_id = [
         {
@@ -682,7 +670,7 @@ export default {
         //cek watchQuery end
 
         if (this.WatchGo() == 1) {
-          this.$nuxt.$loading.start()
+          // this.$nuxt.$loading.start()
           this.main = false
           this.$router.push({
             path: this.$route.path,
@@ -825,7 +813,7 @@ export default {
             var i = 0
             let n = this.selectedData.length
 
-            this.$nuxt.$loading.start()
+            // this.$nuxt.$loading.start()
             this.main = false
 
             this.$axios
@@ -843,7 +831,7 @@ export default {
                 })
 
                 this.$nuxt.refresh().then(() => {
-                  this.$nuxt.$loading.finish()
+                  // this.$nuxt.$loading.finish()
                   this.main = true
                 })
               })
@@ -877,7 +865,7 @@ export default {
               // console.log(this.activitied_at_start)
               // console.log(this.afdeling_id[0].id)
               // console.log(this.foreman_employee_id.employee_id)
-              this.$nuxt.$loading.start()
+              // this.$nuxt.$loading.start()
               this.main = false
 
               let formData = new FormData()
@@ -910,7 +898,7 @@ export default {
                       })
 
                       this.$nuxt.refresh().then(() => {
-                        this.$nuxt.$loading.finish()
+                        // this.$nuxt.$loading.finish()
                         this.main = true
                       })
                     })
