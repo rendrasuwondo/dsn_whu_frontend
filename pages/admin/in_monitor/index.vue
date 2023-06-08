@@ -143,7 +143,7 @@
                   name: 'admin-in_monitor_detail_asisten-id',
                   params: { id: row.item.id },
                   query: {
-                    tanggal: row.item.activitied_at,
+                    tanggal: formatDate(row.item.activitied_at),
                     mandor: `${row.item.afdeling_code} (${row.item.afdeling_id})`,
                     afdelingCode: `${row.item.nik} - ${row.item.name}`,
                   },
@@ -161,7 +161,7 @@
                   name: 'admin-in_monitor_detail-id',
                   params: { id: row.item.id },
                   query: {
-                    tanggal: row.item.activitied_at,
+                    tanggal: formatDate(row.item.activitied_at),
                     mandor: `${row.item.afdeling_code} (${row.item.afdeling_id})`,
                     afdelingCode: `${row.item.nik} - ${row.item.name}`,
                   },
@@ -224,6 +224,12 @@ export default {
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          label: 'Status',
+          key: 'elhm_status_code',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Dept.',
           key: 'department_code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
@@ -234,7 +240,6 @@ export default {
           key: 'afdeling_code',
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
-
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Mandor',
@@ -427,8 +432,7 @@ export default {
     const posts = await $axios.$get(
       `api/admin/workflow/in_monitor?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${userAfdelingId}&q_department_id=${userDepartmentId}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}`
     )
-    console.log("url post", `api/admin/workflow/in_monitor?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${userAfdelingId}&q_department_id=${userDepartmentId}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}`
-);
+
     return {
       posts: posts.data,
       pagination: posts.data,
@@ -463,6 +467,19 @@ export default {
   },
 
   methods: {
+    formatDate(date) {
+      // date '2023-06-01'
+      const dateParsed = new Date(Date.parse(date))
+      const formattedDate = dateParsed
+        .toLocaleDateString('en-GB', {
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric',
+        })
+        .replace(/ /g, '-')
+
+      return formattedDate
+    },
 
     customLabel(afdeling) {
       return `${afdeling.code}` + ' (' + `${afdeling.id}` + ')'
@@ -566,7 +583,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/lph/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_afdeling_id=${this.query_afdeling_id}`,
+        url: `/api/admin/workflow/in_monitor/export?q=${this.search}&q_is_asisten=${this.btn_asisten}&q_afdeling_id=${this.$auth.user.employee.afdeling_id ?? ''}&q_department_id=${this.$auth.user.employee.department_id}&q_activitied_at_start=${this.activitied_at_start}&q_activitied_at_end=${this.activitied_at_end}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
@@ -575,7 +592,7 @@ export default {
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
-        var fileName = 'Laporan Progress Harian.xlsx'
+        var fileName = 'Laporan In Monitor.xlsx'
         link.setAttribute('download', fileName) //or any other extension
         document.body.appendChild(link)
         link.click()
