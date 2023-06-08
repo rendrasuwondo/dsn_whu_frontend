@@ -545,6 +545,8 @@ export default {
       posts: posts.data,
       pagination: posts.data,
       search: search,
+      q_afdeling_id: q_afdeling_id,
+      q_foreman_employee_id: foreman_employee_id.employee_id,
       rowcount: posts.data.length,
       activitied_at_start: activitied_at_start,
       activitied_at_end: activitied_at_end,
@@ -702,7 +704,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/lph/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_afdeling_id=${this.query_afdeling_id}`,
+        url: `/api/admin/lhm/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_afdeling_id=${this.q_afdeling_id}&q_foreman_employee_id=${this.q_foreman_employee_id}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
@@ -711,7 +713,7 @@ export default {
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
-        var fileName = 'Laporan Progress Harian.xlsx'
+        var fileName = 'Laporan Harian Mandor.xlsx'
         link.setAttribute('download', fileName) //or any other extension
         document.body.appendChild(link)
         link.click()
