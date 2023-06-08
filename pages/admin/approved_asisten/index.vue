@@ -274,6 +274,7 @@ export default {
       visibleRows: [],
       show_page: false,
       show_submit: true,
+      foreman_empl_id: '',
       fields: [
         {
           label: 'Approve',
@@ -533,6 +534,10 @@ export default {
     console.log(async_elhm_status)
     console.log(async_class_status)
     return {
+      foreman_empl_id: q_foreman_employee_id,
+      q_afdeling_id: q_afdeling_id,
+      search: search,
+      page: page,
       posts: posts.data,
       pagination: posts.data,
       search: search,
@@ -766,7 +771,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/activity_actual/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_foreman_employee_id=${this.query_foreman_employee_id}&q_afdeling_id=${this.query_afdeling_id}`,
+        url: `/api/admin/approved_asisten/export?q=${this.search}&page=${this.page}&activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_start}&q_foreman_employee_id=${this.foreman_empl_id}&q_afdeling_id=${this.q_afdeling_id}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
@@ -775,7 +780,7 @@ export default {
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
-        var fileName = 'Actual.xlsx'
+        var fileName = 'ApprovedAsisten.xlsx'
         link.setAttribute('download', fileName) //or any other extension
         document.body.appendChild(link)
         link.click()
