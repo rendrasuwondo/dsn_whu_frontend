@@ -542,6 +542,7 @@ export default {
       pagination: posts.data,
       search: search,
       rowcount: posts.data.length,
+      q_department_id: q_department_id,
       activitied_at_start: activitied_at_start,
       activitied_at_end: activitied_at_end,
       afdeling: afdeling_list.data,
@@ -701,7 +702,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/lph/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_afdeling_id=${this.query_afdeling_id}`,
+        url: `/api/admin/lph/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_afdeling_id=${this.query_afdeling_id}&q_department_id=${this.q_department_id}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
