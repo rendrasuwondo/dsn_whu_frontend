@@ -736,6 +736,7 @@ export default {
     },
 
     exportData() {
+      this.$nuxt.$loading.start()
       const headers = {
         'Content-Type': 'application/json',
       }
@@ -776,11 +777,11 @@ export default {
         responseType: 'blob',
         headers: headers, // important
       }).then((response) => {
-        this.isLoading = false
+        this.$nuxt.$loading.finish()
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
-        var fileName = 'ApprovedAsisten.xlsx'
+        var fileName = 'Laporan Approved Asisten.xlsx'
         link.setAttribute('download', fileName) //or any other extension
         document.body.appendChild(link)
         link.click()
