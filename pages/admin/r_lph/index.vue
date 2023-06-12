@@ -27,6 +27,7 @@
                     <b-input-group>
                       <b-form-datepicker
                         v-model="activitied_at_start"
+                        :max="activitied_at_end"
                         :date-format-options="{
                           year: 'numeric',
                           month: 'short',
@@ -47,6 +48,7 @@
                       <b-form-datepicker
                         v-show="true"
                         v-model="activitied_at_end"
+                        :min="activitied_at_start"
                         :date-format-options="{
                           year: 'numeric',
                           month: 'short',
@@ -554,18 +556,6 @@ export default {
   },
 
   mounted() {
-    this.$nextTick(() => {
-      this.$nuxt.$loading.start()
-    })
-    setTimeout(() => this.$nuxt.$loading.finish(), 2000)
-    document.onreadystatechange = () => {
-      if (document.readyState == 'complete') {
-        this.$nextTick(() => {
-          this.$nuxt.$loading.finish()
-        })
-      }
-    }
-
     if (this.user.employee.position_code == 'ASISTEN AFDELING') {
       if (this.$route.query.q_afdeling_id == null) {
         this.$axios.get(`/api/admin/lov_afdeling_default`).then((response) => {
@@ -685,6 +675,7 @@ export default {
     },
 
     exportData() {
+      this.$nuxt.$loading.start()
       const headers = {
         'Content-Type': 'application/json',
       }
@@ -707,7 +698,7 @@ export default {
         responseType: 'blob',
         headers: headers, // important
       }).then((response) => {
-        this.isLoading = false
+        this.$nuxt.$loading.finish()
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url

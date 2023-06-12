@@ -520,12 +520,15 @@ export default {
     )
 
     let thresholdManDays = 0 // Default Value
-    if (typeof global_param.data.data !== 'undefined' && global_param.data.data.length > 0) {
+    if (
+      typeof global_param.data.data !== 'undefined' &&
+      global_param.data.data.length > 0
+    ) {
       thresholdManDays = global_param.data.data[0].value_1
     }
 
     for (var i = 0; i < posts.data.length; i++) {
-      if(posts.data[i].man_days_total > thresholdManDays) {
+      if (posts.data[i].man_days_total > thresholdManDays) {
         posts.data[i]._rowVariant = 'danger'
       } else {
         posts.data[i]._rowVariant = ''
@@ -687,6 +690,7 @@ export default {
     },
 
     exportData() {
+      this.$nuxt.$loading.start()
       const headers = {
         'Content-Type': 'application/json',
       }
@@ -709,7 +713,7 @@ export default {
         responseType: 'blob',
         headers: headers, // important
       }).then((response) => {
-        this.isLoading = false
+        this.$nuxt.$loading.finish()
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
