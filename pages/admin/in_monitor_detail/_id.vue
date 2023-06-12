@@ -575,7 +575,7 @@ export default {
     }
 
     const t_elhm_ctl = await $axios.$get(
-      `/api/admin/workflow/t_elhm_ctl?id=${route.params.id}`
+      `/api/admin/workflow/t_elhm_ctl_by_elhm_id?id=${route.params.id}`
     )
 
     const t_elhm_message = await $axios.$get(

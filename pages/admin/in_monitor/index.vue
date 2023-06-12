@@ -246,71 +246,71 @@ export default {
           key: 'name',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Total HK',
-          key: 'man_days_total',
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Max HK',
-          key: 'man_days_max',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Avg HK',
-          key: 'man_days_average',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Min HK',
-          key: 'man_days_min',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Rate Total',
-          key: 'rate_total',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
+        // {
+        //   thClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        //   label: 'Total HK',
+        //   key: 'man_days_total',
+        //   tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+        //   formatter: (value, key, item) => {
+        //     let formatter = new Intl.NumberFormat('es-US', {
+        //       minimumFractionDigits: 2,
+        //       maximumFractionDigits: 2,
+        //     })
+        //     return formatter.format(value)
+        //   },
+        // },
+        // {
+        //   thClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        //   label: 'Max HK',
+        //   key: 'man_days_max',
+        //   formatter: (value, key, item) => {
+        //     let formatter = new Intl.NumberFormat('es-US', {
+        //       minimumFractionDigits: 2,
+        //       maximumFractionDigits: 2,
+        //     })
+        //     return formatter.format(value)
+        //   },
+        //   tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+        // },
+        // {
+        //   thClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        //   label: 'Avg HK',
+        //   key: 'man_days_average',
+        //   formatter: (value, key, item) => {
+        //     let formatter = new Intl.NumberFormat('es-US', {
+        //       minimumFractionDigits: 2,
+        //       maximumFractionDigits: 2,
+        //     })
+        //     return formatter.format(value)
+        //   },
+        //   tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+        // },
+        // {
+        //   thClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        //   label: 'Min HK',
+        //   key: 'man_days_min',
+        //   formatter: (value, key, item) => {
+        //     let formatter = new Intl.NumberFormat('es-US', {
+        //       minimumFractionDigits: 2,
+        //       maximumFractionDigits: 2,
+        //     })
+        //     return formatter.format(value)
+        //   },
+        //   tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+        // },
+        // {
+        //   thClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        //   label: 'Rate Total',
+        //   key: 'rate_total',
+        //   formatter: (value, key, item) => {
+        //     let formatter = new Intl.NumberFormat('es-US', {
+        //       minimumFractionDigits: 2,
+        //       maximumFractionDigits: 2,
+        //     })
+        //     return formatter.format(value)
+        //   },
+        //   tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+        // },
       ],
       company_code: '',
       department_code: '',
@@ -429,6 +429,7 @@ export default {
     let userDepartmentId = $auth.user.employee.department_id
     let userAfdelingId = $auth.user.employee.afdeling_id ?? ''
 
+    console.log('posts',       `api/admin/workflow/in_monitor?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${userAfdelingId}&q_department_id=${userDepartmentId}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}`);
     const posts = await $axios.$get(
       `api/admin/workflow/in_monitor?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${userAfdelingId}&q_department_id=${userDepartmentId}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}`
     )
