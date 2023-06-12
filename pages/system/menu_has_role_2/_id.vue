@@ -246,6 +246,8 @@ export default {
 
     const header = [menu.data.data]
 
+    console.log('postss', `/api/admin/detail/menu_has_role/${id}?q=${search}&page=${page}`);
+
     //menu_has_role
     const posts = await $axios.$get(
       `/api/admin/detail/menu_has_role/${id}?q=${search}&page=${page}`
