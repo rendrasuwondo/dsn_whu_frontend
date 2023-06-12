@@ -238,7 +238,7 @@
                     <!-- /.direct-chat-infos -->
                     <img
                       class="direct-chat-img"
-                      src="dist/img/user1-128x128.jpg"
+                      src="/img/avatar_general.png"
                       alt="message user image"
                     />
                     <!-- /.direct-chat-img -->
@@ -682,7 +682,7 @@ export default {
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
-        var fileName = 'Laporan Progress Harian.xlsx'
+        var fileName = 'Laporan In Process Detail.xlsx'
         link.setAttribute('download', fileName) //or any other extension
         document.body.appendChild(link)
         link.click()

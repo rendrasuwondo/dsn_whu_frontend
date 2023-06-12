@@ -27,6 +27,7 @@
                     <b-input-group>
                       <b-form-datepicker
                         v-model="activitied_at_start"
+                        :max="activitied_at_end"
                         :date-format-options="{
                           year: 'numeric',
                           month: 'short',
@@ -46,6 +47,7 @@
                     <b-input-group>
                       <b-form-datepicker
                         v-model="activitied_at_end"
+                        :min="activitied_at_start"
                         :date-format-options="{
                           year: 'numeric',
                           month: 'short',
@@ -154,6 +156,7 @@
                     tanggal: formatDate(row.item.activitied_at),
                     mandor: `${row.item.afdeling_code} (${row.item.afdeling_id})`,
                     afdelingCode: `${row.item.nik} - ${row.item.name}`,
+                    approvalStatus: row.item.doc_status,
                   },
                 }"
                 variant="link"
@@ -172,6 +175,7 @@
                     tanggal: formatDate(row.item.activitied_at),
                     mandor: `${row.item.afdeling_code} (${row.item.afdeling_id})`,
                     afdelingCode: `${row.item.nik} - ${row.item.name}`,
+                    approvalStatus: row.item.doc_status,
                   },
                 }"
                 variant="link"
@@ -595,6 +599,8 @@ export default {
     searchData() {
       this.go = 0
 
+      console.log('validateSearch', this.activitied_at_start, this.activitied_at_end);
+
       if (this.$route.query.q != this.search) {
         this.go = 1
       }
@@ -755,6 +761,7 @@ export default {
     },
 
     exportData() {
+      this.$nuxt.$loading.start()
       const headers = {
         'Content-Type': 'application/json',
       }
@@ -777,11 +784,11 @@ export default {
         responseType: 'blob',
         headers: headers, // important
       }).then((response) => {
-        this.isLoading = false
+        this.$nuxt.$loading.finish()
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
-        var fileName = 'Laporan Progress Harian.xlsx'
+        var fileName = 'Laporan In Process.xlsx'
         link.setAttribute('download', fileName) //or any other extension
         document.body.appendChild(link)
         link.click()

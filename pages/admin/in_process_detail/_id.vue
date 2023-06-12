@@ -119,7 +119,9 @@
                 <b-th variant="danger" colspan="3" class="text-center"
                   >Volume</b-th
                 >
-                <b-th variant="danger" colspan="4"></b-th>
+                <b-th variant="danger" colspan="4" class="text-center"
+                  >Rate</b-th
+                >
               </b-tr>
             </template>
             <template v-slot:cell(detail_hap)="row">
@@ -237,10 +239,20 @@
               <template #header>
                 <h6 class="mb-0">Approval</h6>
               </template>
+
+              <b-row>
+                <approval
+                  :approvalStatus="this.$route.query.approvalStatus"
+                  :elhm_id="this.t_elhm_ctl.t_elhm_id"
+                ></approval>
+              </b-row>
+
               <!-- <b-card-text>Header and footers using slots.</b-card-text> -->
-              <b-button href="#" variant="primary" @click="Submit()"
-                >Submit</b-button
-              >
+              <div class="d-flex justify-content-end">
+                <b-button href="#" variant="primary" @click="Submit()"
+                  >Submit</b-button
+                >
+              </div>
             </b-card>
           </b-card-group>
         </div>
@@ -254,7 +266,9 @@
 </template>
 
 <script>
+import Approval from '~/components/Approval.vue'
 export default {
+  components: { Approval },
   layout: 'admin',
   head() {
     return {
@@ -262,13 +276,13 @@ export default {
     }
   },
 
-  props: ['date', 'afdelingCode', 'mandor'],
+  props: ['date', 'afdelingCode', 'mandor', 'approvalStatus'],
   data() {
     return {
       detail: {
         tanggal: this.$route.query.tanggal,
         mandor: this.$route.query.mandor,
-        afdelingCode: this.$route.query.afdeling,
+        afdelingCode: this.$route.query.afdelingCode,
       },
       loading: false,
       main: true,
@@ -555,12 +569,15 @@ export default {
     )
 
     let thresholdManDays = 0 // Default Value
-    if (typeof global_param.data.data !== 'undefined' && global_param.data.data.length > 0) {
+    if (
+      typeof global_param.data.data !== 'undefined' &&
+      global_param.data.data.length > 0
+    ) {
       thresholdManDays = global_param.data.data[0].value_1
     }
 
     for (var i = 0; i < posts.data.length; i++) {
-      if(posts.data[i].man_days_total > thresholdManDays) {
+      if (posts.data[i].man_days_total > thresholdManDays) {
         posts.data[i]._rowVariant = 'danger'
       } else {
         posts.data[i]._rowVariant = ''
@@ -717,6 +734,7 @@ export default {
     },
 
     exportData() {
+      this.$nuxt.$loading.start()
       const headers = {
         'Content-Type': 'application/json',
       }
@@ -739,11 +757,11 @@ export default {
         responseType: 'blob',
         headers: headers, // important
       }).then((response) => {
-        this.isLoading = false
+        this.$nuxt.$loading.finish()
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
-        var fileName = 'Laporan Progress Harian.xlsx'
+        var fileName = 'Laporan In Process Detail.xlsx'
         link.setAttribute('download', fileName) //or any other extension
         document.body.appendChild(link)
         link.click()
