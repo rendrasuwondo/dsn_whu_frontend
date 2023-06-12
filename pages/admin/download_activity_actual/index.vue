@@ -225,7 +225,7 @@ export default {
       current.setDate(current.getDate())
       const date = `${current.getFullYear()}-${
         current.getMonth() + 1
-      }-${current.getDate()}`
+      }-${current.getDate() - 1}`
       // const date = `${current.getFullYear()}-${pad(
       //   current.getMonth() + 1,
       //   2

@@ -219,7 +219,7 @@ export default {
       current.setDate(current.getDate())
       const date = `${current.getFullYear()}-${
         current.getMonth() + 1
-      }-${current.getDate()}`
+      }-${current.getDate() - 1}`
       return date
     }
 
