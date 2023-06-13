@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-book-open"></i> TAMBAH Role
+            <i class="nav-icon fas fa-people-arrows"></i> TAMBAH Role
           </h3>
           <div class="card-tools"></div>
         </div>

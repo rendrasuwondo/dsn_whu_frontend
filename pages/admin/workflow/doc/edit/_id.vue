@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-folder"></i> EDIT WORKFLOW DOCUMENTS
+            <i class="nav-icon fas fa-file"></i> EDIT WORKFLOW DOCUMENTS
           </h3>
           <div class="card-tools"></div>
         </div>

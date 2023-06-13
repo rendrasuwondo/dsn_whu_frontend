@@ -15,7 +15,7 @@
                     :to="{ name: 'admin-in_monitor' }"
                     class="nav-link"
                   >
-                    <i class="nav-icon fas fa-id-badge"></i>
+                    <i class="nav-icon fas fa-user-clock"></i>
                     In Monitor
                   </router-link>
                 </td>

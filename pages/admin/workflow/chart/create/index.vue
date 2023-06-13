@@ -8,7 +8,7 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-book-open"></i> TAMBAH Chart
+            <i class="nav-icon fas fa-chart-line"></i> TAMBAH Chart
           </h3>
           <div class="card-tools"></div>
         </div>

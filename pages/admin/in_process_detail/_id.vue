@@ -15,7 +15,7 @@
                     :to="{ name: 'admin-in_process' }"
                     class="nav-link"
                   >
-                    <i class="nav-icon fas fa-id-badge"></i>
+                    <i class="nav-icon fas fa-briefcase"></i>
                     In Process
                   </nuxt-link>
                 </td>

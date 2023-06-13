@@ -8,7 +8,7 @@
       <div class="card card-outline card-info" v-if="main">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-clipboard"></i> IN PROCESS
+            <i class="nav-icon fas fa-briefcase"></i> IN PROCESS
           </h3>
           <div class="card-tools"></div>
         </div>
