@@ -1,21 +1,20 @@
 <template>
   <b-row id="steps">
-    <div>
-      <div
-        class="step"
-        v-b-tooltip.hover
-        v-bind:title="this.approverName[0] ? this.approverName[0] : ''"
-        data-desc="Approval Asisten"
-        v-bind:class="
-          this.approvalStatus == 1
-            ? 'active'
-            : this.approvalStatus > 1
-            ? 'done'
-            : ''
-        "
-      >
-        1
-      </div>
+    <div
+      class="step"
+      v-b-tooltip.hover
+      v-bind:title="this.approverName[0] ? this.approverName[0] : ''"
+      v-bind:data-date="this.approveDate[0] ? formatDate(this.approveDate[0]) : ''"
+      data-desc="Approval Asisten"
+      v-bind:class="
+        this.approvalStatus == 1
+          ? 'active'
+          : this.approvalStatus > 1
+          ? 'done'
+          : ''
+      "
+    >
+      1
     </div>
 
     <div
@@ -23,6 +22,7 @@
       data-desc="Approval Askep"
       v-b-tooltip.hover
       v-bind:title="this.approverName[1] ? this.approverName[1] : ''"
+      v-bind:data-date="this.approveDate[1] ? formatDate(this.approveDate[1]) : ''"
       v-bind:class="
         this.approvalStatus == 2
           ? 'active'
@@ -39,6 +39,7 @@
       data-desc="Approval EH"
       v-b-tooltip.hover
       v-bind:title="this.approverName[2] ? this.approverName[2] : ''"
+      v-bind:data-date="this.approveDate[2] ? formatDate(this.approveDate[2]) : ''"
       v-bind:class="
         this.approvalStatus == 3
           ? 'active'
@@ -55,23 +56,32 @@
 <script>
 export default {
   name: 'approval',
-  data: () => ({ approverName: '', loading: false }),
-  methods: {},
+  data: () => ({ approverName: '', approveDate: '', loading: false }),
+  methods: {
+    formatDate(date) {
+      // date '2023-06-01'
+      const dateParsed = new Date(Date.parse(date))
+      const formattedDate = dateParsed
+        .toLocaleDateString('en-GB', {
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric',
+        })
+        .replace(/ /g, '-')
+
+      return formattedDate
+    },
+  },
   props: ['approvalStatus', 'approver', 'elhm_id'],
   mounted() {
     this.$axios
       .$get(`/api/admin/workflow/approver_list?id=${this.elhm_id}`)
       .then((response) => {
-        this.approverName = response.data.map(a => a.name_submit);
+        // this.approverName = response.data.map((a) => a.name_submit)
+        this.approverName = response.data.map((a) => a.name_submit)
+        this.approveDate = response.data.map((a) => a.date)
       })
   },
-
-  // async asyncData({ $axios, query, $auth, route }) {
-
-  //   return {
-  //     approver: 'hehe'
-  //   }
-  // }
 }
 </script>
 
@@ -96,10 +106,10 @@ body {
   color: #000000;
   font-weight: 600;
   text-align: center;
-  line-height: 30px;
+  line-height: 35px;
 }
 .step:first-child {
-  line-height: 32px;
+  line-height: 40px;
 }
 .step:nth-child(n + 2) {
   margin: 0 0 0 100px;
@@ -118,21 +128,13 @@ body {
   display: block;
   transform: translate(-55px, 3px);
   color: #000000;
-  content: attr(data-desc);
+  content: attr(data-desc) '\A'attr(data-date);
   font-weight: 400;
   font-size: 13px;
   white-space: pre;
+  line-height: normal;
 }
-.step:after {
-  width: 150px;
-  display: block;
-  transform: translate(-55px, 3px);
-  color: #000000;
-  content: attr(data-desc);
-  font-weight: 400;
-  font-size: 13px;
-  white-space: pre;
-}
+
 .step:first-child:after {
   transform: translate(-55px, -1px);
 }
