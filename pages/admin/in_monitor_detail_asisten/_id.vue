@@ -238,7 +238,7 @@
                     <!-- /.direct-chat-infos -->
                     <img
                       class="direct-chat-img"
-                      src="dist/img/user1-128x128.jpg"
+                      src="/img/avatar_general.png"
                       alt="message user image"
                     />
                     <!-- /.direct-chat-img -->

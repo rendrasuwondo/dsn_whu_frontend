@@ -144,13 +144,13 @@
                   params: { id: row.item.id },
                   query: {
                     tanggal: formatDate(row.item.activitied_at),
-                    mandor: `${row.item.afdeling_code} (${row.item.afdeling_id})`,
-                    afdelingCode: `${row.item.nik} - ${row.item.name}`,
+                    mandor: `${row.item.nik} - ${row.item.name}`,
+                    afdelingCode: `${row.item.afdeling_code} (${row.item.afdeling_id})`,
                   },
                 }"
                 variant="link"
                 size="sm"
-                title="Edit"
+                title="Detail"
                 @click="ProcessDetail()"
               >
                 <i class="fa fa-envelope"></i>
@@ -162,13 +162,13 @@
                   params: { id: row.item.id },
                   query: {
                     tanggal: formatDate(row.item.activitied_at),
-                    mandor: `${row.item.afdeling_code} (${row.item.afdeling_id})`,
-                    afdelingCode: `${row.item.nik} - ${row.item.name}`,
+                    mandor: `${row.item.nik} - ${row.item.name}`,
+                    afdelingCode: `${row.item.afdeling_code} (${row.item.afdeling_id})`,
                   },
                 }"
                 variant="link"
                 size="sm"
-                title="Edit"
+                title="Detail"
                 @click="ProcessDetail()"
               >
                 <i class="fa fa-envelope"></i>

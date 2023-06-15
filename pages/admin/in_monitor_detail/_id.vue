@@ -227,7 +227,7 @@
                     <!-- /.direct-chat-infos -->
                     <img
                       class="direct-chat-img"
-                      src="dist/img/user1-128x128.jpg"
+                      src="/img/avatar_general.png"
                       alt="message user image"
                     />
                     <!-- /.direct-chat-img -->
@@ -275,7 +275,7 @@ export default {
       detail: {
         tanggal: this.$route.query.tanggal,
         mandor: this.$route.query.mandor,
-        afdelingCode: this.$route.query.afdeling,
+        afdelingCode: this.$route.query.afdelingCode,
       },
       loading: false,
       main: true,

@@ -154,14 +154,14 @@
                   params: { id: row.item.id },
                   query: {
                     tanggal: formatDate(row.item.activitied_at),
-                    mandor: `${row.item.afdeling_code} (${row.item.afdeling_id})`,
-                    afdelingCode: `${row.item.nik} - ${row.item.name}`,
+                    mandor: `${row.item.nik} - ${row.item.name}`,
+                    afdelingCode: `${row.item.afdeling_code} (${row.item.afdeling_id})`,
                     approvalStatus: row.item.doc_status,
                   },
                 }"
                 variant="link"
                 size="sm"
-                title="Edit"
+                title="Detail"
                 @click="ProcessDetail()"
               >
                 <i class="fa fa-envelope"></i>
@@ -173,14 +173,14 @@
                   params: { id: row.item.id },
                   query: {
                     tanggal: formatDate(row.item.activitied_at),
-                    mandor: `${row.item.afdeling_code} (${row.item.afdeling_id})`,
-                    afdelingCode: `${row.item.nik} - ${row.item.name}`,
+                    mandor: `${row.item.nik} - ${row.item.name}`,
+                    afdelingCode: `${row.item.afdeling_code} (${row.item.afdeling_id})`,
                     approvalStatus: row.item.doc_status,
                   },
                 }"
                 variant="link"
                 size="sm"
-                title="Edit"
+                title="Detail"
                 @click="ProcessDetail()"
               >
                 <i class="fa fa-envelope"></i>
@@ -507,12 +507,6 @@ export default {
       q_activity_id = ''
     }
 
-    // console.log('q')
-    // console.log($auth.user.employee.position_id)
-
-    const posts = await $axios.$get(
-      `api/admin/workflow/in_process?q=${search}&q_afdeling_id=${q_afdeling_id}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}`
-    )
 
     let btn_asisten, btn_non_asisten
 
@@ -523,6 +517,11 @@ export default {
       btn_asisten = false
       btn_non_asisten = true
     }
+
+    console.log( `api/admin/workflow/in_process?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${q_afdeling_id}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}`)
+    const posts = await $axios.$get(
+      `api/admin/workflow/in_process?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${q_afdeling_id}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}`
+    )
 
     return {
       posts: posts.data,

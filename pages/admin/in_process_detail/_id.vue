@@ -298,42 +298,49 @@ export default {
           label: 'NPK',
           key: 'labour_nik',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          sortable: true,
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Nama Pekerja',
           key: 'labour_name',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          sortable: true,
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Blok',
           key: 'block',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          sortable: true,
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Luas',
           key: 'wide',
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+          sortable: true,
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Jenis Pekerjaan',
           key: 'activity_description',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          sortable: true,
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Satuan',
           key: 'activity_unit_code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          sortable: true,
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Basic',
           key: 'man_days_basic',
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+          sortable: true,
           formatter: (value, key, item) => {
             let formatter = new Intl.NumberFormat('es-US', {
               minimumFractionDigits: 2,
@@ -346,6 +353,7 @@ export default {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Premi',
           key: 'man_days_premi',
+          sortable: true,
           formatter: (value, key, item) => {
             let formatter = new Intl.NumberFormat('es-US', {
               minimumFractionDigits: 2,
@@ -359,6 +367,7 @@ export default {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Total',
           key: 'man_days_total',
+          sortable: true,
           formatter: (value, key, item) => {
             let formatter = new Intl.NumberFormat('es-US', {
               minimumFractionDigits: 2,
@@ -372,6 +381,7 @@ export default {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Basic',
           key: 'qty_basic',
+          sortable: true,
           formatter: (value, key, item) => {
             let formatter = new Intl.NumberFormat('es-US', {
               minimumFractionDigits: 2,
@@ -385,6 +395,7 @@ export default {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Premi',
           key: 'qty_premi',
+          sortable: true,
           formatter: (value, key, item) => {
             let formatter = new Intl.NumberFormat('es-US', {
               minimumFractionDigits: 2,
@@ -398,6 +409,7 @@ export default {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Total',
           key: 'qty_total',
+          sortable: true,
           formatter: (value, key, item) => {
             let formatter = new Intl.NumberFormat('es-US', {
               minimumFractionDigits: 2,
@@ -411,6 +423,7 @@ export default {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Unit',
           key: 'unit',
+          sortable: true,
           formatter: (value, key, item) => {
             let formatter = new Intl.NumberFormat('es-US', {
               minimumFractionDigits: 2,
@@ -424,6 +437,7 @@ export default {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Norm',
           key: 'norm',
+          sortable: true,
           formatter: (value, key, item) => {
             let formatter = new Intl.NumberFormat('es-US', {
               minimumFractionDigits: 2,
