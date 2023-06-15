@@ -134,6 +134,10 @@
                   ><b>Total</b></b-td
                 >
                 <b-td align="right" variant="secondary">
+                </b-td>
+                <b-td align="right" variant="secondary">
+                </b-td>
+                <b-td align="right" variant="secondary">
                   <b> {{ TotalManDaysBasic.toFixed(2) }}</b>
                 </b-td>
                 <b-td align="right" variant="secondary">
@@ -151,7 +155,12 @@
                 <b-td align="right" variant="secondary">
                   <b> {{ addCommas(TotalQtyTotal.toFixed(2)) }}</b>
                 </b-td>
-                <b-td align="right" variant="secondary" colspan="4"></b-td>
+                <b-td align="right" variant="secondary">
+                  <b> {{ addCommas(TotalRateUnit.toFixed(2)) }}</b>
+                </b-td>
+                <b-td align="right" variant="secondary">
+                  <b> {{ addCommas(TotalRateNorm.toFixed(2)) }}</b>
+                </b-td>
               </b-tr>
               <b-tr>
                 <b-td colspan="2" align="left"></b-td>
@@ -1082,6 +1091,21 @@ export default {
       return this.visibleRows.reduce((accum, item) => {
         // console.log(accum + item.qty_total)
         return accum + item.qty_total
+      }, 0.0)
+    },
+
+    TotalRateUnit() {
+      return this.visibleRows.reduce((accum, item) => {
+        console.log('ini loh');
+        console.log(item.unit)
+        return accum + item.unit
+      }, 0.0)
+    },
+
+    TotalRateNorm() {
+      return this.visibleRows.reduce((accum, item) => {
+        // console.log(accum + item.qty_total)
+        return accum + item.norm
       }, 0.0)
     },
   },
