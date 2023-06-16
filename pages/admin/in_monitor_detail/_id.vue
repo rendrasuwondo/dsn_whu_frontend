@@ -126,7 +126,9 @@
                 <b-th variant="danger" colspan="3" class="text-center"
                   >Volume</b-th
                 >
-                <b-th variant="danger" colspan="4"></b-th>
+                <b-th variant="danger" colspan="4" class="text-center"
+                  >Rate</b-th
+                >
               </b-tr>
             </template>
             <template v-slot:cell(detail_hap)="row">
@@ -138,6 +140,8 @@
                 <b-td colspan="2" align="left" variant="secondary"
                   ><b>Total</b></b-td
                 >
+                <b-td align="right" variant="secondary"></b-td>
+                <b-td align="right" variant="secondary"></b-td>
                 <b-td align="right" variant="secondary">
                   <b> {{ TotalManDaysBasic.toFixed(2) }}</b>
                 </b-td>
@@ -156,7 +160,12 @@
                 <b-td align="right" variant="secondary">
                   <b> {{ addCommas(TotalQtyTotal.toFixed(2)) }}</b>
                 </b-td>
-                <b-td align="right" variant="secondary" colspan="4"></b-td>
+                <b-td align="right" variant="secondary">
+                  <b> {{ addCommas(TotalQtyUnit.toFixed(2)) }}</b>
+                </b-td>
+                <b-td align="right" variant="secondary">
+                  <b> {{ addCommas(TotalQtyNorm.toFixed(2)) }}</b>
+                </b-td>
               </b-tr>
               <b-tr>
                 <b-td colspan="2" align="left"></b-td>
@@ -562,12 +571,15 @@ export default {
     )
 
     let thresholdManDays = 0 // Default Value
-    if (typeof global_param.data.data !== 'undefined' && global_param.data.data.length > 0) {
+    if (
+      typeof global_param.data.data !== 'undefined' &&
+      global_param.data.data.length > 0
+    ) {
       thresholdManDays = global_param.data.data[0].value_1
     }
 
     for (var i = 0; i < posts.data.length; i++) {
-      if(posts.data[i].man_days_total > thresholdManDays) {
+      if (posts.data[i].man_days_total > thresholdManDays) {
         posts.data[i]._rowVariant = 'danger'
       } else {
         posts.data[i]._rowVariant = ''
@@ -1049,6 +1061,20 @@ export default {
       return this.visibleRows.reduce((accum, item) => {
         // console.log(accum + item.qty_total)
         return accum + item.qty_total
+      }, 0.0)
+    },
+
+    TotalQtyUnit() {
+      return this.visibleRows.reduce((accum, item) => {
+        // console.log(accum + item.unit)
+        return accum + item.unit
+      }, 0.0)
+    },
+
+    TotalQtyNorm() {
+      return this.visibleRows.reduce((accum, item) => {
+        // console.log(accum + item.norm)
+        return accum + item.norm
       }, 0.0)
     },
   },

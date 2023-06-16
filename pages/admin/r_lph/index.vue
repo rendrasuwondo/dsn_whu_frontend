@@ -178,6 +178,12 @@
                 <b-td align="right" variant="secondary">
                   <b> {{ addCommas(TotalQtyTotal.toFixed(2)) }}</b>
                 </b-td>
+                <b-td align="right" variant="secondary">
+                  <b> {{ addCommas(TotalQtyUnit.toFixed(2)) }}</b>
+                </b-td>
+                <b-td align="right" variant="secondary">
+                  <b> {{ addCommas(TotalQtyNorm.toFixed(2)) }}</b>
+                </b-td>
                 <b-td align="right" variant="secondary" colspan="4"></b-td>
               </b-tr>
               <b-tr>
@@ -771,6 +777,18 @@ export default {
       return this.visibleRows.reduce((accum, item) => {
         // console.log(accum + item.qty_total)
         return accum + item.qty_total
+      }, 0.0)
+    },
+    TotalQtyUnit() {
+      return this.visibleRows.reduce((accum, item) => {
+        // console.log(accum + item.unit)
+        return accum + item.unit
+      }, 0.0)
+    },
+    TotalQtyNorm() {
+      return this.visibleRows.reduce((accum, item) => {
+        // console.log(accum + item.norm)
+        return accum + item.norm
       }, 0.0)
     },
 
