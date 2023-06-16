@@ -8,7 +8,8 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-exclamation-circle"></i> LAPORAN POTENSI ABNORMAL
+            <i class="nav-icon fas fa-exclamation-circle"></i> LAPORAN POTENSI
+            ABNORMAL
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -146,7 +147,10 @@
                 <b-th variant="danger" colspan="3" class="text-center"
                   >Volume</b-th
                 >
-                <b-th variant="danger" colspan="4"></b-th>
+                <b-th variant="danger" colspan="2" class="text-center"
+                  >Rate</b-th
+                >
+                <b-th variant="danger" colspan="2"></b-th>
               </b-tr>
             </template>
             <template v-slot:cell(detail_hap)="row">
@@ -175,6 +179,12 @@
                 </b-td>
                 <b-td align="right" variant="secondary">
                   <b> {{ addCommas(TotalQtyTotal.toFixed(2)) }}</b>
+                </b-td>
+                <b-td align="right" variant="secondary">
+                  <b> {{ addCommas(TotalQtyUnit.toFixed(2)) }}</b>
+                </b-td>
+                <b-td align="right" variant="secondary">
+                  <b> {{ addCommas(TotalQtyNorm.toFixed(2)) }}</b>
                 </b-td>
                 <b-td align="right" variant="secondary" colspan="4"></b-td>
               </b-tr>
@@ -486,12 +496,15 @@ export default {
     )
 
     let thresholdManDays = 0 // Default Value
-    if (typeof global_param.data.data !== 'undefined' && global_param.data.data.length > 0) {
+    if (
+      typeof global_param.data.data !== 'undefined' &&
+      global_param.data.data.length > 0
+    ) {
       thresholdManDays = global_param.data.data[0].value_1
     }
 
     for (var i = 0; i < posts.data.length; i++) {
-      if(posts.data[i].man_days_total > thresholdManDays) {
+      if (posts.data[i].man_days_total > thresholdManDays) {
         posts.data[i]._rowVariant = 'danger'
       } else {
         posts.data[i]._rowVariant = ''
@@ -505,6 +518,8 @@ export default {
       rowcount: posts.data.length,
       activitied_at_start: activitied_at_start,
       activitied_at_end: activitied_at_end,
+      q_afdeling_id: q_afdeling_id,
+      q_department_id: q_department_id,
       afdeling: afdeling_list.data,
       afdeling_id: afdeling_id,
       department: department_list.data,
@@ -550,7 +565,6 @@ export default {
   },
 
   methods: {
-
     customLabel(afdeling) {
       return `${afdeling.code}` + ' (' + `${afdeling.id}` + ')'
     },
@@ -575,7 +589,7 @@ export default {
     },
     //searchData
     searchData() {
-      this.$nuxt.$loading.start();
+      this.$nuxt.$loading.start()
       console.log('rdr')
       console.log(this.afdeling_id)
 
@@ -628,6 +642,7 @@ export default {
     },
 
     exportData() {
+      this.$nuxt.$loading.start()
       const headers = {
         'Content-Type': 'application/json',
       }
@@ -645,16 +660,16 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/lph/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_afdeling_id=${this.query_afdeling_id}`,
+        url: `/api/admin/potensi_abnormal/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_afdeling_id=${this.q_afdeling_id}&q_department_id=${this.q_department_id}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
       }).then((response) => {
-        this.isLoading = false
+        this.$nuxt.$loading.finish()
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
-        var fileName = 'Laporan Progress Harian.xlsx'
+        var fileName = 'Laporan Potensi Abnormal.xlsx'
         link.setAttribute('download', fileName) //or any other extension
         document.body.appendChild(link)
         link.click()
@@ -723,6 +738,18 @@ export default {
       return this.visibleRows.reduce((accum, item) => {
         // console.log(accum + item.qty_total)
         return accum + item.qty_total
+      }, 0.0)
+    },
+    TotalQtyUnit() {
+      return this.visibleRows.reduce((accum, item) => {
+        // console.log(accum + item.unit)
+        return accum + item.unit
+      }, 0.0)
+    },
+    TotalQtyNorm() {
+      return this.visibleRows.reduce((accum, item) => {
+        // console.log(accum + item.norm)
+        return accum + item.norm
       }, 0.0)
     },
 
