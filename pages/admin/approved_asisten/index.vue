@@ -219,13 +219,18 @@
                   >
                 </b-td>
 
-                <b-td colspan="3">Total</b-td>
+                <b-td colspan="2">Total</b-td>
                 <b-td align="right">
                   {{ new Intl.NumberFormat('es-US').format(TOTAL_HK) }}</b-td
                 >
                 <b-td align="right">
                   {{
                     new Intl.NumberFormat('es-US').format(TOTAL_VOLUME)
+                  }}</b-td
+                >
+                <b-td align="right">
+                  {{
+                    new Intl.NumberFormat('es-US').format(TOTAL_RATE)
                   }}</b-td
                 >
               </b-tr>
@@ -281,11 +286,12 @@ export default {
           key: 'selected',
           tdClass: 'align-middle text-center text-nowrap nameOfTheClass ',
           sortable: false,
+          thClass: 'align-middle text-center text-left text-nowrap',
         },
         {
           label: 'Actions',
           key: 'actions',
-          tdClass: 'align-middle text-left text-nowrap  ',
+          tdClass: 'align-middle text-center text-left text-nowrap  ',
           thClass: '',
         },
         {
@@ -490,6 +496,7 @@ export default {
       q_foreman_employee_id = ''
     }
 
+    console.log('post', `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_start}&q_foreman_employee_id=${q_foreman_employee_id}&q_afdeling_id=${q_afdeling_id}`);
     const posts = await $axios.$get(
       `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_start}&q_foreman_employee_id=${q_foreman_employee_id}&q_afdeling_id=${q_afdeling_id}`
     )
@@ -521,7 +528,7 @@ export default {
           async_elhm_status = 'Approve Askep'
           async_class_status = 'card-tools bg-success'
           break
-        case '2':
+        case '3':
           async_elhm_status = 'Approve EH'
           async_class_status = 'card-tools bg-primary'
           break
@@ -983,6 +990,17 @@ export default {
       return this.visibleRows
         .reduce((accum, item) => {
           return accum + item.qty
+        }, 0.0)
+        .toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
+    },
+
+    TOTAL_RATE() {
+      return this.visibleRows
+        .reduce((accum, item) => {
+          return accum + item.flexrate
         }, 0.0)
         .toLocaleString(undefined, {
           minimumFractionDigits: 2,

@@ -87,6 +87,14 @@
             </div>
 
             <div class="form-group">
+              <label>Aktif?</label>
+              <b-form-select v-model="field.is_active">
+                <b-form-select-option value="Y">Ya</b-form-select-option>
+                <b-form-select-option value="N">Tidak</b-form-select-option>
+              </b-form-select>
+            </div>
+
+            <div class="form-group">
               <b-row>
                 <b-col>
                   <label>Tanggal Buat </label>
@@ -175,6 +183,12 @@ export default {
 
   data() {
     return {
+      is_active: { value: 'Y', text: 'Ya' },
+      options: [
+        { value: 'Y', text: 'Ya' },
+        { value: 'N', text: 'Tidak' },
+      ],
+
       state: 'disabled',
 
       field: {
@@ -182,6 +196,7 @@ export default {
         name: '',
         email: '',
         password: '',
+        is_active: 'Y',
         created_at: '',
         updated_at: '',
         created_by: '',
@@ -243,6 +258,7 @@ export default {
       formData.append('name', this.field.name)
       formData.append('email', this.field.email)
       formData.append('password', this.field.password)
+      formData.append('is_active', this.field.is_active)
       formData.append('created_at', this.field.created_at)
       formData.append('updated_at', this.field.updated_at)
       formData.append('created_by', this.field.created_by)

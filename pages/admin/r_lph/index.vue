@@ -99,6 +99,21 @@
                   ></b-col>
                 </b-row>
               </b-container>
+              <b-container class="bv-example-row">
+                <b-row>
+                  <b-col cols="2">Status:</b-col>
+                  <b-col cols="4">
+                    <div class="form-group">
+                      <multiselect
+                        v-model="elhm_status_id"
+                        :options="elhm_status"
+                        label="elhm_status_code"
+                        track-by="elhm_status"
+                        :searchable="true"
+                      ></multiselect></div
+                  ></b-col>
+                </b-row>
+              </b-container>
             </b-card-text>
           </b-card>
 
@@ -143,7 +158,9 @@
           >
             <template v-slot:thead-top="data">
               <b-tr>
-                <b-th variant="primary" colspan="4"></b-th>
+                <b-th variant="primary" colspan="4" class="text-center"
+                  >Status</b-th
+                >
                 <b-th variant="danger" colspan="3" class="text-center">HK</b-th>
                 <b-th variant="danger" colspan="3" class="text-center"
                   >Volume</b-th
@@ -253,6 +270,7 @@ export default {
       foreman: [],
       afdeling: [],
       department: [],
+      elhm_status: [],
       fields: [
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
@@ -403,6 +421,7 @@ export default {
       query_afdeling_id: '',
       afdeling_default: '',
       department_id: this.$route.query.q_department_id,
+      elhm_status_id: this.$route.query.q_elhm_status_id,
     }
   },
   watchQuery: [
@@ -412,6 +431,7 @@ export default {
     'activitied_at_append',
     'q_afdeling_id',
     'q_department_id',
+    'q_elhm_status_id',
   ],
 
   async asyncData({ $axios, query, auth }) {
@@ -516,30 +536,38 @@ export default {
         })
     }
 
-    // console.log('rdr')
-    // console.log(this.auth.user)
-    //department end
+    // Elhm Status
+    let elhm_status_id_asyncData = []
 
+    const elhm_status = await $axios.$get(
+      `/api/admin/lov_elhm_status`
+    )
+
+    console.log('elhm_status', elhm_status);
+
+    let q_elhm_status_id = query.q_elhm_status_id
+      ? query.q_elhm_status_id
+      : 1
+
+    if (query.q_elhm_status_id) {
+      $axios
+        .get(
+          `/api/admin/lov_elhm_status?q_elhm_status_id=${q_elhm_status_id}`
+        )
+        .then((response) => {
+          // console.log('rdr')
+          // console.log(response.data.data)
+          elhm_status_id_asyncData = response.data.data
+        })
+    }
+
+    console.log(
+      'post',
+      `/api/admin/report/lph?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}&q_department_id=${q_department_id}&status=${query.q_elhm_status_id}`
+    )
     const posts = await $axios.$get(
-      `/api/admin/report/lph?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}&q_department_id=${q_department_id}`
+      `/api/admin/report/lph?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}&q_department_id=${q_department_id}&status=${query.q_elhm_status_id}`
     )
-
-    const global_param = await $axios.$get(
-      `/api/admin/global_param?q=MAX_HK_RAWAT`
-    )
-
-    let thresholdManDays = 0 // Default Value
-    if (typeof global_param.data.data !== 'undefined' && global_param.data.data.length > 0) {
-      thresholdManDays = global_param.data.data[0].value_1
-    }
-
-    for (var i = 0; i < posts.data.length; i++) {
-      if(posts.data[i].man_days_total > thresholdManDays) {
-        posts.data[i]._rowVariant = 'danger'
-      } else {
-        posts.data[i]._rowVariant = ''
-      }
-    }
 
     const t_daily_progress = await $axios.$get(
       `/api/admin/master/attendance_daily_progress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}`
@@ -558,6 +586,8 @@ export default {
       t_daily_progress: t_daily_progress.data,
       department: department_list.data,
       department_id: department_id_asyncData,
+      elhm_status: elhm_status.data,
+      elhm_status_id: elhm_status_id_asyncData,
     }
   },
 
@@ -628,7 +658,7 @@ export default {
     },
     //searchData
     searchData() {
-      this.$nuxt.$loading.start();
+      this.$nuxt.$loading.start()
       console.log('rdr')
       console.log(this.afdeling_id)
 
@@ -656,12 +686,27 @@ export default {
         }
       }
 
+      if (this.elhm_status_id == null || this.elhm_status_id == undefined) {
+        this.velhm_status = ''
+      } else {
+        if (this.elhm_status_id.length == 0) {
+          this.velhm_status = ''
+        } else {
+          if (this.elhm_status_id[0] == undefined) {
+            this.velhm_status = this.elhm_status_id.elhm_status
+          } else {
+            this.velhm_status = this.elhm_status_id[0].elhm_status
+          }
+        }
+      }
+
       this.$router.push({
         path: this.$route.path,
         query: {
           q: this.search,
           activitied_at_prepend: this.activitied_at_start,
           activitied_at_append: this.activitied_at_end,
+          q_elhm_status_id: this.velhm_status,
           q_afdeling_id: this.vafdeling,
           q_department_id: this.query_department_id
             ? this.query_department_id

@@ -4,7 +4,9 @@
       class="step"
       v-b-tooltip.hover
       v-bind:title="this.approverName[0] ? this.approverName[0] : ''"
-      v-bind:data-date="this.approveDate[0] ? formatDate(this.approveDate[0]) : ''"
+      v-bind:data-date="
+        this.approveDate[0] ? formatDate(this.approveDate[0]) : ''
+      "
       data-desc="Approval Asisten"
       v-bind:class="
         this.approvalStatus == 1
@@ -14,7 +16,7 @@
           : ''
       "
     >
-      1
+      {{ this.procCode[0] ? this.procCode[0] : 'AFD'}}
     </div>
 
     <div
@@ -22,7 +24,9 @@
       data-desc="Approval Askep"
       v-b-tooltip.hover
       v-bind:title="this.approverName[1] ? this.approverName[1] : ''"
-      v-bind:data-date="this.approveDate[1] ? formatDate(this.approveDate[1]) : ''"
+      v-bind:data-date="
+        this.approveDate[1] ? formatDate(this.approveDate[1]) : ''
+      "
       v-bind:class="
         this.approvalStatus == 2
           ? 'active'
@@ -31,7 +35,7 @@
           : ''
       "
     >
-      2
+      {{ this.procCode[1] ? this.procCode[1] : 'AKP'}}
     </div>
 
     <div
@@ -39,7 +43,9 @@
       data-desc="Approval EH"
       v-b-tooltip.hover
       v-bind:title="this.approverName[2] ? this.approverName[2] : ''"
-      v-bind:data-date="this.approveDate[2] ? formatDate(this.approveDate[2]) : ''"
+      v-bind:data-date="
+        this.approveDate[2] ? formatDate(this.approveDate[2]) : ''
+      "
       v-bind:class="
         this.approvalStatus == 3
           ? 'active'
@@ -48,7 +54,7 @@
           : ''
       "
     >
-      3
+      {{ this.procCode[2] ? this.procCode[2] : 'EH'}}
     </div>
   </b-row>
 </template>
@@ -56,7 +62,12 @@
 <script>
 export default {
   name: 'approval',
-  data: () => ({ approverName: '', approveDate: '', loading: false }),
+  data: () => ({
+    approverName: '',
+    approveDate: '',
+    procCode: '',
+    loading: false,
+  }),
   methods: {
     formatDate(date) {
       // date '2023-06-01'
@@ -80,6 +91,7 @@ export default {
         // this.approverName = response.data.map((a) => a.name_submit)
         this.approverName = response.data.map((a) => a.name_submit)
         this.approveDate = response.data.map((a) => a.date)
+        this.procCode = response.data.map((a) => a.proc_code)
       })
   },
 }
@@ -105,6 +117,7 @@ body {
   border-radius: 50%;
   color: #000000;
   font-weight: 600;
+  font-size: 0.75rem;
   text-align: center;
   line-height: 35px;
 }

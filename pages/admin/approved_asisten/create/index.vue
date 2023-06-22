@@ -249,7 +249,7 @@
 
             <div class="form-group"></div>
 
-            <button class="btn btn-info mr-1 btn-submit" type="submit">
+            <button class="btn btn-info mr-1 btn-submit" type="submit" :disabled="disableSubmit">
               <i class="fa fa-paper-plane"></i> SIMPAN
             </button>
             <button
@@ -288,6 +288,8 @@ export default {
 
       show_hk: true,
       show_rate: false,
+
+      disableSubmit: false,
 
       company_code: '',
       department_code: '',
@@ -478,12 +480,16 @@ export default {
     onChangeHK() {
       this.activity_max_limit = this.field.activity_id.activity_max_limit
       if (this.field.man_days > this.activity_max_limit) {
+        this.field.man_days = ''
+        this.disableSubmit = true
         this.$swal.fire({
           title: 'WARNING!',
           html: `HK Tidak Boleh Lebih Dari Activity Limit (${this.activity_max_limit})!<br>`,
           icon: 'warning',
           showConfirmButton: true,
         })
+      } else {
+        this.disableSubmit = false
       }
     },
 

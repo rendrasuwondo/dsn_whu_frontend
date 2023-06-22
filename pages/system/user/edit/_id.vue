@@ -38,7 +38,7 @@
                 placeholder="Masukkan Nama User"
                 class="form-control"
               />
-              
+
             </div> -->
 
             <div class="form-group">
@@ -80,6 +80,14 @@
                   validation.password[0]
                 }}</b-alert>
               </div> -->
+            </div>
+
+            <div class="form-group">
+              <label>Aktif?</label>
+              <b-form-select v-model="field.is_active">
+                <b-form-select-option value="Y">Ya</b-form-select-option>
+                <b-form-select-option value="N">Tidak</b-form-select-option>
+              </b-form-select>
             </div>
 
             <div class="form-group">
@@ -168,11 +176,17 @@ export default {
 
   data() {
     return {
+      options: [
+        { value: 'Y', text: 'Ya' },
+        { value: 'N', text: 'Tidak' },
+      ],
+
       state: 'disabled',
 
       field: {
         user_name: '',
         name: '',
+        is_active: '',
         email: '',
         password: '',
         created_at: '',
@@ -206,6 +220,7 @@ export default {
         this.field.user_name = response.data.data.user_name
         this.field.name = response.data.data.name
         this.field.email = response.data.data.email
+        this.field.is_active = response.data.data.is_active
         // this.field.employee_id = response.data.data.employee
         this.field.employee_id = {
           id: response.data.data.employee.id,
@@ -236,7 +251,6 @@ export default {
     // update method
     async update(e) {
       e.preventDefault()
-
       //send data ke Rest API untuk update
       await this.$axios
         .put(`/api/admin/users/${this.$route.params.id}`, {
@@ -244,6 +258,7 @@ export default {
           user_name: this.field.user_name,
           name: this.field.name,
           email: this.field.email,
+          is_active: this.field.is_active,
           employee_id: this.field.employee_id ? this.field.employee_id.id : '',
           password: this.field.password,
           created_at: this.field.created_at,

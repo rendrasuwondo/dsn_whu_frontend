@@ -143,7 +143,7 @@
           >
             <template v-slot:thead-top="data">
               <b-tr>
-                <b-th variant="primary" colspan="6"></b-th>
+                <b-th variant="primary" colspan="6" class="text-center">Status</b-th>
                 <b-th variant="danger" colspan="3" class="text-center">HK</b-th>
                 <b-th variant="danger" colspan="3" class="text-center"
                   >Volume</b-th

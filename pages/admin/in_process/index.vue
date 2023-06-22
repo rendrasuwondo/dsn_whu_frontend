@@ -306,6 +306,12 @@ export default {
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          label: 'Status',
+          key: 'elhm_status',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Dept.',
           key: 'department_code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',

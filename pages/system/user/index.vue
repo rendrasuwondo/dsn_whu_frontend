@@ -182,6 +182,11 @@ export default {
           label: 'Email',
           key: 'email',
         },
+        {
+          label: 'Aktif',
+          key: 'is_active_code',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
       ],
       sweet_alert: {
         title: '',
