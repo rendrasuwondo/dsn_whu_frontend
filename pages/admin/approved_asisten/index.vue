@@ -296,7 +296,7 @@ export default {
         },
         {
           label: 'Status',
-          key: 'verification_status_code',
+          key: 'approval_status_code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
