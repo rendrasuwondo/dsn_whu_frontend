@@ -164,6 +164,7 @@ export default {
         description: '',
         created_at: '',
         updated_at: '',
+        created_at: '',
         created_by: '',
         updated_by: '',
       },
@@ -204,6 +205,7 @@ export default {
         this.field.menu_id = response.data.data.menu_id
         this.field.is_active = response.data.data.role.is_active
         this.field.description = response.data.data.description
+        this.field.created_at = response.data.data.created_at
         this.field.created_by = response.data.data.created_by
         this.field.updated_at = response.data.data.updated_at
         this.field.updated_by = response.data.data.updated_by
