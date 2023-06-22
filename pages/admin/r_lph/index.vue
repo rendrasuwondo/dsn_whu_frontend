@@ -101,7 +101,7 @@
               </b-container>
               <b-container class="bv-example-row">
                 <b-row>
-                  <b-col cols="2">Status:</b-col>
+                  <b-col cols="2">Status Approval:</b-col>
                   <b-col cols="4">
                     <div class="form-group">
                       <multiselect
@@ -159,7 +159,7 @@
             <template v-slot:thead-top="data">
               <b-tr>
                 <b-th variant="primary" colspan="4" class="text-center"
-                  >Status</b-th
+                  >{{ elhm_status_label }}</b-th
                 >
                 <b-th variant="danger" colspan="3" class="text-center">HK</b-th>
                 <b-th variant="danger" colspan="3" class="text-center"
@@ -539,27 +539,21 @@ export default {
     // Elhm Status
     let elhm_status_id_asyncData = []
 
-    const elhm_status = await $axios.$get(
-      `/api/admin/lov_elhm_status`
-    )
+    const elhm_status = await $axios.$get(`/api/admin/lov_elhm_status`)
 
-    console.log('elhm_status', elhm_status);
-
-    let q_elhm_status_id = query.q_elhm_status_id
-      ? query.q_elhm_status_id
-      : 1
-
-    if (query.q_elhm_status_id) {
-      $axios
-        .get(
-          `/api/admin/lov_elhm_status?q_elhm_status_id=${q_elhm_status_id}`
-        )
-        .then((response) => {
-          // console.log('rdr')
-          // console.log(response.data.data)
-          elhm_status_id_asyncData = response.data.data
-        })
+    let defaultStatus = 1
+    if (user.employee.position_code == 'ESTATE HEAD') {
+      defaultStatus = 2
     }
+
+    let q_elhm_status_id = query.q_elhm_status_id ? query.q_elhm_status_id : defaultStatus
+
+    $axios
+      .get(`/api/admin/lov_elhm_status?q_elhm_status_id=${q_elhm_status_id}`)
+      .then((response) => {
+        // console.log('rdr')
+        elhm_status_id_asyncData = response.data.data[0]
+      })
 
     console.log(
       'post',
@@ -588,6 +582,7 @@ export default {
       department_id: department_id_asyncData,
       elhm_status: elhm_status.data,
       elhm_status_id: elhm_status_id_asyncData,
+      elhm_status_label: elhm_status_id_asyncData.elhm_status_code,
     }
   },
 
