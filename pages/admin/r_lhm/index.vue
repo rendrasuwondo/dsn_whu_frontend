@@ -99,6 +99,21 @@
                   ></b-col>
                 </b-row>
               </b-container>
+              <b-container class="bv-example-row">
+                <b-row>
+                  <b-col cols="2">Status Approval:</b-col>
+                  <b-col cols="4">
+                    <div class="form-group">
+                      <multiselect
+                        v-model="elhm_status_id"
+                        :options="elhm_status"
+                        label="elhm_status_code"
+                        track-by="elhm_status"
+                        :searchable="true"
+                      ></multiselect></div
+                  ></b-col>
+                </b-row>
+              </b-container>
             </b-card-text>
           </b-card>
 
@@ -143,7 +158,7 @@
           >
             <template v-slot:thead-top="data">
               <b-tr>
-                <b-th variant="primary" colspan="6" class="text-center">Status</b-th>
+                <b-th variant="primary" colspan="6" class="text-center">{{ elhm_status_label }}</b-th>
                 <b-th variant="danger" colspan="3" class="text-center">HK</b-th>
                 <b-th variant="danger" colspan="3" class="text-center"
                   >Volume</b-th
@@ -255,6 +270,7 @@ export default {
       show_submit: true,
       foreman: [],
       afdeling: [],
+      elhm_status: [],
       fields: [
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
@@ -406,6 +422,7 @@ export default {
       query_afdeling_id: '',
       query_foreman_employee_id: '',
       afdeling_default: '',
+      elhm_status_id: this.$route.query.q_elhm_status_id,
     }
   },
   watchQuery: [
@@ -415,6 +432,7 @@ export default {
     'activitied_at_append',
     'q_afdeling_id',
     'q_foreman_employee_id',
+    'q_elhm_status_id',
   ],
 
   async asyncData({ $axios, query, $auth }) {
@@ -427,6 +445,10 @@ export default {
 
       return date
     }
+
+
+    // user
+    const user = await $axios.$get(`/api/admin/user`)
 
     //page
     let page = query.page ? parseInt(query.page) : ''
@@ -520,8 +542,27 @@ export default {
       q_foreman_employee_id = ''
     }
 
+    // Elhm Status
+    let elhm_status_id_asyncData = []
+
+    const elhm_status = await $axios.$get(`/api/admin/lov_elhm_status`)
+
+    let defaultStatus = 1
+    if (user.employee.position_code == 'ESTATE HEAD') {
+      defaultStatus = 2
+    }
+
+    let q_elhm_status_id = query.q_elhm_status_id ? query.q_elhm_status_id : defaultStatus
+
+    $axios
+      .get(`/api/admin/lov_elhm_status?q_elhm_status_id=${q_elhm_status_id}`)
+      .then((response) => {
+        // console.log('rdr')
+        elhm_status_id_asyncData = response.data.data[0]
+      })
+
     const posts = await $axios.$get(
-      `/api/admin/report/lhm?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}&q_foreman_employee_id=${foreman_employee_id.employee_id}`
+      `/api/admin/report/lhm?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}&q_foreman_employee_id=${foreman_employee_id.employee_id}&status=${q_elhm_status_id}`
     )
 
     const global_param = await $axios.$get(
@@ -567,6 +608,9 @@ export default {
       t_daily_progress: t_daily_progress.data,
       foreman: foreman_list.data,
       foreman_employee_id: foreman_employee_id,
+      elhm_status: elhm_status.data,
+      elhm_status_id: elhm_status_id_asyncData,
+      elhm_status_label: elhm_status_id_asyncData.elhm_status_code,
     }
   },
 
@@ -669,6 +713,21 @@ export default {
         }
       } catch (err) {}
 
+
+      if (this.elhm_status_id == null || this.elhm_status_id == undefined) {
+        this.velhm_status = ''
+      } else {
+        if (this.elhm_status_id.length == 0) {
+          this.velhm_status = ''
+        } else {
+          if (this.elhm_status_id[0] == undefined) {
+            this.velhm_status = this.elhm_status_id.elhm_status
+          } else {
+            this.velhm_status = this.elhm_status_id[0].elhm_status
+          }
+        }
+      }
+
       // console.log(this.activitied_at_start.getFullYear())
       // console.log(this.afdeling_id[0].id)
       console.log('cari')
@@ -678,6 +737,7 @@ export default {
           q: this.search,
           activitied_at_prepend: this.activitied_at_start,
           activitied_at_append: this.activitied_at_end,
+          q_elhm_status_id: this.velhm_status,
           q_afdeling_id: this.query_afdeling_id
             ? this.query_afdeling_id
             : this.afdeling_id[0].id,
