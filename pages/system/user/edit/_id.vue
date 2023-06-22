@@ -181,6 +181,8 @@ export default {
         { value: 'N', text: 'Tidak' },
       ],
 
+      is_change_password: false,
+
       state: 'disabled',
 
       field: {
@@ -249,40 +251,63 @@ export default {
     },
 
     // update method
-    async update(e) {
+    update(e) {
       e.preventDefault()
       //send data ke Rest API untuk update
-      await this.$axios
-        .put(`/api/admin/users/${this.$route.params.id}`, {
-          //data yang dikirim
-          user_name: this.field.user_name,
-          name: this.field.name,
-          email: this.field.email,
-          is_active: this.field.is_active,
-          employee_id: this.field.employee_id ? this.field.employee_id.id : '',
-          password: this.field.password,
-          created_at: this.field.created_at,
-          updated_at: this.field.updated_at,
-          created_by: this.field.created_by,
-          updated_by: this.field.updated_by,
+
+      this.$swal
+        .fire({
+          title: 'APAKAH PASSWORD AKAN DIGANTI ?',
+          text: 'INGIN MENGGANTI PASSWORD !',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#3085d6',
+          confirmButtonText: 'YA, GANTI!',
+          cancelButtonText: 'TIDAK',
         })
-        .then(() => {
-          //sweet alert
-          this.$swal.fire({
-            title: 'BERHASIL!',
-            text: 'Data Berhasil Diupdate!',
-            icon: 'success',
-            showConfirmButton: false,
-            timer: 2000,
-          })
-          //redirect ke route "post"
-          this.$router.push({
-            name: 'system-user',
-          })
-        })
-        .catch((error) => {
-          //assign error validasi
-          this.validation = error.response.data
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.is_change_password = true
+          } else {
+            this.is_change_password = false
+          }
+
+          this.$axios
+            .put(`/api/admin/users/${this.$route.params.id}`, {
+              //data yang dikirim
+              is_change_password: this.is_change_password,
+              user_name: this.field.user_name,
+              name: this.field.name,
+              email: this.field.email,
+              is_active: this.field.is_active,
+              employee_id: this.field.employee_id
+                ? this.field.employee_id.id
+                : '',
+              password: this.field.password,
+              created_at: this.field.created_at,
+              updated_at: this.field.updated_at,
+              created_by: this.field.created_by,
+              updated_by: this.field.updated_by,
+            })
+            .then(() => {
+              //sweet alert
+              this.$swal.fire({
+                title: 'BERHASIL!',
+                text: 'Data Berhasil Diupdate!',
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 2000,
+              })
+              //redirect ke route "post"
+              this.$router.push({
+                name: 'system-user',
+              })
+            })
+            .catch((error) => {
+              //assign error validasi
+              this.validation = error.response.data
+            })
         })
     },
   },
