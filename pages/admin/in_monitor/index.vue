@@ -214,7 +214,7 @@ export default {
           thClass: 'align-middle text-center text-nowrap nameOfTheClass',
           label: '',
           key: 'actions',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          tdClass: 'align-middle text-center text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
