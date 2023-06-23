@@ -173,12 +173,12 @@
           >
             <template v-slot:thead-top="data">
               <b-tr>
-                <b-th variant="primary" colspan="6" class="text-center">{{ elhm_status_label }}</b-th>
+                <b-th variant="primary" colspan="4" class="text-center">{{ elhm_status_label }}</b-th>
                 <b-th variant="danger" colspan="3" class="text-center">HK</b-th>
                 <b-th variant="danger" colspan="3" class="text-center"
                   >Volume</b-th
                 >
-                <b-th variant="danger" colspan="4">Rate</b-th>
+                <b-th variant="danger" colspan="2">Rate</b-th>
               </b-tr>
             </template>
             <template v-slot:cell(detail_hap)="row">
@@ -190,10 +190,6 @@
                 <b-td colspan="2" align="left" variant="secondary"
                   ><b>Total</b></b-td
                 >
-                <b-td align="right" variant="secondary">
-                </b-td>
-                <b-td align="right" variant="secondary">
-                </b-td>
                 <b-td align="right" variant="secondary">
                   <b> {{ TotalManDaysBasic.toFixed(2) }}</b>
                 </b-td>
@@ -310,18 +306,6 @@ export default {
           label: 'Luas',
           key: 'wide',
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Jenis Pekerjaan',
-          key: 'activity_description',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Satuan',
-          key: 'activity_unit_code',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
