@@ -255,10 +255,20 @@
               <template #header>
                 <h6 class="mb-0">Approval</h6>
               </template>
+
+              <b-row>
+                <approval
+                  :approvalStatus="this.$route.query.approvalStatus"
+                  :elhm_id="this.t_elhm_ctl.t_elhm_id"
+                ></approval>
+              </b-row>
+
               <!-- <b-card-text>Header and footers using slots.</b-card-text> -->
-              <b-button href="#" variant="primary" @click="Submit()"
-                >Submit</b-button
-              >
+              <div class="d-flex justify-content-end">
+                <b-button href="#" variant="primary" @click="Submit()"
+                  >Submit</b-button
+                >
+              </div>
             </b-card>
           </b-card-group>
         </div>
@@ -275,6 +285,8 @@ export default {
       title: 'IN Process Detail',
     }
   },
+
+  props: ['date', 'afdelingCode', 'mandor', 'approvalStatus'],
   data() {
     return {
       main: true,

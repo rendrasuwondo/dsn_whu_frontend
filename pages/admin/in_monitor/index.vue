@@ -146,6 +146,7 @@
                     tanggal: formatDate(row.item.activitied_at),
                     mandor: `${row.item.nik} - ${row.item.name}`,
                     afdelingCode: `${row.item.afdeling_code} (${row.item.afdeling_id})`,
+                    approvalStatus: row.item.elhm_status,
                   },
                 }"
                 variant="link"
@@ -164,6 +165,7 @@
                     tanggal: formatDate(row.item.activitied_at),
                     mandor: `${row.item.nik} - ${row.item.name}`,
                     afdelingCode: `${row.item.afdeling_code} (${row.item.afdeling_id})`,
+                    approvalStatus: row.item.elhm_status,
                   },
                 }"
                 variant="link"
