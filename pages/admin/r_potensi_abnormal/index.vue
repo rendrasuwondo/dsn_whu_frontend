@@ -8,11 +8,26 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-exclamation-circle"></i> LAPORAN POTENSI
-            ABNORMAL
+            <b-tabs>
+              <template #tabs-end>
+                <b-nav-item href="#" role="presentation" :active="true" @click="() => {}"
+                  >Abnormal Per Pekerjaan</b-nav-item
+                >
+                <nuxt-link
+                  role="presentation"
+                  class="nav-item nav-link align-self-center"
+                  :to="{
+                    name: 'admin-r_potensi_abnormal_per_sku',
+                  }"
+                >
+                  Abnormal Per SKU
+                </nuxt-link>
+              </template>
+            </b-tabs>
           </h3>
           <div class="card-tools"></div>
         </div>
+
         <div class="card-body">
           <b-card
             border-variant="primary"
@@ -490,26 +505,6 @@ export default {
     const posts = await $axios.$get(
       `/api/admin/report/potensi_abnormal?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}&q_department_id=${q_department_id}`
     )
-
-    const global_param = await $axios.$get(
-      `/api/admin/global_param?q=MAX_HK_RAWAT`
-    )
-
-    let thresholdManDays = 0 // Default Value
-    if (
-      typeof global_param.data.data !== 'undefined' &&
-      global_param.data.data.length > 0
-    ) {
-      thresholdManDays = global_param.data.data[0].value_1
-    }
-
-    for (var i = 0; i < posts.data.length; i++) {
-      if (posts.data[i].man_days_total > thresholdManDays) {
-        posts.data[i]._rowVariant = 'danger'
-      } else {
-        posts.data[i]._rowVariant = ''
-      }
-    }
 
     return {
       posts: posts.data,

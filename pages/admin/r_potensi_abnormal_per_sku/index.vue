@@ -8,7 +8,22 @@
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-clipboard"></i> LAPORAN HARIAN MANDOR
+            <b-tabs>
+              <template #tabs-start>
+                <nuxt-link
+                  role="presentation"
+                  class="nav-item nav-link align-self-center"
+                  :to="{
+                    name: 'admin-r_potensi_abnormal',
+                  }"
+                >
+                  Abnormal Per Pekerjaan
+                </nuxt-link>
+                <b-nav-item href="#" role="presentation" :active="true" @click="() => {}"
+                  >Abnormal Per SKU</b-nav-item
+                >
+              </template>
+            </b-tabs>
           </h3>
           <div class="card-tools"></div>
         </div>
@@ -561,8 +576,9 @@ export default {
         elhm_status_id_asyncData = response.data.data[0]
       })
 
+    console.log('posts', `/api/admin/report/potensi_abnormal_per_sku?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}&q_foreman_employee_id=${foreman_employee_id.employee_id}&status=${q_elhm_status_id}`);
     const posts = await $axios.$get(
-      `/api/admin/report/lhm?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}&q_foreman_employee_id=${foreman_employee_id.employee_id}&status=${q_elhm_status_id}`
+      `/api/admin/report/potensi_abnormal_per_sku?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}&q_foreman_employee_id=${foreman_employee_id.employee_id}&status=${q_elhm_status_id}`
     )
 
     const global_param = await $axios.$get(
