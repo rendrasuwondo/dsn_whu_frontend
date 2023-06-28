@@ -502,8 +502,16 @@ export default {
       `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_start}&q_foreman_employee_id=${q_foreman_employee_id}&q_afdeling_id=${q_afdeling_id}`
     )
 
+
+    const today = new Date(activitied_at_start)
+    const year = today.getFullYear()
+    const month = `${today.getMonth() + 1}`.padStart(2, '0')
+    const day = `${today.getDate()}`.padStart(2, '0')
+    const activitiedAtDate = `${year}-${month}-${day}`
+    console.log('new date', activitiedAtDate)
+
     const t_elhm = await $axios.$get(
-      `/api/admin/t_elhm/${activitied_at_start}_${q_afdeling_id}_${q_foreman_employee_id}`
+      `/api/admin/t_elhm/${activitiedAtDate}_${q_afdeling_id}_${q_foreman_employee_id}`
     )
 
     let async_showHideSelected, async_elhm_status, async_class_status
@@ -544,11 +552,7 @@ export default {
       }
     }
 
-    console.log('t_elhm', t_elhm)
-
-    console.log(t_elhm.data)
-    console.log('elhm_status', t_elhm.data.elhm_status)
-
+    console.log('t_elhm')
     console.log(async_elhm_status)
     console.log(async_class_status)
     return {
