@@ -495,7 +495,7 @@ export default {
     },
 
     onChangeVolume() {
-      if (this.field.qty < 1) {
+      if (this.field.qty <= 0) {
         this.field.qty = ''
         this.disableSubmit = true
         this.$swal.fire({
