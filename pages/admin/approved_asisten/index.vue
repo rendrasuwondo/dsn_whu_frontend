@@ -229,9 +229,7 @@
                   }}</b-td
                 >
                 <b-td align="right">
-                  {{
-                    new Intl.NumberFormat('es-US').format(TOTAL_RATE)
-                  }}</b-td
+                  {{ new Intl.NumberFormat('es-US').format(TOTAL_RATE) }}</b-td
                 >
               </b-tr>
             </template>
@@ -496,18 +494,30 @@ export default {
       q_foreman_employee_id = ''
     }
 
-    console.log('post', `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_start}&q_foreman_employee_id=${q_foreman_employee_id}&q_afdeling_id=${q_afdeling_id}`);
+    console.log(
+      'post',
+      `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_start}&q_foreman_employee_id=${q_foreman_employee_id}&q_afdeling_id=${q_afdeling_id}`
+    )
     const posts = await $axios.$get(
       `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_start}&q_foreman_employee_id=${q_foreman_employee_id}&q_afdeling_id=${q_afdeling_id}`
     )
 
+
+    const today = new Date(activitied_at_start)
+    const year = today.getFullYear()
+    const month = `${today.getMonth() + 1}`.padStart(2, '0')
+    const day = `${today.getDate()}`.padStart(2, '0')
+    const activitiedAtDate = `${year}-${month}-${day}`
+    console.log('new date', activitiedAtDate)
+
     const t_elhm = await $axios.$get(
-      `/api/admin/t_elhm/${activitied_at_start}_${q_afdeling_id}_${q_foreman_employee_id}`
+      `/api/admin/t_elhm/${activitiedAtDate}_${q_afdeling_id}_${q_foreman_employee_id}`
     )
 
     let async_showHideSelected, async_elhm_status, async_class_status
 
     if (t_elhm.data == null) {
+      console.log(1)
       async_showHideSelected = true
       async_elhm_status = ' '
       async_class_status = 'card-tools bg-danger'
@@ -517,22 +527,27 @@ export default {
       // console.log(t_elhm.data.elhm_status)
       switch (t_elhm.data.elhm_status) {
         case '0':
+          console.log(2)
           async_elhm_status = ' '
           async_class_status = 'card-tools bg-danger'
           break
         case '1':
+          console.log(3)
           async_elhm_status = 'Approve Asisten'
           async_class_status = 'card-tools bg-warning'
           break
         case '2':
+          console.log(4)
           async_elhm_status = 'Approve Askep'
           async_class_status = 'card-tools bg-success'
           break
         case '3':
+          console.log(5)
           async_elhm_status = 'Approve EH'
           async_class_status = 'card-tools bg-primary'
           break
         default:
+          console.log(6)
           break
       }
     }

@@ -9,9 +9,9 @@
       "
       data-desc="Approval Asisten"
       v-bind:class="
-        this.approvalStatus == 1
+        this.approvalStatus == 0
           ? 'active'
-          : this.approvalStatus > 1
+          : this.approvalStatus >= 1
           ? 'done'
           : ''
       "
@@ -28,9 +28,9 @@
         this.approveDate[1] ? formatDate(this.approveDate[1]) : ''
       "
       v-bind:class="
-        this.approvalStatus == 2
+        this.approvalStatus == 1
           ? 'active'
-          : this.approvalStatus > 2
+          : this.approvalStatus >= 2
           ? 'done'
           : ''
       "
@@ -47,9 +47,9 @@
         this.approveDate[2] ? formatDate(this.approveDate[2]) : ''
       "
       v-bind:class="
-        this.approvalStatus == 3
+        this.approvalStatus == 2
           ? 'active'
-          : this.approvalStatus > 3
+          : this.approvalStatus >= 3
           ? 'done'
           : ''
       "
