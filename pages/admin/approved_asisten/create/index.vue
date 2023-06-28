@@ -135,6 +135,7 @@
                 class="form-control"
                 v-on:keypress="NumbersOnly"
                 placeholder="Masukkan Nilai Volume"
+                @change="onChangeVolume"
               />
               <div v-if="validation.qty" class="mt-2">
                 <b-alert show variant="danger">{{ validation.qty[0] }}</b-alert>
@@ -485,6 +486,21 @@ export default {
         this.$swal.fire({
           title: 'WARNING!',
           html: `HK Tidak Boleh Lebih Dari Activity Limit (${this.activity_max_limit})!<br>`,
+          icon: 'warning',
+          showConfirmButton: true,
+        })
+      } else {
+        this.disableSubmit = false
+      }
+    },
+
+    onChangeVolume() {
+      if (this.field.qty < 1) {
+        this.field.qty = ''
+        this.disableSubmit = true
+        this.$swal.fire({
+          title: 'WARNING!',
+          html: `Volume Harus Lebih Besar Dari 0!<br>`,
           icon: 'warning',
           showConfirmButton: true,
         })
