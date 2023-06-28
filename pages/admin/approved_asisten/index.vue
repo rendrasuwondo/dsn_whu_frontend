@@ -544,10 +544,10 @@ export default {
       }
     }
 
-    console.log('t_elhm')
+    console.log('t_elhm', t_elhm)
 
     console.log(t_elhm.data)
-    console.log(t_elhm.data.elhm_status)
+    console.log('elhm_status', t_elhm.data.elhm_status)
 
     console.log(async_elhm_status)
     console.log(async_class_status)
