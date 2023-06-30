@@ -290,8 +290,8 @@ export default {
   },
 
   mounted() {
-    this.field.activitied_at = this.currentDate()
-
+    this.field.activitied_at = this.currentDate() 
+    console.log(this.currentDate())
     const current0 = new Date()
 
     current0.setDate(current0.getDate() + 1)
@@ -431,12 +431,26 @@ export default {
     },
 
     currentDate() {
+      /*
       const current = new Date()
       const date = `${current.getFullYear()}-${current.getMonth() + 1}-${
         current.getDate() + 1
       }`
 
       return date
+    */
+      var currentDate = new Date();
+
+// Add 1 day to the current date
+currentDate.setDate(currentDate.getDate() + 1);
+
+var year = currentDate.getFullYear();
+var month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+var day = String(currentDate.getDate()).padStart(2, '0');
+
+// Format the date as yyyy-mm-dd
+var formattedDate = `${year}-${month}-${day}`;
+    return formattedDate;
     },
 
     customLabel(afdeling) {
@@ -478,7 +492,7 @@ export default {
       //define formData
       let formData = new FormData()
 
-      // console.log(this.field.activitied_at)
+      console.log(this.field.activitied_at)
 
       this.value = this.field.activitied_at
 
