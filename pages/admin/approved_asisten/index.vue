@@ -513,9 +513,9 @@ export default {
     const t_elhm = await $axios.$get(
       `/api/admin/t_elhm/${activitiedAtDate}_${q_afdeling_id}_${q_foreman_employee_id}`
     )
-
+    console.log('t_elhm sfa') 
     let async_showHideSelected, async_elhm_status, async_class_status
-
+    console.log(t_elhm) 
     if (t_elhm.data == null) {
       console.log(1)
       async_showHideSelected = true
@@ -898,6 +898,7 @@ export default {
               this.main = false
 
               let formData = new FormData()
+              //formData.append('activitied_at', this.activitied_at_start.split("-")[1].padStart(2, '0'))
               formData.append('activitied_at', this.activitied_at_start)
               formData.append('afdeling_id', this.afdeling_id[0].id)
               formData.append(
@@ -917,7 +918,8 @@ export default {
                   this.foreman_employee_id.employee_id
               )
 
-              // console.log(formData)
+              console.log(formData)
+              /*
               this.$axios
                 .post('/api/admin/t_elhm', formData)
                 .then(() => {
@@ -943,6 +945,7 @@ export default {
                   //assign error to state "validation"
                   this.validation = error.response.data
                 })
+                */
             }
           })
       }

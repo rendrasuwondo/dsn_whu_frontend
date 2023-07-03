@@ -38,46 +38,22 @@
                   <b-col cols="2">Tanggal:</b-col>
                   <b-col cols="4">
                     <b-input-group>
-                      <b-form-datepicker
-                        v-model="activitied_at_start"
-                        :date-format-options="{
-                          year: 'numeric',
-                          month: 'short',
-                          day: '2-digit',
-                          weekday: 'short',
-                        }"
+                      <b-form-input
                         size="sm"
-                      ></b-form-datepicker>
-                      <template #append>
-                        <b-btn size="sm" @click="activitied_at_start = ''"
-                          ><i class="fa fa-trash"></i
-                        ></b-btn>
-                      </template>
+                        :disabled="true"
+                        v-model="detail.tanggal"
+                      ></b-form-input>
                     </b-input-group>
                   </b-col>
+                  <b-col cols="2">Mandor:</b-col>
                   <b-col cols="4">
-                    <b-input-group>
-                      <b-form-datepicker
-                        v-show="false"
-                        v-model="activitied_at_end"
-                        :date-format-options="{
-                          year: 'numeric',
-                          month: 'short',
-                          day: '2-digit',
-                          weekday: 'short',
-                        }"
+                    <div class="form-group">
+                      <b-form-input
                         size="sm"
-                      ></b-form-datepicker>
-                      <template #append>
-                        <b-btn
-                          size="sm"
-                          @click="activitied_at_end = ''"
-                          v-show="false"
-                          ><i class="fa fa-trash"></i
-                        ></b-btn>
-                      </template>
-                    </b-input-group>
-                  </b-col>
+                        :disabled="true"
+                        v-model="detail.mandor"
+                      ></b-form-input></div
+                  ></b-col>
                 </b-row>
               </b-container>
               <b-container class="bv-example-row">
@@ -85,30 +61,12 @@
                   <b-col cols="2">Afdeling:</b-col>
                   <b-col cols="4">
                     <div class="form-group">
-                      <multiselect
-                        v-model="afdeling_id"
-                        :options="afdeling"
+                      <b-form-input
                         :custom-label="customLabel"
-                        x
-                        track-by="id"
-                        :searchable="true"
-                        @input="onChangeAfdeling"
-                      ></multiselect></div
-                  ></b-col>
-                </b-row>
-              </b-container>
-              <b-container class="bv-example-row">
-                <b-row>
-                  <b-col cols="2">Mandor</b-col>
-                  <b-col cols="5">
-                    <div class="form-group">
-                      <multiselect
-                        v-model="foreman_employee_id"
-                        :options="foreman"
-                        label="employee_description"
-                        track-by="employee_id"
-                        :searchable="true"
-                      ></multiselect></div
+                        size="sm"
+                        :disabled="true"
+                        v-model="detail.afdelingCode"
+                      ></b-form-input></div
                   ></b-col>
                 </b-row>
               </b-container>
@@ -288,6 +246,11 @@ export default {
   props: ['date', 'afdelingCode', 'mandor', 'approvalStatus'],
   data() {
     return {
+      detail: {
+        tanggal: this.$route.query.tanggal,
+        mandor: this.$route.query.mandor,
+        afdelingCode: this.$route.query.afdelingCode,
+      },
       main: true,
       allSelected: false,
       visibleRows: [],
@@ -512,13 +475,9 @@ export default {
     //  console.log('rdr')
     //  console.log($auth)
 
-    // const posts = await $axios.$get(
-    //   `/api/admin/workflow/in_process_detail?id=${route.params.id}`
+    //const test = await $axios.$get(
+    //    `/api/admin/workflow/in_process_detail?id=${route.params.id}`
     // )
-
-    const posts = await $axios.$get(
-      `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=2023-03-23&activitied_at_append=2023-03-23&q_foreman_employee_id=12027&q_afdeling_id=DW22A`
-    )
 
     const t_elhm_ctl = await $axios.$get(
       `/api/admin/workflow/t_elhm_ctl?id=${route.params.id}`
@@ -528,8 +487,13 @@ export default {
       `/api/admin/workflow/t_elhm_message?t_elhm_id=${t_elhm_ctl.data[0].t_elhm_id}`
     )
 
-    console.log('t_elhm_message')
-    console.log(t_elhm_message.data[0])
+    const posts = await $axios.$get(
+      `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${t_elhm_ctl.data[0].activitied_at}&activitied_at_append=${t_elhm_ctl.data[0].activitied_at}&q_foreman_employee_id=${t_elhm_ctl.data[0].foreman_employee_id}&q_afdeling_id=${t_elhm_ctl.data[0].afdeling_id}`
+    )
+    //12027, 2023-03-23
+
+    console.log('test')
+    console.log(t_elhm_ctl.data[0].activitied_at)
 
 
 
@@ -740,8 +704,8 @@ export default {
           text: 'Melakukan verifikasi !',
           icon: 'warning',
           showCancelButton: true,
-          confirmButtonColor: '#d33',
-          cancelButtonColor: '#3085d6',
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
           confirmButtonText: 'YA',
           cancelButtonText: 'TIDAK',
         })
