@@ -161,6 +161,9 @@
                   <b> {{ addCommas(TotalQtyTotal.toFixed(2)) }}</b>
                 </b-td>
                 <b-td align="right" variant="secondary">
+                  <b> {{ addCommas(TotalFlexrate.toFixed(2)) }}</b>
+                </b-td>
+                <b-td align="right" variant="secondary">
                   <b> {{ addCommas(TotalQtyUnit.toFixed(2)) }}</b>
                 </b-td>
                 <b-td align="right" variant="secondary">
@@ -411,6 +414,20 @@ export default {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Total',
           key: 'qty_total',
+          formatter: (value, key, item) => {
+            let formatter = new Intl.NumberFormat('es-US', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
+            return formatter.format(value)
+          },
+          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+        },
+        {
+          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          label: 'Rate',
+          key: 'flexrate',
+          sortable: true,
           formatter: (value, key, item) => {
             let formatter = new Intl.NumberFormat('es-US', {
               minimumFractionDigits: 2,
@@ -820,7 +837,7 @@ export default {
           inputPlaceholder: 'Message',
           showCancelButton: true,
 
-          reverseButtons: true,
+          reverseButtons: false,
           confirmButtonText: 'Submit',
 
           denyButtonColor: '#3085d6',
@@ -896,7 +913,7 @@ export default {
                   icon: 'question',
                   showConfirmButton: true,
                   showCancelButton: true,
-                  reverseButtons: true,
+                  reverseButtons: false,
                   confirmButtonText: 'Ya',
                   cancelButtonText: 'Tidak',
                 })
@@ -986,7 +1003,7 @@ export default {
                   icon: 'question',
                   showConfirmButton: true,
                   showCancelButton: true,
-                  reverseButtons: true,
+                  reverseButtons: false,
                   confirmButtonText: 'Ya',
                   cancelButtonText: 'Tidak',
                 })
@@ -1072,6 +1089,12 @@ export default {
       return this.visibleRows.reduce((accum, item) => {
         // console.log(accum + item.qty_total)
         return accum + item.qty_total
+      }, 0.0)
+    },
+
+    TotalFlexrate() {
+      return this.visibleRows.reduce((accum, item) => {
+        return accum + item.flexrate
       }, 0.0)
     },
 
