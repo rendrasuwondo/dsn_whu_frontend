@@ -165,7 +165,8 @@
                 <b-th variant="danger" colspan="3" class="text-center"
                   >Volume</b-th
                 >
-                <b-th variant="danger" colspan="4"></b-th>
+                <b-th variant="danger" colspan="3" class="text-center">Rate</b-th>
+                <b-th variant="danger" colspan="2"></b-th>
               </b-tr>
             </template>
             <template v-slot:cell(detail_hap)="row">
@@ -194,6 +195,9 @@
                 </b-td>
                 <b-td align="right" variant="secondary">
                   <b> {{ addCommas(TotalQtyTotal.toFixed(2)) }}</b>
+                </b-td>
+                <b-td align="right" variant="secondary">
+                  <b> {{ addCommas(TotalFlexrate.toFixed(2)) }}</b>
                 </b-td>
                 <b-td align="right" variant="secondary">
                   <b> {{ addCommas(TotalQtyUnit.toFixed(2)) }}</b>
@@ -376,6 +380,19 @@ export default {
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          label: 'Rate',
+          key: 'flexrate',
+          formatter: (value, key, item) => {
+            let formatter = new Intl.NumberFormat('es-US', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
+            return formatter.format(value)
+          },
+          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+        },
+        {
+          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Unit',
           key: 'unit',
           formatter: (value, key, item) => {
@@ -497,6 +514,17 @@ export default {
       q_afdeling_id = afdeling_default.data.id
 
       if (user.employee.position_code != 'ASISTEN AFDELING') {
+        $axios
+        .get(
+          `/api/admin/lov_afdeling_daily_progress?q_afdeling_id=${q_afdeling_id}`
+        )
+        .then((response) => {
+          // console.log('daaa')
+          // console.log(response.data.data)
+          afdeling_id = response.data.data
+        })
+
+
         q_afdeling_id = ''
       }
     }
@@ -817,6 +845,12 @@ export default {
       return this.visibleRows.reduce((accum, item) => {
         // console.log(accum + item.qty_total)
         return accum + item.qty_total
+      }, 0.0)
+    },
+    TotalFlexrate() {
+      return this.visibleRows.reduce((accum, item) => {
+        console.log(accum + item.flexrate)
+        return accum + item.flexrate
       }, 0.0)
     },
     TotalQtyUnit() {

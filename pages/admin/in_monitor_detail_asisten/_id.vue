@@ -800,7 +800,7 @@ export default {
           inputPlaceholder: 'Message',
           showCancelButton: true,
 
-          reverseButtons: true,
+          reverseButtons: false,
           confirmButtonText: 'Submit',
 
           denyButtonColor: '#3085d6',
@@ -876,7 +876,7 @@ export default {
                   icon: 'question',
                   showConfirmButton: true,
                   showCancelButton: true,
-                  reverseButtons: true,
+                  reverseButtons: false,
                   confirmButtonText: 'Ya',
                   cancelButtonText: 'Tidak',
                 })
@@ -966,7 +966,7 @@ export default {
                   icon: 'question',
                   showConfirmButton: true,
                   showCancelButton: true,
-                  reverseButtons: true,
+                  reverseButtons: false,
                   confirmButtonText: 'Ya',
                   cancelButtonText: 'Tidak',
                 })
