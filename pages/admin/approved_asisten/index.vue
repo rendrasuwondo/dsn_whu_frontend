@@ -513,9 +513,9 @@ export default {
     const t_elhm = await $axios.$get(
       `/api/admin/t_elhm/${activitiedAtDate}_${q_afdeling_id}_${q_foreman_employee_id}`
     )
-    console.log('t_elhm sfa') 
+    console.log('t_elhm sfa')
     let async_showHideSelected, async_elhm_status, async_class_status
-    console.log(t_elhm) 
+    console.log(t_elhm)
     if (t_elhm.data == null) {
       console.log(1)
       async_showHideSelected = true
@@ -919,7 +919,7 @@ export default {
               )
 
               console.log(formData)
-              /*
+
               this.$axios
                 .post('/api/admin/t_elhm', formData)
                 .then(() => {
@@ -945,7 +945,7 @@ export default {
                   //assign error to state "validation"
                   this.validation = error.response.data
                 })
-                */
+
             }
           })
       }
