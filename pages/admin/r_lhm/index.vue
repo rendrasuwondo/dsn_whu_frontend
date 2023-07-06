@@ -198,6 +198,9 @@
                   <b> {{ addCommas(TotalQtyTotal.toFixed(2)) }}</b>
                 </b-td>
                 <b-td align="right" variant="secondary">
+                  <b> {{ addCommas(TotalFlexrate.toFixed(2)) }}</b>
+                </b-td>
+                <b-td align="right" variant="secondary">
                   <b> {{ addCommas(TotalRateUnit.toFixed(2)) }}</b>
                 </b-td>
                 <b-td align="right" variant="secondary">
@@ -377,6 +380,19 @@ export default {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Total',
           key: 'qty_total',
+          formatter: (value, key, item) => {
+            let formatter = new Intl.NumberFormat('es-US', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
+            return formatter.format(value)
+          },
+          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+        },
+        {
+          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          label: 'Rate',
+          key: 'flexrate',
           formatter: (value, key, item) => {
             let formatter = new Intl.NumberFormat('es-US', {
               minimumFractionDigits: 2,
@@ -865,10 +881,14 @@ export default {
       }, 0.0)
     },
 
+    TotalFlexrate() {
+      return this.visibleRows.reduce((accum, item) => {
+        return accum + item.flexrate
+      }, 0.0)
+    },
+
     TotalRateUnit() {
       return this.visibleRows.reduce((accum, item) => {
-        console.log('ini loh');
-        console.log(item.unit)
         return accum + item.unit
       }, 0.0)
     },

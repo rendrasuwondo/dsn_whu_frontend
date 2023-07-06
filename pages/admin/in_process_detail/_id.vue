@@ -156,6 +156,9 @@
                   <b> {{ addCommas(TotalQtyTotal.toFixed(2)) }}</b>
                 </b-td>
                 <b-td align="right" variant="secondary">
+                  <b> {{ addCommas(TotalFlexrate.toFixed(2)) }}</b>
+                </b-td>
+                <b-td align="right" variant="secondary">
                   <b> {{ addCommas(TotalRateUnit.toFixed(2)) }}</b>
                 </b-td>
                 <b-td align="right" variant="secondary">
@@ -418,6 +421,20 @@ export default {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Total',
           key: 'qty_total',
+          sortable: true,
+          formatter: (value, key, item) => {
+            let formatter = new Intl.NumberFormat('es-US', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
+            return formatter.format(value)
+          },
+          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+        },
+        {
+          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          label: 'Rate',
+          key: 'flexrate',
           sortable: true,
           formatter: (value, key, item) => {
             let formatter = new Intl.NumberFormat('es-US', {
@@ -1005,7 +1022,7 @@ export default {
                   icon: 'question',
                   showConfirmButton: true,
                   showCancelButton: true,
-                  reverseButtons: true,
+                  reverseButtons: false,
                   confirmButtonText: 'Ya',
                   cancelButtonText: 'Tidak',
                 })
@@ -1094,17 +1111,20 @@ export default {
       }, 0.0)
     },
 
+    TotalFlexrate() {
+      return this.visibleRows.reduce((accum, item) => {
+        return accum + item.flexrate
+      }, 0.0)
+    },
+
     TotalRateUnit() {
       return this.visibleRows.reduce((accum, item) => {
-        console.log('ini loh');
-        console.log(item.unit)
         return accum + item.unit
       }, 0.0)
     },
 
     TotalRateNorm() {
       return this.visibleRows.reduce((accum, item) => {
-        // console.log(accum + item.qty_total)
         return accum + item.norm
       }, 0.0)
     },
