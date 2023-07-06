@@ -510,22 +510,27 @@ export default {
     const activitiedAtDate = `${year}-${month}-${day}`
     console.log('new date', activitiedAtDate)
 
+    /*
     const t_elhm = await $axios.$get(
       `/api/admin/t_elhm/${activitiedAtDate}_${q_afdeling_id}_${q_foreman_employee_id}`
     )
-    console.log('t_elhm sfa')
+    */
+    const t_elhm = await $axios.$get(
+      `/api/admin/t_elhm?activitied_at=${activitiedAtDate}&afdeling_id=${q_afdeling_id}&foreman_employee_id=${q_foreman_employee_id}`
+    )
+    console.log(`/api/admin/t_elhm?activitied_at=${activitiedAtDate}&afdeling_id=${q_afdeling_id}&foreman_employee_id=${q_foreman_employee_id}`)
     let async_showHideSelected, async_elhm_status, async_class_status
-    console.log(t_elhm)
-    if (t_elhm.data == null) {
+    console.log(t_elhm.data.data[0])
+    if (t_elhm.data.data[0] == null) {
       console.log(1)
       async_showHideSelected = true
       async_elhm_status = ' '
       async_class_status = 'card-tools bg-danger'
     } else {
-      async_showHideSelected = t_elhm.data.elhm_status > 0 ? false : true
-      // console.log('t_elhm.data.elhm_status')
-      // console.log(t_elhm.data.elhm_status)
-      switch (t_elhm.data.elhm_status) {
+      async_showHideSelected = t_elhm.data.data[0].elhm_status > 0 ? false : true
+      // console.log('t_elhm.data.data[0].elhm_status')
+      // console.log(t_elhm.data.data[0].elhm_status)
+      switch (t_elhm.data.data[0].elhm_status) {
         case '0':
           console.log(2)
           async_elhm_status = ' '
