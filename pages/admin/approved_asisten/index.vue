@@ -920,7 +920,9 @@ export default {
                   '_' +
                   this.afdeling_id[0].id +
                   '_' +
-                  this.foreman_employee_id.employee_id
+                  this.foreman_employee_id.employee_id +
+                  '_' +
+                  '1'
               )
 
               console.log(formData)
