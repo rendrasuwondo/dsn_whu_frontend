@@ -516,9 +516,9 @@ export default {
     )
     */
     const t_elhm = await $axios.$get(
-      `/api/admin/t_elhm?activitied_at=${activitiedAtDate}&afdeling_id=${q_afdeling_id}&foreman_employee_id=${q_foreman_employee_id}`
+      `/api/admin/t_elhm?activitied_at=${activitiedAtDate}&afdeling_id=${q_afdeling_id}&foreman_employee_id=${q_foreman_employee_id}&p_wf_doc_type_id=1`
     )
-    console.log(`/api/admin/t_elhm?activitied_at=${activitiedAtDate}&afdeling_id=${q_afdeling_id}&foreman_employee_id=${q_foreman_employee_id}`)
+    console.log(`/api/admin/t_elhm?activitied_at=${activitiedAtDate}&afdeling_id=${q_afdeling_id}&foreman_employee_id=${q_foreman_employee_id}&p_wf_doc_type_id=1`)
     let async_showHideSelected, async_elhm_status, async_class_status
     console.log(t_elhm.data.data[0])
     if (t_elhm.data.data[0] == null) {
@@ -903,7 +903,7 @@ export default {
               this.main = false
 
               let formData = new FormData()
-              //formData.append('activitied_at', this.activitied_at_start.split("-")[1].padStart(2, '0'))
+              // formData.append('activitied_at', this.activitied_at_start.split("-")[1].padStart(2, '0'))
               formData.append('activitied_at', this.activitied_at_start)
               formData.append('afdeling_id', this.afdeling_id[0].id)
               formData.append(

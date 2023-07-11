@@ -140,7 +140,7 @@
               <b-button
                 v-show="btn_asisten"
                 :to="{
-                  name: 'admin-in_monitor_detail_asisten-id',
+                  name: 'admin-in_monitor_detail-id',
                   params: { id: row.item.id },
                   query: {
                     tanggal: formatDate(row.item.activitied_at),
@@ -217,6 +217,12 @@ export default {
           label: '',
           key: 'actions',
           tdClass: 'align-middle text-center text-nowrap nameOfTheClass',
+        },
+        {
+          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          label: 'Tipe',
+          key: 'display_name',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
@@ -431,7 +437,7 @@ export default {
     let userDepartmentId = $auth.user.employee.department_id
     let userAfdelingId = $auth.user.employee.afdeling_id ?? ''
 
-    console.log('posts',       `api/admin/workflow/in_monitor?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${userAfdelingId}&q_department_id=${userDepartmentId}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}`);
+    console.log('posts',`api/admin/workflow/in_monitor?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${userAfdelingId}&q_department_id=${userDepartmentId}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}`);
     const posts = await $axios.$get(
       `api/admin/workflow/in_monitor?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${userAfdelingId}&q_department_id=${userDepartmentId}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}`
     )

@@ -169,7 +169,7 @@
               <b-button
                 v-show="btn_non_asisten"
                 :to="{
-                  name: 'admin-in_process_detail-id',
+                  name: row.item.p_wf_doc_type_id==1?'admin-in_process_detail-id':'admin-in_process_detail_rkh-id',
                   params: { id: row.item.id },
                   query: {
                     tanggal: formatDate(row.item.activitied_at),
@@ -296,6 +296,12 @@ export default {
           thClass: 'align-middle text-center text-nowrap nameOfTheClass',
           label: '',
           key: 'actions',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          label: 'Tipe',
+          key: 'display_name',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
