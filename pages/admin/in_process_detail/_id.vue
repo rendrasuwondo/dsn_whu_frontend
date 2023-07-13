@@ -120,7 +120,7 @@
                   >Volume</b-th
                 >
                 <b-th variant="danger" colspan="4" class="text-center"
-                  >Rate</b-th
+                  ></b-th
                 >
               </b-tr>
             </template>

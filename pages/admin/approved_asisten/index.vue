@@ -496,10 +496,10 @@ export default {
 
     console.log(
       'post',
-      `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_start}&q_foreman_employee_id=${q_foreman_employee_id}&q_afdeling_id=${q_afdeling_id}`
+      `/api/admin/report/approved_asisten?q=${search}&page=${page}&activitied_at=${activitied_at_start}&activitied_at_append=${activitied_at_start}&foreman_employee_id=${q_foreman_employee_id}&afdeling_id=${q_afdeling_id}`
     )
     const posts = await $axios.$get(
-      `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_start}&q_foreman_employee_id=${q_foreman_employee_id}&q_afdeling_id=${q_afdeling_id}`
+      `/api/admin/report/approved_asisten?q=${search}&page=${page}&activitied_at=${activitied_at_start}&activitied_at_append=${activitied_at_start}&foreman_employee_id=${q_foreman_employee_id}&afdeling_id=${q_afdeling_id}`
     )
 
 
@@ -1002,35 +1002,23 @@ export default {
   },
   computed: {
     TOTAL_HK() {
-      return this.visibleRows
-        .reduce((accum, item) => {
-          return accum + item.man_days
-        }, 0.0)
-        .toLocaleString(undefined, {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })
+      return this.visibleRows.reduce((accum, item) => {
+        // console.log(accum + item.man_days_basic)
+        return accum + item.man_days
+      }, 0.0)
     },
     TOTAL_VOLUME() {
-      return this.visibleRows
-        .reduce((accum, item) => {
-          return accum + item.qty
-        }, 0.0)
-        .toLocaleString(undefined, {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })
+      return this.visibleRows.reduce((accum, item) => {
+        // console.log(accum + item.qty)
+        return accum + item.qty
+      }, 0.0)
     },
 
     TOTAL_RATE() {
-      return this.visibleRows
-        .reduce((accum, item) => {
-          return accum + item.flexrate
-        }, 0.0)
-        .toLocaleString(undefined, {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })
+      return this.visibleRows.reduce((accum, item) => {
+        // console.log(accum + item.flexrate)
+        return accum + item.flexrate
+      }, 0.0)
     },
   },
 }
