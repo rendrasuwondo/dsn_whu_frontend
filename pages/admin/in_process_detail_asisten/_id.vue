@@ -501,9 +501,16 @@ export default {
       `/api/admin/workflow/t_elhm_message?t_elhm_id=${t_elhm_ctl.data[0].t_elhm_id}`
     )
 
+   /*
     const posts = await $axios.$get(
       `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${t_elhm_ctl.data[0].activitied_at}&activitied_at_append=${t_elhm_ctl.data[0].activitied_at}&q_foreman_employee_id=${t_elhm_ctl.data[0].foreman_employee_id}&q_afdeling_id=${t_elhm_ctl.data[0].afdeling_id}`
     )
+    */
+
+    const posts = await $axios.$get(
+      `/api/admin/report/approved_asisten?q=${search}&page=${page}&activitied_at=${t_elhm_ctl.data[0].activitied_at}&activitied_at_append=${t_elhm_ctl.data[0].activitied_at}&foreman_employee_id=${t_elhm_ctl.data[0].foreman_employee_id}&afdeling_id=${t_elhm_ctl.data[0].afdeling_id}`
+    )	
+    
     //12027, 2023-03-23
 
     console.log('test')

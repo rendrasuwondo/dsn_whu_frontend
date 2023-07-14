@@ -150,7 +150,7 @@
               <b-button
                 v-show="btn_asisten"
                 :to="{
-                  name: 'admin-in_process_detail_asisten-id',
+                  name: row.item.p_wf_doc_type_id==1?'admin-in_process_detail_asisten-id':'admin-in_process_detail_asisten_rkh-id',
                   params: { id: row.item.id },
                   query: {
                     tanggal: formatDate(row.item.activitied_at),

@@ -58,6 +58,24 @@
           <div class="form-group">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
+                <nuxt-link
+                  :to="{
+                    name: 'admin-in_process_detail_asisten_rkh-create',
+                       query: {
+                      id:
+                      this.$route.params.id,
+                      tanggal : this.$route.query.tanggal,
+                      mandor : this.$route.query.mandor,
+                      afdelingCode : this.$route.query.afdelingCode,
+                      approvalStatus : this.$route.query.approvalStatus
+                    },
+                    
+                  }"
+                  class="btn btn-info btn-sm"
+                  style="padding-top: 8px"
+                  title="Tambah"
+                  ><i class="fa fa-plus-circle"></i>
+                </nuxt-link> 
                 <button title="Export To Excel" class="btn btn-info" @click="exportData">
                   <i class="fa fa-file-excel"></i>
                 </button>

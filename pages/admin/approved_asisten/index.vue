@@ -929,7 +929,7 @@ export default {
 
               this.$axios
                 .post('/api/admin/t_elhm', formData)
-                .then(() => {
+                .finally(() => {
                   this.$axios
                     .post('/api/admin/workflow/submit_flow', formData)
                     .then(() => {
