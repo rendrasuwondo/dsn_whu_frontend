@@ -158,14 +158,16 @@
           >
             <template v-slot:thead-top="data">
               <b-tr>
-                <b-th variant="primary" colspan="4" class="text-center"
-                  >{{ elhm_status_label }}</b-th
-                >
+                <b-th variant="primary" colspan="4" class="text-center">{{
+                  elhm_status_label
+                }}</b-th>
                 <b-th variant="danger" colspan="3" class="text-center">HK</b-th>
                 <b-th variant="danger" colspan="3" class="text-center"
                   >Volume</b-th
                 >
-                <b-th variant="danger" colspan="3" class="text-center">Rate</b-th>
+                <b-th variant="danger" colspan="3" class="text-center"
+                  >Rate</b-th
+                >
                 <b-th variant="danger" colspan="2"></b-th>
               </b-tr>
             </template>
@@ -451,7 +453,12 @@ export default {
     'q_elhm_status_id',
   ],
 
-  async asyncData({ $axios, query, auth }) {
+  async asyncData({ $axios, query, auth, req }) {
+    const ip2 = req.headers['x-real-ip'] || req.connection.remoteAddress
+    console.log(req.headers['x-real-ip'])
+    console.log('===================ip2===========')
+    console.log(req.connection.remoteAddress)
+
     function currentDate() {
       const current = new Date()
       current.setDate(current.getDate())
@@ -515,15 +522,14 @@ export default {
 
       if (user.employee.position_code != 'ASISTEN AFDELING') {
         $axios
-        .get(
-          `/api/admin/lov_afdeling_daily_progress?q_afdeling_id=${q_afdeling_id}`
-        )
-        .then((response) => {
-          // console.log('daaa')
-          // console.log(response.data.data)
-          afdeling_id = response.data.data
-        })
-
+          .get(
+            `/api/admin/lov_afdeling_daily_progress?q_afdeling_id=${q_afdeling_id}`
+          )
+          .then((response) => {
+            // console.log('daaa')
+            // console.log(response.data.data)
+            afdeling_id = response.data.data
+          })
 
         q_afdeling_id = ''
       }
@@ -574,7 +580,9 @@ export default {
       defaultStatus = 2
     }
 
-    let q_elhm_status_id = query.q_elhm_status_id ? query.q_elhm_status_id : defaultStatus
+    let q_elhm_status_id = query.q_elhm_status_id
+      ? query.q_elhm_status_id
+      : defaultStatus
 
     $axios
       .get(`/api/admin/lov_elhm_status?q_elhm_status_id=${q_elhm_status_id}`)
@@ -611,6 +619,25 @@ export default {
       elhm_status: elhm_status.data,
       elhm_status_id: elhm_status_id_asyncData,
       elhm_status_label: elhm_status_id_asyncData.elhm_status_code,
+    }
+  },
+  async created() {
+    if (process.client) {
+      //define formData
+      let formData = new FormData()
+
+      formData.append('app', 'lph')
+      formData.append('user', this.$auth.user.employee.user_name)
+      formData.append('name', this.$auth.user.employee.name)
+
+      //sending data to server
+      await this.$axios
+        .post('/api/admin/access_log', formData)
+        .then(() => {})
+        .catch((error) => {
+          //assign error to state "validation"
+          this.validation = error.response.data
+        })
     }
   },
 
