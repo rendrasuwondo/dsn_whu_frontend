@@ -455,7 +455,7 @@ export default {
     console.log(query.q_activitied_at_append)
     // afdeling_id
     const afdeling_list = await $axios.$get(
-      `/api/admin/lov_afdeling_daily_progress`
+      `/api/admin/lov_employee_afdeling`
     )
 
     const afdeling_default = await $axios.$get(
