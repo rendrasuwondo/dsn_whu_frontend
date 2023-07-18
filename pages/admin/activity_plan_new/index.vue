@@ -86,7 +86,15 @@
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <b-button-group>
-                  <nuxt-link :to="{ name: 'admin-activity_plan_new-create' }" class="btn btn-info btn-sm"
+                  <nuxt-link :to="{ name: 'admin-activity_plan_new-create',
+                  query: {
+                      activitied_at_prepend:
+                        this.$route.query.activitied_at_prepend,
+                      activitied_at_append:
+                        this.$route.query.activitied_at_append,
+                      q_activity_id: this.$route.query.q_activity_id,
+                      q_afdeling_id: this.$route.query.q_afdeling_id,
+                    }, }" class="btn btn-info btn-sm"
                     style="padding-top: 8px" title="Tambah"><i class="fa fa-plus-circle"></i>
                   </nuxt-link>
                   <button title="Export To Excel" class="btn btn-info" @click="exportData">
@@ -617,7 +625,7 @@ export default {
               
               this.$axios
                 .post('/api/admin/t_elhm', formData)
-                .then(() => {
+                .finally(() => {
                   this.$axios
                     .post('/api/admin/workflow/submit_flow', formData)
                     .then(() => {
