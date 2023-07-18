@@ -375,7 +375,7 @@ export default {
       param_activitied_at_prepend: this.$route.query.activitied_at_prepend,
       param_activitied_at_append: this.$route.query.activitied_at_append,
       foreman_employee_id: this.$route.query.q_foreman_employee_id,
-      afdeling_id: this.$route.query.afdeling_id,
+      //afdeling_id: this.$route.query.afdeling_id,
       query_foreman_employee_id: '',
       query_afdeling_id: '',
       showHideSelected: false,
@@ -444,10 +444,24 @@ export default {
       afdeling_id = []
 
       q_afdeling_id = $auth.user.employee.afdeling_id
+
+      afdeling_id = [
+        {
+          id: $auth.user.employee.afdeling_id,
+          code: $auth.user.employee.afdeling_code,
+        },
+    ]
     }
 
     if (q_afdeling_id == undefined) {
       q_afdeling_id = ''
+
+      afdeling_id = [
+        {
+          id: $auth.user.employee.afdeling_id,
+          code: $auth.user.employee.afdeling_code,
+        },
+    ]
     }
 
     let department_code = $auth.user.employee.department_code
@@ -496,10 +510,10 @@ export default {
 
     console.log(
       'post',
-      `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_start}&q_foreman_employee_id=${q_foreman_employee_id}&q_afdeling_id=${q_afdeling_id}`
+      `/api/admin/report/approved_asisten?q=${search}&page=${page}&activitied_at=${activitied_at_start}&activitied_at_append=${activitied_at_start}&foreman_employee_id=${q_foreman_employee_id}&afdeling_id=${q_afdeling_id}`
     )
     const posts = await $axios.$get(
-      `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_start}&q_foreman_employee_id=${q_foreman_employee_id}&q_afdeling_id=${q_afdeling_id}`
+      `/api/admin/report/approved_asisten?q=${search}&page=${page}&activitied_at=${activitied_at_start}&activitied_at_append=${activitied_at_start}&foreman_employee_id=${q_foreman_employee_id}&afdeling_id=${q_afdeling_id}`
     )
 
 
@@ -510,22 +524,27 @@ export default {
     const activitiedAtDate = `${year}-${month}-${day}`
     console.log('new date', activitiedAtDate)
 
+    /*
     const t_elhm = await $axios.$get(
       `/api/admin/t_elhm/${activitiedAtDate}_${q_afdeling_id}_${q_foreman_employee_id}`
     )
-    console.log('t_elhm sfa')
+    */
+    const t_elhm = await $axios.$get(
+      `/api/admin/t_elhm?activitied_at=${activitiedAtDate}&afdeling_id=${q_afdeling_id}&foreman_employee_id=${q_foreman_employee_id}&p_wf_doc_type_id=1`
+    )
+    console.log(`/api/admin/t_elhm?activitied_at=${activitiedAtDate}&afdeling_id=${q_afdeling_id}&foreman_employee_id=${q_foreman_employee_id}&p_wf_doc_type_id=1`)
     let async_showHideSelected, async_elhm_status, async_class_status
-    console.log(t_elhm)
-    if (t_elhm.data == null) {
+    console.log(t_elhm.data.data[0])
+    if (t_elhm.data.data[0] == null) {
       console.log(1)
       async_showHideSelected = true
       async_elhm_status = ' '
       async_class_status = 'card-tools bg-danger'
     } else {
-      async_showHideSelected = t_elhm.data.elhm_status > 0 ? false : true
-      // console.log('t_elhm.data.elhm_status')
-      // console.log(t_elhm.data.elhm_status)
-      switch (t_elhm.data.elhm_status) {
+      async_showHideSelected = t_elhm.data.data[0].elhm_status > 0 ? false : true
+      // console.log('t_elhm.data.data[0].elhm_status')
+      // console.log(t_elhm.data.data[0].elhm_status)
+      switch (t_elhm.data.data[0].elhm_status) {
         case '0':
           console.log(2)
           async_elhm_status = ' '
@@ -577,6 +596,7 @@ export default {
   },
 
   mounted() {
+    /*
     if (this.$route.query.q_afdeling_id == null) {
       this.afdeling_id = [
         {
@@ -586,6 +606,7 @@ export default {
       ]
     } else {
     }
+    */
   },
 
   methods: {
@@ -639,6 +660,8 @@ export default {
     },
     //searchData
     searchData() {
+    
+
       if (this.Mandatory() != '') {
         this.$swal.fire({
           title: 'WARNING!',
@@ -648,15 +671,17 @@ export default {
         })
       } else {
         try {
-          if (this.afdeling_id.id === null) {
-            this.vafdeling = ''
-          } else if (this.afdeling_id.id === undefined) {
-            this.vafdeling = this.afdeling_id[0].id
-          } else {
-            this.vafdeling = this.afdeling_id[0].id
-          }
-        } catch (err) {}
-
+        if (this.afdeling_id.id === null) {
+          this.query_afdeling_id = ''
+        } else if (this.afdeling_id.id === undefined) {
+          this.query_afdeling_id = this.$route.query.q_afdeling_id
+        } else {
+          this.query_afdeling_id = this.afdeling_id.id
+            ? this.afdeling_id.id
+            : ''
+        }
+      } catch (err) {}
+       
         try {
           if (this.foreman_employee_id.employee_id === null) {
             this.vforeman_employee = ''
@@ -697,6 +722,7 @@ export default {
         // console.log(this.foreman_employee_id.employee_id)
         //cek watchQuery end
 
+        
         if (this.WatchGo() == 1) {
           // this.$nuxt.$loading.start()
           this.main = false
@@ -707,10 +733,12 @@ export default {
               activitied_at_prepend: this.activitied_at_start,
               activitied_at_append: this.activitied_at_end,
               q_foreman_employee_id: this.vforeman_employee,
-              q_afdeling_id: this.vafdeling,
+              q_afdeling_id: this.query_afdeling_id
+            ? this.query_afdeling_id
+            : this.$auth.user.employee.afdeling_id,
             },
           })
-        }
+        } 
       }
     },
 
@@ -898,7 +926,7 @@ export default {
               this.main = false
 
               let formData = new FormData()
-              //formData.append('activitied_at', this.activitied_at_start.split("-")[1].padStart(2, '0'))
+              // formData.append('activitied_at', this.activitied_at_start.split("-")[1].padStart(2, '0'))
               formData.append('activitied_at', this.activitied_at_start)
               formData.append('afdeling_id', this.afdeling_id[0].id)
               formData.append(
@@ -915,14 +943,16 @@ export default {
                   '_' +
                   this.afdeling_id[0].id +
                   '_' +
-                  this.foreman_employee_id.employee_id
+                  this.foreman_employee_id.employee_id +
+                  '_' +
+                  '1'
               )
 
               console.log(formData)
 
               this.$axios
                 .post('/api/admin/t_elhm', formData)
-                .then(() => {
+                .finally(() => {
                   this.$axios
                     .post('/api/admin/workflow/submit_flow', formData)
                     .then(() => {
@@ -995,35 +1025,23 @@ export default {
   },
   computed: {
     TOTAL_HK() {
-      return this.visibleRows
-        .reduce((accum, item) => {
-          return accum + item.man_days
-        }, 0.0)
-        .toLocaleString(undefined, {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })
+      return this.visibleRows.reduce((accum, item) => {
+        // console.log(accum + item.man_days_basic)
+        return accum + item.man_days
+      }, 0.0)
     },
     TOTAL_VOLUME() {
-      return this.visibleRows
-        .reduce((accum, item) => {
-          return accum + item.qty
-        }, 0.0)
-        .toLocaleString(undefined, {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })
+      return this.visibleRows.reduce((accum, item) => {
+        // console.log(accum + item.qty)
+        return accum + item.qty
+      }, 0.0)
     },
 
     TOTAL_RATE() {
-      return this.visibleRows
-        .reduce((accum, item) => {
-          return accum + item.flexrate
-        }, 0.0)
-        .toLocaleString(undefined, {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })
+      return this.visibleRows.reduce((accum, item) => {
+        // console.log(accum + item.flexrate)
+        return accum + item.flexrate
+      }, 0.0)
     },
   },
 }

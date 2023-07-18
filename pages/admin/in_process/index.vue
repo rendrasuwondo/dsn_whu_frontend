@@ -150,7 +150,7 @@
               <b-button
                 v-show="btn_asisten"
                 :to="{
-                  name: 'admin-in_process_detail_asisten-id',
+                  name: row.item.p_wf_doc_type_id==1?'admin-in_process_detail_asisten-id':'admin-in_process_detail_asisten_rkh-id',
                   params: { id: row.item.id },
                   query: {
                     tanggal: formatDate(row.item.activitied_at),
@@ -169,7 +169,7 @@
               <b-button
                 v-show="btn_non_asisten"
                 :to="{
-                  name: 'admin-in_process_detail-id',
+                  name: row.item.p_wf_doc_type_id==1?'admin-in_process_detail-id':'admin-in_process_detail_rkh-id',
                   params: { id: row.item.id },
                   query: {
                     tanggal: formatDate(row.item.activitied_at),
@@ -296,6 +296,12 @@ export default {
           thClass: 'align-middle text-center text-nowrap nameOfTheClass',
           label: '',
           key: 'actions',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          label: 'Tipe',
+          key: 'display_name',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
@@ -449,7 +455,7 @@ export default {
     console.log(query.q_activitied_at_append)
     // afdeling_id
     const afdeling_list = await $axios.$get(
-      `/api/admin/lov_afdeling_daily_progress`
+      `/api/admin/lov_employee_afdeling`
     )
 
     const afdeling_default = await $axios.$get(
@@ -524,7 +530,7 @@ export default {
       btn_non_asisten = true
     }
 
-    console.log( `api/admin/workflow/in_process?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${q_afdeling_id}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}`)
+    console.log( 'posts', `api/admin/workflow/in_process?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${q_afdeling_id}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}`)
     const posts = await $axios.$get(
       `api/admin/workflow/in_process?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${q_afdeling_id}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}`
     )

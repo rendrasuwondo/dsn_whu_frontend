@@ -11,49 +11,34 @@
             <table>
               <tr>
                 <td @click="InProcess()">
-                  <nuxt-link
-                    :to="{ name: 'admin-in_process' }"
-                    class="nav-link"
-                  >
+                  <nuxt-link :to="{ name: 'admin-in_process' }" class="nav-link">
                     <i class="nav-icon fas fa-briefcase"></i>
                     In Process
                   </nuxt-link>
                 </td>
-                <td>/ Detail</td>
+                <td>/ Detail RKH</td>
               </tr>
             </table>
           </h3>
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
-          <b-card
-            border-variant="primary"
-            header="Filter"
-            header-bg-variant="info"
-            header-text-variant="white"
-          >
+          <b-card border-variant="primary" header="Detail" header-bg-variant="info" header-text-variant="white">
             <b-card-text>
               <b-container class="bv-example-row mb-3">
                 <b-row>
                   <b-col cols="2">Tanggal:</b-col>
                   <b-col cols="4">
                     <b-input-group>
-                      <b-form-input
-                        size="sm"
-                        :disabled="true"
-                        v-model="detail.tanggal"
-                      ></b-form-input>
+                      <b-form-input size="sm" :disabled="true" v-model="detail.tanggal"></b-form-input>
                     </b-input-group>
                   </b-col>
-                  <b-col cols="2">Mandor:</b-col>
+                  <b-col cols="2">Asisten:</b-col>
                   <b-col cols="4">
                     <div class="form-group">
-                      <b-form-input
-                        size="sm"
-                        :disabled="true"
-                        v-model="detail.mandor"
-                      ></b-form-input></div
-                  ></b-col>
+                      <b-form-input size="sm" :disabled="true" v-model="detail.mandor"></b-form-input>
+                    </div>
+                  </b-col>
                 </b-row>
               </b-container>
               <b-container class="bv-example-row">
@@ -61,13 +46,10 @@
                   <b-col cols="2">Afdeling:</b-col>
                   <b-col cols="4">
                     <div class="form-group">
-                      <b-form-input
-                        :custom-label="customLabel"
-                        size="sm"
-                        :disabled="true"
-                        v-model="detail.afdelingCode"
-                      ></b-form-input></div
-                  ></b-col>
+                      <b-form-input :custom-label="customLabel" size="sm" :disabled="true"
+                        v-model="detail.afdelingCode"></b-form-input>
+                    </div>
+                  </b-col>
                 </b-row>
               </b-container>
             </b-card-text>
@@ -76,35 +58,11 @@
           <div class="form-group">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
-                <nuxt-link
-                  :to="{
-                    name: 'admin-in_process_detail_asisten-create',
-                    query: {
-                      tanggal:
-                      activitied_at_start,
-                      afdeling_code: afdeling_id
-                    },
-                  }"
-                  class="btn btn-info btn-sm"
-                  style="padding-top: 8px"
-                  title="Tambah"
-                  ><i class="fa fa-plus-circle"></i>
-                </nuxt-link>
-                <button
-                  title="Export To Excel"
-                  class="btn btn-info"
-                  @click="exportData"
-                >
+                <button title="Export To Excel" class="btn btn-info" @click="exportData">
                   <i class="fa fa-file-excel"></i>
                 </button>
               </div>
-              <input
-                type="text"
-                class="form-control"
-                v-model="search"
-                @keypress.enter="searchData"
-                placeholder=""
-              />
+              <input type="text" class="form-control" v-model="search" @keypress.enter="searchData" placeholder="" />
               <div class="input-group-append">
                 <button @click="searchData" class="btn btn-info">
                   <i class="fa fa-search"></i>
@@ -114,76 +72,57 @@
             </div>
           </div>
           <!-- table -->
-          <b-table
-            small
-            responsive
-            striped
-            bordered
-            hover
-            :items="posts"
-            :fields="fields"
-            show-empty
-            outlined
-            v-model="visibleRows"
-          >
-            <template v-slot:head(selected)="data">
-              <span
-                ><b-form-checkbox
-                  @click.native.stop
-                  @change="select"
-                  v-model="allSelected"
-                >
-                </b-form-checkbox
-              ></span>
-            </template>
-            <template v-slot:cell(selected)="row">
-              <b-form-group>
-                <input type="checkbox" v-model="row.item.selected" />
-              </b-form-group>
-            </template>
-            <template v-slot:cell(actions)="row">
-              <b-button
-                :to="{
-                  name: 'admin-in_process_detail_asisten-edit-id',
-                  params: { id: row.item.id },
-                  query: {
-                    id: $route.params.id,
-                  },
-                }"
-                variant="link"
-                size="sm"
-                title="Edit"
-              >
-                <i class="fa fa-pencil-alt"></i>
-              </b-button>
+          <b-table small responsive bordered hover class="table-1" :items="posts" :fields="fields" show-empty
+            v-model="visibleRows" head-variant="light">
+            <!--
+            <template v-slot:thead-top="data">
+              <b-tr>
+                <b-th variant="primary" colspan="6"></b-th>
+                <b-th variant="danger" colspan="3" class="text-center">HK</b-th>
+                <b-th variant="danger" colspan="3" class="text-center">Volume</b-th>
+                <b-th variant="danger" colspan="4" class="text-center">Rate</b-th>
+              </b-tr>
+            </template>-->
+            <template v-slot:cell(detail_hap)="row">
+              <div>{{ row.item.wide }}</div>
             </template>
             <template v-slot:custom-foot="data">
               <b-tr>
-                <b-td colspan="3"
-                  ><b-button
-                    size="sm"
-                    variant="outline-primary"
-                    @click="Verification"
-                    v-if="rowcount > 0"
-                    >Verifikasi</b-button
-                  ></b-td
-                >
-                <!-- <b-td colspan="3">Total</b-td>
-                <b-td align="right">
-                  {{ new Intl.NumberFormat('es-US').format(TOTAL_HK) }}</b-td
-                >
-                <b-td align="right">
-                  {{
-                    new Intl.NumberFormat('es-US').format(TOTAL_VOLUME)
-                  }}</b-td
-                > -->
+                <b-td colspan="3" align="left" variant="secondary"><b>Total</b></b-td>
+               <b-td align="right" variant="secondary">
+                  <b> {{ TotalManDays.toFixed(2) }}</b>
+                </b-td>
+                <b-td align="right" variant="secondary">
+                  <b> {{ TotalQty.toFixed(2) }}</b>
+                </b-td>
+                <b-td align="right" variant="secondary">
+                  <b> {{ TotalFlexrate.toFixed(2) }}</b>
+                </b-td>
+              
+              
+                
               </b-tr>
+
+
             </template>
           </b-table>
+
+          <!-- pagination -->
           <b-row>
-            <b-col class="text-right" align-self="center"
-              >{{ rowcount }} data</b-col
-            >
+            <!-- <b-col>
+                    <b-pagination
+                      v-model="pagination.current_page"
+                      :total-rows="pagination.total"
+                      :per-page="pagination.per_page"
+                      @change="changePage"
+                      align="left"
+                      class="mt-1"
+                    >
+                    </b-pagination>
+                  </b-col> -->
+            <b-col class="text-right" align-self="center">
+              {{ rowcount }} data
+            </b-col>
           </b-row>
         </div>
       </div>
@@ -208,11 +147,7 @@
                       }}</span>
                     </div>
                     <!-- /.direct-chat-infos -->
-                    <img
-                      class="direct-chat-img"
-                      src="/img/avatar_general.png"
-                      alt="message user image"
-                    />
+                    <img class="direct-chat-img" src="/img/avatar_general.png" alt="message user image" />
                     <!-- /.direct-chat-img -->
                     <div class="direct-chat-text">
                       {{ item.message }}
@@ -229,34 +164,37 @@
               </template>
 
               <b-row>
-                <approval
-                  :approvalStatus="this.$route.query.approvalStatus"
-                  :elhm_id="this.t_elhm_ctl.t_elhm_id"
-                ></approval>
+                <approval :approvalStatus="this.$route.query.approvalStatus" :elhm_id="this.t_elhm_ctl.t_elhm_id">
+                </approval>
               </b-row>
 
               <!-- <b-card-text>Header and footers using slots.</b-card-text> -->
               <div class="d-flex justify-content-end">
-                <b-button href="#" variant="primary" @click="Submit()"
-                  >Submit</b-button
-                >
+                <b-button href="#" variant="primary" @click="Submit()">Submit</b-button>
               </div>
             </b-card>
           </b-card-group>
         </div>
       </div>
+
+      <div v-if="loading" class="loading-page">
+        <p>Loading...</p>
+      </div>
     </section>
   </div>
 </template>
-
+  
 <script>
+import Approval from '~/components/Approval.vue'
 export default {
+  components: { Approval },
   layout: 'admin',
   head() {
     return {
-      title: 'IN Process Detail',
+      title: 'Laporan Harian Mandor',
     }
   },
+
   props: ['date', 'afdelingCode', 'mandor', 'approvalStatus'],
   data() {
     return {
@@ -265,6 +203,7 @@ export default {
         mandor: this.$route.query.mandor,
         afdelingCode: this.$route.query.afdelingCode,
       },
+      loading: false,
       main: true,
       allSelected: false,
       visibleRows: [],
@@ -274,105 +213,80 @@ export default {
       afdeling: [],
       fields: [
         {
-          label: 'Approve',
-          key: 'selected',
-          tdClass: 'align-middle text-center text-nowrap nameOfTheClass ',
-          sortable: false,
-        },
-        {
-          label: '#',
-          key: 'actions',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass ',
-        },
-        {
-          label: 'Status',
-          key: 'verification_status_code',
+          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          label: 'Mandor',
+          key: 'foreman_employee_description',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          sortable: true,
         },
         {
-          label: 'Tanggal',
-          key: 'activitied_at',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
-          label: 'SKU',
-          key: 'labour_employee',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-
-        {
+          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Jenis Pekerjaan',
           key: 'activity_description',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          sortable: true,
         },
-
         {
+          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          label: 'Satuan',
+          key: 'activity_unit_code',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          sortable: true,
+        },
+        {
+          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'HK',
           key: 'man_days',
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+          sortable: true,
           formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US')
+            let formatter = new Intl.NumberFormat('es-US', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
             return formatter.format(value)
           },
         },
         {
+          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Volume',
           key: 'qty',
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+          sortable: true,
           formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US')
+            let formatter = new Intl.NumberFormat('es-US', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
             return formatter.format(value)
           },
+          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
+        
         {
+          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Rate',
           key: 'flexrate',
+          sortable: true,
+          formatter: (value, key, item) => {
+            let formatter = new Intl.NumberFormat('es-US', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
+            return formatter.format(value)
+          },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-          // formatter: (value, key, item) =>
-          //   value.toLocaleString(undefined, {
-          //     minimumFractionDigits: 2,
-          //     maximumFractionDigits: 2,
-          //   }),
         },
-        {
-          label: 'Blok',
-          key: 'block',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
-          label: 'Afd',
-          key: 'afdeling_code',
-          thClass: 'd-none',
-          tdClass: 'align-middle text-right text-nowrap d-none',
-        },
-        {
-          label: 'Estate',
-          key: 'department_code',
-          thClass: 'd-none',
-          tdClass: 'align-middle text-left text-nowrap d-none',
-        },
-
-        {
-          label: 'Mandor',
-          key: 'foreman_employee',
-          thClass: 'd-none',
-          tdClass: 'align-middle text-left text-nowrap d-none',
-        },
-      ],
+              ],
       company_code: '',
       department_code: '',
       param_activitied_at_prepend: this.$route.query.activitied_at_prepend,
       param_activitied_at_append: this.$route.query.activitied_at_append,
-      afdeling_id: this.$route.query.q_afdeling_id,
+      // afdeling_id: this.$route.query.q_afdeling_id,
       foreman_employee_id: this.$route.query.q_foreman_employee_id,
-      query_afdeling_id: '',
+      // query_afdeling_id: '',
       query_foreman_employee_id: '',
       afdeling_default: '',
     }
-  },
-  created() {
-    // console.log('created')
-    // this.main = false
   },
   watchQuery: [
     'q',
@@ -387,9 +301,8 @@ export default {
     function currentDate() {
       const current = new Date()
       current.setDate(current.getDate())
-      const date = `${current.getFullYear()}-${current.getMonth() + 1}-${
-        current.getDate() - 1
-      }`
+      const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate() - 1
+        }`
 
       return date
     }
@@ -410,115 +323,46 @@ export default {
       ? query.activitied_at_append
       : currentDate()
 
-    // afdeling_id
-    const afdeling_list = await $axios.$get(
-      `/api/admin/lov_afdeling_daily_progress`
-    )
-
-    const afdeling_default = await $axios.$get(
-      `/api/admin/lov_afdeling_default`
-    )
-
-    let q_afdeling_id = query.q_afdeling_id
-      ? query.q_afdeling_id
-      : afdeling_default.data.id
-
-    let afdeling_id = []
-
-    let afdeling_code = []
-
-    if (query.q_afdeling_id) {
-      await $axios
-        .get(
-          `/api/admin/lov_afdeling_daily_progress?q_afdeling_id=${q_afdeling_id}`
-        )
-        .then((response) => {
-          // console.log('daaa')
-          // console.log(response.data.data)
-          afdeling_id = response.data.data
-        })
-    } else {
-      afdeling_id = []
-
-      q_afdeling_id = afdeling_default.data.id
-    }
-
-    if (q_afdeling_id == undefined || q_afdeling_id == '') {
-      q_afdeling_id = afdeling_default.data.id
-    }
-
-    const foreman_list = await $axios.$get(
-      `/api/admin/lov_foreman_maintenance?afdeling_id=${q_afdeling_id}`
-    )
-    // console.log('rdr')
-    // console.log(`/api/admin/lov_foreman_maintenance?afdeling_id=${q_afdeling_id}`)
-    let q_foreman_employee_id = query.q_foreman_employee_id
-      ? query.q_foreman_employee_id
-      : ''
-    let foreman_employee_id = []
-
-    if (query.q_foreman_employee_id) {
-      //Mandor
-      await $axios
-        .get(
-          `/api/admin/lov_foreman_maintenance?afdeling_id=${q_afdeling_id}&foreman_id=${q_foreman_employee_id}`
-        )
-        .then((response) => {
-          foreman_employee_id = response.data.data[0]
-          // console.log('cekkkkk')
-          // console.log(response.data.data)
-        })
-    } else {
-      await $axios
-        .get(
-          `/api/admin/lov_foreman_maintenance?afdeling_id=${q_afdeling_id}&foreman_id=${q_foreman_employee_id}`
-        )
-        .then((response) => {
-          foreman_employee_id = response.data.data[0]
-          // console.log('cekkkkk')
-          // console.log(response.data.data)
-        })
-
-      q_foreman_employee_id = foreman_employee_id.employee_id
-    } //if (query.foreman_id) {
-
-    if (q_foreman_employee_id == undefined) {
-      q_foreman_employee_id = ''
-    }
-
-    //  console.log('rdr')
-    //  console.log($auth)
-
-    //const test = await $axios.$get(
-    //    `/api/admin/workflow/in_process_detail?id=${route.params.id}`
-    // )
-
     const t_elhm_ctl = await $axios.$get(
       `/api/admin/workflow/t_elhm_ctl?id=${route.params.id}`
+      //`/api/admin/workflow/t_elhm_ctl?id=113`
     )
+    //console.log('t_elhm_ctl',  t_elhm_ctl.data[0].activitied_at, t_elhm_ctl.data[0].afdeling_id, t_elhm_ctl.data[0].foreman_employee_id)
+    const posts = await $axios.$get(
+      `/api/admin/in_process/activity_plan?activitied_at=${t_elhm_ctl.data[0].activitied_at}&afdeling_id=${t_elhm_ctl.data[0].afdeling_id}&foreman_employee_id=${t_elhm_ctl.data[0].foreman_employee_id}`
+    )
+    console.log('POST', `/api/admin/in_process/activity_plan?activitied_at=${t_elhm_ctl.data[0].activitied_at}&afdeling_id=${t_elhm_ctl.data[0].afdeling_id}&foreman_employee_id=${t_elhm_ctl.data[0].foreman_employee_id}`)
+    const global_param = await $axios.$get(
+      `/api/admin/global_param?q=MAX_HK_RAWAT`
+    )
+
+    let thresholdManDays = 0 // Default Value
+    if (
+      typeof global_param.data.data !== 'undefined' &&
+      global_param.data.data.length > 0
+    ) {
+      thresholdManDays = global_param.data.data[0].value_1
+    }
+
+    for (var i = 0; i < posts.data.length; i++) {
+      if (posts.data[i].man_days_total > thresholdManDays) {
+        posts.data[i]._rowVariant = 'danger'
+      } else {
+        posts.data[i]._rowVariant = ''
+      }
+    }
+
+
 
     const t_elhm_message = await $axios.$get(
       `/api/admin/workflow/t_elhm_message?t_elhm_id=${t_elhm_ctl.data[0].t_elhm_id}`
     )
 
-   /*
-    const posts = await $axios.$get(
-      `/api/admin/report/activity_actual?q=${search}&page=${page}&activitied_at_prepend=${t_elhm_ctl.data[0].activitied_at}&activitied_at_append=${t_elhm_ctl.data[0].activitied_at}&q_foreman_employee_id=${t_elhm_ctl.data[0].foreman_employee_id}&q_afdeling_id=${t_elhm_ctl.data[0].afdeling_id}`
-    )
-    */
-
-    const posts = await $axios.$get(
-      `/api/admin/report/approved_asisten?q=${search}&page=${page}&activitied_at=${t_elhm_ctl.data[0].activitied_at}&activitied_at_append=${t_elhm_ctl.data[0].activitied_at}&foreman_employee_id=${t_elhm_ctl.data[0].foreman_employee_id}&afdeling_id=${t_elhm_ctl.data[0].afdeling_id}`
-    )	
-    
-    //12027, 2023-03-23
-
-    console.log('test')
-    console.log(t_elhm_ctl.data[0].activitied_at)
+    console.log('t_elhm_message')
+    console.log(t_elhm_message.data[0])
 
 
 
-    // console.log('Berhasil')
     return {
       posts: posts.data,
       pagination: posts.data,
@@ -526,52 +370,53 @@ export default {
       rowcount: posts.data.length,
       activitied_at_start: activitied_at_start,
       activitied_at_end: activitied_at_end,
-      afdeling: afdeling_list.data,
-      afdeling_id: afdeling_id,
-      foreman: foreman_list.data,
-      foreman_employee_id: foreman_employee_id,
+      // afdeling: afdeling_list.data,
+      // afdeling_id: afdeling_id,
+      // t_daily_progress: t_daily_progress.data,
+      // foreman: foreman_list.data,
+      // foreman_employee_id: foreman_employee_id,
       t_elhm_ctl: t_elhm_ctl.data[0],
       t_elhm_message: t_elhm_message.data,
     }
   },
 
   mounted() {
-    if (this.$route.query.q_afdeling_id == null) {
-      this.$axios.get(`/api/admin/lov_afdeling_default`).then((response) => {
-        this.afdeling_id = [
-          {
-            id: response.data.data.id,
-            code: response.data.data.code,
-          },
-        ]
-      })
-    }
+    // if (this.$route.query.q_afdeling_id == null) {
+    //   this.$axios.get(`/api/admin/lov_afdeling_default`).then((response) => {
+    //     this.afdeling_id = [
+    //       {
+    //         id: response.data.data.id,
+    //         code: response.data.data.code,
+    //       },
+    //     ]
+    //   })
+    // }
   },
 
   methods: {
     onChangeAfdeling() {
       // console.log (this.afdeling_id.id)
-      if (this.afdeling_id.id != null) {
-        this.$axios
-          .get(
-            `/api/admin/lov_foreman_maintenance?afdeling_id=${this.afdeling_id.id}`
-          )
-          .then((response) => {
-            this.foreman = response.data.data
+      // if (this.afdeling_id.id != null) {
+      //   this.$axios
+      //     .get(
+      //       `/api/admin/lov_foreman_maintenance?afdeling_id=${this.afdeling_id.id}`
+      //     )
+      //     .then((response) => {
+      //       this.foreman = response.data.data
 
-            this.$axios
-              .get(
-                `/api/admin/lov_foreman_maintenance?afdeling_id=${this.afdeling_id.id}`
-              )
-              .then((response) => {
-                this.foreman_employee_id = response.data.data[0]
-              })
-          })
-      }
+      //       this.$axios
+      //         .get(
+      //           `/api/admin/lov_foreman_maintenance?afdeling_id=${this.afdeling_id.id}`
+      //         )
+      //         .then((response) => {
+      //           this.foreman_employee_id = response.data.data[0]
+      //         })
+      //     })
+      // }
     },
 
     customLabel(afdeling) {
-      return `${afdeling.code}` + ' (' + `${afdeling.id}` + ')'
+      // return `${afdeling.code}` + ' (' + `${afdeling.id}` + ')'
     },
 
     changePage(page) {
@@ -606,7 +451,7 @@ export default {
             ? this.afdeling_id.id
             : ''
         }
-      } catch (err) {}
+      } catch (err) { }
 
       try {
         if (this.foreman_employee_id.id === null) {
@@ -620,7 +465,7 @@ export default {
             ? this.foreman_employee_id.employee_id
             : ''
         }
-      } catch (err) {}
+      } catch (err) { }
 
       // console.log(this.activitied_at_start.getFullYear())
       // console.log(this.afdeling_id[0].id)
@@ -652,6 +497,7 @@ export default {
     },
 
     exportData() {
+      this.$nuxt.$loading.start()
       const headers = {
         'Content-Type': 'application/json',
       }
@@ -669,12 +515,12 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/lph/export?activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_end}&q_afdeling_id=${this.query_afdeling_id}`,
+        url: `/api/admin/workflow/in_process_detail/export?id=${this.$route.params.id}&q=${this.search}&q_afdeling_id=${this.query_afdeling_id}&q_activitied_at_start=${this.activitied_at_start}&q_activitied_at_end=${this.activitied_at_end}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
       }).then((response) => {
-        this.isLoading = false
+        this.$nuxt.$loading.finish()
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
@@ -707,70 +553,18 @@ export default {
       return x1 + x2
     },
 
-    start() {
-      // this.loading = true
-    },
-    finish() {
-      // this.loading = false
-    },
+    // start() {
+    //   this.loading = true
+    // },
+    // finish() {
+    //   this.loading = false
+    // },
 
     InProcess() {
-      // this.$nuxt.$loading.start()
+      // this.loading = true
       this.main = false
     },
-    Verification() {
-      this.$swal
-        .fire({
-          title: 'APAKAH ANDA YAKIN ?',
-          text: 'Melakukan verifikasi !',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'YA',
-          cancelButtonText: 'TIDAK',
-        })
-        .then((result) => {
-          if (result.isConfirmed) {
-            // this.$nuxt.$loading.start()
-            this.main = false
 
-            this.selectedData = []
-            this.posts.forEach((el) => {
-              // if (el.selected == true) {
-              //   this.selectedData.push(el)
-              // }
-              this.selectedData.push(el)
-            })
-            console.log(this.selectedData)
-
-            var i = 0
-            let n = this.selectedData.length
-
-            this.$axios
-              .post(
-                `/api/admin/update_activity_actual_status`,
-                this.selectedData
-              )
-              .then(() => {
-                this.$swal.fire({
-                  title: 'BERHASIL!',
-                  text: 'Data Berhasil Diupdate!',
-                  icon: 'success',
-                  showConfirmButton: false,
-                  timer: 2000,
-                })
-
-                this.$nuxt.refresh().then(() => {
-                  // this.$nuxt.$loading.finish()
-                  this.main = true
-                })
-
-
-              })
-          }
-        })
-    },
     Submit() {
       this.$swal
         .fire({
@@ -815,7 +609,7 @@ export default {
               // console.log(this.t_elhm_ctl.activitied_at)
               this.$swal
                 .fire({
-                  title: 'Komfirmasi',
+                  title: 'Konfirmasi',
                   html:
                     '<div>Anda yakin akan melakukan Approve?</div>' +
                     '<div><b-container>' +
@@ -850,7 +644,7 @@ export default {
                     '</div>' +
                     '<div><b-container>' +
                     '<b-row>' +
-                    '<b-col>Mandor</b-col>' +
+                    '<b-col>Asisten</b-col>' +
                     '<b-col>&nbsp;:&nbsp;</b-col>' +
                     '<b-col>' +
                     this.t_elhm_ctl.name +
@@ -998,53 +792,57 @@ export default {
     },
   },
   computed: {
-    TotalManDaysBasic() {
+    TotalManDays() {
       return this.visibleRows.reduce((accum, item) => {
         // console.log(accum + item.man_days_basic)
-        return accum + item.man_days_basic
+        return accum + item.man_days
       }, 0.0)
     },
 
-    TotalManDaysPremi() {
-      return this.visibleRows.reduce((accum, item) => {
-        // console.log(accum + item.man_days_premi)
-        return accum + item.man_days_premi
-      }, 0.0)
-    },
-
-    TotalManDaysTotal() {
-      return this.visibleRows.reduce((accum, item) => {
-        // console.log(accum + item.man_days_total)
-        return accum + item.man_days_total
-      }, 0.0)
-    },
-
-    TotalQtyBasic() {
+    TotalQty() {
       return this.visibleRows.reduce((accum, item) => {
         // console.log(accum + item.qty_basic)
-        return accum + item.qty_basic
+        return accum + item.qty
       }, 0.0)
     },
 
-    TotalQtyPremi() {
+    TotalFlexrate() {
       return this.visibleRows.reduce((accum, item) => {
-        // console.log(accum + item.qty_premi)
-        return accum + item.qty_premi
+        return accum + item.flexrate
       }, 0.0)
     },
 
-    TotalQtyTotal() {
+    TotalRateUnit() {
       return this.visibleRows.reduce((accum, item) => {
-        // console.log(accum + item.qty_total)
-        return accum + item.qty_total
+        return accum + item.unit
+      }, 0.0)
+    },
+
+    TotalRateNorm() {
+      return this.visibleRows.reduce((accum, item) => {
+        return accum + item.norm
       }, 0.0)
     },
   },
 }
 </script>
-
+  
 <style scoped>
+.loading-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  padding-top: 200px;
+  font-size: 30px;
+  font-family: sans-serif;
+}
+
 .table-1 {
   font-size: 14px;
 }
 </style>
+  
