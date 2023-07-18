@@ -16,7 +16,14 @@
             <form @submit.prevent="storePost">
               <div class="form-group">
                 <label>Afdeling</label>
-                <multiselect
+                <input
+                  type="text"
+                  v-model="field.afdeling_id"
+                  placeholder=""
+                  class="form-control"
+                  readonly
+                />
+                <multiselect v-show="false"
                   v-model="field.afdeling_id"
                   :options="afdeling"
                   label="id"
@@ -341,22 +348,7 @@
           })
       }
   
-      // console.log(this.$cookies.get('activity_group_id'))
-      //fetching data categories
-      this.$axios
-        .get('/api/admin/categories')
-  
-        .then((response) => {
-          this.categories = response.data.data.data
-          // console.log(response.data.data.data);
-          // //assing response data to state "categories"
-          // response.data.data.data.forEach((dt)=> {
-          //   console.log(dt.name);
-          //   if (dt.name == 'laravel') {
-          //       this.categories.push(dt)
-          //   }
-          // })
-        })
+     
   
       //fetching data tags
       this.$axios
@@ -373,27 +365,7 @@
       if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
         strApi = `/api/admin/lov_employee_afdeling`
       }
-  
-      this.$axios
-        .get(`/api/admin/lov_employee_afdeling`)
-  
-        .then((response) => {
-          //assing response data to state "tags"
-          this.afdeling = response.data.data
-        })
-  
-      console.log('daaa')
-      console.log(this.$auth.user.employee.afdeling_id)
-    
-      this.$axios
-        .get(
-          `/api/admin/lov_employee_afdeling?afdeling_id=${this.$auth.user.employee.afdeling_id}`
-        )
-        .then((response) => {
-          // console.log('rdr')
-          // console.log(response.data.data)
-          this.field.afdeling_id = response.data.data
-        })
+          this.field.afdeling_id = this.$route.query.q_afdeling_id?this.$route.query.q_afdeling_id:this.$auth.user.employee.afdeling_id
     },
   
     methods: {
