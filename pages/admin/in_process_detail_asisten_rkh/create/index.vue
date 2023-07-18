@@ -16,14 +16,14 @@
             <form @submit.prevent="storePost">
               <div class="form-group">
                 <label>Afdeling</label>
-                <multiselect
-                  v-model="field.afdeling_id"
-                  :options="afdeling"
-                  label="id"
-                  track-by="id"
-                  :searchable="true"
-                  @input="onChangeAfdeling"
-                ></multiselect>
+                <input
+                type="text"
+                v-model="field.afdeling_id"
+                placeholder=""
+                class="form-control"
+                readonly
+              />
+               
                 <div v-if="validation.afdeling_id" class="mt-2">
                   <b-alert show variant="danger">{{
                     validation.afdeling_id[0]
@@ -67,13 +67,14 @@
               <div class="form-group">
                 <label>Tanggal</label>
                 <b-form-datepicker
-                  v-model="field.activitied_at"
+                  v-model="activitied_at"
                   :date-format-options="{
                     year: 'numeric',
                     month: 'short',
                     day: '2-digit',
-                    weekday: 'short',
+                    weekday: 'short'
                   }"
+                       disabled
                 ></b-form-datepicker>
                 <div v-if="validation.activitied_at" class="mt-2">
                   <b-alert show variant="danger">{{
@@ -85,7 +86,7 @@
               <div class="form-group" v-show="show_hk">
                 <label>HK</label>
                 <input
-                  v-model.number="field.man_days"
+                  v-model.number="man_days"
                   class="form-control"
                   v-on:keypress="NumbersOnly"
                   placeholder="Masukkan Nilai HK"
@@ -286,10 +287,45 @@
             uploadUrl: 'http://localhost:8000/api/web/posts/storeImage',
           },
         },
+        t_elhm_ctl: [],
       }
     },
   
+    async asyncData({ $axios, query, route, $auth }) {
+      const t_elhm_ctl = await $axios.$get(
+        `/api/admin/workflow/t_elhm_ctl?id=${route.query.id}`
+      )
+
+      const foreman = await $axios.$get(
+        `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${$auth.user.employee.afdeling_id}&foreman_id=${t_elhm_ctl.data[0].foreman_employee_id}`
+      )
+
+    
+
+     let man_days, activitied_at
+
+      console.log('foreman', `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${$auth.user.employee.afdeling_id}&foreman_id=${t_elhm_ctl.data[0].foreman_employee_id}`)
+      return {
+        t_elhm_ctl: t_elhm_ctl.data.data,
+        activitied_at : t_elhm_ctl.data[0].activitied_at,
+        foreman : foreman.data,
+      }
+    },
+
     mounted() {
+    let test
+   
+    this.$axios
+      .get(`/api/admin/workflow/t_elhm_ctl?id=${this.$route.query.id}`)
+      .then((response) => {
+        console.log('t_elhm_ctl r', response.data.data[0]) 
+        this.field.afdeling_id = response.data.data[0].afdeling_id
+        this.t_elhm_ctl = response.data.data[0]
+        test = response.data.data[0]
+      })
+
+      console.log('test', test) 
+      console.log('t_elhm_ctl', JSON.stringify(this.t_elhm_ctl))
       this.field.activitied_at = this.currentDate1()
       console.log(this.currentDate())
       const current0 = new Date()
@@ -317,13 +353,13 @@
           //   }
           // })
         })
-  
+        /*
       //foreman_employee_id
       if (this.field.afdeling_id.afdeling_id == undefined) {
         this.$axios
           // .get('/api/admin/lov_foreman_employee')
           .get(
-            `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.$auth.user.employee.afdeling_id}`
+            `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.$auth.user.employee.afdeling_id`
           )
   
           .then((response) => {
@@ -340,7 +376,7 @@
             this.foreman = response.data.data
           })
       }
-  
+
       // console.log(this.$cookies.get('activity_group_id'))
       //fetching data categories
       this.$axios
@@ -394,6 +430,7 @@
           // console.log(response.data.data)
           this.field.afdeling_id = response.data.data
         })
+        */
     },
   
     methods: {
@@ -536,9 +573,8 @@
   
         formData.append(
           'id',
-          this.field.activity_id
-            ? this.field.activity_id.id
-            : '' + this.field.afdeling_id.id + this.field.activitied_at
+          this.field.activity_id.id + '_'
+            + this.$auth.user.employee.afdeling_id + '_' + this.field.activitied_at + '_' + this.field.foreman_employee_id.nik
         )
         formData.append(
           'activity_id',
@@ -561,8 +597,8 @@
           'activity_group_id',
           this.$auth.user.employee.activity_group_id
         )
-        formData.append('activitied_at', this.field.activitied_at)
-        formData.append('man_days', this.field.man_days)
+        formData.append('activitied_at', this.activitied_at)
+        formData.append('man_days', this.man_days)
         formData.append('qty', this.field.qty)
         formData.append('flexrate', this.field.flexrate)
         formData.append('description', this.field.description)
@@ -579,6 +615,20 @@
         formData.append('update_at', this.field.update_at)
         formData.append('udpate_by', this.field.udpate_by)
   
+       console.log('formData',formData)
+       /*  
+       this.$router.push({
+              name: 'admin-in_process_detail_asisten_rkh-id',
+               params: { id:  this.$route.query.id },
+              query: {
+                     tanggal : this.$route.query.tanggal,
+                      mandor : this.$route.query.mandor,
+                      afdelingCode : this.$route.query.afdelingCode,
+                      approvalStatus : this.$route.query.approvalStatus
+                    },
+            })
+        */
+        
         //sending data to server
         await this.$axios
           .post('/api/admin/activity_plan', formData)
@@ -594,7 +644,14 @@
   
             //redirect, if success store data
             this.$router.push({
-              name: 'admin-activity_plan_new',
+              name: 'admin-in_process_detail_asisten_rkh-id',
+               params: { id:  this.$route.query.id },
+              query: {
+                     tanggal : this.$route.query.tanggal,
+                      mandor : this.$route.query.mandor,
+                      afdelingCode : this.$route.query.afdelingCode,
+                      approvalStatus : this.$route.query.approvalStatus
+                    },
             })
           })
           .catch((error) => {
@@ -611,6 +668,7 @@
   
             this.validation = error.response.data
           })
+          
       },
       NumbersOnly(evt) {
         evt = evt ? evt : window.event

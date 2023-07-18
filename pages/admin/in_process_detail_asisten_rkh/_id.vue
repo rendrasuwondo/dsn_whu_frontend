@@ -101,8 +101,25 @@
                 <b-th variant="danger" colspan="4" class="text-center">Rate</b-th>
               </b-tr>
             </template>-->
-            <template v-slot:cell(detail_hap)="row">
-              <div>{{ row.item.wide }}</div>
+            <template v-slot:cell(actions)="row">
+              <b-button
+                :to="{
+                  name: 'admin-in_process_detail_asisten_rkh-edit-id',
+                  params: { id: row.item.id },
+                  query: {
+                    id: $route.params.id,
+                    tanggal : $route.query.tanggal,
+                    mandor : $route.query.mandor,
+                    afdelingCode : $route.query.afdelingCode,
+                    approvalStatus : $route.query.approvalStatus
+                  },
+                }"
+                variant="link"
+                size="sm"
+                title="Edit"
+              >
+                <i class="fa fa-pencil-alt"></i>
+              </b-button>
             </template>
             <template v-slot:custom-foot="data">
               <b-tr>
@@ -230,6 +247,11 @@ export default {
       foreman: [],
       afdeling: [],
       fields: [
+        {
+          label: '#',
+          key: 'actions',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass ',
+        },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Mandor',

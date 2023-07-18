@@ -53,6 +53,23 @@
               </b-container>
               <b-container class="bv-example-row">
                 <b-row>
+                  <b-col cols="1">Afdeling</b-col>
+                  <b-col cols="7">
+                    <div class="form-group">
+                      <multiselect
+                        v-model="afdeling_id"
+                        :options="afdeling"
+                        :custom-label="customLabel"
+                        x
+                        track-by="id"
+                        :searchable="true"
+                        @input="onChangeAfdeling"
+                      ></multiselect></div
+                  ></b-col>
+                </b-row>
+              </b-container>
+              <b-container class="bv-example-row">
+                <b-row>
                   <b-col cols="2">Jenis Pekerjaan</b-col>
                   <b-col cols="7">
                     <div class="form-group">
@@ -223,6 +240,9 @@ export default {
       showHideSelected: true,
       elhm_status: '',
       class_status: 'card-tools',
+      afdeling: [],
+      //afdeling_id: this.$route.query.afdeling_id,
+      query_afdeling_id: '',
     }
   },
 
@@ -233,6 +253,7 @@ export default {
     'activitied_at_prepend',
     'activitied_at_append',
     'q_activity_id',
+    'q_afdeling_id',
   ],
 
   async asyncData({ $axios, query, $auth }) {
@@ -259,6 +280,49 @@ export default {
     let activitied_at_end = query.activitied_at_append
       ? query.activitied_at_append
       : currentDate()
+
+
+   let q_afdeling_id = query.q_afdeling_id ? query.q_afdeling_id : ''
+
+    let afdeling_id = []
+
+    // afdeling_id
+    const afdeling_list = await $axios.$get(`/api/admin/lov_employee_afdeling`)
+
+    let afdeling_code = []
+
+    if (query.q_afdeling_id) {
+      $axios
+        .get(`/api/admin/lov_employee_afdeling?afdeling_id=${q_afdeling_id}`)
+        .then((response) => {
+          afdeling_id = response.data.data
+        })
+    } else {
+      afdeling_id = []
+
+      q_afdeling_id = $auth.user.employee.afdeling_id
+
+      afdeling_id = [
+        {
+          id: $auth.user.employee.afdeling_id,
+          code: $auth.user.employee.afdeling_code,
+        },
+    ]
+    }
+
+    if (q_afdeling_id == undefined) {
+      q_afdeling_id = ''
+
+      afdeling_id = [
+        {
+          id: $auth.user.employee.afdeling_id,
+          code: $auth.user.employee.afdeling_code,
+        },
+    ]
+    }
+
+    
+   
 
     const activity_list = await $axios.$get(`/api/admin/lov_activity`)
 
@@ -288,15 +352,15 @@ export default {
     const month = `${today.getMonth() + 1}`.padStart(2, '0')
     const day = `${today.getDate()}`.padStart(2, '0')
     const activitiedAtDate = `${year}-${month}-${day}`
-    console.log('new date', activitiedAtDate)
-    console.log('afdeling_id', $auth.user.employee.afdeling_id)
-    console.log('employee_id', $auth.user.employee.employee_id)
+    //console.log('new date', activitiedAtDate)
+    //console.log('afdeling_id', $auth.user.employee.afdeling_id)
+    //console.log('employee_id', $auth.user.employee.employee_id)
   
     const t_elhm = await $axios.$get(
-      `/api/admin/t_elhm?activitied_at=${activitiedAtDate}&afdeling_id=${$auth.user.employee.afdeling_id}&foreman_employee_id=${$auth.user.employee.employee_id}&p_wf_doc_type_id=2`
+      `/api/admin/t_elhm?activitied_at=${activitiedAtDate}&afdeling_id=${q_afdeling_id}&foreman_employee_id=${$auth.user.employee.employee_id}&p_wf_doc_type_id=2`
     )
-
-    // console.log(t_elhm)
+   //console.log('afdeling_id', afdeling_id)
+   //console.log('t_elhm',  `/api/admin/t_elhm?activitied_at=${activitiedAtDate}&afdeling_id=${q_afdeling_id}&foreman_employee_id=${$auth.user.employee.employee_id}&p_wf_doc_type_id=2`)
 
     
     let async_showHideSelected, async_elhm_status, async_class_status
@@ -340,7 +404,7 @@ export default {
 
     //fetching posts
     const posts = await $axios.$get(
-      `/api/admin/activity_plan?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_start}&q_activity_id=${q_activity_id}`
+      `/api/admin/activity_plan?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_start}&q_activity_id=${q_activity_id}&q_afdeling_id=${q_afdeling_id}`
     )
 
     // console.log(posts.data)
@@ -358,18 +422,22 @@ export default {
       elhm_status: async_elhm_status,
       class_status: async_class_status,
       showHideSelected: async_showHideSelected,
+      afdeling: afdeling_list.data,
+      afdeling_id: afdeling_id,
     }
   },
   mounted() {
-    // this.search = this.$route.query.q
-    // document.onreadystatechange = () => {
-    //   if (document.readyState == 'complete') {
-    //     console.log('Page completed with image and files!' + this.$route.query.q)
-    //     // fetch to next page or some code
-    //   }
-    // }
-    // console.log('sadsa')
-    // console.log(this.$route.query.q)
+    /*
+    if (this.$route.query.q_afdeling_id == null) {
+      this.afdeling_id = [
+        {
+          id: this.$auth.user.employee.afdeling_id,
+          code: this.$auth.user.employee.afdeling_code,
+        },
+      ]
+    } else {
+    }
+    */
   },
 
   methods: {
@@ -408,6 +476,18 @@ export default {
         }
       } catch (err) { }
 
+      try {
+        if (this.afdeling_id.id === null) {
+          this.query_afdeling_id = ''
+        } else if (this.afdeling_id.id === undefined) {
+          this.query_afdeling_id = this.$route.query.q_afdeling_id
+        } else {
+          this.query_afdeling_id = this.afdeling_id.id
+            ? this.afdeling_id.id
+            : ''
+        }
+      } catch (err) {}
+
       this.$router.push({
         path: this.$route.path,
         query: {
@@ -415,6 +495,9 @@ export default {
           activitied_at_prepend: this.activitied_at_start,
           activitied_at_append: this.activitied_at_end,
           q_activity_id: this.query_activity_id,
+          q_afdeling_id: this.query_afdeling_id
+            ? this.query_afdeling_id
+            : this.$auth.user.employee.afdeling_id,
         },
       })
     },
@@ -510,7 +593,7 @@ export default {
               let formData = new FormData()
               formData.append('activitied_at', this.activitied_at_start.split("-")[0] + '-' + this.activitied_at_start.split("-")[1].padStart(2, '0')+'-' + this.activitied_at_start.split("-")[2].padStart(2, '0'))
 
-              formData.append('afdeling_id', this.$auth.user.employee.afdeling_id)
+              formData.append('afdeling_id', this.$route.query.q_afdeling_id?this.$route.query.q_afdeling_id:this.$auth.user.employee.afdeling_id)
               formData.append(
                 'foreman_employee_id',
                 this.$auth.user.employee.employee_id
@@ -523,7 +606,7 @@ export default {
                 't_elhm_id',
                 this.activitied_at_start.split("-")[0] + '-' + this.activitied_at_start.split("-")[1].padStart(2, '0')+'-' + this.activitied_at_start.split("-")[2].padStart(2, '0') +
                   '_' +
-                  this.$auth.user.employee.afdeling_id +
+                  (this.$route.query.q_afdeling_id?this.$route.query.q_afdeling_id:this.$auth.user.employee.afdeling_id) +
                   '_' +
                   this.$auth.user.employee.employee_id +
                   '_' +
@@ -531,7 +614,7 @@ export default {
               )
 
                console.log(formData) 
-
+              
               this.$axios
                 .post('/api/admin/t_elhm', formData)
                 .then(() => {
@@ -556,10 +639,41 @@ export default {
                 .catch((error) => {
                   //assign error to state "validation"
                   this.validation = error.response.data
-                })
+                }) 
             }
           })
-    }
+    },
+
+    customLabel(afdeling) {
+      return `${afdeling.code}` + ' (' + `${afdeling.id}` + ')'
+    },
+
+     onChangeAfdeling() {
+      try {
+        if (this.afdeling_id.id === null) {
+          this.query_afdeling_id = ''
+        } else if (this.afdeling_id.id === undefined) {
+          this.query_afdeling_id = this.$route.query.q_afdeling_id
+        } else {
+          this.query_afdeling_id = this.afdeling_id.id
+            ? this.afdeling_id.id
+            : ''
+        }
+      } catch (err) {}
+
+     this.$router.push({
+        path: this.$route.path,
+        query: {
+          q: this.search,
+          activitied_at_prepend: this.activitied_at_start,
+          activitied_at_append: this.activitied_at_end,
+          q_activity_id: this.query_activity_id,
+          q_afdeling_id: this.query_afdeling_id
+            ? this.query_afdeling_id
+            : this.$auth.user.employee.afdeling_id,
+        },
+      })
+    },
   },
 }
 </script>

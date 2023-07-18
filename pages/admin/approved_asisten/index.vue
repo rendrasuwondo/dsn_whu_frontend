@@ -375,7 +375,7 @@ export default {
       param_activitied_at_prepend: this.$route.query.activitied_at_prepend,
       param_activitied_at_append: this.$route.query.activitied_at_append,
       foreman_employee_id: this.$route.query.q_foreman_employee_id,
-      afdeling_id: this.$route.query.afdeling_id,
+      //afdeling_id: this.$route.query.afdeling_id,
       query_foreman_employee_id: '',
       query_afdeling_id: '',
       showHideSelected: false,
@@ -444,10 +444,24 @@ export default {
       afdeling_id = []
 
       q_afdeling_id = $auth.user.employee.afdeling_id
+
+      afdeling_id = [
+        {
+          id: $auth.user.employee.afdeling_id,
+          code: $auth.user.employee.afdeling_code,
+        },
+    ]
     }
 
     if (q_afdeling_id == undefined) {
       q_afdeling_id = ''
+
+      afdeling_id = [
+        {
+          id: $auth.user.employee.afdeling_id,
+          code: $auth.user.employee.afdeling_code,
+        },
+    ]
     }
 
     let department_code = $auth.user.employee.department_code
@@ -582,6 +596,7 @@ export default {
   },
 
   mounted() {
+    /*
     if (this.$route.query.q_afdeling_id == null) {
       this.afdeling_id = [
         {
@@ -591,6 +606,7 @@ export default {
       ]
     } else {
     }
+    */
   },
 
   methods: {
@@ -644,6 +660,8 @@ export default {
     },
     //searchData
     searchData() {
+    
+
       if (this.Mandatory() != '') {
         this.$swal.fire({
           title: 'WARNING!',
@@ -653,15 +671,17 @@ export default {
         })
       } else {
         try {
-          if (this.afdeling_id.id === null) {
-            this.vafdeling = ''
-          } else if (this.afdeling_id.id === undefined) {
-            this.vafdeling = this.afdeling_id[0].id
-          } else {
-            this.vafdeling = this.afdeling_id[0].id
-          }
-        } catch (err) {}
-
+        if (this.afdeling_id.id === null) {
+          this.query_afdeling_id = ''
+        } else if (this.afdeling_id.id === undefined) {
+          this.query_afdeling_id = this.$route.query.q_afdeling_id
+        } else {
+          this.query_afdeling_id = this.afdeling_id.id
+            ? this.afdeling_id.id
+            : ''
+        }
+      } catch (err) {}
+       
         try {
           if (this.foreman_employee_id.employee_id === null) {
             this.vforeman_employee = ''
@@ -702,6 +722,7 @@ export default {
         // console.log(this.foreman_employee_id.employee_id)
         //cek watchQuery end
 
+        
         if (this.WatchGo() == 1) {
           // this.$nuxt.$loading.start()
           this.main = false
@@ -712,10 +733,12 @@ export default {
               activitied_at_prepend: this.activitied_at_start,
               activitied_at_append: this.activitied_at_end,
               q_foreman_employee_id: this.vforeman_employee,
-              q_afdeling_id: this.vafdeling,
+              q_afdeling_id: this.query_afdeling_id
+            ? this.query_afdeling_id
+            : this.$auth.user.employee.afdeling_id,
             },
           })
-        }
+        } 
       }
     },
 

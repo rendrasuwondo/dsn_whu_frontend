@@ -530,7 +530,7 @@ export default {
       btn_non_asisten = true
     }
 
-    console.log( `api/admin/workflow/in_process?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${q_afdeling_id}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}`)
+    console.log( 'posts', `api/admin/workflow/in_process?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${q_afdeling_id}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}`)
     const posts = await $axios.$get(
       `api/admin/workflow/in_process?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${q_afdeling_id}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}`
     )
