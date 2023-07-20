@@ -451,6 +451,23 @@ export default {
     'q_elhm_status_id',
   ],
 
+  async created() {
+    if (process.client) {
+      //define formData
+      let formData = new FormData()
+
+      formData.append('app', 'lhm')
+
+      //sending data to server
+      await this.$axios
+        .post('/api/admin/access_log', formData)
+        .then(() => {})
+        .catch((error) => {
+          //assign error to state "validation"
+          this.validation = error.response.data
+        })
+    }
+  },
   async asyncData({ $axios, query, $auth }) {
     function currentDate() {
       const current = new Date()

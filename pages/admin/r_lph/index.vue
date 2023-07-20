@@ -13,109 +13,112 @@
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
-          <b-card
-            border-variant="primary"
-            header="Filter"
-            header-bg-variant="info"
-            header-text-variant="white"
-          >
-            <b-card-text>
-              <b-container class="bv-example-row mb-3">
-                <b-row>
-                  <b-col cols="2">Tanggal:</b-col>
-                  <b-col cols="4">
-                    <b-input-group>
-                      <b-form-datepicker
-                        v-model="activitied_at_start"
-                        :max="activitied_at_end"
-                        :date-format-options="{
-                          year: 'numeric',
-                          month: 'short',
-                          day: '2-digit',
-                          weekday: 'short',
-                        }"
-                        size="sm"
-                      ></b-form-datepicker>
-                      <template #append>
-                        <b-btn size="sm" @click="activitied_at_start = ''"
-                          ><i class="fa fa-trash"></i
-                        ></b-btn>
-                      </template>
-                    </b-input-group>
-                  </b-col>
-                  <b-col cols="4">
-                    <b-input-group>
-                      <b-form-datepicker
-                        v-show="true"
-                        v-model="activitied_at_end"
-                        :min="activitied_at_start"
-                        :date-format-options="{
-                          year: 'numeric',
-                          month: 'short',
-                          day: '2-digit',
-                          weekday: 'short',
-                        }"
-                        size="sm"
-                      ></b-form-datepicker>
-                      <template #append>
-                        <b-btn
+          <ClientOnly>
+            <b-card
+              border-variant="primary"
+              header="Filter"
+              header-bg-variant="info"
+              header-text-variant="white"
+            >
+              <b-card-text>
+                <b-container class="bv-example-row mb-3">
+                  <b-row>
+                    <b-col cols="2">Tanggal:</b-col>
+                    <b-col cols="4">
+                      <b-input-group>
+                        <b-form-datepicker
+                          v-model="activitied_at_start"
+                          :max="activitied_at_end"
+                          :date-format-options="{
+                            year: 'numeric',
+                            month: 'short',
+                            day: '2-digit',
+                            weekday: 'short',
+                          }"
                           size="sm"
-                          @click="activitied_at_end = ''"
+                        ></b-form-datepicker>
+                        <template #append>
+                          <b-btn size="sm" @click="activitied_at_start = ''"
+                            ><i class="fa fa-trash"></i
+                          ></b-btn>
+                        </template>
+                      </b-input-group>
+                    </b-col>
+                    <b-col cols="4">
+                      <b-input-group>
+                        <b-form-datepicker
                           v-show="true"
-                          ><i class="fa fa-trash"></i
-                        ></b-btn>
-                      </template>
-                    </b-input-group>
-                  </b-col>
-                </b-row>
-              </b-container>
-              <b-container class="bv-example-row">
-                <b-row>
-                  <b-col cols="2">Estate:</b-col>
-                  <b-col cols="4">
-                    <div class="form-group">
-                      <multiselect
-                        v-model="department_id"
-                        :options="department"
-                        label="department_code"
-                        track-by="department_id"
-                        :searchable="true"
-                      ></multiselect></div
-                  ></b-col>
-                </b-row>
-              </b-container>
-              <b-container class="bv-example-row">
-                <b-row>
-                  <b-col cols="2">Afdeling:</b-col>
-                  <b-col cols="4">
-                    <div class="form-group">
-                      <multiselect
-                        v-model="afdeling_id"
-                        :options="afdeling"
-                        :custom-label="customLabel"
-                        track-by="id"
-                        :searchable="true"
-                      ></multiselect></div
-                  ></b-col>
-                </b-row>
-              </b-container>
-              <b-container class="bv-example-row">
-                <b-row>
-                  <b-col cols="2">Status Approval:</b-col>
-                  <b-col cols="4">
-                    <div class="form-group">
-                      <multiselect
-                        v-model="elhm_status_id"
-                        :options="elhm_status"
-                        label="elhm_status_code"
-                        track-by="elhm_status"
-                        :searchable="true"
-                      ></multiselect></div
-                  ></b-col>
-                </b-row>
-              </b-container>
-            </b-card-text>
-          </b-card>
+                          v-model="activitied_at_end"
+                          :min="activitied_at_start"
+                          :date-format-options="{
+                            year: 'numeric',
+                            month: 'short',
+                            day: '2-digit',
+                            weekday: 'short',
+                          }"
+                          size="sm"
+                        ></b-form-datepicker>
+                        <template #append>
+                          <b-btn
+                            size="sm"
+                            @click="activitied_at_end = ''"
+                            v-show="true"
+                            ><i class="fa fa-trash"></i
+                          ></b-btn>
+                        </template>
+                      </b-input-group>
+                    </b-col>
+                  </b-row>
+                </b-container>
+                <b-container class="bv-example-row">
+                  <b-row>
+                    <b-col cols="2">Estate:</b-col>
+                    <b-col cols="4">
+                      <div class="form-group">
+                        <multiselect
+                          v-model="department_id"
+                          :options="department"
+                          label="department_code"
+                          track-by="department_id"
+                          :searchable="true"
+                        ></multiselect></div
+                    ></b-col>
+                  </b-row>
+                </b-container>
+                <b-container class="bv-example-row">
+                  <b-row>
+                    <b-col cols="2">Afdeling:</b-col>
+                    <b-col cols="4">
+                      <div class="form-group">
+                        <multiselect
+                          v-model="afdeling_id"
+                          :options="afdeling"
+                          :custom-label="customLabel"
+                          track-by="id"
+                          :searchable="true"
+                        ></multiselect></div
+                    ></b-col>
+                  </b-row>
+                </b-container>
+                <b-container class="bv-example-row">
+                  <b-row>
+                    <b-col cols="2">Status Approval:</b-col>
+                    <b-col cols="4">
+                      <div class="form-group">
+                        <multiselect
+                          v-model="elhm_status_id"
+                          :options="elhm_status"
+                          label="elhm_status_code"
+                          track-by="elhm_status"
+                          :searchable="true"
+                        ></multiselect></div
+                    ></b-col>
+                  </b-row>
+                </b-container>
+              </b-card-text>
+            </b-card>
+          </ClientOnly>
+
 
           <div class="form-group">
             <div class="input-group mb-3">
@@ -158,14 +161,16 @@
           >
             <template v-slot:thead-top="data">
               <b-tr>
-                <b-th variant="primary" colspan="4" class="text-center"
-                  >{{ elhm_status_label }}</b-th
-                >
+                <b-th variant="primary" colspan="4" class="text-center">{{
+                  elhm_status_label
+                }}</b-th>
                 <b-th variant="danger" colspan="3" class="text-center">HK</b-th>
                 <b-th variant="danger" colspan="3" class="text-center"
                   >Volume</b-th
                 >
-                <b-th variant="danger" colspan="3" class="text-center">Rate</b-th>
+                <b-th variant="danger" colspan="3" class="text-center"
+                  >Rate</b-th
+                >
                 <b-th variant="danger" colspan="2"></b-th>
               </b-tr>
             </template>
@@ -451,7 +456,12 @@ export default {
     'q_elhm_status_id',
   ],
 
-  async asyncData({ $axios, query, auth }) {
+  async asyncData({ $axios, query, auth, req }) {
+    const ip2 = req.headers['x-real-ip'] || req.connection.remoteAddress
+    console.log(req.headers['x-real-ip'])
+    console.log('===================ip2===========')
+    console.log(req.connection.remoteAddress)
+
     function currentDate() {
       const current = new Date()
       current.setDate(current.getDate())
@@ -515,15 +525,14 @@ export default {
 
       if (user.employee.position_code != 'ASISTEN AFDELING') {
         $axios
-        .get(
-          `/api/admin/lov_afdeling_daily_progress?q_afdeling_id=${q_afdeling_id}`
-        )
-        .then((response) => {
-          // console.log('daaa')
-          // console.log(response.data.data)
-          afdeling_id = response.data.data
-        })
-
+          .get(
+            `/api/admin/lov_afdeling_daily_progress?q_afdeling_id=${q_afdeling_id}`
+          )
+          .then((response) => {
+            // console.log('daaa')
+            // console.log(response.data.data)
+            afdeling_id = response.data.data
+          })
 
         q_afdeling_id = ''
       }
@@ -574,7 +583,9 @@ export default {
       defaultStatus = 2
     }
 
-    let q_elhm_status_id = query.q_elhm_status_id ? query.q_elhm_status_id : defaultStatus
+    let q_elhm_status_id = query.q_elhm_status_id
+      ? query.q_elhm_status_id
+      : defaultStatus
 
     $axios
       .get(`/api/admin/lov_elhm_status?q_elhm_status_id=${q_elhm_status_id}`)
@@ -611,6 +622,33 @@ export default {
       elhm_status: elhm_status.data,
       elhm_status_id: elhm_status_id_asyncData,
       elhm_status_label: elhm_status_id_asyncData.elhm_status_code,
+    }
+  },
+  async created() {
+    console.log(process)
+    console.log(process.client)
+    if (process.client) {
+      //define formData
+      let formData = new FormData()
+
+      // IP
+      // let clientIP
+      // await fetch('https://api.ipify.org?format=json')
+      //   .then((x) => x.json())
+      //   .then(({ ip }) => {
+      //     clientIP = ip
+      //   })
+
+      formData.append('app', 'lph')
+
+      //sending data to server
+      await this.$axios
+        .post('/api/admin/access_log', formData)
+        .then(() => {})
+        .catch((error) => {
+          //assign error to state "validation"
+          this.validation = error.response.data
+        })
     }
   },
 

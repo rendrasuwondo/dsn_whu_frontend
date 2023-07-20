@@ -779,7 +779,23 @@ export default {
       activity_id: activity_id,
     }
   },
+  async created() {
+    if (process.client) {
+      //define formData
+      let formData = new FormData()
 
+      formData.append('app', 'lhb')
+
+      //sending data to server
+      await this.$axios
+        .post('/api/admin/access_log', formData)
+        .then(() => {})
+        .catch((error) => {
+          //assign error to state "validation"
+          this.validation = error.response.data
+        })
+    }
+  },
   mounted() {
     this.$nextTick(() => {
       this.$nuxt.$loading.start()
