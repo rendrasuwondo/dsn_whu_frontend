@@ -785,8 +785,6 @@ export default {
       let formData = new FormData()
 
       formData.append('app', 'lhb')
-      formData.append('user', this.$auth.user.employee.user_name)
-      formData.append('name', this.$auth.user.employee.name)
 
       //sending data to server
       await this.$axios

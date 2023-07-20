@@ -13,109 +13,112 @@
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
-          <b-card
-            border-variant="primary"
-            header="Filter"
-            header-bg-variant="info"
-            header-text-variant="white"
-          >
-            <b-card-text>
-              <b-container class="bv-example-row mb-3">
-                <b-row>
-                  <b-col cols="2">Tanggal:</b-col>
-                  <b-col cols="4">
-                    <b-input-group>
-                      <b-form-datepicker
-                        v-model="activitied_at_start"
-                        :max="activitied_at_end"
-                        :date-format-options="{
-                          year: 'numeric',
-                          month: 'short',
-                          day: '2-digit',
-                          weekday: 'short',
-                        }"
-                        size="sm"
-                      ></b-form-datepicker>
-                      <template #append>
-                        <b-btn size="sm" @click="activitied_at_start = ''"
-                          ><i class="fa fa-trash"></i
-                        ></b-btn>
-                      </template>
-                    </b-input-group>
-                  </b-col>
-                  <b-col cols="4">
-                    <b-input-group>
-                      <b-form-datepicker
-                        v-show="true"
-                        v-model="activitied_at_end"
-                        :min="activitied_at_start"
-                        :date-format-options="{
-                          year: 'numeric',
-                          month: 'short',
-                          day: '2-digit',
-                          weekday: 'short',
-                        }"
-                        size="sm"
-                      ></b-form-datepicker>
-                      <template #append>
-                        <b-btn
+          <ClientOnly>
+            <b-card
+              border-variant="primary"
+              header="Filter"
+              header-bg-variant="info"
+              header-text-variant="white"
+            >
+              <b-card-text>
+                <b-container class="bv-example-row mb-3">
+                  <b-row>
+                    <b-col cols="2">Tanggal:</b-col>
+                    <b-col cols="4">
+                      <b-input-group>
+                        <b-form-datepicker
+                          v-model="activitied_at_start"
+                          :max="activitied_at_end"
+                          :date-format-options="{
+                            year: 'numeric',
+                            month: 'short',
+                            day: '2-digit',
+                            weekday: 'short',
+                          }"
                           size="sm"
-                          @click="activitied_at_end = ''"
+                        ></b-form-datepicker>
+                        <template #append>
+                          <b-btn size="sm" @click="activitied_at_start = ''"
+                            ><i class="fa fa-trash"></i
+                          ></b-btn>
+                        </template>
+                      </b-input-group>
+                    </b-col>
+                    <b-col cols="4">
+                      <b-input-group>
+                        <b-form-datepicker
                           v-show="true"
-                          ><i class="fa fa-trash"></i
-                        ></b-btn>
-                      </template>
-                    </b-input-group>
-                  </b-col>
-                </b-row>
-              </b-container>
-              <b-container class="bv-example-row">
-                <b-row>
-                  <b-col cols="2">Estate:</b-col>
-                  <b-col cols="4">
-                    <div class="form-group">
-                      <multiselect
-                        v-model="department_id"
-                        :options="department"
-                        label="department_code"
-                        track-by="department_id"
-                        :searchable="true"
-                      ></multiselect></div
-                  ></b-col>
-                </b-row>
-              </b-container>
-              <b-container class="bv-example-row">
-                <b-row>
-                  <b-col cols="2">Afdeling:</b-col>
-                  <b-col cols="4">
-                    <div class="form-group">
-                      <multiselect
-                        v-model="afdeling_id"
-                        :options="afdeling"
-                        :custom-label="customLabel"
-                        track-by="id"
-                        :searchable="true"
-                      ></multiselect></div
-                  ></b-col>
-                </b-row>
-              </b-container>
-              <b-container class="bv-example-row">
-                <b-row>
-                  <b-col cols="2">Status Approval:</b-col>
-                  <b-col cols="4">
-                    <div class="form-group">
-                      <multiselect
-                        v-model="elhm_status_id"
-                        :options="elhm_status"
-                        label="elhm_status_code"
-                        track-by="elhm_status"
-                        :searchable="true"
-                      ></multiselect></div
-                  ></b-col>
-                </b-row>
-              </b-container>
-            </b-card-text>
-          </b-card>
+                          v-model="activitied_at_end"
+                          :min="activitied_at_start"
+                          :date-format-options="{
+                            year: 'numeric',
+                            month: 'short',
+                            day: '2-digit',
+                            weekday: 'short',
+                          }"
+                          size="sm"
+                        ></b-form-datepicker>
+                        <template #append>
+                          <b-btn
+                            size="sm"
+                            @click="activitied_at_end = ''"
+                            v-show="true"
+                            ><i class="fa fa-trash"></i
+                          ></b-btn>
+                        </template>
+                      </b-input-group>
+                    </b-col>
+                  </b-row>
+                </b-container>
+                <b-container class="bv-example-row">
+                  <b-row>
+                    <b-col cols="2">Estate:</b-col>
+                    <b-col cols="4">
+                      <div class="form-group">
+                        <multiselect
+                          v-model="department_id"
+                          :options="department"
+                          label="department_code"
+                          track-by="department_id"
+                          :searchable="true"
+                        ></multiselect></div
+                    ></b-col>
+                  </b-row>
+                </b-container>
+                <b-container class="bv-example-row">
+                  <b-row>
+                    <b-col cols="2">Afdeling:</b-col>
+                    <b-col cols="4">
+                      <div class="form-group">
+                        <multiselect
+                          v-model="afdeling_id"
+                          :options="afdeling"
+                          :custom-label="customLabel"
+                          track-by="id"
+                          :searchable="true"
+                        ></multiselect></div
+                    ></b-col>
+                  </b-row>
+                </b-container>
+                <b-container class="bv-example-row">
+                  <b-row>
+                    <b-col cols="2">Status Approval:</b-col>
+                    <b-col cols="4">
+                      <div class="form-group">
+                        <multiselect
+                          v-model="elhm_status_id"
+                          :options="elhm_status"
+                          label="elhm_status_code"
+                          track-by="elhm_status"
+                          :searchable="true"
+                        ></multiselect></div
+                    ></b-col>
+                  </b-row>
+                </b-container>
+              </b-card-text>
+            </b-card>
+          </ClientOnly>
+
 
           <div class="form-group">
             <div class="input-group mb-3">
@@ -622,13 +625,21 @@ export default {
     }
   },
   async created() {
+    console.log(process)
+    console.log(process.client)
     if (process.client) {
       //define formData
       let formData = new FormData()
 
+      // IP
+      // let clientIP
+      // await fetch('https://api.ipify.org?format=json')
+      //   .then((x) => x.json())
+      //   .then(({ ip }) => {
+      //     clientIP = ip
+      //   })
+
       formData.append('app', 'lph')
-      formData.append('user', this.$auth.user.employee.user_name)
-      formData.append('name', this.$auth.user.employee.name)
 
       //sending data to server
       await this.$axios
