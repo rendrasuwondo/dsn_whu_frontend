@@ -399,6 +399,14 @@
         this.$router.push({
           name: 'admin-activity_plan_new',
           params: { id: this.$route.params.id, r: 1 },
+          query: {
+                      activitied_at_prepend:
+                        this.$route.query.activitied_at_prepend,
+                      activitied_at_append:
+                        this.$route.query.activitied_at_append,
+                      q_activity_id: this.$route.query.q_activity_id,
+                      q_afdeling_id: this.$route.query.q_afdeling_id,
+                    },
         })
       },
   
@@ -491,20 +499,12 @@
   
         this.value = this.field.activitied_at
   
-        if (this.field.afdeling_id.id == undefined) {
-          formData.append('afdeling_id', this.$auth.user.employee.afdeling_id)
-        } else {
-          formData.append(
-            'afdeling_id',
-            this.field.afdeling_id ? this.field.afdeling_id.id : ''
-          )
-        }
-  
+        formData.append('afdeling_id', this.$route.query.q_afdeling_id?this.$route.query.q_afdeling_id:this.$auth.user.employee.afdeling_id)
         formData.append(
           'id',
-          this.field.activity_id
+          (this.field.activity_id
             ? this.field.activity_id.id
-            : '' + this.field.afdeling_id.id + this.field.activitied_at
+            : '') + '_' + (this.$route.query.q_afdeling_id?this.$route.query.q_afdeling_id:this.$auth.user.employee.afdeling_id) + '_' + this.field.activitied_at
         )
         formData.append(
           'activity_id',
@@ -544,7 +544,8 @@
         formData.append('created_by', this.field.created_by)
         formData.append('update_at', this.field.update_at)
         formData.append('udpate_by', this.field.udpate_by)
-  
+        console.log('formData',formData)
+        
         //sending data to server
         await this.$axios
           .post('/api/admin/activity_plan', formData)
@@ -561,6 +562,14 @@
             //redirect, if success store data
             this.$router.push({
               name: 'admin-activity_plan_new',
+              query: {
+                      activitied_at_prepend:
+                        this.$route.query.activitied_at_prepend,
+                      activitied_at_append:
+                        this.$route.query.activitied_at_append,
+                      q_activity_id: this.$route.query.q_activity_id,
+                      q_afdeling_id: this.$route.query.q_afdeling_id,
+                    },
             })
           })
           .catch((error) => {

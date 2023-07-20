@@ -297,24 +297,34 @@
       )
 
       const foreman = await $axios.$get(
-        `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${$auth.user.employee.afdeling_id}&foreman_id=${t_elhm_ctl.data[0].foreman_employee_id}`
+        `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${$auth.user.employee.afdeling_id}`
       )
 
+      const afdeling = await $axios.$get(
+        `/api/admin/workflow/t_elhm_ctl?id=${route.query.id}`
+      )
+
+      let afdeling_id
+      afdeling_id =  afdeling.data[0].afdeling_id
+      console.log('afdeling_id',afdeling_id)
+   
     
 
      let man_days, activitied_at
 
-      console.log('foreman', `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${$auth.user.employee.afdeling_id}&foreman_id=${t_elhm_ctl.data[0].foreman_employee_id}`)
+      console.log('foreman', `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${$auth.user.employee.afdeling_id}`)
       return {
         t_elhm_ctl: t_elhm_ctl.data.data,
         activitied_at : t_elhm_ctl.data[0].activitied_at,
         foreman : foreman.data,
+        afdeling_id : afdeling_id
       }
     },
 
     mounted() {
     let test
    
+    
     this.$axios
       .get(`/api/admin/workflow/t_elhm_ctl?id=${this.$route.query.id}`)
       .then((response) => {
@@ -323,6 +333,7 @@
         this.t_elhm_ctl = response.data.data[0]
         test = response.data.data[0]
       })
+      
 
       console.log('test', test) 
       console.log('t_elhm_ctl', JSON.stringify(this.t_elhm_ctl))
@@ -353,84 +364,7 @@
           //   }
           // })
         })
-        /*
-      //foreman_employee_id
-      if (this.field.afdeling_id.afdeling_id == undefined) {
-        this.$axios
-          // .get('/api/admin/lov_foreman_employee')
-          .get(
-            `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.$auth.user.employee.afdeling_id`
-          )
-  
-          .then((response) => {
-            this.foreman = response.data.data
-          })
-      } else {
-        this.$axios
-          // .get('/api/admin/lov_foreman_employee')
-          .get(
-            `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.field.afdeling_id.afdeling_id}`
-          )
-  
-          .then((response) => {
-            this.foreman = response.data.data
-          })
-      }
-
-      // console.log(this.$cookies.get('activity_group_id'))
-      //fetching data categories
-      this.$axios
-        .get('/api/admin/categories')
-  
-        .then((response) => {
-          this.categories = response.data.data.data
-          // console.log(response.data.data.data);
-          // //assing response data to state "categories"
-          // response.data.data.data.forEach((dt)=> {
-          //   console.log(dt.name);
-          //   if (dt.name == 'laravel') {
-          //       this.categories.push(dt)
-          //   }
-          // })
-        })
-  
-      //fetching data tags
-      this.$axios
-        .get('/api/admin/tags')
-  
-        .then((response) => {
-          //assing response data to state "tags"
-          this.tags = response.data.data.data
-        })
-  
-      //fetching data tags
-      let strApi = `/api/admin/lov_employee_afdeling`
-  
-      if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
-        strApi = `/api/admin/lov_employee_afdeling`
-      }
-  
-      this.$axios
-        .get(`/api/admin/lov_employee_afdeling`)
-  
-        .then((response) => {
-          //assing response data to state "tags"
-          this.afdeling = response.data.data
-        })
-  
-      console.log('daaa')
-      console.log(this.$auth.user.employee.afdeling_id)
-    
-      this.$axios
-        .get(
-          `/api/admin/lov_employee_afdeling?afdeling_id=${this.$auth.user.employee.afdeling_id}`
-        )
-        .then((response) => {
-          // console.log('rdr')
-          // console.log(response.data.data)
-          this.field.afdeling_id = response.data.data
-        })
-        */
+       
     },
   
     methods: {
@@ -558,23 +492,19 @@
         //define formData
         let formData = new FormData()
         console.log('this.field.afdeling_id')
-        console.log(this.field.afdeling_id.id)
+        console.log(this.afdeling_id)
   
         this.value = this.field.activitied_at
   
-        if (this.field.afdeling_id.id == undefined) {
-          formData.append('afdeling_id', this.$auth.user.employee.afdeling_id)
-        } else {
-          formData.append(
+        formData.append(
             'afdeling_id',
-            this.field.afdeling_id ? this.field.afdeling_id.id : ''
+            this.afdeling_id
           )
-        }
   
         formData.append(
           'id',
           this.field.activity_id.id + '_'
-            + this.$auth.user.employee.afdeling_id + '_' + this.field.activitied_at + '_' + this.field.foreman_employee_id.nik
+            + this.afdeling_id + '_' + this.field.activitied_at + '_' + this.field.foreman_employee_id.nik
         )
         formData.append(
           'activity_id',
@@ -616,19 +546,7 @@
         formData.append('udpate_by', this.field.udpate_by)
   
        console.log('formData',formData)
-       /*  
-       this.$router.push({
-              name: 'admin-in_process_detail_asisten_rkh-id',
-               params: { id:  this.$route.query.id },
-              query: {
-                     tanggal : this.$route.query.tanggal,
-                      mandor : this.$route.query.mandor,
-                      afdelingCode : this.$route.query.afdelingCode,
-                      approvalStatus : this.$route.query.approvalStatus
-                    },
-            })
-        */
-        
+             
         //sending data to server
         await this.$axios
           .post('/api/admin/activity_plan', formData)

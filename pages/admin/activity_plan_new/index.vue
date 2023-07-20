@@ -415,7 +415,7 @@ export default {
       `/api/admin/activity_plan?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_start}&q_activity_id=${q_activity_id}&q_afdeling_id=${q_afdeling_id}`
     )
 
-    // console.log(posts.data)
+    console.log('posts', `/api/admin/activity_plan?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_start}&q_activity_id=${q_activity_id}&q_afdeling_id=${q_afdeling_id}`)
     // this.rowcount = posts.data.total
 
     return {

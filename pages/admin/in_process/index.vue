@@ -331,7 +331,7 @@ export default {
 
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Mandor',
+          label: 'Asisten/Mandor',
           key: 'name',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
@@ -522,7 +522,7 @@ export default {
 
     let btn_asisten, btn_non_asisten
 
-    if ($auth.user.employee.position_id == 30) {
+    if ($auth.user.employee.position_id == 30 || $auth.user.employee.position_id == 35) {
       btn_asisten = true
       btn_non_asisten = false
     } else {
@@ -655,7 +655,7 @@ export default {
           },
         })
 
-        if (this.$auth.user.employee.position_id == 30) {
+        if (this.$auth.user.employee.position_id == 30 || this.$auth.user.employee.position_id == 35) {
           this.btn_asisten = true
           this.btn_non_asisten = false
         } else {
