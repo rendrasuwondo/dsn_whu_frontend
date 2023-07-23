@@ -675,6 +675,8 @@ export default {
         },
       ]
     }
+
+    console.log('host',gethostbyaddr($_SERVER['REMOTE_ADDR']))
   },
 
   methods: {
