@@ -447,16 +447,17 @@ export default {
     let userDepartmentId = $auth.user.employee.department_id
     let userAfdelingId = $auth.user.employee.afdeling_id ?? ''
 
-    console.log('posts',`api/admin/workflow/in_monitor?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${userAfdelingId}&q_department_id=${userDepartmentId}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}`);
+    console.log('posts',`api/admin/workflow/in_monitor?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${userAfdelingId}&q_department_id=${userDepartmentId}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}&page=${page}`);
     const posts = await $axios.$get(
-      `api/admin/workflow/in_monitor?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${userAfdelingId}&q_department_id=${userDepartmentId}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}`
+      `api/admin/workflow/in_monitor?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${userAfdelingId}&q_department_id=${userDepartmentId}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}&page=${page}`
     )
 
+    console.log(posts.data.data);
     return {
-      posts: posts.data,
+      posts: posts.data.data,
       pagination: posts.data,
       search: search,
-      rowcount: posts.data.length,
+      rowcount: posts.data.total,
       activitied_at_start: activitied_at_start,
       activitied_at_end: activitied_at_end,
       afdeling: afdeling_list.data,
