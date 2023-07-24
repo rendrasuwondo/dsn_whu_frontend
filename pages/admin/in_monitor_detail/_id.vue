@@ -265,8 +265,8 @@
               </b-row>
 
               <!-- <b-card-text>Header and footers using slots.</b-card-text> -->
-              <div class="d-flex justify-content-end">
-                <b-button href="#" variant="primary" @click="Submit()"
+              <div class="d-flex justify-content-end" v-show=false>
+                <b-button href="#" variant="primary" @click="Submit()" v-show=false
                   >Submit</b-button
                 >
               </div>

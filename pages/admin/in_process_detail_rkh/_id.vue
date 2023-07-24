@@ -358,8 +358,8 @@ export default {
       `/api/admin/workflow/t_elhm_message?t_elhm_id=${t_elhm_ctl.data[0].t_elhm_id}`
     )
 
-    console.log('t_elhm_message')
-    console.log(t_elhm_message.data[0])
+    console.log('t_elhm_message', `/api/admin/workflow/t_elhm_message?t_elhm_id=${t_elhm_ctl.data[0].t_elhm_id}`)
+   
 
 
 
