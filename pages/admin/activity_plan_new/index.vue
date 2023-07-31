@@ -266,9 +266,9 @@ export default {
 
   async asyncData({ $axios, query, $auth }) {
     function currentDate() {
-      const current = new Date()
+      const current = new Date(new Date().getTime()+(1*24*60*60*1000))
       current.setDate(current.getDate())
-      const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate() + 1
+      const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate() 
         }`
       return date
     }
@@ -283,7 +283,7 @@ export default {
     let activitied_at_start = query.activitied_at_prepend
       ? query.activitied_at_prepend
       : currentDate()
-
+    console.log('currentDate()',currentDate())
     //activitied_at_append
     let activitied_at_end = query.activitied_at_append
       ? query.activitied_at_append
