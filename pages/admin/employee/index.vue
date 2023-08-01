@@ -407,7 +407,7 @@ export default {
     if (query.q_department_id) {
       $axios
         .get(
-          `/api/admin/lov_employee_department?q_department_id=${q_department_id}`
+          `/api/admin/lov_employee_department_all?q_department_id=${q_department_id}`
         )
         .then((response) => {
           // console.log('rdr')
