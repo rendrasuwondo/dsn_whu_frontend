@@ -443,7 +443,7 @@ export default {
 
     //fetching posts
     const posts = await $axios.$get(
-      `/api/admin/employee?q=${search}&page=${page}$q_afdeling_id=${q_afdeling_id}&q_department_id=${q_department_id}&q_position_id=${q_position_id}&q_user_name=${q_user_name}`
+      `/api/admin/employee?q=${search}&page=${page}&q_afdeling_id=${q_afdeling_id}&q_department_id=${q_department_id}&q_position_id=${q_position_id}&q_user_name=${q_user_name}`
     )
 
     return {
