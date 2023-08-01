@@ -365,7 +365,7 @@ export default {
     // afdeling_id
     const afdeling_list = await $axios.$get(`/api/admin/lov_afdeling_all`)
 
-    const afdeling_default = 'AN21A'
+    const afdeling_default = ''
 
     let q_afdeling_id = query.q_afdeling_id
       ? query.q_afdeling_id
@@ -396,13 +396,11 @@ export default {
       `/api/admin/lov_employee_department_all`
     )
 
-    const department_default = await $axios.$get(
-      `/api/admin/lov_department_default`
-    )
+    const department_default = ''
 
     let q_department_id = query.q_department_id
       ? query.q_department_id
-      : department_default.data.department_id
+      : department_default
 
     if (query.q_department_id) {
       $axios
@@ -425,7 +423,7 @@ export default {
 
     let q_position_id = query.q_position_id
       ? query.q_position_id
-      : 1
+      : ''
 
     if (query.q_position_id) {
       $axios
@@ -441,6 +439,8 @@ export default {
 
     let q_user_name = query.q_user_name ? query.q_user_name : ''
 
+
+    console.log(`/api/admin/employee?q=${search}&page=${page}&q_afdeling_id=${q_afdeling_id}&q_department_id=${q_department_id}&q_position_id=${q_position_id}&q_user_name=${q_user_name}`);
     //fetching posts
     const posts = await $axios.$get(
       `/api/admin/employee?q=${search}&page=${page}&q_afdeling_id=${q_afdeling_id}&q_department_id=${q_department_id}&q_position_id=${q_position_id}&q_user_name=${q_user_name}`
