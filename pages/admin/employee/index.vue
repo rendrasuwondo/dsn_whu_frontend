@@ -13,6 +13,76 @@
           <div class="card-tools"></div>
         </div>
         <div class="card-body">
+          <b-card
+            border-variant="primary"
+            header="Filter"
+            header-bg-variant="info"
+            header-text-variant="white"
+          >
+            <b-card-text>
+              <b-container class="bv-example-row">
+                <b-row>
+                  <b-col cols="2">Estate:</b-col>
+                  <b-col cols="4">
+                    <div class="form-group">
+                      <multiselect
+                        v-model="department_id"
+                        :options="department"
+                        label="department_code"
+                        track-by="department_id"
+                        :searchable="true"
+                      ></multiselect></div
+                  ></b-col>
+                </b-row>
+              </b-container>
+              <b-container class="bv-example-row">
+                <b-row>
+                  <b-col cols="2">Afdeling:</b-col>
+                  <b-col cols="4">
+                    <div class="form-group">
+                      <multiselect
+                        v-model="afdeling_id"
+                        :options="afdeling"
+                        :custom-label="customLabel"
+                        track-by="id"
+                        :searchable="true"
+                      ></multiselect></div
+                  ></b-col>
+                </b-row>
+              </b-container>
+              <b-container class="bv-example-row">
+                <b-row>
+                  <b-col cols="2">Position:</b-col>
+                  <b-col cols="4">
+                    <div class="form-group">
+                      <multiselect
+                        v-model="position_id"
+                        :options="position"
+                        :custom-label="customLabel"
+                        track-by="id"
+                        :searchable="true"
+                      ></multiselect></div
+                  ></b-col>
+                </b-row>
+              </b-container>
+              <b-container class="bv-example-row">
+                <b-row>
+                  <b-col cols="2">Name:</b-col>
+                  <b-col cols="4">
+                    <div class="form-group">
+                      <input
+                        type="text"
+                        placeholder=""
+                        class="form-control"
+                        v-model="userName"
+                      />
+                    </div>
+                  </b-col>
+                </b-row>
+              </b-container>
+            </b-card-text>
+          </b-card>
+
           <div class="form-group">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
@@ -186,6 +256,9 @@ export default {
   },
   data() {
     return {
+      afdeling: [],
+      department: [],
+      position: [],
       param_q: this.$route.query.q,
       fields: [
         {
@@ -264,24 +337,127 @@ export default {
         title: '',
         icon: '',
       },
+      afdeling_id: this.$route.query.q_afdeling_id,
+      department_id: this.$route.query.q_department_id,
+      position_id: this.$route.query.q_position_id,
+      userName: this.$route.query.q_user_name,
     }
   },
-  watchQuery: ['q', 'page'],
+  watchQuery: [
+    'q',
+    'page',
+    'q_afdeling_id',
+    'q_department_id',
+    'q_position_id',
+    'q_user_name',
+  ],
 
   async asyncData({ $axios, query }) {
     //page
     let page = query.page ? parseInt(query.page) : ''
-
+    console.log(1)
     //search
     let search = query.q ? query.q : ''
 
+    // user
+    const user = await $axios.$get(`/api/admin/user`)
+
+    // afdeling_id
+    const afdeling_list = await $axios.$get(`/api/admin/lov_afdeling_all`)
+
+    console.log(afdeling_list)
+    const afdeling_default = 'AN21A'
+
+    let q_afdeling_id = query.q_afdeling_id
+      ? query.q_afdeling_id
+      : afdeling_default
+
+    let afdeling_id = []
+
+    if (query.q_afdeling_id) {
+      $axios
+        .get(
+          `/api/admin/lov_afdeling_all?q_afdeling_id=${q_afdeling_id}`
+        )
+        .then((response) => {
+          // console.log('daaa')
+          // console.log(response.data.data)
+          afdeling_id = response.data.data
+        })
+    }
+
+    if (q_afdeling_id == undefined || q_afdeling_id == '') {
+      q_afdeling_id = afdeling_default
+    }
+
+    //department
+    let department_id_asyncData = []
+
+    const department_list = await $axios.$get(
+      `/api/admin/lov_employee_department_all`
+    )
+
+    const department_default = await $axios.$get(
+      `/api/admin/lov_department_default`
+    )
+
+    let q_department_id = query.q_department_id
+      ? query.q_department_id
+      : department_default.data.department_id
+
+    if (query.q_department_id) {
+      $axios
+        .get(
+          `/api/admin/lov_employee_department?q_department_id=${q_department_id}`
+        )
+        .then((response) => {
+          // console.log('rdr')
+          // console.log(response.data.data)
+          department_id_asyncData = response.data.data
+        })
+    }
+
+    //position
+    let position_id_asyncData = []
+
+    const position_list = await $axios.$get(
+      `/api/admin/lov_position_all`
+    )
+
+    let q_position_id = query.q_position_id
+      ? query.q_position_id
+      : 1
+
+    if (query.q_position_id) {
+      $axios
+        .get(
+          `/api/admin/lov_position_all?q_position_id=${q_position_id}`
+        )
+        .then((response) => {
+          // console.log('rdr')
+          // console.log(response.data.data)
+          position_id_asyncData = response.data.data
+        })
+    }
+
+    console.log(4)
+
+    let q_user_name = query.q_user_name ? query.q_user_name : ''
+
     //fetching posts
     const posts = await $axios.$get(
-      `/api/admin/employee?q=${search}&page=${page}`
+      `/api/admin/employee?q=${search}&page=${page}$q_afdeling_id=${q_afdeling_id}&q_department_id=${q_department_id}&q_position_id=${q_position_id}&q_user_name=${q_user_name}`
     )
+    console.log(5)
 
     return {
       posts: posts.data.data,
+      afdeling: afdeling_list.data,
+      afdeling_id: afdeling_id,
+      department: department_list.data,
+      department_id: department_id_asyncData,
+      position: position_list.data,
+      position_id: position_id_asyncData,
       pagination: posts.data,
       search: search,
       rowcount: posts.data.total,
@@ -289,6 +465,9 @@ export default {
   },
 
   methods: {
+    customLabel(afdeling) {
+      return `${afdeling.code}` + ' (' + `${afdeling.id}` + ')'
+    },
     changePage(page) {
       this.$router.push({
         path: this.$route.path,
@@ -300,10 +479,50 @@ export default {
     },
     //searchData
     searchData() {
+      if (this.afdeling_id == null) {
+        this.vafdeling = ''
+      } else {
+        if (this.afdeling_id[0] == undefined) {
+          this.vafdeling = this.afdeling_id.id
+        } else {
+          this.vafdeling = this.afdeling_id[0].id
+        }
+      }
+
+      if (this.position_id == null) {
+        this.vposition = ''
+      } else {
+        if (this.position_id[0] == undefined) {
+          this.vposition = this.position_id.id
+        } else {
+          this.vposition = this.position_id[0].id
+        }
+      }
+
+      if (this.department_id == null || this.department_id == undefined) {
+        this.vdepartment = ''
+      } else {
+        if (this.department_id.length == 0) {
+          this.vdepartment = ''
+        } else {
+          if (this.department_id[0] == undefined) {
+            this.vdepartment = this.department_id.department_id
+          } else {
+            this.vdepartment = this.department_id[0].department_id
+          }
+        }
+      }
+
       this.$router.push({
         path: this.$route.path,
         query: {
           q: this.search,
+          q_user_name: this.userName,
+          q_position_id: this.vposition,
+          q_afdeling_id: this.vafdeling,
+          q_department_id: this.query_department_id
+            ? this.query_department_id
+            : this.vdepartment,
         },
       })
     },
