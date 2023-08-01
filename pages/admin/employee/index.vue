@@ -355,7 +355,7 @@ export default {
   async asyncData({ $axios, query }) {
     //page
     let page = query.page ? parseInt(query.page) : ''
-    console.log(1)
+
     //search
     let search = query.q ? query.q : ''
 
@@ -365,7 +365,6 @@ export default {
     // afdeling_id
     const afdeling_list = await $axios.$get(`/api/admin/lov_afdeling_all`)
 
-    console.log(afdeling_list)
     const afdeling_default = 'AN21A'
 
     let q_afdeling_id = query.q_afdeling_id
@@ -440,15 +439,12 @@ export default {
         })
     }
 
-    console.log(4)
-
     let q_user_name = query.q_user_name ? query.q_user_name : ''
 
     //fetching posts
     const posts = await $axios.$get(
       `/api/admin/employee?q=${search}&page=${page}$q_afdeling_id=${q_afdeling_id}&q_department_id=${q_department_id}&q_position_id=${q_position_id}&q_user_name=${q_user_name}`
     )
-    console.log(5)
 
     return {
       posts: posts.data.data,
