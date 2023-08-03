@@ -94,7 +94,9 @@
                         this.$route.query.activitied_at_append,
                       q_activity_id: this.$route.query.q_activity_id,
                       q_afdeling_id: this.$route.query.q_afdeling_id,
-                    }, }" class="btn btn-info btn-sm"
+                    }, }"
+                    class="btn btn-info btn-sm"
+                    v-show="showAddButton"
                     style="padding-top: 8px" title="Tambah"><i class="fa fa-plus-circle"></i>
                   </nuxt-link>
                   <button title="Export To Excel" class="btn btn-info" @click="exportData">
@@ -130,7 +132,7 @@
                   title="Hapus"
                   v-show="showHideSelected"
                   ><i class="fa fa-trash"></i
-                ></b-button> 
+                ></b-button>
             </template>
             <template v-slot:cell(detail)="row">
               <b-button :to="{
@@ -154,13 +156,13 @@
                 :per-page="pagination.per_page" @change="changePage" align="left" class="mt-1"></b-pagination></b-col>
             <b-col class="text-right" align-self="center">{{ rowcount }} data</b-col>
           </b-row>
-         
+
         </div>
       </div>
     </section>
   </div>
 </template>
-  
+
 <script>
 export default {
   //layout
@@ -250,7 +252,7 @@ export default {
       class_status: 'card-tools',
       afdeling: [],
       //afdeling_id: this.$route.query.afdeling_id,
-      query_afdeling_id: '',
+      query_afdeling_id: ''
     }
   },
 
@@ -268,7 +270,7 @@ export default {
     function currentDate() {
       const current = new Date(new Date().getTime()+(1*24*60*60*1000))
       current.setDate(current.getDate())
-      const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate() 
+      const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()
         }`
       return date
     }
@@ -329,8 +331,8 @@ export default {
     ]
     }
 
-    
-   
+
+
 
     const activity_list = await $axios.$get(`/api/admin/lov_activity`)
 
@@ -363,15 +365,16 @@ export default {
     //console.log('new date', activitiedAtDate)
     //console.log('afdeling_id', $auth.user.employee.afdeling_id)
     //console.log('employee_id', $auth.user.employee.employee_id)
-  
+
     const t_elhm = await $axios.$get(
       `/api/admin/t_elhm?activitied_at=${activitiedAtDate}&afdeling_id=${q_afdeling_id}&foreman_employee_id=${$auth.user.employee.employee_id}&p_wf_doc_type_id=2`
     )
    //console.log('afdeling_id', afdeling_id)
    //console.log('t_elhm',  `/api/admin/t_elhm?activitied_at=${activitiedAtDate}&afdeling_id=${q_afdeling_id}&foreman_employee_id=${$auth.user.employee.employee_id}&p_wf_doc_type_id=2`)
 
-    
+
     let async_showHideSelected, async_elhm_status, async_class_status
+    let async_showAddButton = true
     console.log(t_elhm.data.data[0])
     if (t_elhm.data.data[0] == null) {
       console.log(1)
@@ -392,23 +395,26 @@ export default {
           console.log(3)
           async_elhm_status = 'Approve Asisten'
           async_class_status = 'card-tools bg-warning'
+          async_showAddButton = false
           break
         case '2':
           console.log(4)
           async_elhm_status = 'Approve Askep'
           async_class_status = 'card-tools bg-success'
+          async_showAddButton = false
           break
         case '3':
           console.log(5)
           async_elhm_status = 'Approve EH'
           async_class_status = 'card-tools bg-primary'
+          async_showAddButton = false
           break
         default:
           console.log(6)
           break
       }
     }
-    
+
 
     //fetching posts
     const posts = await $axios.$get(
@@ -430,6 +436,7 @@ export default {
       elhm_status: async_elhm_status,
       class_status: async_class_status,
       showHideSelected: async_showHideSelected,
+      showAddButton: async_showAddButton,
       afdeling: afdeling_list.data,
       afdeling_id: afdeling_id,
     }
@@ -580,9 +587,9 @@ export default {
         })
     },
 
-    Submit() { 
+    Submit() {
       // console.log(this.activitied_at_start + '_' + this.$auth.user.employee.afdeling_id + '_' + this.$auth.user.employee.employee_id + '_2')
-      
+
       // alert(this.activitied_at_start.split("-")[0] + '-' + this.activitied_at_start.split("-")[1].padStart(2, '0')+'-' + this.activitied_at_start.split("-")[2].padStart(2, '0') + '_' + this.$auth.user.employee.afdeling_id + '_' + this.$auth.user.employee.employee_id + '_2')
 
       this.$swal
@@ -621,8 +628,8 @@ export default {
                   '2'
               )
 
-               console.log(formData) 
-              
+               console.log(formData)
+
               this.$axios
                 .post('/api/admin/t_elhm', formData)
                 .finally(() => {
@@ -637,7 +644,7 @@ export default {
                         showConfirmButton: false,
                         timer: 2000,
                       })
-                      this.$nuxt.$loading.finish()  
+                      this.$nuxt.$loading.finish()
                       this.$nuxt.refresh().then(() => {
                         // this.$nuxt.$loading.finish()
                         this.main = true
@@ -647,7 +654,7 @@ export default {
                 .catch((error) => {
                   //assign error to state "validation"
                   this.validation = error.response.data
-                }) 
+                })
             }
           })
     },
@@ -685,6 +692,5 @@ export default {
   },
 }
 </script>
-  
+
 <style></style>
-  
