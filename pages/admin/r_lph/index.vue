@@ -456,11 +456,7 @@ export default {
     'q_elhm_status_id',
   ],
 
-  async asyncData({ $axios, query, auth, req }) {
-    const ip2 = req.headers['x-real-ip'] || req.connection.remoteAddress
-    console.log(req.headers['x-real-ip'])
-    console.log('===================ip2===========')
-    console.log(req.connection.remoteAddress)
+  async asyncData({ $axios, query, auth }) {
 
     function currentDate() {
       const current = new Date()
@@ -675,8 +671,6 @@ export default {
         },
       ]
     }
-
-    console.log('host',gethostbyaddr($_SERVER['REMOTE_ADDR']))
   },
 
   methods: {
