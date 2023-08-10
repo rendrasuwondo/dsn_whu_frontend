@@ -359,7 +359,7 @@ export default {
         .then((response) => {
           this.foreman = response.data.data
         })
-
+      console.log('mandor', `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.$auth.user.employee.afdeling_id}`)
       //Dropdown Block
       this.$axios
         .get(
@@ -396,7 +396,7 @@ export default {
         .then((response) => {
           this.foreman = response.data.data
         })
-
+     
       //Dropdown Block
       this.$axios
         .get(
