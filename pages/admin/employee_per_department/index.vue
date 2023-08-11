@@ -86,6 +86,14 @@
                   </b-container>
                 </b-col>
               </b-row>
+              <b-row>
+                <div class="input-group justify-content-end">
+                  <button @click="syncDataSAP" class="btn btn-info">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                    Sync Data
+                  </button>
+                </div>
+              </b-row>
             </b-card-text>
           </b-card>
 
@@ -369,7 +377,9 @@ export default {
     const user = await $axios.$get(`/api/admin/user`)
 
     // afdeling_id
-    const afdeling_list = await $axios.$get(`/api/admin/lov_afdeling_all?per_department=true`)
+    const afdeling_list = await $axios.$get(
+      `/api/admin/lov_afdeling_all?per_department=true`
+    )
 
     const afdeling_default = ''
 
@@ -520,6 +530,59 @@ export default {
             : this.vdepartment,
         },
       })
+    },
+    async syncDataSAP() {
+      if (this.department_id != null && this.department_id.length != 0) {
+        let BUKRS = this.department_id.department_code_sap.slice(0, 2)
+        let ESTNR = this.department_id.department_code_sap.slice(2)
+
+        this.$swal
+          .fire({
+            title: 'APAKAH ANDA YAKIN ?',
+            text: `INGIN SYNC DATA EMPLOYEE SAP ${this.department_id.department_code_sap} !`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'YA, SYNC!',
+            cancelButtonText: 'TIDAK',
+          })
+          .then((result) => {
+            if (result.isConfirmed) {
+              this.$nuxt.$loading.start()
+              this.$axios
+                .$get(`/api/admin/sync_employee?BUKRS=${BUKRS}&ESTNR=${ESTNR}`)
+                .then((response) => {
+                  this.$nuxt.$loading.finish()
+                  if (response.success == true) {
+                    this.$swal.fire({
+                      title: 'BERHASIL!',
+                      text: response.message,
+                      icon: 'success',
+                      showConfirmButton: false,
+                      timer: 2000,
+                    })
+                  } else {
+                    this.$swal.fire({
+                      title: 'Oops!',
+                      text: response.message,
+                      icon: 'error',
+                      showConfirmButton: false,
+                      timer: 2000,
+                    })
+                  }
+                })
+            }
+          })
+      } else {
+        this.$swal.fire({
+          title: 'Oops!',
+          text: 'Pilih estate terlebih dulu!',
+          icon: 'error',
+          showConfirmButton: false,
+          timer: 2000,
+        })
+      }
     },
 
     //deletePost method
