@@ -20,66 +20,72 @@
             header-text-variant="white"
           >
             <b-card-text>
-              <b-container class="bv-example-row">
-                <b-row>
-                  <b-col cols="2">Estate:</b-col>
-                  <b-col cols="4">
-                    <div class="form-group">
-                      <multiselect
-                        v-model="department_id"
-                        :options="department"
-                        label="department_code"
-                        track-by="department_id"
-                        :searchable="true"
-                      ></multiselect></div
-                  ></b-col>
-                </b-row>
-              </b-container>
-              <b-container class="bv-example-row">
-                <b-row>
-                  <b-col cols="2">Afdeling:</b-col>
-                  <b-col cols="4">
-                    <div class="form-group">
-                      <multiselect
-                        v-model="afdeling_id"
-                        :options="afdeling"
-                        :custom-label="customLabel"
-                        track-by="id"
-                        :searchable="true"
-                      ></multiselect></div
-                  ></b-col>
-                </b-row>
-              </b-container>
-              <b-container class="bv-example-row">
-                <b-row>
-                  <b-col cols="2">Position:</b-col>
-                  <b-col cols="4">
-                    <div class="form-group">
-                      <multiselect
-                        v-model="position_id"
-                        :options="position"
-                        :custom-label="customLabel"
-                        track-by="id"
-                        :searchable="true"
-                      ></multiselect></div
-                  ></b-col>
-                </b-row>
-              </b-container>
-              <b-container class="bv-example-row">
-                <b-row>
-                  <b-col cols="2">Name:</b-col>
-                  <b-col cols="4">
-                    <div class="form-group">
-                      <input
-                        type="text"
-                        placeholder=""
-                        class="form-control"
-                        v-model="userName"
-                      />
-                    </div>
-                  </b-col>
-                </b-row>
-              </b-container>
+              <b-row>
+                <b-col>
+                  <b-container class="bv-example-row">
+                    <b-row>
+                      <b-col cols="2">Estate:</b-col>
+                      <b-col cols="10">
+                        <div class="form-group">
+                          <multiselect
+                            v-model="department_id"
+                            :options="department"
+                            label="department_code"
+                            track-by="department_id"
+                            :searchable="true"
+                          ></multiselect></div
+                      ></b-col>
+                    </b-row>
+                  </b-container>
+                  <b-container class="bv-example-row">
+                    <b-row>
+                      <b-col cols="2">Afdeling:</b-col>
+                      <b-col cols="10">
+                        <div class="form-group">
+                          <multiselect
+                            v-model="afdeling_id"
+                            :options="afdeling"
+                            :custom-label="customLabel"
+                            track-by="id"
+                            :searchable="true"
+                          ></multiselect></div
+                      ></b-col>
+                    </b-row>
+                  </b-container>
+                </b-col>
+                <b-col>
+                  <b-container class="bv-example-row">
+                    <b-row>
+                      <b-col cols="2">Position:</b-col>
+                      <b-col cols="10">
+                        <div class="form-group">
+                          <multiselect
+                            v-model="position_id"
+                            :options="position"
+                            :custom-label="customLabel"
+                            track-by="id"
+                            :searchable="true"
+                          ></multiselect></div
+                      ></b-col>
+                    </b-row>
+                  </b-container>
+                  <b-container class="bv-example-row">
+                    <b-row>
+                      <b-col cols="2">Name:</b-col>
+                      <b-col cols="10">
+                        <div class="form-group">
+                          <input
+                            type="text"
+                            placeholder=""
+                            class="form-control"
+                            v-model="userName"
+                          />
+                        </div>
+                      </b-col>
+                    </b-row>
+                  </b-container>
+                </b-col>
+              </b-row>
             </b-card-text>
           </b-card>
 
@@ -375,9 +381,7 @@ export default {
 
     if (query.q_afdeling_id) {
       $axios
-        .get(
-          `/api/admin/lov_afdeling_all?q_afdeling_id=${q_afdeling_id}`
-        )
+        .get(`/api/admin/lov_afdeling_all?q_afdeling_id=${q_afdeling_id}`)
         .then((response) => {
           // console.log('daaa')
           // console.log(response.data.data)
@@ -417,19 +421,13 @@ export default {
     //position
     let position_id_asyncData = []
 
-    const position_list = await $axios.$get(
-      `/api/admin/lov_position_all`
-    )
+    const position_list = await $axios.$get(`/api/admin/lov_position_all`)
 
-    let q_position_id = query.q_position_id
-      ? query.q_position_id
-      : ''
+    let q_position_id = query.q_position_id ? query.q_position_id : ''
 
     if (query.q_position_id) {
       $axios
-        .get(
-          `/api/admin/lov_position_all?q_position_id=${q_position_id}`
-        )
+        .get(`/api/admin/lov_position_all?q_position_id=${q_position_id}`)
         .then((response) => {
           // console.log('rdr')
           // console.log(response.data.data)
@@ -439,8 +437,9 @@ export default {
 
     let q_user_name = query.q_user_name ? query.q_user_name : ''
 
-
-    console.log(`/api/admin/employee?q=${search}&page=${page}&q_afdeling_id=${q_afdeling_id}&q_department_id=${q_department_id}&q_position_id=${q_position_id}&q_user_name=${q_user_name}`);
+    console.log(
+      `/api/admin/employee?q=${search}&page=${page}&q_afdeling_id=${q_afdeling_id}&q_department_id=${q_department_id}&q_position_id=${q_position_id}&q_user_name=${q_user_name}`
+    )
     //fetching posts
     const posts = await $axios.$get(
       `/api/admin/employee?q=${search}&page=${page}&q_afdeling_id=${q_afdeling_id}&q_department_id=${q_department_id}&q_position_id=${q_position_id}&q_user_name=${q_user_name}`
