@@ -469,7 +469,7 @@ export default {
     // let i_afdeling_id = $auth.user.employee.afdeling_id
 
     const foreman_list = await $axios.$get(
-      `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${q_afdeling_id}`
+      `/api/admin/lov_foreman_maintenance_approval?afdeling_id=${q_afdeling_id}`
     )
 
     //foreman_id
@@ -483,7 +483,7 @@ export default {
       //Mandor
       await $axios
         .get(
-          `/api/admin/lov_foreman_maintenance?afdeling_id=${q_afdeling_id}&foreman_id=${q_foreman_employee_id}`
+          `/api/admin/lov_foreman_maintenance_approval?afdeling_id=${q_afdeling_id}&foreman_id=${q_foreman_employee_id}`
         )
         .then((response) => {
           foreman_employee_id = response.data.data[0]
@@ -493,7 +493,7 @@ export default {
     } else {
       await $axios
         .get(
-          `/api/admin/lov_foreman_maintenance?afdeling_id=${q_afdeling_id}&foreman_id=${q_foreman_employee_id}`
+          `/api/admin/lov_foreman_maintenance_approval?afdeling_id=${q_afdeling_id}&foreman_id=${q_foreman_employee_id}`
         )
         .then((response) => {
           foreman_employee_id = response.data.data[0]
