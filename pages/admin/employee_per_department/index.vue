@@ -539,7 +539,7 @@ export default {
         this.$swal
           .fire({
             title: 'APAKAH ANDA YAKIN ?',
-            text: `INGIN SYNC DATA EMPLOYEE SAP ${this.department_id.department_code_sap} !`,
+            text: `Akan SYNC Data Employee SAP (Tenaga Kerja Rawat/Panen) ${this.department_id.department_code} !`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
