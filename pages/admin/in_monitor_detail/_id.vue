@@ -266,7 +266,7 @@
 
               <!-- <b-card-text>Header and footers using slots.</b-card-text> -->
               <div class="d-flex justify-content-end" v-show=false>
-                <b-button href="#" variant="primary" @click="Submit()" v-show=false
+                <b-button href="#" variant="primary" @click="Submit()" v-show=showHideSelected
                   >Submit</b-button
                 >
               </div>
@@ -588,7 +588,7 @@ export default {
     }
 
     //  console.log('rdr')
-    //  console.log($auth)
+    //  console.log('$auth',$auth)
 
     const posts = await $axios.$get(
       `/api/admin/workflow/in_monitor_detail?id=${route.params.id}`
@@ -614,20 +614,41 @@ export default {
       }
     }
 
+    const t_elhm = await $axios.$get(
+      `/api/admin/workflow/t_elhm?id=${route.params.id}`
+    )
+
     const t_elhm_ctl = await $axios.$get(
       `/api/admin/workflow/t_elhm_ctl_by_elhm_id?id=${route.params.id}`
     )
-
+    // console.log('t_elhm_ctl',t_elhm_ctl)
     const t_elhm_message = await $axios.$get(
       `/api/admin/workflow/t_elhm_message?t_elhm_id=${t_elhm_ctl.data[0].t_elhm_id}`
     )
 
-    console.log('t_elhm_message')
-    console.log(t_elhm_message.data[0])
+    let async_showHideSelected
+    if (t_elhm.data.elhm_status==3 && t_elhm.data.p_wf_proc_id==3 && $auth.user.employee.position_id==5) {
+      async_showHideSelected = true  
+    } else {
+      async_showHideSelected = false 
+    }
 
     const t_daily_progress = await $axios.$get(
       `/api/admin/master/attendance_daily_progress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}`
     )
+
+    let async_submit_option
+
+    if ($auth.user.employee.position_id==30) {
+      async_submit_option =  '<select id="approval" name="approval" class="form-control">' +
+            '<option value="N">Reject</option>' +
+            '</select>'
+    } else {
+        async_submit_option =  '<select id="approval" name="approval" class="form-control">' +
+            '<option value="Y">Approve</option>' +
+            '<option value="N">Reject</option>' +
+            '</select>'
+    }
 
     // console.log('Berhasil')
     return {
@@ -644,6 +665,8 @@ export default {
       foreman_employee_id: foreman_employee_id,
       t_elhm_ctl: t_elhm_ctl.data[0],
       t_elhm_message: t_elhm_message.data,
+      showHideSelected: async_showHideSelected,
+      submit_option :async_submit_option
     }
   },
 
@@ -824,15 +847,13 @@ export default {
     },
 
     Submit() {
+      console.log('this.afdeling_id', this.afdeling_id[0].id)
       this.$swal
         .fire({
           title: 'Approval',
           input: 'textarea',
           html:
-            '<select id="approval" name="approval" class="form-control">' +
-            '<option value="Y">Approve</option>' +
-            '<option value="N">Reject</option>' +
-            '</select>',
+            this.submit_option,
           icon: 'warning',
           inputPlaceholder: 'Message',
           showCancelButton: true,

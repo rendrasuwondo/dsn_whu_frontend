@@ -639,6 +639,18 @@ export default {
       `/api/admin/master/attendance_daily_progress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}`
     )
 
+    let async_submit_option
+
+    if ($auth.user.employee.position_id==30) {
+      async_submit_option =  '<select id="approval" name="approval" class="form-control">' +
+            '<option value="N">Reject</option>' +
+            '</select>'
+    } else {
+        async_submit_option =  '<select id="approval" name="approval" class="form-control">' +
+            '<option value="Y">Approve</option>' +
+            '<option value="N">Reject</option>' +
+            '</select>'
+    }
     // console.log('Berhasil')
     return {
       posts: posts.data,
@@ -654,6 +666,7 @@ export default {
       foreman_employee_id: foreman_employee_id,
       t_elhm_ctl: t_elhm_ctl.data[0],
       t_elhm_message: t_elhm_message.data,
+      submit_option :async_submit_option,
     }
   },
 
@@ -848,10 +861,7 @@ export default {
           title: 'Approval',
           input: 'textarea',
           html:
-            '<select id="approval" name="approval" class="form-control">' +
-            '<option value="Y">Approve</option>' +
-            '<option value="N">Reject</option>' +
-            '</select>',
+           this.submit_option,
           icon: 'warning',
           inputPlaceholder: 'Message',
           showCancelButton: true,
