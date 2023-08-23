@@ -86,6 +86,14 @@
                   </b-container>
                 </b-col>
               </b-row>
+              <b-row>
+                <div class="input-group justify-content-end">
+                  <button @click="syncDataSAP" class="btn btn-info">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                    Sync Data
+                  </button>
+                </div>
+              </b-row>
             </b-card-text>
           </b-card>
 
@@ -369,7 +377,9 @@ export default {
     const user = await $axios.$get(`/api/admin/user`)
 
     // afdeling_id
-    const afdeling_list = await $axios.$get(`/api/admin/lov_afdeling_all`)
+    const afdeling_list = await $axios.$get(
+      `/api/admin/lov_afdeling_all?per_department=true`
+    )
 
     const afdeling_default = ''
 
@@ -397,7 +407,7 @@ export default {
     let department_id_asyncData = []
 
     const department_list = await $axios.$get(
-      `/api/admin/lov_employee_department_all`
+      `/api/admin/lov_employee_department_all?per_department=true`
     )
 
     const department_default = ''
@@ -438,11 +448,11 @@ export default {
     let q_user_name = query.q_user_name ? query.q_user_name : ''
 
     console.log(
-      `/api/admin/employee?q=${search}&page=${page}&q_afdeling_id=${q_afdeling_id}&q_department_id=${q_department_id}&q_position_id=${q_position_id}&q_user_name=${q_user_name}`
+      `/api/admin/employee?per_department=true&q=${search}&page=${page}&q_afdeling_id=${q_afdeling_id}&q_department_id=${q_department_id}&q_position_id=${q_position_id}&q_user_name=${q_user_name}`
     )
     //fetching posts
     const posts = await $axios.$get(
-      `/api/admin/employee?q=${search}&page=${page}&q_afdeling_id=${q_afdeling_id}&q_department_id=${q_department_id}&q_position_id=${q_position_id}&q_user_name=${q_user_name}`
+      `/api/admin/employee?per_department=true&q=${search}&page=${page}&q_afdeling_id=${q_afdeling_id}&q_department_id=${q_department_id}&q_position_id=${q_position_id}&q_user_name=${q_user_name}`
     )
 
     return {
@@ -520,6 +530,59 @@ export default {
             : this.vdepartment,
         },
       })
+    },
+    async syncDataSAP() {
+      if (this.department_id != null && this.department_id.length != 0) {
+        let BUKRS = this.department_id.department_code_sap.slice(0, 2)
+        let ESTNR = this.department_id.department_code_sap.slice(2)
+
+        this.$swal
+          .fire({
+            title: 'APAKAH ANDA YAKIN ?',
+            text: `Akan SYNC Data Employee SAP (Tenaga Kerja Rawat/Panen) ${this.department_id.department_code} !`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'YA, SYNC!',
+            cancelButtonText: 'TIDAK',
+          })
+          .then((result) => {
+            if (result.isConfirmed) {
+              this.$nuxt.$loading.start()
+              this.$axios
+                .$get(`/api/admin/sync_employee?BUKRS=${BUKRS}&ESTNR=${ESTNR}`)
+                .then((response) => {
+                  this.$nuxt.$loading.finish()
+                  if (response.success == true) {
+                    this.$swal.fire({
+                      title: 'BERHASIL!',
+                      text: response.message,
+                      icon: 'success',
+                      showConfirmButton: false,
+                      timer: 2000,
+                    })
+                  } else {
+                    this.$swal.fire({
+                      title: 'Oops!',
+                      text: response.message,
+                      icon: 'error',
+                      showConfirmButton: false,
+                      timer: 2000,
+                    })
+                  }
+                })
+            }
+          })
+      } else {
+        this.$swal.fire({
+          title: 'Oops!',
+          text: 'Pilih estate terlebih dulu!',
+          icon: 'error',
+          showConfirmButton: false,
+          timer: 2000,
+        })
+      }
     },
 
     //deletePost method
