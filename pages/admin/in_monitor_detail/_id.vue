@@ -645,8 +645,7 @@ export default {
             '</select>'
     } else {
         async_submit_option =  '<select id="approval" name="approval" class="form-control">' +
-            '<option value="Y">Approve</option>' +
-            '<option value="N">Reject</option>' +
+           '<option value="N">Reject</option>' +
             '</select>'
     }
 
