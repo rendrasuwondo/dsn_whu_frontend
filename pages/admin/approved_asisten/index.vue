@@ -124,6 +124,7 @@
                   class="btn btn-info btn-sm"
                   style="padding-top: 8px"
                   title="Tambah"
+                  v-show=showHideSelected
                   ><i class="fa fa-plus-circle"></i>
                 </nuxt-link>
                 <button
