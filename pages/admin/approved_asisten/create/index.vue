@@ -396,7 +396,7 @@ export default {
         .then((response) => {
           this.foreman = response.data.data
         })
-     
+
       //Dropdown Block
       this.$axios
         .get(
@@ -731,6 +731,13 @@ export default {
         })
         .catch((error) => {
           //assign error to state "validation"
+          this.$swal.fire({
+            title: 'Error!',
+            text: error.response.data.message,
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 5000,
+          })
           this.validation = error.response.data
         })
     },
