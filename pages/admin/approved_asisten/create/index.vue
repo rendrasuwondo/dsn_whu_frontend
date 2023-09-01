@@ -343,7 +343,7 @@ export default {
       this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
     this.field.updated_by =
       this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
-
+    console.log('yesterdayDate',this.yesterdayDate())
     this.field.activitied_at = this.yesterdayDate()
 
     this.company_code = this.user.employee.company_code
@@ -607,9 +607,11 @@ export default {
 
     yesterdayDate() {
       const current = new Date()
-      const date = `${current.getFullYear()}-${
-        current.getMonth() + 1
-      }-${current.getDate() - 1}`
+      current.setDate(current.getDate()-1)
+      const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current
+        .getDate()
+        .toString()
+        .padStart(2, '0')}`
 
       return date
     },
