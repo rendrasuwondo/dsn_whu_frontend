@@ -402,10 +402,11 @@ export default {
   async asyncData({ $axios, query, $auth }) {
     function currentDate() {
       const current = new Date()
-      current.setDate(current.getDate())
-      const date = `${current.getFullYear()}-${current.getMonth() + 1}-${
-        current.getDate() - 1
-      }`
+      current.setDate(current.getDate()-1)
+      const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current
+        .getDate()
+        .toString()
+        .padStart(2, '0')}`
 
       return date
     }
@@ -574,7 +575,7 @@ export default {
 
     console.log('t_elhm')
     console.log(async_elhm_status)
-    console.log(async_class_status)
+    // console.log(async_class_status)
     return {
       foreman_empl_id: q_foreman_employee_id,
       q_afdeling_id: q_afdeling_id,
@@ -584,7 +585,7 @@ export default {
       pagination: posts.data,
       search: search,
       rowcount: posts.data.length,
-      activitied_at_start: activitied_at_start,
+      activitied_at_start: activitiedAtDate,
       activitied_at_end: activitied_at_end,
       foreman: foreman_list.data,
       foreman_employee_id: foreman_employee_id,
@@ -925,7 +926,7 @@ export default {
               // console.log(this.foreman_employee_id.employee_id)
               // this.$nuxt.$loading.start()
               this.main = false
-
+              // alert(this.activitied_at_start)
               let formData = new FormData()
               // formData.append('activitied_at', this.activitied_at_start.split("-")[1].padStart(2, '0'))
               formData.append('activitied_at', this.activitied_at_start)
