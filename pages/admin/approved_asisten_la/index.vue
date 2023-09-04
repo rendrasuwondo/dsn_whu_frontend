@@ -8,7 +8,7 @@
       <div class="card card-outline card-info" v-if="main">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="nav-icon fas fa-hard-hat"></i> Approve Asisten
+            <i class="nav-icon fas fa-hard-hat"></i> Approve Asisten LA
           </h3>
           <div :class="class_status">
             <b>Status Approve : {{ elhm_status }}</b>
@@ -24,8 +24,8 @@
             <b-card-text>
               <b-container class="bv-example-row mb-3">
                 <b-row>
-                  <b-col cols="1">Tanggal</b-col>
-                  <b-col>
+                  <b-col cols="2">Tanggal</b-col>
+                  <b-col cols="3">
                     <b-input-group>
                       <b-form-datepicker
                         v-model="activitied_at_start"
@@ -45,6 +45,18 @@
                       </template>
                     </b-input-group>
                   </b-col>
+                  <b-col cols="1"></b-col>
+                  <b-col cols="2">Mandor</b-col>
+                  <b-col cols="4">
+                    <div class="form-group">
+                      <multiselect
+                        v-model="foreman_employee_id"
+                        :options="foreman"
+                        label="employee_description"
+                        track-by="employee_id"
+                        :searchable="true"
+                      ></multiselect></div
+                  ></b-col>
                   <b-col>
                     <b-input-group>
                       <b-datepicker
@@ -74,8 +86,22 @@
               </b-container>
               <b-container class="bv-example-row">
                 <b-row>
-                  <b-col cols="1">Afdeling</b-col>
-                  <b-col cols="7">
+                  <b-col cols="2">Afdeling SKU</b-col>
+                  <b-col cols="3">
+                    <div class="form-group">
+                      <multiselect
+                        v-model="afdeling_id"
+                        :options="afdeling"
+                        :custom-label="customLabel"
+                        x
+                        track-by="id"
+                        :searchable="true"
+                        @input="onChangeAfdeling"
+                      ></multiselect></div
+                  ></b-col>
+                  <b-col cols="1"></b-col>
+                  <b-col cols="2">Afdeling Block</b-col>
+                  <b-col cols="4">
                     <div class="form-group">
                       <multiselect
                         v-model="afdeling_id"
@@ -91,17 +117,7 @@
               </b-container>
               <b-container class="bv-example-row">
                 <b-row>
-                  <b-col cols="1">Mandor</b-col>
-                  <b-col cols="7">
-                    <div class="form-group">
-                      <multiselect
-                        v-model="foreman_employee_id"
-                        :options="foreman"
-                        label="employee_description"
-                        track-by="employee_id"
-                        :searchable="true"
-                      ></multiselect></div
-                  ></b-col>
+                  
                 </b-row>
               </b-container>
             </b-card-text>
