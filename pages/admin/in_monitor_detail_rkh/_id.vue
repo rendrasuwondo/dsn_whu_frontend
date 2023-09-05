@@ -11,15 +11,15 @@
             <table>
               <tr>
                 <td @click="InProcess()">
-                  <router-link
+                  <nuxt-link
                     :to="{ name: 'admin-in_monitor' }"
                     class="nav-link"
                   >
-                    <i class="nav-icon fas fa-user-clock"></i>
+                    <i class="nav-icon fas fa-briefcase"></i>
                     In Monitor
-                  </router-link>
+                  </nuxt-link>
                 </td>
-                <td>/ Detail</td>
+                <td>/ Detail RKH</td>
               </tr>
             </table>
           </h3>
@@ -39,28 +39,22 @@
                   <b-col cols="4">
                     <b-input-group>
                       <b-form-input
-                        :type="date"
-                        :date-format-options="{
-                          year: 'numeric',
-                          month: 'short',
-                          day: '2-digit',
-                          weekday: 'short',
-                        }"
                         size="sm"
                         :disabled="true"
                         v-model="detail.tanggal"
                       ></b-form-input>
                     </b-input-group>
                   </b-col>
-                  <b-col cols="2">Mandor:</b-col>
+                  <b-col cols="2">Asisten:</b-col>
                   <b-col cols="4">
                     <div class="form-group">
                       <b-form-input
                         size="sm"
                         :disabled="true"
                         v-model="detail.mandor"
-                      ></b-form-input></div
-                  ></b-col>
+                      ></b-form-input>
+                    </div>
+                  </b-col>
                 </b-row>
               </b-container>
               <b-container class="bv-example-row">
@@ -73,8 +67,9 @@
                         size="sm"
                         :disabled="true"
                         v-model="detail.afdelingCode"
-                      ></b-form-input></div
-                  ></b-col>
+                      ></b-form-input>
+                    </div>
+                  </b-col>
                 </b-row>
               </b-container>
             </b-card-text>
@@ -119,80 +114,32 @@
             v-model="visibleRows"
             head-variant="light"
           >
+            <!--
             <template v-slot:thead-top="data">
               <b-tr>
                 <b-th variant="primary" colspan="6"></b-th>
                 <b-th variant="danger" colspan="3" class="text-center">HK</b-th>
-                <b-th variant="danger" colspan="3" class="text-center"
-                  >Volume</b-th
-                >
-                <b-th variant="danger" colspan="4" class="text-center"
-                  >Rate</b-th
-                >
+                <b-th variant="danger" colspan="3" class="text-center">Volume</b-th>
+                <b-th variant="danger" colspan="4" class="text-center">Rate</b-th>
               </b-tr>
-            </template>
+            </template>-->
             <template v-slot:cell(detail_hap)="row">
               <div>{{ row.item.wide }}</div>
             </template>
             <template v-slot:custom-foot="data">
               <b-tr>
-                <b-td colspan="2" align="left" variant="secondary"></b-td>
-                <b-td colspan="2" align="left" variant="secondary"
+                <b-td colspan="3" align="left" variant="secondary"
                   ><b>Total</b></b-td
                 >
-                <b-td align="right" variant="secondary"></b-td>
-                <b-td align="right" variant="secondary"></b-td>
                 <b-td align="right" variant="secondary">
-                  <b> {{ TotalManDaysBasic.toFixed(2) }}</b>
+                  <b> {{ TotalManDays.toFixed(2) }}</b>
                 </b-td>
                 <b-td align="right" variant="secondary">
-                  <b> {{ TotalManDaysPremi.toFixed(2) }}</b>
+                  <b> {{ TotalQty.toFixed(2) }}</b>
                 </b-td>
                 <b-td align="right" variant="secondary">
-                  <b> {{ TotalManDaysTotal.toFixed(2) }}</b>
+                  <b> {{ TotalFlexrate.toFixed(2) }}</b>
                 </b-td>
-                <b-td align="right" variant="secondary">
-                  <b> {{ addCommas(TotalQtyBasic.toFixed(2)) }}</b>
-                </b-td>
-                <b-td align="right" variant="secondary">
-                  <b>{{ addCommas(TotalQtyPremi.toFixed(2)) }}</b>
-                </b-td>
-                <b-td align="right" variant="secondary">
-                  <b> {{ addCommas(TotalQtyTotal.toFixed(2)) }}</b>
-                </b-td>
-                <b-td align="right" variant="secondary">
-                  <b> {{ addCommas(TotalFlexrate.toFixed(2)) }}</b>
-                </b-td>
-                <b-td align="right" variant="secondary">
-                  <b> {{ addCommas(TotalQtyUnit.toFixed(2)) }}</b>
-                </b-td>
-                <b-td align="right" variant="secondary">
-                  <b> {{ addCommas(TotalQtyNorm.toFixed(2)) }}</b>
-                </b-td>
-              </b-tr>
-              <b-tr>
-                <b-td colspan="2" align="left"></b-td>
-                <b-td colspan="2" align="left">S/H1/H2</b-td>
-                <b-td align="right">
-                  {{ t_daily_progress.type_1.toFixed(2) }}
-                </b-td>
-                <b-td colspan="9"></b-td>
-              </b-tr>
-              <b-tr>
-                <b-td colspan="2" align="left"></b-td>
-                <b-td colspan="2" align="left">C/P1/P1</b-td>
-                <b-td align="right">
-                  {{ t_daily_progress.type_2.toFixed(2) }}
-                </b-td>
-                <b-td colspan="9"></b-td>
-              </b-tr>
-              <b-tr>
-                <b-td colspan="2" align="left"></b-td>
-                <b-td colspan="2" align="left">M</b-td>
-                <b-td align="right">
-                  {{ t_daily_progress.type_3.toFixed(2) }}
-                </b-td>
-                <b-td colspan="9"></b-td>
               </b-tr>
             </template>
           </b-table>
@@ -200,16 +147,16 @@
           <!-- pagination -->
           <b-row>
             <!-- <b-col>
-                  <b-pagination
-                    v-model="pagination.current_page"
-                    :total-rows="pagination.total"
-                    :per-page="pagination.per_page"
-                    @change="changePage"
-                    align="left"
-                    class="mt-1"
-                  >
-                  </b-pagination>
-                </b-col> -->
+                    <b-pagination
+                      v-model="pagination.current_page"
+                      :total-rows="pagination.total"
+                      :per-page="pagination.per_page"
+                      @change="changePage"
+                      align="left"
+                      class="mt-1"
+                    >
+                    </b-pagination>
+                  </b-col> -->
             <b-col class="text-right" align-self="center">
               {{ rowcount }} data
             </b-col>
@@ -261,12 +208,17 @@
                 <approval
                   :approvalStatus="this.$route.query.approvalStatus"
                   :elhm_id="this.t_elhm_ctl.t_elhm_id"
-                ></approval>
+                >
+                </approval>
               </b-row>
 
               <!-- <b-card-text>Header and footers using slots.</b-card-text> -->
-              <div class="d-flex justify-content-end" v-show=false>
-                <b-button href="#" variant="primary" @click="Submit()" v-show=showHideSelected
+              <div class="d-flex justify-content-end">
+                <b-button
+                  href="#"
+                  variant="primary"
+                  @click="Submit()"
+                  v-show="showHideSelected"
                   >Submit</b-button
                 >
               </div>
@@ -283,7 +235,9 @@
 </template>
 
 <script>
+import Approval from '~/components/Approval.vue'
 export default {
+  components: { Approval },
   layout: 'admin',
   head() {
     return {
@@ -292,7 +246,6 @@ export default {
   },
 
   props: ['date', 'afdelingCode', 'mandor', 'approvalStatus'],
-
   data() {
     return {
       detail: {
@@ -311,45 +264,31 @@ export default {
       fields: [
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'NPK',
-          key: 'labour_nik',
+          label: 'Mandor',
+          key: 'foreman_employee_description',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Nama Pekerja',
-          key: 'labour_name',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Blok',
-          key: 'block',
-          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Luas',
-          key: 'wide',
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+          sortable: true,
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Jenis Pekerjaan',
           key: 'activity_description',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          sortable: true,
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Satuan',
           key: 'activity_unit_code',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          sortable: true,
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Basic',
-          key: 'man_days_basic',
+          label: 'HK',
+          key: 'man_days',
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+          sortable: true,
           formatter: (value, key, item) => {
             let formatter = new Intl.NumberFormat('es-US', {
               minimumFractionDigits: 2,
@@ -360,8 +299,9 @@ export default {
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Premi',
-          key: 'man_days_premi',
+          label: 'Volume',
+          key: 'qty',
+          sortable: true,
           formatter: (value, key, item) => {
             let formatter = new Intl.NumberFormat('es-US', {
               minimumFractionDigits: 2,
@@ -371,58 +311,7 @@ export default {
           },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Total',
-          key: 'man_days_total',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Basic',
-          key: 'qty_basic',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Premi',
-          key: 'qty_premi',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Total',
-          key: 'qty_total',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
+
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'Rate',
@@ -437,40 +326,14 @@ export default {
           },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
         },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Unit',
-          key: 'unit',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
-        {
-          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
-          label: 'Norm',
-          key: 'norm',
-          formatter: (value, key, item) => {
-            let formatter = new Intl.NumberFormat('es-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-            return formatter.format(value)
-          },
-          tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
-        },
       ],
       company_code: '',
       department_code: '',
       param_activitied_at_prepend: this.$route.query.activitied_at_prepend,
       param_activitied_at_append: this.$route.query.activitied_at_append,
-      afdeling_id: this.$route.query.q_afdeling_id,
+      // afdeling_id: this.$route.query.q_afdeling_id,
       foreman_employee_id: this.$route.query.q_foreman_employee_id,
-      query_afdeling_id: '',
+      // query_afdeling_id: '',
       query_foreman_employee_id: '',
       afdeling_default: '',
     }
@@ -511,89 +374,25 @@ export default {
       ? query.activitied_at_append
       : currentDate()
 
-    // afdeling_id
-    const afdeling_list = await $axios.$get(
-      `/api/admin/lov_afdeling_daily_progress`
+    const t_elhm = await $axios.$get(
+      `/api/admin/workflow/t_elhm?id=${route.params.id}`
     )
 
-    const afdeling_default = await $axios.$get(
-      `/api/admin/lov_afdeling_default`
+    const t_elhm_ctl = await $axios.$get(
+      `/api/admin/workflow/t_elhm_ctl_by_elhm_id?id=${route.params.id}`
+      //`/api/admin/workflow/t_elhm_ctl?id=113`
     )
-
-    let q_afdeling_id = query.q_afdeling_id
-      ? query.q_afdeling_id
-      : afdeling_default.data.id
-
-    let afdeling_id = []
-
-    let afdeling_code = []
-
-    if (query.q_afdeling_id) {
-      await $axios
-        .get(
-          `/api/admin/lov_afdeling_daily_progress?q_afdeling_id=${q_afdeling_id}`
-        )
-        .then((response) => {
-          // console.log('daaa')
-          // console.log(response.data.data)
-          afdeling_id = response.data.data
-        })
-    } else {
-      afdeling_id = []
-
-      q_afdeling_id = afdeling_default.data.id
-    }
-
-    if (q_afdeling_id == undefined || q_afdeling_id == '') {
-      q_afdeling_id = afdeling_default.data.id
-    }
-
-    const foreman_list = await $axios.$get(
-      `/api/admin/lov_foreman_maintenance?afdeling_id=${q_afdeling_id}`
+    console.log(
+      't_elhm_ctl',
+      `/api/admin/workflow/t_elhm_ctl_by_elhm_id?id=${route.params.id}`
     )
-    // console.log('rdr')
-    // console.log(`/api/admin/lov_foreman_maintenance?afdeling_id=${q_afdeling_id}`)
-    let q_foreman_employee_id = query.q_foreman_employee_id
-      ? query.q_foreman_employee_id
-      : ''
-    let foreman_employee_id = []
-
-    if (query.q_foreman_employee_id) {
-      //Mandor
-      await $axios
-        .get(
-          `/api/admin/lov_foreman_maintenance?afdeling_id=${q_afdeling_id}&foreman_id=${q_foreman_employee_id}`
-        )
-        .then((response) => {
-          foreman_employee_id = response.data.data[0]
-          // console.log('cekkkkk')
-          // console.log(response.data.data)
-        })
-    } else {
-      await $axios
-        .get(
-          `/api/admin/lov_foreman_maintenance?afdeling_id=${q_afdeling_id}&foreman_id=${q_foreman_employee_id}`
-        )
-        .then((response) => {
-          foreman_employee_id = response.data.data[0]
-          // console.log('cekkkkk')
-          // console.log(response.data.data)
-        })
-
-      q_foreman_employee_id = foreman_employee_id.employee_id
-    } //if (query.foreman_id) {
-
-    if (q_foreman_employee_id == undefined) {
-      q_foreman_employee_id = ''
-    }
-
-    //  console.log('rdr')
-     console.log('posts', `/api/admin/workflow/in_monitor_detail?id=${route.params.id}`)
-
     const posts = await $axios.$get(
-      `/api/admin/workflow/in_monitor_detail?id=${route.params.id}`
+      `/api/admin/in_process/activity_plan?activitied_at=${t_elhm_ctl.data[0].activitied_at}&afdeling_id=${t_elhm_ctl.data[0].afdeling_id}&foreman_employee_id=${t_elhm_ctl.data[0].foreman_employee_id}`
     )
-
+    console.log(
+      'POST',
+      `/api/admin/in_process/activity_plan?activitied_at=${t_elhm_ctl.data[0].activitied_at}&afdeling_id=${t_elhm_ctl.data[0].afdeling_id}&foreman_employee_id=${t_elhm_ctl.data[0].foreman_employee_id}`
+    )
     const global_param = await $axios.$get(
       `/api/admin/global_param?q=MAX_HK_RAWAT`
     )
@@ -614,42 +413,25 @@ export default {
       }
     }
 
-    const t_elhm = await $axios.$get(
-      `/api/admin/workflow/t_elhm?id=${route.params.id}`
-    )
-
-    const t_elhm_ctl = await $axios.$get(
-      `/api/admin/workflow/t_elhm_ctl_by_elhm_id?id=${route.params.id}`
-    )
-    // console.log('t_elhm_ctl',t_elhm_ctl)
     const t_elhm_message = await $axios.$get(
       `/api/admin/workflow/t_elhm_message?t_elhm_id=${t_elhm_ctl.data[0].t_elhm_id}`
     )
 
-    let async_showHideSelected
-    if (t_elhm.data.elhm_status==3 && t_elhm.data.p_wf_proc_id==3 && $auth.user.employee.position_id==5) {
-      async_showHideSelected = true  
-    } else {
-      async_showHideSelected = false 
-    }
-
-    const t_daily_progress = await $axios.$get(
-      `/api/admin/master/attendance_daily_progress?q=${search}&page=${page}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}&q_afdeling_id=${q_afdeling_id}`
+    console.log(
+      't_elhm_message',
+      `/api/admin/workflow/t_elhm_message?t_elhm_id=${t_elhm_ctl.data[0].t_elhm_id}`
     )
-
-    let async_submit_option
-
-    if ($auth.user.employee.position_id==30) {
-      async_submit_option =  '<select id="approval" name="approval" class="form-control">' +
-            '<option value="N">Reject</option>' +
-            '</select>'
+    let async_showHideSelected
+    if (
+      t_elhm.data.elhm_status == 3 &&
+      t_elhm.data.p_wf_proc_id == 3 &&
+      $auth.user.employee.position_id == 5
+    ) {
+      async_showHideSelected = true
     } else {
-        async_submit_option =  '<select id="approval" name="approval" class="form-control">' +
-           '<option value="N">Reject</option>' +
-            '</select>'
+      async_showHideSelected = false
     }
 
-    // console.log('Berhasil')
     return {
       posts: posts.data,
       pagination: posts.data,
@@ -657,55 +439,53 @@ export default {
       rowcount: posts.data.length,
       activitied_at_start: activitied_at_start,
       activitied_at_end: activitied_at_end,
-      afdeling: afdeling_list.data,
-      afdeling_id: afdeling_id,
-      t_daily_progress: t_daily_progress.data,
-      foreman: foreman_list.data,
-      foreman_employee_id: foreman_employee_id,
+      // afdeling: afdeling_list.data,
+      // afdeling_id: afdeling_id,
+      // t_daily_progress: t_daily_progress.data,
+      // foreman: foreman_list.data,
+      // foreman_employee_id: foreman_employee_id,
       t_elhm_ctl: t_elhm_ctl.data[0],
       t_elhm_message: t_elhm_message.data,
       showHideSelected: async_showHideSelected,
-      submit_option :async_submit_option
     }
   },
 
   mounted() {
-    if (this.$route.query.q_afdeling_id == null) {
-      this.$axios.get(`/api/admin/lov_afdeling_default`).then((response) => {
-        this.afdeling_id = [
-          {
-            id: response.data.data.id,
-            code: response.data.data.code,
-          },
-        ]
-      })
-    }
+    // if (this.$route.query.q_afdeling_id == null) {
+    //   this.$axios.get(`/api/admin/lov_afdeling_default`).then((response) => {
+    //     this.afdeling_id = [
+    //       {
+    //         id: response.data.data.id,
+    //         code: response.data.data.code,
+    //       },
+    //     ]
+    //   })
+    // }
   },
 
   methods: {
     onChangeAfdeling() {
       // console.log (this.afdeling_id.id)
-      if (this.afdeling_id.id != null) {
-        this.$axios
-          .get(
-            `/api/admin/lov_foreman_maintenance?afdeling_id=${this.afdeling_id.id}`
-          )
-          .then((response) => {
-            this.foreman = response.data.data
-
-            this.$axios
-              .get(
-                `/api/admin/lov_foreman_maintenance?afdeling_id=${this.afdeling_id.id}`
-              )
-              .then((response) => {
-                this.foreman_employee_id = response.data.data[0]
-              })
-          })
-      }
+      // if (this.afdeling_id.id != null) {
+      //   this.$axios
+      //     .get(
+      //       `/api/admin/lov_foreman_maintenance?afdeling_id=${this.afdeling_id.id}`
+      //     )
+      //     .then((response) => {
+      //       this.foreman = response.data.data
+      //       this.$axios
+      //         .get(
+      //           `/api/admin/lov_foreman_maintenance?afdeling_id=${this.afdeling_id.id}`
+      //         )
+      //         .then((response) => {
+      //           this.foreman_employee_id = response.data.data[0]
+      //         })
+      //     })
+      // }
     },
 
     customLabel(afdeling) {
-      return `${afdeling.code}` + ' (' + `${afdeling.id}` + ')'
+      // return `${afdeling.code}` + ' (' + `${afdeling.id}` + ')'
     },
 
     changePage(page) {
@@ -786,6 +566,7 @@ export default {
     },
 
     exportData() {
+      this.$nuxt.$loading.start()
       const headers = {
         'Content-Type': 'application/json',
       }
@@ -803,16 +584,16 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/workflow/in_monitor_detail/export?id=${this.$route.params.id}&q=${this.search}&q_afdeling_id=${this.query_afdeling_id}&q_activitied_at_start=${this.activitied_at_start}&q_activitied_at_end=${this.activitied_at_end}`,
+        url: `/api/admin/workflow/in_process_detail/export?id=${this.$route.params.id}&q=${this.search}&q_afdeling_id=${this.query_afdeling_id}&q_activitied_at_start=${this.activitied_at_start}&q_activitied_at_end=${this.activitied_at_end}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
       }).then((response) => {
-        this.isLoading = false
+        this.$nuxt.$loading.finish()
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
-        var fileName = 'Laporan In Monitor Detail.xlsx'
+        var fileName = 'Laporan In Process Detail.xlsx'
         link.setAttribute('download', fileName) //or any other extension
         document.body.appendChild(link)
         link.click()
@@ -841,18 +622,27 @@ export default {
       return x1 + x2
     },
 
+    // start() {
+    //   this.loading = true
+    // },
+    // finish() {
+    //   this.loading = false
+    // },
+
     InProcess() {
+      // this.loading = true
       this.main = false
     },
 
     Submit() {
-      console.log('this.afdeling_id', this.afdeling_id[0].id)
       this.$swal
         .fire({
           title: 'Approval',
           input: 'textarea',
           html:
-            this.submit_option,
+            '<select id="approval" name="approval" class="form-control">' +
+            '<option value="N">Reject</option>' +
+            '</select>',
           icon: 'warning',
           inputPlaceholder: 'Message',
           showCancelButton: true,
@@ -887,7 +677,7 @@ export default {
               // console.log(this.t_elhm_ctl.activitied_at)
               this.$swal
                 .fire({
-                  title: 'Komfirmasi',
+                  title: 'Konfirmasi',
                   html:
                     '<div>Anda yakin akan melakukan Approve?</div>' +
                     '<div><b-container>' +
@@ -922,7 +712,7 @@ export default {
                     '</div>' +
                     '<div><b-container>' +
                     '<b-row>' +
-                    '<b-col>Mandor</b-col>' +
+                    '<b-col>Asisten</b-col>' +
                     '<b-col>&nbsp;:&nbsp;</b-col>' +
                     '<b-col>' +
                     this.t_elhm_ctl.name +
@@ -968,7 +758,7 @@ export default {
                         })
 
                         this.$router.push({
-                          name: 'admin-in_monitor',
+                          name: 'admin-in_process',
                           params: { id: this.$route.params.id, r: 1 },
                         })
                       })
@@ -1058,7 +848,7 @@ export default {
                         })
 
                         this.$router.push({
-                          name: 'admin-in_monitor',
+                          name: 'admin-in_process',
                           params: { id: this.$route.params.id, r: 1 },
                         })
                       })
@@ -1070,45 +860,17 @@ export default {
     },
   },
   computed: {
-    TotalManDaysBasic() {
+    TotalManDays() {
       return this.visibleRows.reduce((accum, item) => {
         // console.log(accum + item.man_days_basic)
-        return accum + item.man_days_basic
+        return accum + item.man_days
       }, 0.0)
     },
 
-    TotalManDaysPremi() {
-      return this.visibleRows.reduce((accum, item) => {
-        // console.log(accum + item.man_days_premi)
-        return accum + item.man_days_premi
-      }, 0.0)
-    },
-
-    TotalManDaysTotal() {
-      return this.visibleRows.reduce((accum, item) => {
-        // console.log(accum + item.man_days_total)
-        return accum + item.man_days_total
-      }, 0.0)
-    },
-
-    TotalQtyBasic() {
+    TotalQty() {
       return this.visibleRows.reduce((accum, item) => {
         // console.log(accum + item.qty_basic)
-        return accum + item.qty_basic
-      }, 0.0)
-    },
-
-    TotalQtyPremi() {
-      return this.visibleRows.reduce((accum, item) => {
-        // console.log(accum + item.qty_premi)
-        return accum + item.qty_premi
-      }, 0.0)
-    },
-
-    TotalQtyTotal() {
-      return this.visibleRows.reduce((accum, item) => {
-        // console.log(accum + item.qty_total)
-        return accum + item.qty_total
+        return accum + item.qty
       }, 0.0)
     },
 
@@ -1118,16 +880,14 @@ export default {
       }, 0.0)
     },
 
-    TotalQtyUnit() {
+    TotalRateUnit() {
       return this.visibleRows.reduce((accum, item) => {
-        // console.log(accum + item.unit)
         return accum + item.unit
       }, 0.0)
     },
 
-    TotalQtyNorm() {
+    TotalRateNorm() {
       return this.visibleRows.reduce((accum, item) => {
-        // console.log(accum + item.norm)
         return accum + item.norm
       }, 0.0)
     },
@@ -1148,6 +908,7 @@ export default {
   font-size: 30px;
   font-family: sans-serif;
 }
+
 .table-1 {
   font-size: 14px;
 }
