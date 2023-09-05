@@ -208,7 +208,7 @@ export default {
   layout: 'admin',
   head() {
     return {
-      title: 'IN Process',
+      title: 'IN Monitor',
     }
   },
   data() {
