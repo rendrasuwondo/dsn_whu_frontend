@@ -140,6 +140,7 @@
                 <b-td align="right" variant="secondary">
                   <b> {{ TotalFlexrate.toFixed(2) }}</b>
                 </b-td>
+                <b-td align="left" variant="secondary"></b-td>
               </b-tr>
             </template>
           </b-table>
@@ -325,6 +326,13 @@ export default {
             return formatter.format(value)
           },
           tdClass: 'align-middle text-right text-nowrap nameOfTheClass',
+        },
+        {
+          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          label: 'Keterangan',
+          key: 'description',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          sortable: true,
         },
       ],
       company_code: '',
