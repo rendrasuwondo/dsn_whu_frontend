@@ -140,7 +140,7 @@
               <b-button
                 v-show="btn_asisten"
                 :to="{
-                  name: 'admin-in_monitor_detail-id',
+                  name: row.item.p_wf_doc_type_id==1?'admin-in_monitor_detail-id':'admin-in_monitor_detail_rkh-id',
                   params: { id: row.item.id },
                   query: {
                     tanggal: formatDate(row.item.activitied_at),
