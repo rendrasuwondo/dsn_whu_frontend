@@ -366,10 +366,14 @@ export default {
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          label: 'Afd',
-          key: 'afdeling_code',
-          tdClass: 'align-middle text-right text-nowrap d-none',
-          thClass: 'd-none',
+          label: 'Afdeling Block',
+          key: 'afdeling_id',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          label: 'Afdeling SKU',
+          key: 'labour_afdeling_id',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
           label: 'Estate',
@@ -548,18 +552,21 @@ export default {
           // console.log('cekkkkk')
           // console.log(response.data.data)
         })
-    } else {
-      await $axios
-        .get(
-          `/api/admin/lov_foreman_maintenance_approval?afdeling_id=${q_afdeling_id}&foreman_id=${q_foreman_employee_id}`
-        )
-        .then((response) => {
-          foreman_employee_id = response.data.data[0]
-          // console.log('cekkkkk')
-          // console.log(response.data.data)
-        })
 
-      q_foreman_employee_id = foreman_employee_id.employee_id
+    } else {
+      // await $axios
+      //   .get(
+      //     `/api/admin/lov_foreman_maintenance_approval?afdeling_id=${q_afdeling_id}&foreman_id=${q_foreman_employee_id}`
+      //   )
+      //   .then((response) => {
+
+      //     foreman_employee_id = response.data.data[0]
+      //     // console.log('cekkkkk')
+      //     // console.log(response.data.data)
+      //   })
+
+      // q_foreman_employee_id = foreman_employee_id.employee_id
+
     } //if (query.foreman_id) {
 
     if (q_foreman_employee_id == undefined) {
@@ -629,6 +636,11 @@ export default {
       }
     }
 
+    let foremanData = ''
+    if (posts.data[0] != undefined) {
+      foremanData = posts.data[0].foreman_employee_id
+    }
+
     console.log('t_elhm')
     console.log(async_elhm_status)
     console.log(async_class_status)
@@ -636,6 +648,7 @@ export default {
       foreman_empl_id: q_foreman_employee_id,
       q_afdeling_id: q_afdeling_id,
       q_afdeling_block_id: q_afdeling_block_id,
+      foreman_data: foremanData,
       search: search,
       page: page,
       posts: posts.data,
@@ -996,14 +1009,14 @@ export default {
               // console.log(this.foreman_employee_id.employee_id)
               // this.$nuxt.$loading.start()
               this.main = false
-
+              console.log('submit', this.foreman_data);
               let formData = new FormData()
               // formData.append('activitied_at', this.activitied_at_start.split("-")[1].padStart(2, '0'))
               formData.append('activitied_at', this.activitied_at_start)
               formData.append('afdeling_id', this.afdeling_id[0].id)
               formData.append(
                 'foreman_employee_id',
-                this.foreman_employee_id.employee_id
+                this.foreman_data
               )
               formData.append('elhm_status', '0')
               formData.append('p_wf_proc_id', '1')
@@ -1063,9 +1076,9 @@ export default {
         this.message += 'Afdeling Tidak Boleh Kosong!<br>'
       }
 
-      if (this.foreman_employee_id == null) {
-        this.message += 'Mandor Tidak Boleh Kosong!<br>'
-      }
+      // if (this.foreman_employee_id == null) {
+      //   this.message += 'Mandor Tidak Boleh Kosong!<br>'
+      // }
 
       return this.message
     },
