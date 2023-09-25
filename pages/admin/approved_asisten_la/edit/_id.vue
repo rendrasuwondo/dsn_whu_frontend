@@ -257,7 +257,7 @@
               <i class="fa fa-paper-plane"></i> SIMPAN
             </button>
             <button
-              v-on:click="back()"
+              v-on:click="redirectBack()"
               class="btn btn-warning btn-reset"
               type="reset"
             >
@@ -387,16 +387,9 @@ export default {
   },
 
   methods: {
-    back() {
-      this.$router.push({
-        name: 'admin-approved_asisten_la',
-        // params: { id: this.$route.params.id, r: 1 },
-        // query: {
-        //   activitied_at_prepend: this.$route.query.activitied_at_prepend,
-        //   activitied_at_append: this.$route.query.activitied_at_append,
-        //   foreman_id: this.$route.query.foreman_id,
-        // },
-      })
+
+    redirectBack() {
+      this.$router.go(-1);
     },
 
     customLabel(option) {
@@ -445,7 +438,7 @@ export default {
           this.main = false
 
           //redirect ke route "post"
-          this.back()
+          this.$router.go(-1);
         })
         .catch((error) => {
           //assign error validasi

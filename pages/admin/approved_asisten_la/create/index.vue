@@ -254,7 +254,7 @@
               <i class="fa fa-paper-plane"></i> SIMPAN
             </button>
             <button
-              v-on:click="back()"
+              v-on:click="redirectBack()"
               class="btn btn-warning btn-reset"
               type="reset"
             >
@@ -465,6 +465,9 @@ export default {
   },
 
   methods: {
+    redirectBack() {
+      this.$router.go(-1);
+    },
     onChange() {
       if (this.field.activity_id.activity_name.indexOf('RATE') > 0) {
         this.show_hk = false
@@ -578,18 +581,6 @@ export default {
         `${foreman.position_code}` +
         ']'
       )
-    },
-
-    back() {
-      this.$router.push({
-        name: 'admin-approved_asisten_la',
-        params: { id: this.$route.params.id, r: 1 },
-        query: {
-          activitied_at_prepend: this.$route.query.activitied_at_prepend,
-          activitied_at_append: this.$route.query.activitied_at_append,
-          foreman_id: this.$route.query.foreman_id,
-        },
-      })
     },
 
     // customLabel(activity_description) {
@@ -729,7 +720,7 @@ export default {
           this.main = false
 
           //redirect, if success store data
-          this.back()
+          this.$router.go(-1);
         })
         .catch((error) => {
           //assign error to state "validation"
