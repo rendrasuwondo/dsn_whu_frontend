@@ -2,12 +2,11 @@
   <div class="card card-outline card-info">
     <div class="card-header text-center">
       <nuxt-link to="/" class="h1 font-weight-bold text-dark title-1"
-        >ERP-WHU</nuxt-link
+        ><i>i</i>-<i>Plant</i> Site</nuxt-link
       >
       <div class="title-2">
         <i
-          >Enterprise Resource Planning <br />
-          Muara Wahau</i
+          >Integration of Information in <br>Plantation Management</i
         >
       </div>
     </div>
@@ -70,7 +69,7 @@ export default {
   //meta
   head() {
     return {
-      title: 'Login - ERP-WHU',
+      title: 'Login - i-Plant Site',
     }
   },
 

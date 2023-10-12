@@ -31,7 +31,7 @@
           <b-col class="vertical-center">
             <b-row>
               <b-col>
-                <b class="navbar-title-1">DSN - ERP WHU</b>
+                <b class="navbar-title-1">DSN - <i>i</i>-<i>Plant</i> Site</b>
               </b-col></b-row
             ><b-row
               ><b-col>

@@ -8,7 +8,7 @@
 
       <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <a to="/admin/dashboard" class="brand-link text-center mt-2">
-          <span class="brand-text font-weight-bold">ERP - WHU</span>
+          <span class="brand-text font-weight-bold"><i>i</i>-<i>Plant</i> Site</span>
         </a>
 
         <!-- Sidebar -->

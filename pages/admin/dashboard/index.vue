@@ -110,7 +110,7 @@ export default {
   //meta
   head() {
     return {
-      title: 'DSN - ERP WHU',
+      title: 'DSN - i-Plant Site',
     }
   },
 
