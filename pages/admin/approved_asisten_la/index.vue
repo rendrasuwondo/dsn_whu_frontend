@@ -1010,13 +1010,15 @@ export default {
               // this.$nuxt.$loading.start()
               this.main = false
               console.log('submit', this.foreman_data);
+
               let formData = new FormData()
               // formData.append('activitied_at', this.activitied_at_start.split("-")[1].padStart(2, '0'))
               formData.append('activitied_at', this.activitied_at_start)
               formData.append('afdeling_id', this.afdeling_id[0].id)
               formData.append(
                 'foreman_employee_id',
-                this.foreman_data
+                this.foreman_employee_id.employee_id
+                // this.foreman_data
               )
               formData.append('elhm_status', '0')
               formData.append('p_wf_proc_id', '1')
@@ -1076,9 +1078,9 @@ export default {
         this.message += 'Afdeling Tidak Boleh Kosong!<br>'
       }
 
-      // if (this.foreman_employee_id == null) {
-      //   this.message += 'Mandor Tidak Boleh Kosong!<br>'
-      // }
+      if (this.foreman_employee_id == '') {
+        this.message += 'Mandor Tidak Boleh Kosong!<br>'
+      }
 
       return this.message
     },
