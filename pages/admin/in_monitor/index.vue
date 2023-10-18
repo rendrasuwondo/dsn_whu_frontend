@@ -72,9 +72,23 @@
                         v-model="afdeling_id"
                         :options="afdeling"
                         :custom-label="customLabel"
-                        x
                         track-by="id"
                         :searchable="true"
+                      ></multiselect></div
+                  ></b-col>
+                </b-row>
+              </b-container>
+              <b-container class="bv-example-row">
+                <b-row>
+                  <b-col cols="2">Tipe:</b-col>
+                  <b-col cols="4">
+                    <div class="form-group">
+                      <multiselect
+                        v-model="type_id"
+                        :options="type"
+                        track-by="value"
+                        label="label"
+                        aria-multiselectable="false"
                       ></multiselect></div
                   ></b-col>
                 </b-row>
@@ -140,7 +154,10 @@
               <b-button
                 v-show="btn_asisten"
                 :to="{
-                  name: row.item.p_wf_doc_type_id==1?'admin-in_monitor_detail-id':'admin-in_monitor_detail_rkh-id',
+                  name:
+                    row.item.p_wf_doc_type_id == 1
+                      ? 'admin-in_monitor_detail-id'
+                      : 'admin-in_monitor_detail_rkh-id',
                   params: { id: row.item.id },
                   query: {
                     tanggal: formatDate(row.item.activitied_at),
@@ -159,7 +176,10 @@
               <b-button
                 v-show="btn_non_asisten"
                 :to="{
-                  name: row.item.p_wf_doc_type_id==1?'admin-in_monitor_detail-id':'admin-in_monitor_detail_rkh-id',
+                  name:
+                    row.item.p_wf_doc_type_id == 1
+                      ? 'admin-in_monitor_detail-id'
+                      : 'admin-in_monitor_detail_rkh-id',
                   params: { id: row.item.id },
                   query: {
                     tanggal: formatDate(row.item.activitied_at),
@@ -183,7 +203,7 @@
 
           <!-- pagination -->
           <b-row>
-          <b-col
+            <b-col
               ><b-pagination
                 v-model="pagination.current_page"
                 :total-rows="pagination.total"
@@ -335,6 +355,11 @@ export default {
       param_activitied_at_prepend: this.$route.query.activitied_at_prepend,
       param_activitied_at_append: this.$route.query.activitied_at_append,
       afdeling_id: this.$route.query.q_afdeling_id,
+      type: [
+        { value: 'RKH', label: 'RKH' },
+        { value: 'REALISASI', label: 'REALISASI' },
+      ],
+      type_id: this.$route.query.q_type_id,
       query_afdeling_id: '',
       afdeling_default: '',
       activity_id: this.$route.query.q_activity_id,
@@ -352,6 +377,7 @@ export default {
     'q_activitied_at_end',
     'q_afdeling_id',
     'q_activity_id',
+    'q_type_id',
   ],
 
   async asyncData({ $axios, query, $auth }) {
@@ -447,12 +473,27 @@ export default {
     let userDepartmentId = $auth.user.employee.department_id
     let userAfdelingId = $auth.user.employee.afdeling_id ?? ''
 
-    console.log('posts',`api/admin/workflow/in_monitor?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${userAfdelingId}&q_department_id=${userDepartmentId}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}&page=${page}`);
+    console.log(
+      'posts',
+      `api/admin/workflow/in_monitor?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${userAfdelingId}&q_department_id=${userDepartmentId}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}&page=${page}&q_type_id=${query.q_type_id}`
+    )
     const posts = await $axios.$get(
-      `api/admin/workflow/in_monitor?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${userAfdelingId}&q_department_id=${userDepartmentId}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}&page=${page}`
+      `api/admin/workflow/in_monitor?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${userAfdelingId}&q_department_id=${userDepartmentId}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}&page=${page}&q_type_id=${query.q_type_id}`
     )
 
-    console.log(posts.data.data);
+    let q_type_id
+
+    if (query.q_type_id == 'RKH') {
+
+      q_type_id = { value: 'RKH', label: 'RKH' }
+    } else if (query.q_type_id == 'REALISASI') {
+
+      q_type_id = { value: 'REALISASI', label: 'REALISASI' }
+    } else {
+      q_type_id = ''
+    }
+
+    console.log(posts.data.data)
     return {
       posts: posts.data.data,
       pagination: posts.data,
@@ -462,6 +503,7 @@ export default {
       activitied_at_end: activitied_at_end,
       afdeling: afdeling_list.data,
       afdeling_id: afdeling_id,
+      type_id: q_type_id,
       activity: activity_list.data,
       activity_id: activity_id,
       btn_asisten: btn_asisten,
@@ -520,6 +562,9 @@ export default {
           afdeling_id: this.$route.query.q_afdeling_id
             ? this.$route.query.q_afdeling_id
             : this.id_afdeling,
+          type_id: this.$route.query.q_type_id
+            ? this.$route.query.q_type_id
+            : this.type_id,
         },
       })
     },
@@ -537,6 +582,18 @@ export default {
         vafdeling_id = this.afdeling_id.id
       } catch (error) {
         vafdeling_id = ''
+      }
+
+      let vtype_id
+
+      try {
+        vtype_id = this.type_id.value
+      } catch (error) {
+        vtype_id = ''
+      }
+
+      if (this.$route.query.q_type_id != vtype_id) {
+        this.go = 1
       }
 
       if (this.$route.query.q_afdeling_id != vafdeling_id) {
@@ -560,6 +617,7 @@ export default {
           query: {
             q: this.search,
             q_afdeling_id: vafdeling_id,
+            q_type_id: vtype_id,
             q_activitied_at_start: this.activitied_at_start,
             q_activitied_at_end: this.activitied_at_end,
           },
@@ -603,7 +661,15 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/workflow/in_monitor/export?q=${this.search}&q_is_asisten=${this.btn_asisten}&q_afdeling_id=${this.$auth.user.employee.afdeling_id ?? ''}&q_department_id=${this.$auth.user.employee.department_id}&q_activitied_at_start=${this.activitied_at_start}&q_activitied_at_end=${this.activitied_at_end}`,
+        url: `/api/admin/workflow/in_monitor/export?q=${
+          this.search
+        }&q_is_asisten=${this.btn_asisten}&q_afdeling_id=${
+          this.$auth.user.employee.afdeling_id ?? ''
+        }&q_department_id=${
+          this.$auth.user.employee.department_id
+        }&q_activitied_at_start=${
+          this.activitied_at_start
+        }&q_activitied_at_end=${this.activitied_at_end}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
@@ -639,8 +705,7 @@ export default {
       return x1 + x2
     },
 
-    ProcessDetail() {
-    },
+    ProcessDetail() {},
   },
   computed: {
     TotalManDaysBasic() {
