@@ -333,10 +333,17 @@ export default {
       : this.$auth.user.employee.afdeling_id
 
     if (this.field.afdeling_id.afdeling_id == undefined) {
+
+      this.field.afdeling_id = this.$route.query.q_afdeling_id
+      ? this.$route.query.q_afdeling_id
+      : this.$auth.user.employee.afdeling_id
+
+      // console.log('this.field.afdeling_id',this.field.afdeling_id)
+
       this.$axios
         // .get('/api/admin/lov_foreman_employee')
         .get(
-          `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.$route.query.q_afdeling_id}`
+          `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.field.afdeling_id}`
         )
 
         .then((response) => {
