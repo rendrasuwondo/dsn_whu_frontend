@@ -52,6 +52,17 @@
                       ></b-col>
                     </b-row>
                   </b-container>
+                  <b-container class="bv-example-row">
+                    <b-row>
+                      <b-col cols="2">Aktif?</b-col>
+                      <b-col cols="10">
+                        <div class="form-group">
+                          <b-form-select v-model="is_active" :options="options">
+                          </b-form-select>
+                        </div>
+                      </b-col>
+                    </b-row>
+                  </b-container>
                 </b-col>
                 <b-col>
                   <b-container class="bv-example-row">
@@ -274,6 +285,12 @@ export default {
       department: [],
       position: [],
       param_q: this.$route.query.q,
+      options: [
+        { value: 'Y', text: 'Ya' },
+        { value: 'N', text: 'Tidak' },
+      ],
+      is_active: this.$route.query.q_is_active ?? 'Y',
+
       fields: [
         {
           label: 'Actions',
@@ -364,6 +381,7 @@ export default {
     'q_department_id',
     'q_position_id',
     'q_user_name',
+    'q_is_active',
   ],
 
   async asyncData({ $axios, query }) {
@@ -372,6 +390,9 @@ export default {
 
     //search
     let search = query.q ? query.q : ''
+
+    // is active
+    let isActive = query.q_is_active ?? 'Y'
 
     // user
     const user = await $axios.$get(`/api/admin/user`)
@@ -448,11 +469,11 @@ export default {
     let q_user_name = query.q_user_name ? query.q_user_name : ''
 
     console.log(
-      `/api/admin/employee?per_department=true&q=${search}&page=${page}&q_afdeling_id=${q_afdeling_id}&q_department_id=${q_department_id}&q_position_id=${q_position_id}&q_user_name=${q_user_name}`
+      `/api/admin/employee?per_department=true&q=${search}&page=${page}&q_afdeling_id=${q_afdeling_id}&q_department_id=${q_department_id}&q_position_id=${q_position_id}&q_user_name=${q_user_name}&q_is_active=${isActive}`
     )
     //fetching posts
     const posts = await $axios.$get(
-      `/api/admin/employee?per_department=true&q=${search}&page=${page}&q_afdeling_id=${q_afdeling_id}&q_department_id=${q_department_id}&q_position_id=${q_position_id}&q_user_name=${q_user_name}`
+      `/api/admin/employee?per_department=true&q=${search}&page=${page}&q_afdeling_id=${q_afdeling_id}&q_department_id=${q_department_id}&q_position_id=${q_position_id}&q_user_name=${q_user_name}&q_is_active=${isActive}`
     )
 
     return {
@@ -525,6 +546,7 @@ export default {
           q_user_name: this.userName,
           q_position_id: this.vposition,
           q_afdeling_id: this.vafdeling,
+          q_is_active: this.is_active,
           q_department_id: this.query_department_id
             ? this.query_department_id
             : this.vdepartment,
@@ -631,8 +653,14 @@ export default {
         'Content-Type': 'application/json',
       }
 
+
+      let departmentId = ''
+      if (this.$route.query.q_department_id != null && this.$route.query.q_department_id != undefined && this.$route.query.q_department_id != '') {
+        departmentId =this.$route.query.q_department_id
+      }
+
       this.$axios({
-        url: `/api/admin/employee/export?q=${this.search}`,
+        url: `/api/admin/employee_per_department/export?q=${this.search}&q_department_id=${departmentId}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
