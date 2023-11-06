@@ -654,13 +654,42 @@ export default {
       }
 
 
+      let page = ''
+      if (this.$route.query.page != null && this.$route.query.page != undefined && this.$route.query.page != '') {
+        page =this.$route.query.page
+      }
+
+      let afdelingId = ''
+      if (this.$route.query.q_afdeling_id != null && this.$route.query.q_afdeling_id != undefined && this.$route.query.q_afdeling_id != '') {
+        afdelingId =this.$route.query.q_afdeling_id
+      }
+
       let departmentId = ''
       if (this.$route.query.q_department_id != null && this.$route.query.q_department_id != undefined && this.$route.query.q_department_id != '') {
         departmentId =this.$route.query.q_department_id
       }
 
+      let positionId = ''
+      if (this.$route.query.q_position_id != null && this.$route.query.q_position_id != undefined && this.$route.query.q_position_id != '') {
+        positionId =this.$route.query.q_position_id
+      }
+
+      let userName = ''
+      if (this.$route.query.q_user_name != null && this.$route.query.q_user_name != undefined && this.$route.query.q_user_name != '') {
+        userName =this.$route.query.q_user_name
+      }
+
+      let isActive = ''
+      if (this.$route.query.q_is_active != null && this.$route.query.q_is_active != undefined && this.$route.query.q_is_active != '') {
+        isActive =this.$route.query.q_is_active
+      }
+
+      const currentUrlParams = this.$route.params.slug  ;
+      console.log('currentUrlParams')
+      console.log(currentUrlParams)
+
       this.$axios({
-        url: `/api/admin/employee_per_department/export?q=${this.search}&q_department_id=${departmentId}`,
+        url: `/api/admin/employee_per_department/export?per_department=true&q=${this.search}&page=${page}&q_afdeling_id=${afdelingId}&q_department_id=${departmentId}&q_position_id=${positionId}&q_user_name=${userName}&q_is_active=${isActive}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
