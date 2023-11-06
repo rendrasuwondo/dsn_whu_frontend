@@ -350,7 +350,7 @@ export default {
 
     //Data department
     this.$axios
-      .get('/api/admin/lov_department')
+      .get('/api/admin/lov_department_all')
 
       .then((response) => {
         this.department = response.data.data
