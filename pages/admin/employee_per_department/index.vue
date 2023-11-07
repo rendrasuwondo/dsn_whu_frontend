@@ -653,12 +653,6 @@ export default {
         'Content-Type': 'application/json',
       }
 
-
-      let page = ''
-      if (this.$route.query.page != null && this.$route.query.page != undefined && this.$route.query.page != '') {
-        page =this.$route.query.page
-      }
-
       let afdelingId = ''
       if (this.$route.query.q_afdeling_id != null && this.$route.query.q_afdeling_id != undefined && this.$route.query.q_afdeling_id != '') {
         afdelingId =this.$route.query.q_afdeling_id
@@ -680,8 +674,19 @@ export default {
       }
 
       let isActive = ''
-      if (this.$route.query.q_is_active != null && this.$route.query.q_is_active != undefined && this.$route.query.q_is_active != '') {
-        isActive =this.$route.query.q_is_active
+      if (this.is_active === null) {
+        isActive = 'Y'
+      } else if (this.is_active === undefined) {
+        if (this.$route.query.q_is_active === undefined) {
+          isActive = 'Y'
+        } else {
+          isActive =
+          this.$route.query.q_is_active
+        }
+      } else {
+        isActive = this.is_active
+        ? this.is_active
+        : 'Y'
       }
 
       const currentUrlParams = this.$route.params.slug  ;
@@ -689,7 +694,7 @@ export default {
       console.log(currentUrlParams)
 
       this.$axios({
-        url: `/api/admin/employee_per_department/export?per_department=true&q=${this.search}&page=${page}&q_afdeling_id=${afdelingId}&q_department_id=${departmentId}&q_position_id=${positionId}&q_user_name=${userName}&q_is_active=${isActive}`,
+        url: `/api/admin/employee_per_department/export?per_department=true&q=${this.search}&q_afdeling_id=${afdelingId}&q_department_id=${departmentId}&q_position_id=${positionId}&q_user_name=${userName}&q_is_active=${isActive}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
