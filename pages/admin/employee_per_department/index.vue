@@ -486,7 +486,7 @@ export default {
       position_id: position_id_asyncData,
       pagination: posts.data,
       search: search,
-      rowcount: posts.data.total,
+      rowcount: posts.data.total.toLocaleString('en-US'),
     }
   },
 

@@ -52,6 +52,17 @@
                       ></b-col>
                     </b-row>
                   </b-container>
+                  <b-container class="bv-example-row">
+                    <b-row>
+                      <b-col cols="2">Aktif?</b-col>
+                      <b-col cols="10">
+                        <div class="form-group">
+                          <b-form-select v-model="is_active" :options="options">
+                          </b-form-select>
+                        </div>
+                      </b-col>
+                    </b-row>
+                  </b-container>
                 </b-col>
                 <b-col>
                   <b-container class="bv-example-row">
@@ -266,6 +277,12 @@ export default {
       department: [],
       position: [],
       param_q: this.$route.query.q,
+      options: [
+        { value: 'Y', text: 'Ya' },
+        { value: 'N', text: 'Tidak' },
+      ],
+      is_active: this.$route.query.q_is_active ?? 'Y',
+
       fields: [
         {
           label: 'Actions',
@@ -356,6 +373,7 @@ export default {
     'q_department_id',
     'q_position_id',
     'q_user_name',
+    'q_is_active',
   ],
 
   async asyncData({ $axios, query }) {
@@ -364,6 +382,9 @@ export default {
 
     //search
     let search = query.q ? query.q : ''
+
+    // is active
+    let isActive = query.q_is_active ?? 'Y'
 
     // user
     const user = await $axios.$get(`/api/admin/user`)
@@ -438,11 +459,11 @@ export default {
     let q_user_name = query.q_user_name ? query.q_user_name : ''
 
     console.log(
-      `/api/admin/employee?q=${search}&page=${page}&q_afdeling_id=${q_afdeling_id}&q_department_id=${q_department_id}&q_position_id=${q_position_id}&q_user_name=${q_user_name}`
+      `/api/admin/employee?q=${search}&page=${page}&q_afdeling_id=${q_afdeling_id}&q_department_id=${q_department_id}&q_position_id=${q_position_id}&q_user_name=${q_user_name}&q_is_active=${isActive}`
     )
     //fetching posts
     const posts = await $axios.$get(
-      `/api/admin/employee?q=${search}&page=${page}&q_afdeling_id=${q_afdeling_id}&q_department_id=${q_department_id}&q_position_id=${q_position_id}&q_user_name=${q_user_name}`
+      `/api/admin/employee?q=${search}&page=${page}&q_afdeling_id=${q_afdeling_id}&q_department_id=${q_department_id}&q_position_id=${q_position_id}&q_user_name=${q_user_name}&q_is_active=${isActive}`
     )
 
     return {
@@ -455,7 +476,7 @@ export default {
       position_id: position_id_asyncData,
       pagination: posts.data,
       search: search,
-      rowcount: posts.data.total,
+      rowcount: posts.data.total.toLocaleString('en-US'),
     }
   },
 
@@ -515,6 +536,7 @@ export default {
           q_user_name: this.userName,
           q_position_id: this.vposition,
           q_afdeling_id: this.vafdeling,
+          q_is_active: this.is_active,
           q_department_id: this.query_department_id
             ? this.query_department_id
             : this.vdepartment,
@@ -568,21 +590,91 @@ export default {
         'Content-Type': 'application/json',
       }
 
-      this.$axios({
-        url: `/api/admin/employee/export?q=${this.search}`,
-        method: 'GET',
-        responseType: 'blob',
-        headers: headers, // important
-      }).then((response) => {
-        this.isLoading = false
-        const url = window.URL.createObjectURL(new Blob([response.data]))
-        const link = document.createElement('a')
-        link.href = url
-        var fileName = 'Employee.xlsx'
-        link.setAttribute('download', fileName) //or any other extension
-        document.body.appendChild(link)
-        link.click()
-      })
+      let page = ''
+      if (
+        this.$route.query.page != null &&
+        this.$route.query.page != undefined &&
+        this.$route.query.page != ''
+      ) {
+        page = this.$route.query.page
+      }
+
+      let afdelingId = ''
+      if (
+        this.$route.query.q_afdeling_id != null &&
+        this.$route.query.q_afdeling_id != undefined &&
+        this.$route.query.q_afdeling_id != ''
+      ) {
+        afdelingId = this.$route.query.q_afdeling_id
+      }
+
+      let positionId = ''
+      if (
+        this.$route.query.q_position_id != null &&
+        this.$route.query.q_position_id != undefined &&
+        this.$route.query.q_position_id != ''
+      ) {
+        positionId = this.$route.query.q_position_id
+      }
+
+      let userName = ''
+      if (
+        this.$route.query.q_user_name != null &&
+        this.$route.query.q_user_name != undefined &&
+        this.$route.query.q_user_name != ''
+      ) {
+        userName = this.$route.query.q_user_name
+      }
+
+      let isActive = ''
+      if (
+        this.$route.query.q_is_active != null &&
+        this.$route.query.q_is_active != undefined &&
+        this.$route.query.q_is_active != ''
+      ) {
+        isActive = this.$route.query.q_is_active
+      }
+
+      if (this.department_id.department_id === null) {
+        this.deptId = ''
+      } else if (this.department_id.department_id === undefined) {
+        if (this.$route.query.q_department_id === undefined) {
+          this.deptId = ''
+        } else {
+          this.deptId =
+          this.$route.query.q_department_id
+        }
+      } else {
+        this.deptId = this.department_id.department_id
+        ? this.department_id.department_id
+        : ''
+      }
+
+      if (this.deptId != '') {
+        this.$axios({
+          url: `/api/admin/employee/export?q=${this.search}&page=${page}&q_afdeling_id=${afdelingId}&q_department_id=${this.deptId}&q_position_id=${positionId}&q_user_name=${userName}&q_is_active=${isActive}`,
+          method: 'GET',
+          responseType: 'blob',
+          headers: headers, // important
+        }).then((response) => {
+          this.isLoading = false
+          const url = window.URL.createObjectURL(new Blob([response.data]))
+          const link = document.createElement('a')
+          link.href = url
+          var fileName = 'Employee.xlsx'
+          link.setAttribute('download', fileName) //or any other extension
+          document.body.appendChild(link)
+          link.click()
+        })
+      } else {
+        this.$swal.fire({
+          title: 'OOPS!',
+          text: 'Pilih Estate terlebih dahuli!',
+          icon: 'error',
+          showConfirmButton: false,
+          timer: 2000,
+        })
+      }
     },
   },
 }
