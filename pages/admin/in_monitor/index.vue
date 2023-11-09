@@ -475,10 +475,10 @@ export default {
 
     console.log(
       'posts',
-      `api/admin/workflow/in_monitor?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${userAfdelingId}&q_department_id=${userDepartmentId}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}&page=${page}&q_type_id=${query.q_type_id}`
+      `api/admin/workflow/in_monitor?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${userAfdelingId}&q_department_id=${userDepartmentId}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}&page=${page}&q_type_id=${(query.q_type_id==undefined?'':query.q_type_id)}`
     )
     const posts = await $axios.$get(
-      `api/admin/workflow/in_monitor?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${userAfdelingId}&q_department_id=${userDepartmentId}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}&page=${page}&q_type_id=${query.q_type_id}`
+      `api/admin/workflow/in_monitor?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${userAfdelingId}&q_department_id=${userDepartmentId}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}&page=${page}&q_type_id=${(query.q_type_id==undefined?'':query.q_type_id)}`
     )
 
     let q_type_id
