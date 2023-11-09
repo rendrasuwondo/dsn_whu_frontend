@@ -518,6 +518,9 @@ export default {
 
     onChangeAfdeling() {
       if (this.field.afdeling_id != null) {
+
+        this.field.ha_statement_id = ''
+
         if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
           this.$axios
             .get(

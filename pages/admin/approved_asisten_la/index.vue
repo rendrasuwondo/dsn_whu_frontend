@@ -1028,8 +1028,8 @@ export default {
               formData.append('afdeling_id', this.afdeling_id[0].id)
               formData.append(
                 'foreman_employee_id',
-                this.foreman_employee_id.employee_id
-                // this.foreman_data
+                // this.foreman_employee_id.employee_id
+                this.foreman_data
               )
               formData.append('elhm_status', '0')
               formData.append('p_wf_proc_id', '1')
@@ -1041,7 +1041,8 @@ export default {
                   '_' +
                   this.afdeling_id[0].id +
                   '_' +
-                  this.foreman_employee_id.employee_id +
+                  // this.foreman_employee_id.employee_id +
+                  this.foreman_data +
                   '_' +
                   '1'
               )
