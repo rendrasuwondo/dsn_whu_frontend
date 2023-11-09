@@ -116,9 +116,7 @@
                 </b-row>
               </b-container>
               <b-container class="bv-example-row">
-                <b-row>
-
-                </b-row>
+                <b-row> </b-row>
               </b-container>
             </b-card-text>
           </b-card>
@@ -130,17 +128,18 @@
                   :to="{
                     name: 'admin-approved_asisten_la-create',
                     query: {
-                      activitied_at_prepend:
-                        this.$route.query.activitied_at_prepend,
-                      activitied_at_append:
-                        this.$route.query.activitied_at_append,
-                      foreman_id: this.$route.query.q_foreman_employee_id,
+                      // activitied_at_prepend:
+                      //   this.$route.query.activitied_at_prepend,
+                      // activitied_at_append:
+                      //   this.$route.query.activitied_at_append,
+                      // foreman_id: this.$route.query.q_foreman_employee_id,
+                      afdeling_id: afdeling_id_string,
                     },
                   }"
                   class="btn btn-info btn-sm"
                   style="padding-top: 8px"
                   title="Tambah"
-                  v-show=showHideSelected
+                  v-show="showHideSelected"
                   ><i class="fa fa-plus-circle"></i>
                 </nuxt-link>
                 <button
@@ -202,10 +201,11 @@
                   name: 'admin-approved_asisten_la-edit-id',
                   params: { id: row.item.id },
                   query: {
-                    activitied_at_prepend: param_activitied_at_prepend,
-                    activitied_at_append: param_activitied_at_append,
-                    foreman_id: foreman_employee_id,
-                    elhm_status: elhm_status,
+                    // activitied_at_prepend: param_activitied_at_prepend,
+                    // activitied_at_append: param_activitied_at_append,
+                    // foreman_id: foreman_employee_id,
+                    // elhm_status: elhm_status,
+                    afdeling_id: afdeling_id_string,
                   },
                 }"
                 variant="link"
@@ -456,12 +456,14 @@ export default {
     const afdeling_list = await $axios.$get(`/api/admin/lov_employee_afdeling`)
 
     let afdeling_code = []
+    let afdeling_id_string = ''
 
     if (query.q_afdeling_id) {
       $axios
         .get(`/api/admin/lov_employee_afdeling?afdeling_id=${q_afdeling_id}`)
         .then((response) => {
           afdeling_id = response.data.data
+          afdeling_id_string = afdeling_id[0].id
         })
     } else {
       afdeling_id = []
@@ -473,7 +475,9 @@ export default {
           id: $auth.user.employee.afdeling_id,
           code: $auth.user.employee.afdeling_code,
         },
-    ]
+      ]
+
+      afdeling_id_string = $auth.user.employee.afdeling_id
     }
 
     if (q_afdeling_id == undefined) {
@@ -484,21 +488,28 @@ export default {
           id: $auth.user.employee.afdeling_id,
           code: $auth.user.employee.afdeling_code,
         },
-    ]
+      ]
+      afdeling_id_string = $auth.user.employee.afdeling_id
     }
 
-    let q_afdeling_block_id = query.q_afdeling_block_id ? query.q_afdeling_block_id : ''
+    let q_afdeling_block_id = query.q_afdeling_block_id
+      ? query.q_afdeling_block_id
+      : ''
 
     let afdeling_block_id = []
 
     // afdeling_id
-    const afdeling_block_list = await $axios.$get(`/api/admin/lov_employee_afdeling`)
+    const afdeling_block_list = await $axios.$get(
+      `/api/admin/lov_employee_afdeling`
+    )
 
     let afdeling_block_code = []
 
     if (query.q_afdeling_block_id) {
       $axios
-        .get(`/api/admin/lov_employee_afdeling?afdeling_id=${q_afdeling_block_id}`)
+        .get(
+          `/api/admin/lov_employee_afdeling?afdeling_id=${q_afdeling_block_id}`
+        )
         .then((response) => {
           afdeling_block_id = response.data.data
         })
@@ -552,21 +563,17 @@ export default {
           // console.log('cekkkkk')
           // console.log(response.data.data)
         })
-
     } else {
       // await $axios
       //   .get(
       //     `/api/admin/lov_foreman_maintenance_approval?afdeling_id=${q_afdeling_id}&foreman_id=${q_foreman_employee_id}`
       //   )
       //   .then((response) => {
-
       //     foreman_employee_id = response.data.data[0]
       //     // console.log('cekkkkk')
       //     // console.log(response.data.data)
       //   })
-
       // q_foreman_employee_id = foreman_employee_id.employee_id
-
     } //if (query.foreman_id) {
 
     if (q_foreman_employee_id == undefined) {
@@ -580,7 +587,6 @@ export default {
     const posts = await $axios.$get(
       `/api/admin/report/approved_asisten_la?q=${search}&page=${page}&activitied_at=${activitied_at_start}&activitied_at_append=${activitied_at_start}&foreman_employee_id=${q_foreman_employee_id}&afdeling_id=${q_afdeling_id}&afdeling_block_id=${q_afdeling_block_id}`
     )
-
 
     const today = new Date(activitied_at_start)
     const year = today.getFullYear()
@@ -597,7 +603,9 @@ export default {
     const t_elhm = await $axios.$get(
       `/api/admin/t_elhm?activitied_at=${activitiedAtDate}&afdeling_id=${q_afdeling_id}&foreman_employee_id=${q_foreman_employee_id}&p_wf_doc_type_id=1`
     )
-    console.log(`/api/admin/t_elhm?activitied_at=${activitiedAtDate}&afdeling_id=${q_afdeling_id}&foreman_employee_id=${q_foreman_employee_id}&p_wf_doc_type_id=1`)
+    console.log(
+      `/api/admin/t_elhm?activitied_at=${activitiedAtDate}&afdeling_id=${q_afdeling_id}&foreman_employee_id=${q_foreman_employee_id}&p_wf_doc_type_id=1`
+    )
     let async_showHideSelected, async_elhm_status, async_class_status
     console.log(t_elhm.data.data[0])
     if (t_elhm.data.data[0] == null) {
@@ -606,7 +614,8 @@ export default {
       async_elhm_status = ' '
       async_class_status = 'card-tools bg-danger'
     } else {
-      async_showHideSelected = t_elhm.data.data[0].elhm_status > 0 ? false : true
+      async_showHideSelected =
+        t_elhm.data.data[0].elhm_status > 0 ? false : true
       // console.log('t_elhm.data.data[0].elhm_status')
       // console.log(t_elhm.data.data[0].elhm_status)
       switch (t_elhm.data.data[0].elhm_status) {
@@ -645,6 +654,7 @@ export default {
     console.log(async_elhm_status)
     console.log(async_class_status)
     return {
+      afdeling_id_string: afdeling_id_string,
       foreman_empl_id: q_foreman_employee_id,
       q_afdeling_id: q_afdeling_id,
       q_afdeling_block_id: q_afdeling_block_id,
@@ -686,6 +696,9 @@ export default {
   methods: {
     onChangeAfdeling() {
       if (this.afdeling_id != null) {
+
+        this.afdeling_id_string = this.afdeling_id.id
+
         if (
           this.$auth.user.employee.activity_group_code == 'RAWAT' ||
           this.$auth.user.employee.activity_group_code == 'BIBITAN'
@@ -734,8 +747,6 @@ export default {
     },
     //searchData
     searchData() {
-
-
       if (this.Mandatory() != '') {
         this.$swal.fire({
           title: 'WARNING!',
@@ -745,26 +756,26 @@ export default {
         })
       } else {
         try {
-        if (this.afdeling_id.id === null) {
-          this.query_afdeling_id = ''
-        } else if (this.afdeling_id.id === undefined) {
-          this.query_afdeling_id = this.$route.query.q_afdeling_id
-        } else {
-          this.query_afdeling_id = this.afdeling_id.id
-            ? this.afdeling_id.id
-            : ''
-        }
+          if (this.afdeling_id.id === null) {
+            this.query_afdeling_id = ''
+          } else if (this.afdeling_id.id === undefined) {
+            this.query_afdeling_id = this.$route.query.q_afdeling_id
+          } else {
+            this.query_afdeling_id = this.afdeling_id.id
+              ? this.afdeling_id.id
+              : ''
+          }
 
-        if (this.afdeling_block_id.id === null) {
-          this.query_afdeling_block_id = ''
-        } else if (this.afdeling_block_id.id === undefined) {
-          this.query_afdeling_block_id = this.$route.query.q_afdeling_block_id
-        } else {
-          this.query_afdeling_block_id = this.afdeling_block_id.id
-            ? this.afdeling_block_id.id
-            : ''
-        }
-      } catch (err) {}
+          if (this.afdeling_block_id.id === null) {
+            this.query_afdeling_block_id = ''
+          } else if (this.afdeling_block_id.id === undefined) {
+            this.query_afdeling_block_id = this.$route.query.q_afdeling_block_id
+          } else {
+            this.query_afdeling_block_id = this.afdeling_block_id.id
+              ? this.afdeling_block_id.id
+              : ''
+          }
+        } catch (err) {}
 
         try {
           if (this.foreman_employee_id.employee_id === null) {
@@ -816,11 +827,11 @@ export default {
               activitied_at_append: this.activitied_at_end,
               q_foreman_employee_id: this.vforeman_employee,
               q_afdeling_id: this.query_afdeling_id
-            ? this.query_afdeling_id
-            : this.$auth.user.employee.afdeling_id,
+                ? this.query_afdeling_id
+                : this.$auth.user.employee.afdeling_id,
               q_afdeling_block_id: this.query_afdeling_block_id
-            ? this.query_afdeling_block_id
-            : '',
+                ? this.query_afdeling_block_id
+                : '',
             },
           })
         }
@@ -1009,7 +1020,7 @@ export default {
               // console.log(this.foreman_employee_id.employee_id)
               // this.$nuxt.$loading.start()
               this.main = false
-              console.log('submit', this.foreman_data);
+              console.log('submit', this.foreman_data)
 
               let formData = new FormData()
               // formData.append('activitied_at', this.activitied_at_start.split("-")[1].padStart(2, '0'))
@@ -1062,7 +1073,6 @@ export default {
                   //assign error to state "validation"
                   this.validation = error.response.data
                 })
-
             }
           })
       }
@@ -1075,12 +1085,12 @@ export default {
       }
 
       if (this.afdeling_id == null) {
-        this.message += 'Afdeling Tidak Boleh Kosong!<br>'
+        this.message += 'Afdeling SKU Tidak Boleh Kosong!<br>'
       }
 
-      if (this.foreman_employee_id == '') {
-        this.message += 'Mandor Tidak Boleh Kosong!<br>'
-      }
+      // if (this.foreman_employee_id == '') {
+      //   this.message += 'Mandor Tidak Boleh Kosong!<br>'
+      // }
 
       return this.message
     },

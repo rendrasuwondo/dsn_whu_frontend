@@ -441,7 +441,7 @@ export default {
 
     //Dropdown SKU
     this.$axios
-      .get(`/api/admin/lov_labour/${this.company_code}/${this.department_code}`)
+      .get(`/api/admin/lov_labour/${this.company_code}/${this.department_code}?afdeling_id=${this.$route.query.afdeling_id}`)
       .then((response) => {
         this.labour = response.data.data
       })
