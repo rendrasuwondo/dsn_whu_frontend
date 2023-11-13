@@ -128,8 +128,7 @@
                   :to="{
                     name: 'admin-approved_asisten_la-create',
                     query: {
-                      // activitied_at_prepend:
-                      //   this.$route.query.activitied_at_prepend,
+                      activitied_at_prepend: activitied_at_start,
                       // activitied_at_append:
                       //   this.$route.query.activitied_at_append,
                       // foreman_id: this.$route.query.q_foreman_employee_id,
@@ -201,7 +200,7 @@
                   name: 'admin-approved_asisten_la-edit-id',
                   params: { id: row.item.id },
                   query: {
-                    // activitied_at_prepend: param_activitied_at_prepend,
+                    activitied_at_prepend: activitied_at_start,
                     // activitied_at_append: param_activitied_at_append,
                     // foreman_id: foreman_employee_id,
                     // elhm_status: elhm_status,
@@ -696,7 +695,6 @@ export default {
   methods: {
     onChangeAfdeling() {
       if (this.afdeling_id != null) {
-
         this.afdeling_id_string = this.afdeling_id.id
 
         if (
