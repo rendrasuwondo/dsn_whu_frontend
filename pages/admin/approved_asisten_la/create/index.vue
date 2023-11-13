@@ -33,7 +33,7 @@
             </div>
 
             <div class="form-group">
-              <label>Afdeling</label>
+              <label>Afdeling Blok</label>
               <multiselect
                 v-model="field.afdeling_id"
                 :options="afdeling"
@@ -47,6 +47,17 @@
                   validation.afdeling[0]
                 }}</b-alert>
               </div>
+            </div>
+
+            <div class="form-group">
+              <label>Afdeling SKU</label>
+              <input
+                type="text"
+                v-model="field.afdeling_sku"
+                placeholder=""
+                class="form-control"
+                readonly
+              />
             </div>
 
             <div class="form-group">
@@ -301,6 +312,7 @@ export default {
       ],
 
       field: {
+        afdeling_sku: '',
         activity_id: '',
         foreman_employee_id: '',
         ha_statement_id: '',
@@ -344,7 +356,8 @@ export default {
     this.field.updated_by =
       this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
     console.log('yesterdayDate',this.yesterdayDate())
-    this.field.activitied_at = this.yesterdayDate()
+    this.field.activitied_at = this.$route.query.activitied_at_prepend ? this.$route.query.activitied_at_prepend : this.yesterdayDate()
+    this.field.afdeling_sku = this.$route.query.afdeling_id ? this.$route.query.afdeling_id : ''
 
     this.company_code = this.user.employee.company_code
     this.department_code = this.user.employee.department_code
@@ -723,7 +736,16 @@ export default {
           this.main = false
 
           //redirect, if success store data
-          this.$router.go(-1);
+          // this.$router.go(-1);
+
+          this.$router.push({
+            name: 'admin-approved_asisten_la',
+            query: {
+              activitied_at_prepend: this.$route.query.activitied_at_prepend,
+              q_afdeling_id: this.$route.query.afdeling_id,
+            },
+            replace: true
+          })
         })
         .catch((error) => {
           //assign error to state "validation"

@@ -151,6 +151,7 @@
                 class="form-control"
                 v-on:keypress="NumbersOnly"
                 placeholder="Masukkan Nilai HK"
+                @change="onChangeHK"
               />
             </div>
 
@@ -161,6 +162,8 @@
                 class="form-control"
                 v-on:keypress="NumbersOnly"
                 placeholder="Masukkan Nilai Volume"
+                @change="onChangeVolume"
+
               />
               <div v-if="validation.qty" class="mt-2">
                 <b-alert show variant="danger">{{ validation.qty[0] }}</b-alert>
@@ -291,6 +294,7 @@ export default {
       ],
 
       field: {
+        activity_max_limit: '',
         foreman_employee_id: '',
         activity_plan_detail_id: '',
         man_days: '',
@@ -346,6 +350,9 @@ export default {
       .then((response) => {
         console.log('rdr')
         console.log(response.data.data.man_days)
+
+        this.field.activity_max_limit =
+          response.data.data.activity_max_limit
         this.field.activity_plan_detail_id =
           response.data.data.activity_plan_detail_id
         this.field.activitied_at = response.data.data.activitied_at
@@ -387,7 +394,36 @@ export default {
   },
 
   methods: {
+    onChangeHK() {
+      // this.field.activity_max_limit = this.field.activity_id.activity_max_limit
+      if (this.field.man_days > this.field.activity_max_limit) {
+        this.field.man_days = ''
+        this.approval = true
+        this.$swal.fire({
+          title: 'WARNING!',
+          html: `HK Tidak Boleh Lebih Dari Activity Limit (${this.field.activity_max_limit})!<br>`,
+          icon: 'warning',
+          showConfirmButton: true,
+        })
+      } else {
+        this.approval = false
+      }
+    },
 
+    onChangeVolume() {
+      if (this.field.qty <= 0) {
+        this.field.qty = ''
+        this.disableSubmit = true
+        this.$swal.fire({
+          title: 'WARNING!',
+          html: `Volume Harus Lebih Besar Dari 0!<br>`,
+          icon: 'warning',
+          showConfirmButton: true,
+        })
+      } else {
+        this.disableSubmit = false
+      }
+    },
     redirectBack() {
       this.$router.go(-1);
     },
@@ -438,7 +474,13 @@ export default {
           this.main = false
 
           //redirect ke route "post"
-          this.$router.go(-1);
+          // this.$router.go(-1);
+
+          this.$router.push({
+            name: 'admin-approved_asisten_la',
+            query: { activitied_at_prepend: this.$route.query.activitied_at_prepend },
+            replace: true
+          })
         })
         .catch((error) => {
           //assign error validasi
