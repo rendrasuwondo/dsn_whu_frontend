@@ -174,7 +174,6 @@
                 v-on:keypress="NumbersOnly"
                 placeholder="Masukkan Nilai Volume"
                 @change="onChangeVolume"
-
               />
               <div v-if="validation.qty" class="mt-2">
                 <b-alert show variant="danger">{{ validation.qty[0] }}</b-alert>
@@ -408,10 +407,9 @@ export default {
 
   methods: {
     onChangeHK() {
-      // this.field.activity_max_limit = this.field.activity_id.activity_max_limit
       if (this.field.man_days > this.field.activity_max_limit) {
         this.field.man_days = ''
-        this.approval = true
+        this.approval = false
         this.$swal.fire({
           title: 'WARNING!',
           html: `HK Tidak Boleh Lebih Dari Activity Limit (${this.field.activity_max_limit})!<br>`,
@@ -419,14 +417,14 @@ export default {
           showConfirmButton: true,
         })
       } else {
-        this.approval = false
+        this.approval = true
       }
     },
 
     onChangeVolume() {
       if (this.field.qty <= 0) {
         this.field.qty = ''
-        this.disableSubmit = true
+        this.approval = false
         this.$swal.fire({
           title: 'WARNING!',
           html: `Volume Harus Lebih Besar Dari 0!<br>`,
@@ -434,7 +432,7 @@ export default {
           showConfirmButton: true,
         })
       } else {
-        this.disableSubmit = false
+        this.approval = true
       }
     },
     redirectBack() {
