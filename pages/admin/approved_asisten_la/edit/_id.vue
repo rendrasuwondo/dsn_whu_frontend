@@ -104,7 +104,7 @@
             </div>
 
             <div class="form-group">
-              <label>Afdeling</label>
+              <label>Afdeling Blok</label>
               <input
                 type="text"
                 v-model="field.afdeling_id"
@@ -117,6 +117,17 @@
                   validation.afdeling[0]
                 }}</b-alert>
               </div>
+            </div>
+
+            <div class="form-group">
+              <label>Afdeling SKU</label>
+              <input
+                type="text"
+                v-model="field.afdeling_sku"
+                placeholder=""
+                class="form-control"
+                readonly
+              />
             </div>
 
             <div class="form-group">
@@ -294,6 +305,7 @@ export default {
       ],
 
       field: {
+        afdeling_sku: '',
         activity_max_limit: '',
         foreman_employee_id: '',
         activity_plan_detail_id: '',
@@ -343,6 +355,7 @@ export default {
     // console.log(this.user.employee.company_code)
     this.company_code = this.user.employee.company_code
     this.foreman_employee = this.user.employee.foreman_employee
+    this.field.afdeling_sku = this.$route.query.afdeling_id ? this.$route.query.afdeling_id : ''
 
     //get data field by ID
     this.$axios

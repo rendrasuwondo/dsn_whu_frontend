@@ -916,7 +916,7 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/approved_asisten/export?q=${this.search}&page=${this.page}&activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_start}&q_foreman_employee_id=${this.foreman_empl_id}&q_afdeling_id=${this.q_afdeling_id}`,
+        url: `/api/admin/approved_asisten/export?q=${this.search}&page=${this.page}&activitied_at_prepend=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_start}&q_foreman_employee_id=${this.foreman_data}&q_afdeling_id=${this.q_afdeling_id}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
