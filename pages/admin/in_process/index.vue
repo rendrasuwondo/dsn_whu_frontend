@@ -150,7 +150,10 @@
               <b-button
                 v-show="btn_asisten"
                 :to="{
-                  name: row.item.p_wf_doc_type_id==1?'admin-in_process_detail_asisten-id':'admin-in_process_detail_asisten_rkh-id',
+                  name:
+                    row.item.p_wf_doc_type_id == 1
+                      ? 'admin-in_process_detail_asisten-id'
+                      : 'admin-in_process_detail_asisten_rkh-id',
                   params: { id: row.item.id },
                   query: {
                     tanggal: formatDate(row.item.activitied_at),
@@ -169,7 +172,10 @@
               <b-button
                 v-show="btn_non_asisten"
                 :to="{
-                  name: row.item.p_wf_doc_type_id==1?'admin-in_process_detail-id':'admin-in_process_detail_rkh-id',
+                  name:
+                    row.item.p_wf_doc_type_id == 1
+                      ? 'admin-in_process_detail-id'
+                      : 'admin-in_process_detail_rkh-id',
                   params: { id: row.item.id },
                   query: {
                     tanggal: formatDate(row.item.activitied_at),
@@ -306,6 +312,12 @@ export default {
         },
         {
           thClass: 'align-middle text-left text-nowrap nameOfTheClass',
+          label: 'Grup',
+          key: 'activity_group_name',
+          tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
+        },
+        {
+          thClass: 'align-middle text-left text-nowrap nameOfTheClass',
           label: 'TGL',
           key: 'activitied_at',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
@@ -436,11 +448,13 @@ export default {
       return date
     }
 
+
     //page
     let page = query.page ? parseInt(query.page) : ''
 
     //search
     let search = query.q ? query.q : ''
+
 
     //activitied_at_prepend
     let activitied_at_start = query.q_activitied_at_start
@@ -454,9 +468,7 @@ export default {
     console.log('activitied_at_end')
     console.log(query.q_activitied_at_append)
     // afdeling_id
-    const afdeling_list = await $axios.$get(
-      `/api/admin/lov_employee_afdeling`
-    )
+    const afdeling_list = await $axios.$get(`/api/admin/lov_employee_afdeling`)
 
     const afdeling_default = await $axios.$get(
       `/api/admin/lov_afdeling_default`
@@ -522,7 +534,10 @@ export default {
 
     let btn_asisten, btn_non_asisten
 
-    if ($auth.user.employee.position_id == 30 || $auth.user.employee.position_id == 35) {
+    if (
+      $auth.user.employee.position_id == 30 ||
+      $auth.user.employee.position_id == 35
+    ) {
       btn_asisten = true
       btn_non_asisten = false
     } else {
@@ -613,7 +628,11 @@ export default {
     searchData() {
       this.go = 0
 
-      console.log('validateSearch', this.activitied_at_start, this.activitied_at_end);
+      console.log(
+        'validateSearch',
+        this.activitied_at_start,
+        this.activitied_at_end
+      )
 
       if (this.$route.query.q != this.search) {
         this.go = 1
@@ -658,7 +677,10 @@ export default {
           },
         })
 
-        if (this.$auth.user.employee.position_id == 30 || this.$auth.user.employee.position_id == 35) {
+        if (
+          this.$auth.user.employee.position_id == 30 ||
+          this.$auth.user.employee.position_id == 35
+        ) {
           this.btn_asisten = true
           this.btn_non_asisten = false
         } else {

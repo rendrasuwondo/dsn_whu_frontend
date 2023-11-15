@@ -100,7 +100,7 @@
                       ></multiselect></div
                   ></b-col>
                   <b-col cols="1"></b-col>
-                  <b-col cols="2">Afdeling Block</b-col>
+                  <b-col cols="2">Afdeling Pekerjaan</b-col>
                   <b-col cols="4">
                     <div class="form-group">
                       <multiselect
@@ -365,7 +365,7 @@ export default {
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          label: 'Afdeling Block',
+          label: 'Afdeling Pekerjaan',
           key: 'afdeling_id',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
@@ -600,7 +600,7 @@ export default {
     )
     */
     const t_elhm = await $axios.$get(
-      `/api/admin/t_elhm?activitied_at=${activitiedAtDate}&afdeling_id=${q_afdeling_id}&foreman_employee_id=${q_foreman_employee_id}&p_wf_doc_type_id=1`
+      `/api/admin/t_elhm?activitied_at=${activitiedAtDate}&afdeling_id=${q_afdeling_id}&foreman_employee_id=${q_foreman_employee_id}&p_wf_doc_type_id=1&activity_group_id=4`
     )
     console.log(
       `/api/admin/t_elhm?activitied_at=${activitiedAtDate}&afdeling_id=${q_afdeling_id}&foreman_employee_id=${q_foreman_employee_id}&p_wf_doc_type_id=1`
