@@ -600,7 +600,7 @@ export default {
     )
     */
     const t_elhm = await $axios.$get(
-      `/api/admin/t_elhm?activitied_at=${activitiedAtDate}&afdeling_id=${q_afdeling_id}&foreman_employee_id=${q_foreman_employee_id}&p_wf_doc_type_id=1`
+      `/api/admin/t_elhm?activitied_at=${activitiedAtDate}&afdeling_id=${q_afdeling_id}&foreman_employee_id=${q_foreman_employee_id}&p_wf_doc_type_id=1&activity_group_id=4`
     )
     console.log(
       `/api/admin/t_elhm?activitied_at=${activitiedAtDate}&afdeling_id=${q_afdeling_id}&foreman_employee_id=${q_foreman_employee_id}&p_wf_doc_type_id=1`
