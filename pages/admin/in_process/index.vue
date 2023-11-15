@@ -435,13 +435,13 @@ export default {
 
       return date
     }
-    
+
     //page
     let page = query.page ? parseInt(query.page) : ''
 
     //search
     let search = query.q ? query.q : ''
-    
+
     //activitied_at_prepend
     let activitied_at_start = query.q_activitied_at_start
       ? query.q_activitied_at_start
@@ -461,7 +461,7 @@ export default {
     const afdeling_default = await $axios.$get(
       `/api/admin/lov_afdeling_default`
     )
-    
+
     let q_afdeling_id = query.q_afdeling_id ? query.q_afdeling_id : ''
 
     let afdeling_id = []
@@ -487,7 +487,7 @@ export default {
     if (q_afdeling_id == undefined || q_afdeling_id == '') {
       // q_afdeling_id = afdeling_default.data.id
     }
-    
+
     // activity_id
     const activity_list = await $axios.$get(`/api/admin/lov_activity`)
 
@@ -519,7 +519,7 @@ export default {
       q_activity_id = ''
     }
 
-    
+
     let btn_asisten, btn_non_asisten
 
     if ($auth.user.employee.position_id == 30 || $auth.user.employee.position_id == 35) {
@@ -529,14 +529,14 @@ export default {
       btn_asisten = false
       btn_non_asisten = true
     }
-    
+
     console.log( 'posts', `api/admin/workflow/in_process?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${q_afdeling_id}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}`)
-    
+
     const posts = await $axios.$get(
       `api/admin/workflow/in_process?q=${search}&q_is_asisten=${btn_asisten}&q_afdeling_id=${q_afdeling_id}&q_activitied_at_start=${activitied_at_start}&q_activitied_at_end=${activitied_at_end}`
     )
-    
-    
+
+
     return {
       posts: posts.data,
       pagination: posts.data,
@@ -551,7 +551,7 @@ export default {
       btn_asisten: btn_asisten,
       btn_non_asisten: btn_non_asisten,
     }
-    
+
   },
 
   mounted() {},
@@ -792,8 +792,9 @@ export default {
         this.query_afdeling_id = this.afdeling_id.id ? this.afdeling_id.id : ''
       }
 
+      console.log(`/api/admin/workflow/in_process/export?q=${this.search}&q_is_asisten=${this.btn_asisten}&q_afdeling_id=${this.query_afdeling_id}&q_activitied_at_start=${this.activitied_at_start}&q_activitied_at_end=${this.activitied_at_end}`)
       this.$axios({
-        url: `/api/admin/workflow/in_process/export?q=${this.search}&q_afdeling_id=${this.query_afdeling_id}&q_activitied_at_start=${this.activitied_at_start}&q_activitied_at_end=${this.activitied_at_end}`,
+        url: `/api/admin/workflow/in_process/export?q=${this.search}&q_is_asisten=${this.btn_asisten}&q_afdeling_id=${this.query_afdeling_id}&q_activitied_at_start=${this.activitied_at_start}&q_activitied_at_end=${this.activitied_at_end}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
