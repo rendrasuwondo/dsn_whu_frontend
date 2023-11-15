@@ -104,7 +104,7 @@
             </div>
 
             <div class="form-group">
-              <label>Afdeling Blok</label>
+              <label>Afdeling Pekerjaan</label>
               <input
                 type="text"
                 v-model="field.afdeling_id"

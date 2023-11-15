@@ -100,7 +100,7 @@
                       ></multiselect></div
                   ></b-col>
                   <b-col cols="1"></b-col>
-                  <b-col cols="2">Afdeling Block</b-col>
+                  <b-col cols="2">Afdeling Pekerjaan</b-col>
                   <b-col cols="4">
                     <div class="form-group">
                       <multiselect
@@ -365,7 +365,7 @@ export default {
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },
         {
-          label: 'Afdeling Block',
+          label: 'Afdeling Pekerjaan',
           key: 'afdeling_id',
           tdClass: 'align-middle text-left text-nowrap nameOfTheClass',
         },

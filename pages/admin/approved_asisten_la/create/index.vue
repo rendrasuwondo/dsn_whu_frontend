@@ -33,7 +33,7 @@
             </div>
 
             <div class="form-group">
-              <label>Afdeling Blok</label>
+              <label>Afdeling Pekerjaan</label>
               <multiselect
                 v-model="field.afdeling_id"
                 :options="afdeling"
