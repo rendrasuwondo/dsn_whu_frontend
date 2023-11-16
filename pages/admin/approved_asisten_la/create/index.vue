@@ -261,7 +261,11 @@
 
             <div class="form-group"></div>
 
-            <button class="btn btn-info mr-1 btn-submit" type="submit" :disabled="disableSubmit">
+            <button
+              class="btn btn-info mr-1 btn-submit"
+              type="submit"
+              :disabled="disableSubmit"
+            >
               <i class="fa fa-paper-plane"></i> SIMPAN
             </button>
             <button
@@ -355,9 +359,13 @@ export default {
       this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
     this.field.updated_by =
       this.$auth.user.employee.nik + '-' + this.$auth.user.employee.name
-    console.log('yesterdayDate',this.yesterdayDate())
-    this.field.activitied_at = this.$route.query.activitied_at_prepend ? this.$route.query.activitied_at_prepend : this.yesterdayDate()
-    this.field.afdeling_sku = this.$route.query.afdeling_id ? this.$route.query.afdeling_id : ''
+    console.log('yesterdayDate', this.yesterdayDate())
+    this.field.activitied_at = this.$route.query.activitied_at_prepend
+      ? this.$route.query.activitied_at_prepend
+      : this.yesterdayDate()
+    this.field.afdeling_sku = this.$route.query.afdeling_id
+      ? this.$route.query.afdeling_id
+      : ''
 
     this.company_code = this.user.employee.company_code
     this.department_code = this.user.employee.department_code
@@ -372,7 +380,10 @@ export default {
         .then((response) => {
           this.foreman = response.data.data
         })
-      console.log('mandor', `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.$auth.user.employee.afdeling_id}`)
+      console.log(
+        'mandor',
+        `/api/admin/lov_foreman_maintanance_rawat_hpt?afdeling_id=${this.$auth.user.employee.afdeling_id}`
+      )
       //Dropdown Block
       this.$axios
         .get(
@@ -454,7 +465,9 @@ export default {
 
     //Dropdown SKU
     this.$axios
-      .get(`/api/admin/lov_labour/${this.company_code}/${this.department_code}?afdeling_id=${this.$route.query.afdeling_id}`)
+      .get(
+        `/api/admin/lov_labour/${this.company_code}/${this.department_code}?afdeling_id=${this.$route.query.afdeling_id}`
+      )
       .then((response) => {
         this.labour = response.data.data
       })
@@ -479,7 +492,14 @@ export default {
 
   methods: {
     redirectBack() {
-      this.$router.go(-1);
+      this.$router.push({
+        name: 'admin-approved_asisten_la',
+        query: {
+          activitied_at_prepend: this.$route.query.activitied_at_prepend,
+          q_afdeling_id: this.$route.query.afdeling_id,
+        },
+        replace: true,
+      })
     },
     onChange() {
       if (this.field.activity_id.activity_name.indexOf('RATE') > 0) {
@@ -531,7 +551,6 @@ export default {
 
     onChangeAfdeling() {
       if (this.field.afdeling_id != null) {
-
         this.field.ha_statement_id = ''
 
         if (this.$auth.user.employee.activity_group_code == 'RAWAT') {
@@ -614,7 +633,7 @@ export default {
 
     yesterdayDate() {
       const current = new Date()
-      current.setDate(current.getDate()-1)
+      current.setDate(current.getDate() - 1)
       const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current
         .getDate()
         .toString()
@@ -744,7 +763,7 @@ export default {
               activitied_at_prepend: this.$route.query.activitied_at_prepend,
               q_afdeling_id: this.$route.query.afdeling_id,
             },
-            replace: true
+            replace: true,
           })
         })
         .catch((error) => {

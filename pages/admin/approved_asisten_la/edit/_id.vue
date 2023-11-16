@@ -266,7 +266,11 @@
                 </b-col>
               </b-row>
             </div>
-            <button class="btn btn-info mr-1 btn-submit" type="submit" v-show="this.approval">
+            <button
+              class="btn btn-info mr-1 btn-submit"
+              type="submit"
+              v-show="this.approval"
+            >
               <i class="fa fa-paper-plane"></i> SIMPAN
             </button>
             <button
@@ -354,7 +358,9 @@ export default {
     // console.log(this.user.employee.company_code)
     this.company_code = this.user.employee.company_code
     this.foreman_employee = this.user.employee.foreman_employee
-    this.field.afdeling_sku = this.$route.query.afdeling_id ? this.$route.query.afdeling_id : ''
+    this.field.afdeling_sku = this.$route.query.afdeling_id
+      ? this.$route.query.afdeling_id
+      : ''
 
     //get data field by ID
     this.$axios
@@ -363,8 +369,7 @@ export default {
         console.log('rdr')
         console.log(response.data.data.man_days)
 
-        this.field.activity_max_limit =
-          response.data.data.activity_max_limit
+        this.field.activity_max_limit = response.data.data.activity_max_limit
         this.field.activity_plan_detail_id =
           response.data.data.activity_plan_detail_id
         this.field.activitied_at = response.data.data.activitied_at
@@ -402,7 +407,7 @@ export default {
         break
     }
 
-    console.log('this.approval', this.approval);
+    console.log('this.approval', this.approval)
   },
 
   methods: {
@@ -436,7 +441,14 @@ export default {
       }
     },
     redirectBack() {
-      this.$router.go(-1);
+      this.$router.push({
+        name: 'admin-approved_asisten_la',
+        query: {
+          activitied_at_prepend: this.$route.query.activitied_at_prepend,
+          q_afdeling_id: this.$route.query.afdeling_id,
+        },
+        replace: true,
+      })
     },
 
     customLabel(option) {
@@ -489,8 +501,11 @@ export default {
 
           this.$router.push({
             name: 'admin-approved_asisten_la',
-            query: { activitied_at_prepend: this.$route.query.activitied_at_prepend },
-            replace: true
+            query: {
+              activitied_at_prepend: this.$route.query.activitied_at_prepend,
+              q_afdeling_id: this.$route.query.afdeling_id,
+            },
+            replace: true,
           })
         })
         .catch((error) => {
