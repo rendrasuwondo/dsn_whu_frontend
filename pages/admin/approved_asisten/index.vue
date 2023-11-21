@@ -114,8 +114,8 @@
                   :to="{
                     name: 'admin-approved_asisten-create',
                     query: {
-                      activitied_at_prepend:
-                        this.$route.query.activitied_at_prepend,
+                      activitied_at_prepend: activitied_at_start,
+                      afdeling_id: afdeling_id_string,
                       activitied_at_append:
                         this.$route.query.activitied_at_append,
                       foreman_id: this.$route.query.q_foreman_employee_id,
@@ -186,7 +186,8 @@
                   name: 'admin-approved_asisten-edit-id',
                   params: { id: row.item.id },
                   query: {
-                    activitied_at_prepend: param_activitied_at_prepend,
+                    activitied_at_prepend: activitied_at_start,
+                    afdeling_id: afdeling_id_string,
                     activitied_at_append: param_activitied_at_append,
                     foreman_id: foreman_employee_id,
                     elhm_status: elhm_status,
@@ -435,12 +436,14 @@ export default {
     const afdeling_list = await $axios.$get(`/api/admin/lov_employee_afdeling`)
 
     let afdeling_code = []
+    let afdeling_id_string = ''
 
     if (query.q_afdeling_id) {
       $axios
         .get(`/api/admin/lov_employee_afdeling?afdeling_id=${q_afdeling_id}`)
         .then((response) => {
           afdeling_id = response.data.data
+          afdeling_id_string = afdeling_id[0].id
         })
     } else {
       afdeling_id = []
@@ -452,7 +455,10 @@ export default {
           id: $auth.user.employee.afdeling_id,
           code: $auth.user.employee.afdeling_code,
         },
-    ]
+      ]
+
+      afdeling_id_string = $auth.user.employee.afdeling_id
+
     }
 
     if (q_afdeling_id == undefined) {
@@ -463,7 +469,9 @@ export default {
           id: $auth.user.employee.afdeling_id,
           code: $auth.user.employee.afdeling_code,
         },
-    ]
+      ]
+
+      afdeling_id_string = $auth.user.employee.afdeling_id
     }
 
     let department_code = $auth.user.employee.department_code
@@ -577,6 +585,7 @@ export default {
     console.log(async_elhm_status)
     // console.log(async_class_status)
     return {
+      afdeling_id_string: afdeling_id_string,
       foreman_empl_id: q_foreman_employee_id,
       q_afdeling_id: q_afdeling_id,
       search: search,
@@ -614,6 +623,8 @@ export default {
   methods: {
     onChangeAfdeling() {
       if (this.afdeling_id != null) {
+        this.afdeling_id_string = this.afdeling_id.id
+
         if (
           this.$auth.user.employee.activity_group_code == 'RAWAT' ||
           this.$auth.user.employee.activity_group_code == 'BIBITAN'
@@ -662,7 +673,7 @@ export default {
     },
     //searchData
     searchData() {
-    
+
 
       if (this.Mandatory() != '') {
         this.$swal.fire({
@@ -683,7 +694,7 @@ export default {
             : ''
         }
       } catch (err) {}
-       
+
         try {
           if (this.foreman_employee_id.employee_id === null) {
             this.vforeman_employee = ''
@@ -724,7 +735,7 @@ export default {
         // console.log(this.foreman_employee_id.employee_id)
         //cek watchQuery end
 
-        
+
         if (this.WatchGo() == 1) {
           // this.$nuxt.$loading.start()
           this.main = false
@@ -740,7 +751,7 @@ export default {
             : this.$auth.user.employee.afdeling_id,
             },
           })
-        } 
+        }
       }
     },
 
