@@ -583,12 +583,14 @@ export default {
     back() {
       this.$router.push({
         name: 'admin-approved_asisten',
-        params: { id: this.$route.params.id, r: 1 },
+        // params: { id: this.$route.params.id, r: 1 },
         query: {
           activitied_at_prepend: this.$route.query.activitied_at_prepend,
           activitied_at_append: this.$route.query.activitied_at_append,
           foreman_id: this.$route.query.foreman_id,
+          q_afdeling_id: this.$route.query.afdeling_id,
         },
+        replace: true,
       })
     },
 
