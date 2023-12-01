@@ -422,14 +422,25 @@ export default {
 
   async asyncData({ $axios, query, $auth }) {
     function currentDate() {
-      const current = new Date()
-      current.setDate(current.getDate())
-      const date = `${current.getFullYear()}-${current.getMonth() + 1}-${
-        current.getDate() - 1
-      }`
+      // const current = new Date()
+      // current.setDate(current.getDate())
+      // const date = `${current.getFullYear()}-${current.getMonth() + 1}-${
+      //   current.getDate() - 1
+      // }`
 
-      return date
+      // return date
+
+      var someDate = new Date()
+      var numberOfDaysToAdd = -1
+      var result = someDate.setDate(someDate.getDate() + numberOfDaysToAdd)
+      var date = new Date(result)
+      return date.getFullYear()+'-'+`${date.getMonth() + 1}`.padStart(2, '0')+'-'+ `${date.getDate()}`.padStart(2, '0')
     }
+
+    var someDate = new Date()
+    var numberOfDaysToAdd = -1
+    var result = someDate.setDate(someDate.getDate() + numberOfDaysToAdd)
+    // console.log('baru', new Date(result), currentDate().getFullYear()+'-'+`${currentDate().getMonth() + 1}`.padStart(2, '0')+'-'+ `${currentDate().getDate()}`.padStart(2, '0'))
 
     //page
     let page = query.page ? parseInt(query.page) : ''
@@ -441,7 +452,7 @@ export default {
     let activitied_at_start = query.activitied_at_prepend
       ? query.activitied_at_prepend
       : currentDate()
-
+    console.log('currentDate()', currentDate(), activitied_at_start)
     //activitied_at_append
     let activitied_at_end = query.activitied_at_append
       ? query.activitied_at_append
@@ -592,7 +603,15 @@ export default {
     const month = `${today.getMonth() + 1}`.padStart(2, '0')
     const day = `${today.getDate()}`.padStart(2, '0')
     const activitiedAtDate = `${year}-${month}-${day}`
-    console.log('new date', activitiedAtDate)
+    console.log(
+      'new date',
+      activitied_at_start,
+      activitiedAtDate,
+      today,
+      year,
+      month,
+      day
+    )
 
     /*
     const t_elhm = await $axios.$get(
@@ -916,7 +935,13 @@ export default {
       }
 
       this.$axios({
-        url: `/api/admin/approved_asisten_la/export?q=${this.search}&page=${this.page}&activitied_at=${this.activitied_at_start}&activitied_at_append=${this.activitied_at_start}&foreman_employee_id=${this.q_foreman_employee_id ?? ''}&afdeling_id=${this.q_afdeling_id}&afdeling_block_id=${this.q_afdeling_block_id}`,
+        url: `/api/admin/approved_asisten_la/export?q=${this.search}&page=${
+          this.page
+        }&activitied_at=${this.activitied_at_start}&activitied_at_append=${
+          this.activitied_at_start
+        }&foreman_employee_id=${this.q_foreman_employee_id ?? ''}&afdeling_id=${
+          this.q_afdeling_id
+        }&afdeling_block_id=${this.q_afdeling_block_id}`,
         method: 'GET',
         responseType: 'blob',
         headers: headers, // important
@@ -1011,10 +1036,26 @@ export default {
           })
           .then((result) => {
             if (result.isConfirmed == true) {
+              function currentDate() {
+                const current = new Date()
+                current.setDate(current.getDate() - 1)
+                const date = `${current.getFullYear()}-${
+                  current.getMonth() + 1
+                }-${current.getDate().toString().padStart(2, '0')}`
+
+                return date
+              }
+
+              //activitied_at_prepend
+              let activitied_at_start = this.$route.query.activitied_at_prepend
+                ? this.$route.query.activitied_at_prepend
+                : currentDate()
+
               // console.log(result.isConfirmed)
               // console.log('Submit')
-              // console.log(this.activitied_at_start)
-              // console.log(this.afdeling_id[0].id)
+              console.log('currentDate()', currentDate())
+              console.log('activitied_at_start', activitied_at_start)
+              //console.log(this.afdeling_id[0].id)
               // console.log(this.foreman_employee_id.employee_id)
               // this.$nuxt.$loading.start()
               this.main = false
@@ -1022,7 +1063,7 @@ export default {
 
               let formData = new FormData()
               // formData.append('activitied_at', this.activitied_at_start.split("-")[1].padStart(2, '0'))
-              formData.append('activitied_at', this.activitied_at_start)
+              formData.append('activitied_at', activitied_at_start)
               formData.append('afdeling_id', this.afdeling_id[0].id)
               formData.append(
                 'foreman_employee_id',
@@ -1035,7 +1076,7 @@ export default {
               formData.append('approve', 'Y')
               formData.append(
                 't_elhm_id',
-                this.activitied_at_start +
+                activitied_at_start +
                   '_' +
                   this.afdeling_id[0].id +
                   '_' +
@@ -1143,5 +1184,4 @@ export default {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
