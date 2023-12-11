@@ -1068,7 +1068,8 @@ export default {
               formData.append(
                 'foreman_employee_id',
                 // this.foreman_employee_id.employee_id
-                this.foreman_data
+                // this.foreman_data
+                this.$auth.user.employee.employee_id
               )
               formData.append('elhm_status', '0')
               formData.append('p_wf_proc_id', '1')
@@ -1081,13 +1082,14 @@ export default {
                   this.afdeling_id[0].id +
                   '_' +
                   // this.foreman_employee_id.employee_id +
-                  this.foreman_data +
+                  // this.foreman_data +
+                  this.$auth.user.employee.employee_id +
                   '_' +
                   '1'
               )
 
-              console.log(formData)
-
+              console.log(formData, this.$auth.user.employee)
+              // alert(this.$auth.user.employee.id);
               this.$axios
                 .post('/api/admin/t_elhm', formData)
                 .finally(() => {
