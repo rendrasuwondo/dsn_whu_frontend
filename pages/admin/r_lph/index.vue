@@ -574,7 +574,7 @@ export default {
 
     const elhm_status = await $axios.$get(`/api/admin/lov_elhm_status`)
 
-    let defaultStatus = 1
+    let defaultStatus = 0
     if (user.employee.position_code == 'ESTATE HEAD') {
       defaultStatus = 2
     }
