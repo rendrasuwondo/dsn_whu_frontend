@@ -76,6 +76,7 @@
           class="dropdown-menu"
           style="left: 0px; right: inherit"
         >
+          <li><a @click="change" class="dropdown-item">Change Password</a></li>
           <li><a @click="logout" class="dropdown-item">Logout</a></li>
         </ul>
       </li>
@@ -121,6 +122,19 @@ export default {
       //redirect route login
       this.$router.push({
         name: 'login',
+      })
+    },
+
+    async change() {
+      //logout auth
+      // await this.$auth.logout()
+
+      //remove cookies
+      this.$cookies.removeAll()
+
+      //redirect route login
+      this.$router.push({
+        name: 'admin-change_password',
       })
     },
   },
