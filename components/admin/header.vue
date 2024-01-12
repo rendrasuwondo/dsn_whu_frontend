@@ -76,8 +76,8 @@
           class="dropdown-menu"
           style="left: 0px; right: inherit"
         >
-          <li><a @click="change" class="dropdown-item">Change Password</a></li>
-          <li><a @click="logout" class="dropdown-item">Logout</a></li>
+          <li><a @click="change" class="dropdown-item"><i class="fa fa-cog" aria-hidden="true"> </i> Change Password</a></li>
+          <li><a @click="logout" class="dropdown-item"><i class="fa fa-power-off" aria-hidden="true"> </i> Logout</a></li>
         </ul>
       </li>
     </ul>
