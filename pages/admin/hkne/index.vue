@@ -233,7 +233,7 @@ export default {
     let activitied_at_end = query.activitied_at_append
       ? query.activitied_at_append
       : currentDate()
-
+    console.log(`/api/admin/hkne?q=${search}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}`)
     //fetching posts
     const posts = await $axios.$get(
       `/api/admin/hkne?q=${search}&activitied_at_prepend=${activitied_at_start}&activitied_at_append=${activitied_at_end}`
